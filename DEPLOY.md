@@ -2,14 +2,31 @@
 
 代码在 GitHub，静态站点跑在 Cloudflare Workers，子域名指向站点。
 
-**已部署（2026-10-14）**：
+已部署（2026-10-14 更新）：
 
 | | |
 |---|---|
 | 站点 | https://nav.tryworld.com.cn |
 | Worker | `tryworld-nav`（账号 TryWorld，`d59de4a1…cfe359`） |
 | workers.dev | https://tryworld-nav.1822520752.workers.dev |
-| 部署内容 | 8,671 个文件 / 1.2 GB（含媒体），首次上传 20 分钟 |
+| 部署内容 | 8,707 个文件 / 1.05 GB（含媒体），首次上传约 20 分钟 |
+
+## ⚠️ 部署前必读：媒体不能删
+
+媒体**不能**在上传前从 `out/` 删掉。`public/assets/**` 被 gitignore，本地是唯一副本，而
+`NEXT_PUBLIC_ASSET_BASE` 未设置，所以 `src/lib/assets.ts` 的 `asset()` 返回站点相对路径
+`/assets/...` —— 这些文件线上只由本 Worker 的资产清单提供。**Workers Static Assets 每次
+部署都整体替换资产清单**，因此拿缺媒体的 `out/` 去部署，会把线上 4188 张产品图全部打成 404。
+
+`scripts/prune-out.mjs` 因此改为**默认保留媒体**，只有显式 `--prune-media`（且要求
+`NEXT_PUBLIC_ASSET_BASE` 已设置）才会删。这正是本文档早先写给 CI 的那条警告，只是
+`npm run deploy` 自己一直在违例。
+
+```bash
+npm run build                      # out/ 含媒体，8,707 文件 / 1.05 GB
+node scripts/prune-out.mjs         # 只报数，不删（默认）
+npx wrangler deploy
+```
 
 ## 架构
 

@@ -4,10 +4,13 @@
  *
  * Two things get removed, both optional:
  *
- *   1. R2-hosted media (`assets/{icons,shots,tags,news}`) — always. The build
- *      copies everything from `public/`, and locally that is 327 MB of product
- *      screenshots. In CI those directories do not exist (gitignored), so this
- *      is a no-op there; locally it stops a 327 MB duplicate upload.
+ *   1. R2-hosted media (`assets/{icons,shots,tags,news}`) — only with
+ *      `--prune-media`, and only when `NEXT_PUBLIC_ASSET_BASE` is set. The
+ *      build copies everything from `public/`, and locally that is 327 MB of
+ *      product screenshots. Until R2 is enabled those files are the live
+ *      site's only copy, because Workers Static Assets replaces the whole
+ *      asset manifest on deploy — so the default is now to keep them, and
+ *      dropping them is an explicit opt-in.
  *
  *   2. RSC payloads (`**\/*.txt`) — only with `--lean`. Next emits one next to
  *      every page so its client router can navigate without a full page load.
@@ -21,8 +24,9 @@
  * so deleting them would turn a declared URL into a 404.
  *
  * Usage:
- *   node scripts/prune-out.mjs            # media only (default)
- *   node scripts/prune-out.mjs --lean     # media + RSC payloads
+ *   node scripts/prune-out.mjs            # keep media, keep RSC payloads
+ *   node scripts/prune-out.mjs --lean     # keep media, drop RSC payloads
+ *   node scripts/prune-out.mjs --prune-media   # drop media (needs R2)
  */
 import { existsSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -32,6 +36,22 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'out');
 const LEAN = process.argv.includes('--lean');
+const PRUNE_MEDIA = process.argv.includes('--prune-media');
+
+// The media is only safe to drop when it is served from somewhere else. Today
+// it is not: `NEXT_PUBLIC_ASSET_BASE` is unset, so every `asset()` call in
+// src/lib/assets.ts returns a site-relative `/assets/...` path, and the only
+// thing serving those files is this Worker's own asset manifest. Workers
+// Static Assets replaces that manifest wholesale on deploy, so pruning the
+// media here turns all 4188 product images into 404s on the live site.
+// `--prune-media` is the escape hatch for the day R2 is enabled.
+if (PRUNE_MEDIA && !process.env.NEXT_PUBLIC_ASSET_BASE) {
+  console.error(
+    'refusing to prune media: NEXT_PUBLIC_ASSET_BASE is unset, so /assets/* ' +
+      'is served by this Worker. Set it to the media host and rebuild first.',
+  );
+  process.exit(1);
+}
 
 const MEDIA = ['assets/icons', 'assets/shots', 'assets/tags', 'assets/news'];
 
@@ -69,17 +89,31 @@ if (!existsSync(OUT)) {
 let freed = 0;
 
 // ---- 1. R2-hosted media ----
-let removed = 0;
-for (const rel of MEDIA) {
-  const p = join(OUT, rel);
-  if (!existsSync(p)) continue;
-  const size = dirSize(p);
-  rmSync(p, { recursive: true, force: true });
-  freed += size;
-  removed++;
-  console.log(`  removed out/${rel} (${(size / 1048576).toFixed(0)} MB)`);
+if (PRUNE_MEDIA) {
+  let removed = 0;
+  for (const rel of MEDIA) {
+    const p = join(OUT, rel);
+    if (!existsSync(p)) continue;
+    const size = dirSize(p);
+    rmSync(p, { recursive: true, force: true });
+    freed += size;
+    removed++;
+    console.log(`  removed out/${rel} (${(size / 1048576).toFixed(0)} MB)`);
+  }
+  if (removed === 0) console.log('  media: nothing to prune (already absent)');
+} else {
+  const present = MEDIA.filter((rel) => existsSync(join(OUT, rel)));
+  const bytes = present.reduce((n, rel) => n + dirSize(join(OUT, rel)), 0);
+  const files = present.reduce((n, rel) => n + findFiles(join(OUT, rel), '').length, 0);
+  if (present.length) {
+    console.log(
+      `  media: KEPT ${files} files / ${(bytes / 1048576).toFixed(0)} MB — ` +
+        'NEXT_PUBLIC_ASSET_BASE is unset, so /assets/* is served by this Worker',
+    );
+  } else {
+    console.log('  media: nothing to keep (already absent)');
+  }
 }
-if (removed === 0) console.log('  media: nothing to prune (already absent)');
 
 // ---- 2. RSC payloads, opt-in ----
 if (LEAN) {
