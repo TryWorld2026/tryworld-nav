@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft, Calendar } from 'lucide-react';
 import { newsArticles, newsBySlug, SITE } from '@/lib/data';
 import type { NewsArticle } from '@/lib/types';
+import { canonical } from '@/lib/canonical';
 
 export function generateStaticParams() {
   return newsArticles.map((a) => ({ slug: a.slug }));
@@ -28,6 +29,7 @@ export async function generateMetadata({
 
   const title = `${article.title} | ${SITE.name}`;
   return {
+    ...canonical(`/news/${slug}`),
     title: { absolute: title },
     description: article.seoDescription || article.summary,
     keywords: article.keywords ? article.keywords.split(',').map((k) => k.trim()).filter(Boolean) : undefined,

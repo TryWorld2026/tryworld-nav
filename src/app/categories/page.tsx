@@ -3,12 +3,14 @@ import Link from 'next/link';
 import { CategoryIcon } from '@/components/category-icon';
 import { categoryCards } from '@/lib/data';
 import { rgb, rgbAlpha } from '@/lib/utils';
+import { canonical } from '@/lib/canonical';
 
 /**
  * The origin's own `<title>`, description and keywords, harvested from
  * /categories rather than derived — the page copy is hand-written.
  */
 export const metadata: Metadata = {
+  ...canonical("/categories"),
   title: '所有分类',
   description:
     '试界导航是专注于智能体和AI工具的门户网站，我们致力于为用户介绍最新、热门的智能体和AI工具，帮助用户快速找到适合自己的学习、工作、生活的AI利器。浏览我们的精选分类，找到适合您需求的智能体或AI工具。',

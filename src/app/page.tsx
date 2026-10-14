@@ -1,11 +1,26 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { ConciergeBell, Link2, Rocket } from 'lucide-react';
 import { Hero } from '@/components/hero';
 import { CategoryIcon } from '@/components/category-icon';
 import { SectionHeader } from '@/components/section-header';
 import { ToolMiniCard } from '@/components/tool-card';
-import { friendLinks, hotTools, newestTools, sections } from '@/lib/data';
+import { friendLinks, hotTools, newestTools, sections, SITE } from '@/lib/data';
 import type { Tool } from '@/lib/types';
+import { canonical } from '@/lib/canonical';
+
+/**
+ * The home page needs its own metadata block purely for `alternates.canonical`,
+ * which is the one path every other route on the site now carries. `title` and
+ * `description` are restated from `SITE` because a page-level block overrides
+ * the layout's inherited values wholesale — omitting them would drop the
+ * description and the keywords-adjacent fields from `/` only.
+ */
+export const metadata: Metadata = {
+  ...canonical("/"),
+  title: SITE.title,
+  description: SITE.description,
+};
 
 /** The origin's phone-only "browse everything" button, verbatim (chunk `62:`). */
 const BROWSE_ALL_CLASS =

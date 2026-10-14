@@ -20,6 +20,7 @@ import {
 } from '@/lib/data';
 import { pricingBadgeClass } from '@/lib/pricing';
 import { buttonPrimary } from '@/lib/styles';
+import { canonical } from '@/lib/canonical';
 
 export function generateStaticParams() {
   return tools.map((t) => ({ slug: t.slug }));
@@ -51,6 +52,7 @@ export async function generateMetadata({
   const description = extras?.description || tool.description;
 
   return {
+    ...canonical(`/tools/${slug}`),
     // Absolute, not a bare string — see the note above about `title.template`.
     title: { absolute: `${tool.name} - ${tool.description} | ${SITE.name}` },
     description,

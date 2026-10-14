@@ -3,8 +3,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, Clock } from 'lucide-react';
 import { newsArticles } from '@/lib/data';
+import { canonical } from '@/lib/canonical';
 
 export const metadata: Metadata = {
+  ...canonical("/news"),
   title: 'AI新闻资讯',
   description: '获取最新的人工智能行业动态、技术趋势和市场资讯。',
 };

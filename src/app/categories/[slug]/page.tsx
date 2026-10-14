@@ -6,6 +6,7 @@ import { PageHeader } from '@/components/page-header';
 import { CategoryIcon } from '@/components/category-icon';
 import { ToolMiniCard } from '@/components/tool-card';
 import { categories, categoryBySlug, SITE, toolsByCategory } from '@/lib/data';
+import { canonical } from '@/lib/canonical';
 import { rgb, rgbAlpha } from '@/lib/utils';
 
 export function generateStaticParams() {
@@ -21,6 +22,7 @@ export async function generateMetadata({
   const category = categoryBySlug.get(slug);
   if (!category) return { title: '分类未找到' };
   return {
+    ...canonical(`/categories/${slug}`),
     // Absolute, not a bare string: `layout.tsx` sets `title.template`, which
     // would append the site name a second time.
     title: { absolute: `${category.name} - ${SITE.name}` },

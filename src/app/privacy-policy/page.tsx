@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { ProsePage } from '@/components/prose-page';
 import { SITE } from '@/lib/data';
+import { canonical } from '@/lib/canonical';
 
 export const metadata: Metadata = {
+  ...canonical("/privacy-policy"),
   title: '隐私政策',
   description: `${SITE.name} 不收集任何个人身份信息。`,
 };

@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { ProsePage } from '@/components/prose-page';
 import { SITE } from '@/lib/data';
+import { canonical } from '@/lib/canonical';
 
 export const metadata: Metadata = {
+  ...canonical("/terms-conditions"),
   title: '用户协议',
   description: `使用 ${SITE.name} 前请阅读以下条款。`,
 };

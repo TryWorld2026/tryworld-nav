@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { collections } from '@/lib/data';
+import { canonical } from '@/lib/canonical';
 
 export const metadata: Metadata = {
+  ...canonical("/collections"),
   title: '精选AI利器集合',
   description: '试界导航精选AI工具集合，AI助力提效，让你事半功倍。',
 };

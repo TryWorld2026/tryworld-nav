@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { collectionBySlug, collections, SITE, toolBySlug } from '@/lib/data';
 import { ToolMiniCard } from '@/components/tool-card';
 import type { Tool } from '@/lib/types';
+import { canonical } from '@/lib/canonical';
 
 export function generateStaticParams() {
   return collections.map((c) => ({ slug: c.slug }));
@@ -24,6 +25,7 @@ export async function generateMetadata({
 
   const title = `${collection.title}大全 | ${SITE.name}`;
   return {
+    ...canonical(`/collections/${slug}`),
     title: { absolute: title },
     description: collection.intro,
     openGraph: {

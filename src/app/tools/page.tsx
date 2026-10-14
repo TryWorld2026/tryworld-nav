@@ -2,8 +2,10 @@ import type { Metadata } from 'next';
 import { ToolsExplorer } from '@/components/tools-explorer';
 import { PageHeader } from '@/components/page-header';
 import { allCategories, tags, tools } from '@/lib/data';
+import { canonical } from '@/lib/canonical';
 
 export const metadata: Metadata = {
+  ...canonical("/tools"),
   title: '全部工具',
   description: '浏览试界导航收录的所有 AI 工具与智能体，支持按分类、标签和关键词筛选。',
 };
