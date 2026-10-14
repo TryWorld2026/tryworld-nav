@@ -34,8 +34,11 @@ npm run media:backup E:/移动硬盘/tryworld   # 指定目录
 
 ## 换机器 / 重建
 
+仓库是**私有**的：`github.com/TryWorld2026/tryworld-nav`。克隆前先确认本机 git 有那个账号的凭据
+（`git credential fill` 能返回 `username=TryWorld2026` 即可），否则会撞 404。
+
 ```bash
-git clone <你的仓库> tryworld-nav && cd tryworld-nav
+git clone https://github.com/TryWorld2026/tryworld-nav.git tryworld-nav && cd tryworld-nav
 npm ci
 
 # 三选一还原媒体：
