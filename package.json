@@ -5,7 +5,7 @@
   "description": "试界导航 — 智能体与 AI 工具导航门户",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/generate-llms-full.mjs && next build",
     "start": "next start",
     "lint": "eslint .",
     "assets:check": "node scripts/sync-assets.mjs --check",
@@ -15,7 +15,9 @@
     "prune": "node scripts/prune-out.mjs",
     "preview:cf": "npx wrangler dev",
     "media:backup": "node scripts/backup-media.mjs",
-    "media:restore": "node scripts/restore-media.mjs"
+    "media:restore": "node scripts/restore-media.mjs",
+    "census": "node scripts/census.mjs",
+    "llms:full": "node scripts/generate-llms-full.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

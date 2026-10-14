@@ -88,7 +88,7 @@ export function ToolInfoPanel({
                 {/* The origin's own harvested favicon SVG. It is not a rule-
                     suppressed escape hatch: the harvest pass rejects every slug
                     whose prose or extras carry a script/style/iframe/object/embed
-                    element, an `on*` attribute or a `javascript:` URL (0 of 1150
+                    element, an `on*` attribute or a `javascript:` URL (0 of 2081
                     did), and these two fields are the only remaining raw HTML. */}
                 {row.logo && <span dangerouslySetInnerHTML={{ __html: row.logo }} />}
                 <ArrowUpRight className="inline h-4 w-4" aria-hidden="true" />

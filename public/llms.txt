@@ -2,56 +2,56 @@
 探索发现最新热门的智能体和AI工具，助力高效学习、工作与生活。
 
 ## 核心内容
-- [AI智能体平台](https://tryworld.com.cn/categories/ai-agents)：汇聚2026年最新热门AI智能体平台，如Manus、Flowith、AutoGLM沉思等，满足多样化需求。
-- [AI浏览器](https://tryworld.com.cn/categories/ai-browser)：推荐2026年最新热门的AI和Agentic浏览器，如夸克、Fellou、Dia，提升浏览体验。
-- [AI聊天机器人](https://tryworld.com.cn/categories/ai-chatbots)：涵盖豆包、DeepSeek、腾讯元宝等众多AI聊天机器人，提供免费智能对话服务。
-- [AI写作工具](https://tryworld.com.cn/categories/ai-writing)：推荐2026年热门AI写作工具，助力高效创作文章、文案等。
-- [AI图像设计工具](https://tryworld.com.cn/categories/ai-image-design)：精选热门AI图像设计工具，轻松实现创意设计。
-- [AI视频动画工具](https://tryworld.com.cn/categories/ai-video-animation)：汇集2026年热门AI视频和动画生成工具，快速制作视频动画内容。
-- [AI编程工具](https://tryworld.com.cn/categories/ai-coding)：提供最新热门AI编程和代码生成工具，辅助编程学习与开发。
-- [AI音频音乐工具](https://tryworld.com.cn/categories/ai-audio-music)：推荐2026年热门AI语音和音乐工具，如Udio等，创造独特音乐体验。
-- [AI PPT工具](https://tryworld.com.cn/categories/ai-ppt)：展示2026年热门AI PPT生成工具，如iSlide、咔片PPT等，快速制作精美PPT。
-- [AI搜索引擎](https://tryworld.com.cn/categories/ai-search-engine)：介绍2026年热门AI搜索引擎，提升搜索效率与精准度。
-- [AI数据分析工具](https://tryworld.com.cn/categories/ai-data-analysis)：精选2026年热门AI数据分析工具，助力高效数据分析与决策。
-- [AI网站制作工具](https://tryworld.com.cn/categories/ai-website-builder)：推荐2026年热门AI网站制作工具，轻松搭建个性化网站。
-- [AI思维导图工具](https://tryworld.com.cn/categories/ai-mindmap-whiteboard)：汇集热门AI思维导图和在线白板工具，如ProcessOn、TreeMind树图等，提升思维整理效率。
-- [AI笔记工具](https://tryworld.com.cn/categories/ai-notetaker)：推荐热门AI笔记和会议记录摘要工具，如简单听记、SmartPDFs等，高效记录与整理知识。
-- [AI内容检测工具](https://tryworld.com.cn/categories/ai-content-detection)：提供2026年热门AI内容检测工具，如Studycorgi ChatGPT Detector等，检测内容生成来源。
+- [AI智能体平台](https://nav.tryworld.com.cn/categories/ai-agents)：汇聚2026年最新热门AI智能体平台，如Manus、Flowith、AutoGLM沉思等，满足多样化需求。
+- [AI浏览器](https://nav.tryworld.com.cn/categories/ai-browser)：推荐2026年最新热门的AI和Agentic浏览器，如夸克、Fellou、Dia，提升浏览体验。
+- [AI聊天机器人](https://nav.tryworld.com.cn/categories/ai-chatbots)：涵盖豆包、DeepSeek、腾讯元宝等众多AI聊天机器人，提供免费智能对话服务。
+- [AI写作工具](https://nav.tryworld.com.cn/categories/ai-writing)：推荐2026年热门AI写作工具，助力高效创作文章、文案等。
+- [AI图像设计工具](https://nav.tryworld.com.cn/categories/ai-image-design)：精选热门AI图像设计工具，轻松实现创意设计。
+- [AI视频动画工具](https://nav.tryworld.com.cn/categories/ai-video-animation)：汇集2026年热门AI视频和动画生成工具，快速制作视频动画内容。
+- [AI编程工具](https://nav.tryworld.com.cn/categories/ai-coding)：提供最新热门AI编程和代码生成工具，辅助编程学习与开发。
+- [AI音频音乐工具](https://nav.tryworld.com.cn/categories/ai-audio-music)：推荐2026年热门AI语音和音乐工具，如Udio等，创造独特音乐体验。
+- [AI PPT工具](https://nav.tryworld.com.cn/categories/ai-ppt)：展示2026年热门AI PPT生成工具，如iSlide、咔片PPT等，快速制作精美PPT。
+- [AI搜索引擎](https://nav.tryworld.com.cn/categories/ai-search-engine)：介绍2026年热门AI搜索引擎，提升搜索效率与精准度。
+- [AI数据分析工具](https://nav.tryworld.com.cn/categories/ai-data-analysis)：精选2026年热门AI数据分析工具，助力高效数据分析与决策。
+- [AI网站制作工具](https://nav.tryworld.com.cn/categories/ai-website-builder)：推荐2026年热门AI网站制作工具，轻松搭建个性化网站。
+- [AI思维导图工具](https://nav.tryworld.com.cn/categories/ai-mindmap-whiteboard)：汇集热门AI思维导图和在线白板工具，如ProcessOn、TreeMind树图等，提升思维整理效率。
+- [AI笔记工具](https://nav.tryworld.com.cn/categories/ai-notetaker)：推荐热门AI笔记和会议记录摘要工具，如简单听记、SmartPDFs等，高效记录与整理知识。
+- [AI内容检测工具](https://nav.tryworld.com.cn/categories/ai-content-detection)：提供2026年热门AI内容检测工具，如Studycorgi ChatGPT Detector等，检测内容生成来源。
 
 ## 常用资源
-- [试界导航官网](https://tryworld.com.cn/)：浏览最新热门智能体和AI工具。
-- [关于我们](https://tryworld.com.cn/about)：了解试界导航的使命、愿景与核心价值观。
-- [所有工具](https://tryworld.com.cn/tools)：查看全部智能体和AI工具。
-- [所有分类](https://tryworld.com.cn/categories)：按分类查找所需智能体和AI工具。
-- [精选集合](https://tryworld.com.cn/collections)：探索编辑推荐的精选智能体和AI工具集合。
+- [试界导航官网](https://nav.tryworld.com.cn/)：浏览最新热门智能体和AI工具。
+- [关于我们](https://nav.tryworld.com.cn/about)：了解试界导航的使命、愿景与核心价值观。
+- [所有工具](https://nav.tryworld.com.cn/tools)：查看全部智能体和AI工具。
+- [所有分类](https://nav.tryworld.com.cn/categories)：按分类查找所需智能体和AI工具。
+- [精选集合](https://nav.tryworld.com.cn/collections)：探索编辑推荐的精选智能体和AI工具集合。
 
 ## 精选集合
-- [AI六小龙旗下的AI产品集合](https://tryworld.com.cn/collections)：AI六小龙公司推出的优质AI产品。
-- [有Agent模式的AI产品集合](https://tryworld.com.cn/collections)：带有Agent模式/功能的AI工具和产品。
-- [大厂旗下的AI产品集合](https://tryworld.com.cn/collections)：互联网大厂推出的AI产品。
-- [免费使用的AI产品集合](https://tryworld.com.cn/collections)：完全免费的AI产品。
-- [初创公司推出的AI产品集合](https://tryworld.com.cn/collections)：新兴AI初创公司推出的创新产品。
-- [独立开发者推出的AI产品集合](https://tryworld.com.cn/collections)：独立开发者设计、开发的AI产品。
-- [编辑推荐的AI产品集合](https://tryworld.com.cn/collections)：试界导航编辑精选推荐的AI产品。
+- [AI六小龙旗下的AI产品集合](https://nav.tryworld.com.cn/collections)：AI六小龙公司推出的优质AI产品。
+- [有Agent模式的AI产品集合](https://nav.tryworld.com.cn/collections)：带有Agent模式/功能的AI工具和产品。
+- [大厂旗下的AI产品集合](https://nav.tryworld.com.cn/collections)：互联网大厂推出的AI产品。
+- [免费使用的AI产品集合](https://nav.tryworld.com.cn/collections)：完全免费的AI产品。
+- [初创公司推出的AI产品集合](https://nav.tryworld.com.cn/collections)：新兴AI初创公司推出的创新产品。
+- [独立开发者推出的AI产品集合](https://nav.tryworld.com.cn/collections)：独立开发者设计、开发的AI产品。
+- [编辑推荐的AI产品集合](https://nav.tryworld.com.cn/collections)：试界导航编辑精选推荐的AI产品。
 
 ## 最新更新
-- [Muse](https://tryworld.com.cn/tools/muse-meta)：Meta推出的个人AI智能体
-- [Chatterfly](https://tryworld.com.cn/tools/chatterfly)：腾讯推出的AI语音输入工具
-- [Pavo](https://tryworld.com.cn/tools/pavo-ai)：免费的AI视频和图像生成工具
-- [灵犀](https://tryworld.com.cn/tools/lingxi)：金山办公推出的 AI 原生的 Office 办公智能体
-- [Grok Bot](https://tryworld.com.cn/tools/grok-bot)：SpaceXAI推出的AI工作智能体，支持多Agent协作
-- [豆包工作](https://tryworld.com.cn/tools/doubao-work)：字节推出的通用AI办公Agent产品
-- [库库AI](https://tryworld.com.cn/tools/kuku-baidu)：百度推出的通用AI办公智能体平台
-- [Epixa](https://tryworld.com.cn/tools/epixa)：一站式 AI 图像与视频创作聚合平台
-- [AltFlow](https://tryworld.com.cn/tools/altflow)：互动型叙事短剧创作AI Agent
-- [造化工坊](https://tryworld.com.cn/tools/zaohua-qq)：腾讯光子工作室推出的AI互动叙事创作与体验平台
-- [StoryPlay](https://tryworld.com.cn/tools/storyplay)：垂直短剧AI剧本创作平台
-- [Percify](https://tryworld.com.cn/tools/percify)： AI真人数字人与语音克隆视频生成平台
-- [升维画布](https://tryworld.com.cn/tools/yedao666)：AI漫剧与视频制作工具
-- [Elser AI](https://tryworld.com.cn/tools/elser-ai)：动漫、漫剧与影视短片创作的一体化AI生产平台
-- [漫聚星球](https://tryworld.com.cn/tools/xzai-chat)：AI影视创作与漫剧制作平台
-- [Laper](https://tryworld.com.cn/tools/laper-ai)：AI原生影视剧本创作与前期筹备平台
-- [JoyAI](https://tryworld.com.cn/tools/joyai)：京东研发的多模态 AIGC 创意工具
-- [妙呀](https://tryworld.com.cn/tools/miaoya-ai)：大麦与阿里通义联合推出的潮玩AI设计平台
-- [Polar](https://tryworld.com.cn/tools/polar-browser)：AI原生的浏览器，内置工作智能体
-- [Loomy](https://tryworld.com.cn/tools/loomy)：科大讯飞推出的桌面级AI工作助理
+- [Muse](https://nav.tryworld.com.cn/tools/muse-meta)：Meta推出的个人AI智能体
+- [Chatterfly](https://nav.tryworld.com.cn/tools/chatterfly)：腾讯推出的AI语音输入工具
+- [Pavo](https://nav.tryworld.com.cn/tools/pavo-ai)：免费的AI视频和图像生成工具
+- [灵犀](https://nav.tryworld.com.cn/tools/lingxi)：金山办公推出的 AI 原生的 Office 办公智能体
+- [Grok Bot](https://nav.tryworld.com.cn/tools/grok-bot)：SpaceXAI推出的AI工作智能体，支持多Agent协作
+- [豆包工作](https://nav.tryworld.com.cn/tools/doubao-work)：字节推出的通用AI办公Agent产品
+- [库库AI](https://nav.tryworld.com.cn/tools/kuku-baidu)：百度推出的通用AI办公智能体平台
+- [Epixa](https://nav.tryworld.com.cn/tools/epixa)：一站式 AI 图像与视频创作聚合平台
+- [AltFlow](https://nav.tryworld.com.cn/tools/altflow)：互动型叙事短剧创作AI Agent
+- [造化工坊](https://nav.tryworld.com.cn/tools/zaohua-qq)：腾讯光子工作室推出的AI互动叙事创作与体验平台
+- [StoryPlay](https://nav.tryworld.com.cn/tools/storyplay)：垂直短剧AI剧本创作平台
+- [Percify](https://nav.tryworld.com.cn/tools/percify)： AI真人数字人与语音克隆视频生成平台
+- [升维画布](https://nav.tryworld.com.cn/tools/yedao666)：AI漫剧与视频制作工具
+- [Elser AI](https://nav.tryworld.com.cn/tools/elser-ai)：动漫、漫剧与影视短片创作的一体化AI生产平台
+- [漫聚星球](https://nav.tryworld.com.cn/tools/xzai-chat)：AI影视创作与漫剧制作平台
+- [Laper](https://nav.tryworld.com.cn/tools/laper-ai)：AI原生影视剧本创作与前期筹备平台
+- [JoyAI](https://nav.tryworld.com.cn/tools/joyai)：京东研发的多模态 AIGC 创意工具
+- [妙呀](https://nav.tryworld.com.cn/tools/miaoya-ai)：大麦与阿里通义联合推出的潮玩AI设计平台
+- [Polar](https://nav.tryworld.com.cn/tools/polar-browser)：AI原生的浏览器，内置工作智能体
+- [Loomy](https://nav.tryworld.com.cn/tools/loomy)：科大讯飞推出的桌面级AI工作助理

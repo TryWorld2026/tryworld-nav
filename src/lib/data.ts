@@ -52,9 +52,12 @@ const toolExtras = rawExtras as Record<string, ToolExtras>;
 
 /**
  * Harvested extras for one tool, or `null` when the origin published none. Every
- * one of the 1150 catalogued slugs has an entry today, but the accessor stays
+ * one of the 2081 catalogued slugs has an entry today, but the accessor stays
  * defensive: the JSON is crawler output, and a half-written entry should degrade
- * one page rather than throw during prerender and take the build down.
+ * one page rather than throw during prerender and take the build down. Note
+ * that a missing `prose` also reads as `null` here — `pokecut` is the one
+ * slug whose origin page ships an empty body, and `ToolProse` renders nothing
+ * for it.
  */
 export function extrasBySlug(slug: string): ToolExtras | null {
   const extras = toolExtras[slug];

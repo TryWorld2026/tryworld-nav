@@ -15,12 +15,18 @@
  *      work, no console errors), which saves 240 MB — a third of the payload —
  *      at the cost of prefetching and instant transitions.
  *
+ * `--lean` keeps a whitelist of hand-written `.txt` files that are not RSC
+ * payloads: both are advertised by `src/app/robots.txt/route.ts`
+ * (`LLM-Content`, `LLM-Full-Content`) and copied verbatim out of `public/`,
+ * so deleting them would turn a declared URL into a 404.
+ *
  * Usage:
  *   node scripts/prune-out.mjs            # media only (default)
  *   node scripts/prune-out.mjs --lean     # media + RSC payloads
  */
 import { existsSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
+import { basename, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -28,6 +34,12 @@ const OUT = join(ROOT, 'out');
 const LEAN = process.argv.includes('--lean');
 
 const MEDIA = ['assets/icons', 'assets/shots', 'assets/tags', 'assets/news'];
+
+// Hand-written text files that live in `out/` by design. A `**/*.txt` glob
+// catches them by accident, and they are indistinguishable from RSC payloads
+// by extension alone.
+const KEEP_TXT = ['llms.txt', 'llms-full.txt'];
+const isKept = (p) => KEEP_TXT.includes(basename(p));
 
 function dirSize(dir) {
   let n = 0;
@@ -71,18 +83,25 @@ if (removed === 0) console.log('  media: nothing to prune (already absent)');
 
 // ---- 2. RSC payloads, opt-in ----
 if (LEAN) {
-  const txts = findFiles(OUT, '.txt');
+  const txts = findFiles(OUT, '.txt').filter((p) => !isKept(p));
   let bytes = 0;
   for (const p of txts) {
     bytes += statSync(p).size;
     rmSync(p, { force: true });
   }
+  for (const p of findFiles(OUT, '.txt').filter(isKept)) {
+    console.log(`  kept ${relative(OUT, p)} (declared in robots.txt)`);
+  }
   freed += bytes;
   console.log(`  removed ${txts.length} RSC payloads (${(bytes / 1048576).toFixed(0)} MB)`);
   console.log('  navigation now falls back to full page loads');
 } else {
-  const n = findFiles(OUT, '.txt').length;
+  const all = findFiles(OUT, '.txt');
+  const n = all.filter((p) => !isKept(p)).length;
   console.log(`  kept ${n} RSC payloads (client-side nav; use --lean to drop them)`);
+  for (const p of all.filter(isKept)) {
+    console.log(`  kept ${relative(OUT, p)} (declared in robots.txt)`);
+  }
 }
 
 console.log(`\nfreed ${(freed / 1048576).toFixed(0)} MB from the deploy payload`);

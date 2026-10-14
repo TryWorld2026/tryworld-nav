@@ -206,15 +206,17 @@ export type NewsArticle = {
  * re-derivation. It is rendered through `dangerouslySetInnerHTML` in ToolProse,
  * which is safe because the harvest pass rejects every slug carrying a
  * script/style/iframe/object/embed/form element, an `on*` attribute or a
- * `javascript:` URL (0 of 1150 slugs did). That contract lives in
- * `src/components/tool-details.tsx`.
+ * `javascript:` URL (0 of 2081 slugs did). That contract lives in
+ * `src/components/tool-details.tsx`. The coverage numbers quoted throughout
+ * this file are the output of `node scripts/census.mjs`.
  *
  * `more` / `related` / `latest` are the origin's own per-page widget snapshots.
- * They are kept for provenance but are **not** used to render the page: roughly
- * 45% of every one of them names a slug that is absent from our catalog (the
- * origin lists ~2082 tools, the replica carries 1150), so adopting them verbatim
- * would leave three grids riddled with dead links. `lib/data.ts` derives
- * deterministic replacements instead — see the note on `moreTools`.
+ * They are kept for provenance but are **not** used to render the page. Only
+ * 18 of their 93,789 references name a slug this catalog cannot resolve
+ * (`more` 12, `related` 6, `latest` 0 — 0.05% / 0.02% / 0%), so the dead-link
+ * risk is small today, but the grids still cannot be adopted verbatim: they are
+ * random samples on the origin, and `lib/data.ts` derives deterministic
+ * replacements instead — see the note on `moreTools`.
  */
 export type ToolExtras = {
   /**
@@ -242,12 +244,12 @@ export type ToolExtras = {
    */
   description?: string;
   /**
-   * The 相关信息 rows. Present on 629 of the 1150 slugs — the origin only
+   * The 相关信息 rows. Present on 1155 of the 2081 slugs — the origin only
    * renders the panel for entries that carry a 开发者 row, so absence is
    * meaningful rather than a harvest gap. The tool page passes `?? []`.
    */
   info?: ToolInfoRow[];
-  /** 支持平台 chips — present on 907 of 1150 slugs, same reasoning as `info`. */
+  /** 支持平台 chips — present on 1513 of 2081 slugs, same reasoning as `info`. */
   platforms?: ToolPlatform[];
   /** Provenance only — see the note above. */
   more?: string[];

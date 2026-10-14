@@ -9,10 +9,12 @@
  * function of the entry's own copy. The only faithful recovery is to read it back
  * off every page, which is what `tools/pricing` in the harvest pipeline does.
  *
- * Four tones exist in the corpus, and the census over all 1150 pages is exact:
- * 免费增值 906, 免费 143, 免费开源 37, 付费 25 — with 39 slugs rendering no badge
- * at all. Each entry holds the tone-specific tail of the origin's class list; the
- * shared prefix lives in `PRICING_PREFIX`.
+ * Four tones exist in the corpus, and the census over all 2081 pages is exact:
+ * 免费增值 1737, 免费 183, 免费开源 55, 付费 51 — with 53 slugs rendering no
+ * badge at all and 2 (`leewow`, `shenbi-maoyan`) carrying a 未知 label that
+ * predates the tone table and therefore resolves to the neutral pill. Each
+ * entry holds the tone-specific tail of the origin's class list; the shared
+ * prefix lives in `PRICING_PREFIX`.
  *
  * A label the harvest never saw falls back to the neutral grey pill rather than
  * being dropped — an unrecognised value should still read as a pricing badge, not

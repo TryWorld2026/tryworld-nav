@@ -12,7 +12,7 @@
  * It is injected with `dangerouslySetInnerHTML`, which is only defensible
  * because the harvest pass refuses to keep any slug whose prose contains a
  * script/style/iframe/object/embed/form element, an `on*` attribute, or a
- * `javascript:` URL. That check ran over all 1150 slugs and rejected none, and
+ * `javascript:` URL. That check ran over all 2081 slugs and rejected none, and
  * every one of the 62 `href` values in the corpus is `https` or relative. The
  * alarming-looking attribute names in the corpus (`DATABASE_URL`,
  * `S3_UPLOAD_SECRET`, `HELICONE_API_KEY`) are text inside `<pre><code>`

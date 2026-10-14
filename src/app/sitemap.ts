@@ -40,7 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     // Collection pages sit at the same level of the origin's own sitemap as the
     // category pages, and are curated by hand rather than generated, so they
-    // outrank the 1197 tool entries.
+    // outrank the 2081 tool entries.
     ...collections.map((c) => ({
       url: `${SITE.url}/collections/${c.slug}`,
       lastModified: CATALOG_UPDATED,
