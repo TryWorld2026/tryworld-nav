@@ -1,0 +1,56 @@
+name: deploy
+
+on:
+  # Auto-deploy on push is deliberately OFF until the media problem is solved.
+  #
+  # The 336 MB of product icons and screenshots is gitignored, so a fresh CI
+  # checkout has no `public/assets/{icons,shots,tags,news}`. A Workers Static
+  # Assets deploy REPLACES the asset manifest, which means deploying from CI
+  # would silently delete every product image from the live site.
+  #
+  # Two ways to switch it on, in order of preference:
+  #   1. Enable R2, run `npm run assets:push`, set ASSET_BASE_URL — then the
+  #      build references the R2 host and the deploy carries no media at all.
+  #   2. Un-ignore public/assets and accept a 364 MB repo.
+  #
+  # Until then, deploy from a machine that has the media: `npm run deploy`.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Guard: a media-less checkout would deploy a site with no images.
+      - name: Verify media is present
+        run: |
+          missing=0
+          for d in icons shots tags news; do
+            if [ ! -d "public/assets/$d" ]; then
+              echo "::error::public/assets/$d is absent — this deploy would strip every product image. See DEPLOY.md."
+              missing=1
+            fi
+          done
+          [ "$missing" = 0 ] || exit 1
+
+      - name: Build
+        run: npm run build
+
+      - name: Prune
+        run: npm run prune
+
+      - name: Deploy to Cloudflare Workers
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy

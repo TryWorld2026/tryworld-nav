@@ -1,0 +1,1032 @@
+[
+  {
+    "slug": "ai-agents",
+    "name": "AI智能体",
+    "tagline": "AI智能体和智能体开发平台",
+    "members": [
+      {
+        "slug": "cherry-studio",
+        "icon": "/assets/icons/cherry-studio.svg",
+        "name": "Cherry Studio"
+      },
+      {
+        "slug": "lovart-ai",
+        "icon": "/assets/icons/lovart-ai.png",
+        "name": "Lovart"
+      },
+      {
+        "slug": "openclaw",
+        "icon": "/assets/icons/openclaw.png",
+        "name": "OpenClaw"
+      },
+      {
+        "slug": "coze-space",
+        "icon": "/assets/icons/coze-space.svg",
+        "name": "扣子空间"
+      },
+      {
+        "slug": "loomy",
+        "icon": "/assets/icons/loomy.webp",
+        "name": "Loomy"
+      },
+      {
+        "slug": "seko-ai",
+        "icon": "/assets/icons/seko-ai.png",
+        "name": "Seko AI"
+      }
+    ],
+    "plus": 103,
+    "color": "245 158 11",
+    "icon": "brain-circuit"
+  },
+  {
+    "slug": "ai-chatbots",
+    "name": "AI聊天助手",
+    "tagline": "AI聊天机器人和对话交互助手",
+    "members": [
+      {
+        "slug": "cherry-studio",
+        "icon": "/assets/icons/cherry-studio.svg",
+        "name": "Cherry Studio"
+      },
+      {
+        "slug": "xinghuo-xfyun",
+        "icon": "/assets/icons/xinghuo-xfyun.png",
+        "name": "讯飞星火"
+      },
+      {
+        "slug": "doubao",
+        "icon": "/assets/icons/doubao.png",
+        "name": "豆包"
+      },
+      {
+        "slug": "flowith",
+        "icon": "/assets/icons/flowith.svg",
+        "name": "Flowith"
+      },
+      {
+        "slug": "nami-search",
+        "icon": "/assets/icons/nami-search.png",
+        "name": "纳米AI"
+      },
+      {
+        "slug": "tencent-yuanbao",
+        "icon": "/assets/icons/tencent-yuanbao.png",
+        "name": "腾讯元宝"
+      }
+    ],
+    "plus": 53,
+    "color": "59 130 246",
+    "icon": "bot-message-square"
+  },
+  {
+    "slug": "ai-writing",
+    "name": "AI写作",
+    "tagline": "AI文案撰写和文章创作工具",
+    "members": [
+      {
+        "slug": "wawawriter",
+        "icon": "/assets/icons/wawawriter.svg",
+        "name": "蛙蛙写作"
+      },
+      {
+        "slug": "turbodesk-xfyun",
+        "icon": "/assets/icons/turbodesk-xfyun.svg",
+        "name": "讯飞绘文"
+      },
+      {
+        "slug": "octarine-app",
+        "icon": "/assets/icons/octarine-app.png",
+        "name": "Octarine"
+      },
+      {
+        "slug": "ibiling",
+        "icon": "/assets/icons/ibiling.png",
+        "name": "笔灵AI"
+      },
+      {
+        "slug": "songguoai",
+        "icon": "/assets/icons/songguoai.png",
+        "name": "松果AI"
+      },
+      {
+        "slug": "laper-ai",
+        "icon": "/assets/icons/laper-ai.png",
+        "name": "Laper"
+      }
+    ],
+    "plus": 60,
+    "color": "168 85 247",
+    "icon": "pen-tool"
+  },
+  {
+    "slug": "ai-image-design",
+    "name": "AI图像/设计",
+    "tagline": "AI图像生成和平面设计工具",
+    "members": [
+      {
+        "slug": "lovart-ai",
+        "icon": "/assets/icons/lovart-ai.png",
+        "name": "Lovart"
+      },
+      {
+        "slug": "liblib",
+        "icon": "/assets/icons/liblib.png",
+        "name": "哩布哩布AI"
+      },
+      {
+        "slug": "klingai",
+        "icon": "/assets/icons/klingai.svg",
+        "name": "可灵AI"
+      },
+      {
+        "slug": "jimeng-ai",
+        "icon": "/assets/icons/jimeng-ai.png",
+        "name": "即梦AI"
+      },
+      {
+        "slug": "ihuiwa",
+        "icon": "/assets/icons/ihuiwa.jpeg",
+        "name": "绘蛙AI视频"
+      },
+      {
+        "slug": "d-design",
+        "icon": "/assets/icons/d-design.svg",
+        "name": "堆友AI"
+      }
+    ],
+    "plus": 133,
+    "color": "16 185 129",
+    "icon": "image"
+  },
+  {
+    "slug": "ai-video-animation",
+    "name": "AI视频/动画",
+    "tagline": "AI视频生成和动画生成工具",
+    "members": [
+      {
+        "slug": "seko-ai",
+        "icon": "/assets/icons/seko-ai.png",
+        "name": "Seko AI"
+      },
+      {
+        "slug": "updream",
+        "icon": "/assets/icons/updream.png",
+        "name": "updream"
+      },
+      {
+        "slug": "klingai",
+        "icon": "/assets/icons/klingai.svg",
+        "name": "可灵AI"
+      },
+      {
+        "slug": "jimeng-ai",
+        "icon": "/assets/icons/jimeng-ai.png",
+        "name": "即梦AI"
+      },
+      {
+        "slug": "huasheng",
+        "icon": "/assets/icons/huasheng.png",
+        "name": "花生AI"
+      },
+      {
+        "slug": "heygen",
+        "icon": "/assets/icons/heygen.jpeg",
+        "name": "HeyGen"
+      }
+    ],
+    "plus": 116,
+    "color": "239 68 68",
+    "icon": "clapperboard"
+  },
+  {
+    "slug": "ai-coding",
+    "name": "AI代码编程",
+    "tagline": "AI编程和代码生成工具",
+    "members": [
+      {
+        "slug": "cursor",
+        "icon": "/assets/icons/cursor.png",
+        "name": "Cursor"
+      },
+      {
+        "slug": "windsurf",
+        "icon": "/assets/icons/windsurf.svg",
+        "name": "Windsurf"
+      },
+      {
+        "slug": "doubao-ai-coding",
+        "icon": "/assets/icons/doubao-ai-coding.png",
+        "name": "豆包AI编程"
+      },
+      {
+        "slug": "bolt",
+        "icon": "/assets/icons/bolt.svg",
+        "name": "Bolt.new"
+      },
+      {
+        "slug": "lovable-dev",
+        "icon": "/assets/icons/lovable-dev.jpg",
+        "name": "Lovable"
+      },
+      {
+        "slug": "qoder",
+        "icon": "/assets/icons/qoder.png",
+        "name": "Qoder"
+      }
+    ],
+    "plus": 73,
+    "color": "120 113 108",
+    "icon": "square-terminal"
+  },
+  {
+    "slug": "ai-audio-music",
+    "name": "AI音频/音乐",
+    "tagline": "AI音频克隆和音乐生成",
+    "members": [
+      {
+        "slug": "haimian",
+        "icon": "/assets/icons/haimian.png",
+        "name": "海绵音乐"
+      },
+      {
+        "slug": "yinfeng",
+        "icon": "/assets/icons/yinfeng.jpeg",
+        "name": "音疯"
+      },
+      {
+        "slug": "hailuoai-audio",
+        "icon": "/assets/icons/hailuoai-audio.svg",
+        "name": "海螺语音"
+      },
+      {
+        "slug": "tingji-baidu",
+        "icon": "/assets/icons/tingji-baidu.png",
+        "name": "简单听记"
+      },
+      {
+        "slug": "moyin",
+        "icon": "/assets/icons/moyin.svg",
+        "name": "魔音工坊"
+      },
+      {
+        "slug": "iflyrec",
+        "icon": "/assets/icons/iflyrec.png",
+        "name": "讯飞听见"
+      }
+    ],
+    "plus": 57,
+    "color": "234 179 8",
+    "icon": "audio-waveform"
+  },
+  {
+    "slug": "ai-ppt",
+    "name": "AI PPT制作",
+    "tagline": "AI PPT生成、设计以及制作的AI工具",
+    "members": [
+      {
+        "slug": "gamma",
+        "icon": "/assets/icons/gamma.jpg",
+        "name": "Gamma"
+      },
+      {
+        "slug": "islide",
+        "icon": "/assets/icons/islide.png",
+        "name": "iSlide AIPPT"
+      },
+      {
+        "slug": "aippt",
+        "icon": "/assets/icons/aippt.png",
+        "name": "AIPPT"
+      },
+      {
+        "slug": "cappt",
+        "icon": "/assets/icons/cappt.svg",
+        "name": "咔片PPT"
+      },
+      {
+        "slug": "kimi-ppt",
+        "icon": "/assets/icons/kimi-ppt.png",
+        "name": "Kimi PPT助手"
+      },
+      {
+        "slug": "lgppt",
+        "icon": "/assets/icons/lgppt.png",
+        "name": "职得PPT"
+      }
+    ],
+    "plus": 34,
+    "color": "20 184 166",
+    "icon": "presentation"
+  },
+  {
+    "slug": "ai-search-engine",
+    "name": "AI搜索引擎",
+    "tagline": "个性化的AI搜索引擎",
+    "members": [
+      {
+        "slug": "bohrium",
+        "icon": "/assets/icons/bohrium.png",
+        "name": "玻尔AI"
+      },
+      {
+        "slug": "zhida-zhihu",
+        "icon": "/assets/icons/zhida-zhihu.png",
+        "name": "知乎直答"
+      },
+      {
+        "slug": "metaso",
+        "icon": "/assets/icons/metaso.svg",
+        "name": "秘塔AI搜索"
+      },
+      {
+        "slug": "iflow",
+        "icon": "/assets/icons/iflow.png",
+        "name": "心流"
+      },
+      {
+        "slug": "perplexity-ai",
+        "icon": "/assets/icons/perplexity-ai.jpeg",
+        "name": "Perplexity AI "
+      },
+      {
+        "slug": "aminer",
+        "icon": "/assets/icons/aminer.jpeg",
+        "name": "AMiner"
+      }
+    ],
+    "plus": 38,
+    "color": "6 182 212",
+    "icon": "binoculars"
+  },
+  {
+    "slug": "ai-data-analysis",
+    "name": "AI数据分析",
+    "tagline": "AI数据分析、表格制作、统计整理工具",
+    "members": [
+      {
+        "slug": "office-xiaohuanxiong",
+        "icon": "/assets/icons/office-xiaohuanxiong.svg",
+        "name": "办公小浣熊"
+      },
+      {
+        "slug": "aitubiao",
+        "icon": "/assets/icons/aitubiao.png",
+        "name": "爱图表"
+      },
+      {
+        "slug": "tomoro",
+        "icon": "/assets/icons/tomoro.svg",
+        "name": "Tomoro"
+      },
+      {
+        "slug": "biaoda",
+        "icon": "/assets/icons/biaoda.svg",
+        "name": "表答"
+      },
+      {
+        "slug": "airtable",
+        "icon": "/assets/icons/airtable.webp",
+        "name": "Airtable"
+      },
+      {
+        "slug": "asktable",
+        "icon": "/assets/icons/asktable.png",
+        "name": "察言观数AskTable"
+      }
+    ],
+    "plus": 18,
+    "color": "132 204 22",
+    "icon": "chart-area"
+  },
+  {
+    "slug": "ai-browser",
+    "name": "AI浏览器",
+    "tagline": "含AI功能的浏览器、Agent浏览器以及给AI用的浏览器",
+    "members": [
+      {
+        "slug": "chatgpt-atlas",
+        "icon": "/assets/icons/chatgpt-atlas.png",
+        "name": "ChatGPT Atlas"
+      },
+      {
+        "slug": "fellou",
+        "icon": "/assets/icons/fellou.svg",
+        "name": "Fellou"
+      },
+      {
+        "slug": "quark",
+        "icon": "/assets/icons/quark.svg",
+        "name": "夸克"
+      },
+      {
+        "slug": "qbot",
+        "icon": "/assets/icons/qbot.svg",
+        "name": "QBot"
+      },
+      {
+        "slug": "dia-browser",
+        "icon": "/assets/icons/dia-browser.png",
+        "name": "Dia"
+      },
+      {
+        "slug": "polar-browser",
+        "icon": "/assets/icons/polar-browser.jpg",
+        "name": "Polar"
+      }
+    ],
+    "plus": 18,
+    "color": "236 72 153",
+    "icon": "compass"
+  },
+  {
+    "slug": "ai-website-builder",
+    "name": "AI网站制作",
+    "tagline": "AI网站设计、制作、开发工具",
+    "members": [
+      {
+        "slug": "doubao-ai-coding",
+        "icon": "/assets/icons/doubao-ai-coding.png",
+        "name": "豆包AI编程"
+      },
+      {
+        "slug": "lovable-dev",
+        "icon": "/assets/icons/lovable-dev.jpg",
+        "name": "Lovable"
+      },
+      {
+        "slug": "miaoda",
+        "icon": "/assets/icons/miaoda.png",
+        "name": "秒哒"
+      },
+      {
+        "slug": "creo4u",
+        "icon": "/assets/icons/creo4u.jpg",
+        "name": "语构"
+      },
+      {
+        "slug": "weavefox",
+        "icon": "/assets/icons/weavefox.png",
+        "name": "WeaveFox"
+      },
+      {
+        "slug": "meoo",
+        "icon": "/assets/icons/meoo.png",
+        "name": "秒悟Meoo"
+      }
+    ],
+    "plus": 46,
+    "color": "132 204 22",
+    "icon": "globe"
+  },
+  {
+    "slug": "ai-mindmap-whiteboard",
+    "name": "AI脑图/白板",
+    "tagline": "AI思维导图、流程图、白板协作、头脑风暴工具",
+    "members": [
+      {
+        "slug": "processon",
+        "icon": "/assets/icons/processon.svg",
+        "name": "ProcessOn"
+      },
+      {
+        "slug": "treemind",
+        "icon": "/assets/icons/treemind.png",
+        "name": "TreeMind树图"
+      },
+      {
+        "slug": "zhixi",
+        "icon": "/assets/icons/zhixi.png",
+        "name": "知犀"
+      },
+      {
+        "slug": "mylens-ai",
+        "icon": "/assets/icons/mylens-ai.jpg",
+        "name": "MyLens AI"
+      },
+      {
+        "slug": "mindmapwizard",
+        "icon": "/assets/icons/mindmapwizard.jpg",
+        "name": "Mind Map Wizard"
+      },
+      {
+        "slug": "refly-ai",
+        "icon": "/assets/icons/refly-ai.svg",
+        "name": "Refly AI"
+      }
+    ],
+    "plus": 20,
+    "color": "14 165 233",
+    "icon": "network"
+  },
+  {
+    "slug": "ai-notetaker",
+    "name": "AI记录摘要",
+    "tagline": "AI笔记和会议记录摘要工具",
+    "members": [
+      {
+        "slug": "tingji-baidu",
+        "icon": "/assets/icons/tingji-baidu.png",
+        "name": "简单听记"
+      },
+      {
+        "slug": "granola",
+        "icon": "/assets/icons/granola.svg",
+        "name": "Granola"
+      },
+      {
+        "slug": "heptabase",
+        "icon": "/assets/icons/heptabase.png",
+        "name": "Heptabase"
+      },
+      {
+        "slug": "thetawave-ai",
+        "icon": "/assets/icons/thetawave-ai.png",
+        "name": "ThetaWave AI"
+      },
+      {
+        "slug": "tana",
+        "icon": "/assets/icons/tana.jpg",
+        "name": "Tana"
+      },
+      {
+        "slug": "chatterfly",
+        "icon": "/assets/icons/chatterfly.png",
+        "name": "Chatterfly"
+      }
+    ],
+    "plus": 53,
+    "color": "139 92 246",
+    "icon": "notebook-pen"
+  },
+  {
+    "slug": "ai-content-detection",
+    "name": "AI内容检测",
+    "tagline": "检测文章AI率以及降AI率的工具",
+    "members": [
+      {
+        "slug": "zhuque-ai-detector",
+        "icon": "/assets/icons/zhuque-ai-detector.png",
+        "name": "朱雀AI检测"
+      },
+      {
+        "slug": "gptzero",
+        "icon": "/assets/icons/gptzero.svg",
+        "name": "GPTZero"
+      },
+      {
+        "slug": "check51",
+        "icon": "/assets/icons/check51.webp",
+        "name": "句无忧"
+      },
+      {
+        "slug": "upass-ai",
+        "icon": "/assets/icons/upass-ai.png",
+        "name": "uPass"
+      },
+      {
+        "slug": "factsnap",
+        "icon": "/assets/icons/factsnap.png",
+        "name": "FactSnap"
+      },
+      {
+        "slug": "winston-ai",
+        "icon": "/assets/icons/winston-ai.png",
+        "name": "Winston AI"
+      }
+    ],
+    "plus": 11,
+    "color": "99 102 241",
+    "icon": "radar"
+  },
+  {
+    "slug": "ai-document-tools",
+    "name": "AI文档办公",
+    "tagline": "AI文档解析、内容提取、快速阅读工具",
+    "members": [
+      {
+        "slug": "loomy",
+        "icon": "/assets/icons/loomy.webp",
+        "name": "Loomy"
+      },
+      {
+        "slug": "office-xiaohuanxiong",
+        "icon": "/assets/icons/office-xiaohuanxiong.svg",
+        "name": "办公小浣熊"
+      },
+      {
+        "slug": "claude-cowork",
+        "icon": "/assets/icons/claude-cowork.png",
+        "name": "Claude Cowork"
+      },
+      {
+        "slug": "qoderwork",
+        "icon": "/assets/icons/qoderwork.png",
+        "name": "QoderWork"
+      },
+      {
+        "slug": "workbuddy",
+        "icon": "/assets/icons/workbuddy.svg",
+        "name": "WorkBuddy"
+      },
+      {
+        "slug": "doc2x",
+        "icon": "/assets/icons/doc2x.png",
+        "name": "Doc2X"
+      }
+    ],
+    "plus": 51,
+    "color": "217 70 239",
+    "icon": "scroll-text"
+  },
+  {
+    "slug": "ai-learning-tools",
+    "name": "AI学习教育",
+    "tagline": "AI学习教育工具，包括辅助学习、智能解题、教学等",
+    "members": [
+      {
+        "slug": "youlearn",
+        "icon": "/assets/icons/youlearn.png",
+        "name": "YouLearn"
+      },
+      {
+        "slug": "trancy",
+        "icon": "/assets/icons/trancy.jpg",
+        "name": "Trancy"
+      },
+      {
+        "slug": "conbrie",
+        "icon": "/assets/icons/conbrie.png",
+        "name": "Conbrie"
+      },
+      {
+        "slug": "feixianglaoshi",
+        "icon": "/assets/icons/feixianglaoshi.png",
+        "name": "飞象老师"
+      },
+      {
+        "slug": "thetawave-ai",
+        "icon": "/assets/icons/thetawave-ai.png",
+        "name": "ThetaWave AI"
+      },
+      {
+        "slug": "learnbuddy",
+        "icon": "/assets/icons/learnbuddy.png",
+        "name": "LearnBuddy"
+      }
+    ],
+    "plus": 22,
+    "color": "34 197 94",
+    "icon": "pyramid"
+  },
+  {
+    "slug": "ai-academic-tools",
+    "name": "AI学术研究",
+    "tagline": "AI学术研究辅助工具",
+    "members": [
+      {
+        "slug": "bohrium",
+        "icon": "/assets/icons/bohrium.png",
+        "name": "玻尔AI"
+      },
+      {
+        "slug": "readpaper",
+        "icon": "/assets/icons/readpaper.png",
+        "name": "ReadPaper"
+      },
+      {
+        "slug": "migo",
+        "icon": "/assets/icons/migo.svg",
+        "name": "觅果·Migo"
+      },
+      {
+        "slug": "txyz-ai",
+        "icon": "/assets/icons/txyz-ai.jpg",
+        "name": "TXYZ"
+      },
+      {
+        "slug": "aminer",
+        "icon": "/assets/icons/aminer.jpeg",
+        "name": "AMiner"
+      },
+      {
+        "slug": "xueshucha",
+        "icon": "/assets/icons/xueshucha.jpg",
+        "name": "学术猹"
+      }
+    ],
+    "plus": 25,
+    "color": "2 132 199",
+    "icon": "graduation-cap"
+  },
+  {
+    "slug": "ai-cloud-platforms",
+    "name": "AI算力平台",
+    "tagline": "AI算力平台和大模型开发服务平台",
+    "members": [
+      {
+        "slug": "voclengine-ark",
+        "icon": "/assets/icons/voclengine-ark.svg",
+        "name": "火山方舟"
+      },
+      {
+        "slug": "aliyun-bailian",
+        "icon": "/assets/icons/aliyun-bailian.png",
+        "name": "阿里云百炼"
+      },
+      {
+        "slug": "siliconflow",
+        "icon": "/assets/icons/siliconflow.jpg",
+        "name": "硅基流动"
+      },
+      {
+        "slug": "synexa-ai",
+        "icon": "/assets/icons/synexa-ai.jpg",
+        "name": "Synexa AI"
+      },
+      {
+        "slug": "novita-ai",
+        "icon": "/assets/icons/novita-ai.jpeg",
+        "name": "Novita AI"
+      },
+      {
+        "slug": "aihubmix",
+        "icon": "/assets/icons/aihubmix.png",
+        "name": "AiHubMix推理时代"
+      }
+    ],
+    "plus": 19,
+    "color": "251 113 133",
+    "icon": "cpu"
+  },
+  {
+    "slug": "ai-prompt-tools",
+    "name": "AI提示词",
+    "tagline": "AI提示词发现、生成、优化和管理的工具以及平台",
+    "members": [
+      {
+        "slug": "promptpilot",
+        "icon": "/assets/icons/promptpilot.svg",
+        "name": "PromptPilot"
+      },
+      {
+        "slug": "promptperfect",
+        "icon": "/assets/icons/promptperfect.webp",
+        "name": "PromptPerfect"
+      },
+      {
+        "slug": "promptport",
+        "icon": "/assets/icons/promptport.png",
+        "name": "PromptPort"
+      },
+      {
+        "slug": "skills-sh",
+        "icon": "/assets/icons/skills-sh.png",
+        "name": "Skills.sh"
+      },
+      {
+        "slug": "lobehub-skills-marketplace",
+        "icon": "/assets/icons/lobehub-skills-marketplace.png",
+        "name": "LobeHub Skills Marketplace"
+      },
+      {
+        "slug": "clawhub",
+        "icon": "/assets/icons/clawhub.png",
+        "name": "ClawHub"
+      }
+    ],
+    "plus": 18,
+    "color": "29 78 216",
+    "icon": "text-cursor-input"
+  },
+  {
+    "slug": "ai-marketing-sales",
+    "name": "AI营销推广",
+    "tagline": "AI营销推广平台，含广告、社媒、SEO营销等各种渠道",
+    "members": [
+      {
+        "slug": "quick-taobao",
+        "icon": "/assets/icons/quick-taobao.png",
+        "name": "生意管家"
+      },
+      {
+        "slug": "cakegrowth",
+        "icon": "/assets/icons/cakegrowth.png",
+        "name": "CakeGrowth"
+      },
+      {
+        "slug": "alphashop",
+        "icon": "/assets/icons/alphashop.png",
+        "name": "遨虾"
+      },
+      {
+        "slug": "zeely-ai",
+        "icon": "/assets/icons/zeely-ai.png",
+        "name": "Zeely"
+      },
+      {
+        "slug": "beacons-ai",
+        "icon": "/assets/icons/beacons-ai.png",
+        "name": "Beacons"
+      },
+      {
+        "slug": "jdd",
+        "icon": "/assets/icons/jdd.png",
+        "name": "京点点"
+      }
+    ],
+    "plus": 5,
+    "color": "219 39 119",
+    "icon": "megaphone"
+  },
+  {
+    "slug": "ai-translation-tools",
+    "name": "AI翻译",
+    "tagline": "AI翻译工具，含语言翻译、视频翻译、图片翻译、内容本地化等",
+    "members": [
+      {
+        "slug": "mixtranslate",
+        "icon": "/assets/icons/mixtranslate.png",
+        "name": "MixTranslate"
+      },
+      {
+        "slug": "immersive-translate",
+        "icon": "/assets/icons/immersive-translate.png",
+        "name": "沉浸式翻译"
+      },
+      {
+        "slug": "deepl-translate",
+        "icon": "/assets/icons/deepl-translate.jpg",
+        "name": "DeepL翻译"
+      },
+      {
+        "slug": "voclengine-translate",
+        "icon": "/assets/icons/voclengine-translate.png",
+        "name": "火山翻译"
+      },
+      {
+        "slug": "google-translate",
+        "icon": "/assets/icons/google-translate.png",
+        "name": "谷歌翻译"
+      },
+      {
+        "slug": "baidu-translate",
+        "icon": "/assets/icons/baidu-translate.png",
+        "name": "百度翻译"
+      }
+    ],
+    "plus": 8,
+    "color": "249 115 22",
+    "icon": "languages"
+  },
+  {
+    "slug": "ai-recruiting-tools",
+    "name": "AI求职招聘",
+    "tagline": "AI求职招聘工具，含AI招聘、简历、面试等人力资源工具",
+    "members": [
+      {
+        "slug": "zdjianli",
+        "icon": "/assets/icons/zdjianli.jpg",
+        "name": "职得AI简历"
+      },
+      {
+        "slug": "qiuzhifangzhou",
+        "icon": "/assets/icons/qiuzhifangzhou.png",
+        "name": "求职方舟"
+      },
+      {
+        "slug": "offergoose",
+        "icon": "/assets/icons/offergoose.webp",
+        "name": "多面鹅"
+      },
+      {
+        "slug": "yoojober",
+        "icon": "/assets/icons/yoojober.jpg",
+        "name": "YOO简历"
+      },
+      {
+        "slug": "baigua-mianshi",
+        "icon": "/assets/icons/baigua-mianshi.svg",
+        "name": "白瓜面试"
+      },
+      {
+        "slug": "zhimianxing",
+        "icon": "/assets/icons/zhimianxing.png",
+        "name": "智面星"
+      }
+    ],
+    "plus": 6,
+    "color": "79 70 229",
+    "icon": "briefcase-business"
+  },
+  {
+    "slug": "ai-finance-tools",
+    "name": "AI金融投资",
+    "tagline": "AI金融投资工具，含AI金融助手、智能投资、财务分析等",
+    "members": [
+      {
+        "slug": "intellectia",
+        "icon": "/assets/icons/intellectia.jpg",
+        "name": "Intellectia AI"
+      },
+      {
+        "slug": "eastmoney-miaoxiang",
+        "icon": "/assets/icons/eastmoney-miaoxiang.png",
+        "name": "东方财富妙想"
+      },
+      {
+        "slug": "iwencai",
+        "icon": "/assets/icons/iwencai.png",
+        "name": "同花顺问财"
+      },
+      {
+        "slug": "prometai",
+        "icon": "/assets/icons/prometai.png",
+        "name": "PrometAI"
+      }
+    ],
+    "plus": null,
+    "color": "251 191 36",
+    "icon": "badge-japanese-yen"
+  },
+  {
+    "slug": "ai-lawer-tools",
+    "name": "AI法律助手",
+    "tagline": "AI法律工具，包括法律助手、合同审查等",
+    "members": [
+      {
+        "slug": "baidu-ailegal",
+        "icon": "/assets/icons/baidu-ailegal.png",
+        "name": "法行宝"
+      },
+      {
+        "slug": "tongyi-farui",
+        "icon": "/assets/icons/tongyi-farui.png",
+        "name": "通义法睿"
+      },
+      {
+        "slug": "chineselaw",
+        "icon": "/assets/icons/chineselaw.jpg",
+        "name": "元典智库"
+      },
+      {
+        "slug": "delilegal",
+        "icon": "/assets/icons/delilegal.png",
+        "name": "得理法搜"
+      },
+      {
+        "slug": "fazhi-law",
+        "icon": "/assets/icons/fazhi-law.png",
+        "name": "法智"
+      },
+      {
+        "slug": "meta-law",
+        "icon": "/assets/icons/meta-law.png",
+        "name": "MetaLaw"
+      }
+    ],
+    "plus": 3,
+    "color": "250 204 21",
+    "icon": "scale"
+  },
+  {
+    "slug": "ai-customer-support",
+    "name": "AI客服系统",
+    "tagline": "AI客户服务机器人、知识库、帮助文档等智能工具",
+    "members": [
+      {
+        "slug": "zendesk",
+        "icon": "/assets/icons/zendesk.jpeg",
+        "name": "Zendesk"
+      },
+      {
+        "slug": "gorgias",
+        "icon": "/assets/icons/gorgias.png",
+        "name": "Gorgias"
+      },
+      {
+        "slug": "intercom",
+        "icon": "/assets/icons/intercom.png",
+        "name": "Intercom"
+      },
+      {
+        "slug": "tidio",
+        "icon": "/assets/icons/tidio.png",
+        "name": "Tidio"
+      },
+      {
+        "slug": "crisp",
+        "icon": "/assets/icons/crisp.png",
+        "name": "Crisp"
+      },
+      {
+        "slug": "xiaokefu",
+        "icon": "/assets/icons/xiaokefu.png",
+        "name": "芝麻小客服"
+      }
+    ],
+    "plus": 14,
+    "color": "249 115 22",
+    "icon": "headset"
+  }
+]

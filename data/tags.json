@@ -1,0 +1,92 @@
+[
+  {
+    "id": "rn404hq47y1j19w",
+    "slug": "made-by-notable-companies",
+    "name": "大厂出品",
+    "title": "大厂旗下的AI产品",
+    "intro": "由互联网大厂/知名公司推出的AI产品",
+    "seo_description": "",
+    "icon": "dachang_tagicon_1_7p1jegofyj.svg",
+    "iconUrl": "/assets/tags/made-by-notable-companies.svg"
+  },
+  {
+    "id": "3qq69jk9pn5l6l0",
+    "slug": "completely-free",
+    "name": "完全免费",
+    "title": "免费使用的AI产品",
+    "intro": "完全免费的AI产品",
+    "seo_description": "",
+    "icon": "free_tagicon_1_mdz14ll396.svg",
+    "iconUrl": "/assets/tags/completely-free.svg"
+  },
+  {
+    "id": "80i0rl0945w6z7j",
+    "slug": "editors-picks",
+    "name": "编辑推荐",
+    "title": "编辑推荐的AI产品",
+    "intro": "试界导航编辑精选推荐的AI产品",
+    "seo_description": "",
+    "icon": "editor_picks_tagicon_1_6rt1qnjncc.svg",
+    "iconUrl": "/assets/tags/editors-picks.svg"
+  },
+  {
+    "id": "v6e85l4q9q3yfih",
+    "slug": "developed-by-indie-hacker",
+    "name": "独立开发",
+    "title": "独立开发者推出的AI产品",
+    "intro": "由独立开发者设计、开发、制作的AI产品",
+    "seo_description": "",
+    "icon": "indie_maker_tagicon_1_xvcu3baxji.svg",
+    "iconUrl": "/assets/tags/developed-by-indie-hacker.svg"
+  },
+  {
+    "id": "d01eyi6tkd59kq4",
+    "slug": "innovation-startups",
+    "name": "新兴初创",
+    "title": "初创公司推出的AI产品",
+    "intro": "新兴AI初创公司推出的AI产品",
+    "seo_description": "",
+    "icon": "creative_tagicon_1_l0a7sceze6.svg",
+    "iconUrl": "/assets/tags/innovation-startups.svg"
+  },
+  {
+    "id": "dqysw7n1176gm9a",
+    "slug": "china-six-ai-stars",
+    "name": "AI六小龙",
+    "title": "AI六小龙旗下的AI产品",
+    "intro": "AI六小龙公司（智谱、月之暗面、MiniMax、阶跃星辰、零一万物、百川）推出的AI产品",
+    "seo_description": "",
+    "icon": "dragon_tagicon_rglqcefzk0.svg",
+    "iconUrl": "/assets/tags/china-six-ai-stars.svg"
+  },
+  {
+    "id": "w50185u4z6q0m2e",
+    "slug": "with-agent-mode",
+    "name": "Agent模式",
+    "title": "有Agent模式的AI产品",
+    "intro": "带有Agent模式/功能的AI工具和产品集合",
+    "seo_description": "",
+    "icon": "agent_mode_tagicon_c8wjb1xbn4.svg",
+    "iconUrl": "/assets/tags/with-agent-mode.svg"
+  },
+  {
+    "id": "1203f0ux641d7o8",
+    "slug": "ai-product-photo-tools",
+    "name": "AI商拍",
+    "title": "AI商拍工具",
+    "intro": "AI服饰模特、商品图生成、电商设计、产品摄影工具",
+    "seo_description": "",
+    "icon": "product_photo_tagicon_4m4lc3az7v.svg",
+    "iconUrl": "/assets/tags/ai-product-photo-tools.svg"
+  },
+  {
+    "id": "0ah755hk4e879u3",
+    "slug": "ai-digital-human-tools",
+    "name": "AI数字人",
+    "title": "AI数字人生成工具",
+    "intro": "AI数字人克隆、生成和制作工具",
+    "seo_description": "试界导航整理了数十个AI虚拟数字人克隆、生成和制作工具，帮助你无需真人出镜即可制作逼真的视频。",
+    "icon": "digital_human_tagicon_6xv241scqs.svg",
+    "iconUrl": "/assets/tags/ai-digital-human-tools.svg"
+  }
+]

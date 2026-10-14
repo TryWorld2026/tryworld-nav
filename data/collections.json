@@ -1,0 +1,3177 @@
+[
+ {
+  "slug": "ai-digital-human-tools",
+  "name": "AI数字人生成工具",
+  "title": "AI数字人生成工具",
+  "intro": "AI数字人克隆、生成和制作工具",
+  "description": "AI数字人克隆、生成和制作工具",
+  "icon": "/assets/tags/ai-digital-human-tools.svg",
+  "tagIcon": "/assets/tags/ai-digital-human-tools.svg",
+  "memberIcons": [
+   "/assets/icons/heygen.jpeg",
+   "/assets/icons/kaipai.png",
+   "/assets/icons/keevx.png",
+   "/assets/icons/duix.jpg",
+   "/assets/icons/shanjian.png",
+   "/assets/icons/chanjing.png"
+  ],
+  "others": [
+   "china-six-ai-stars",
+   "ai-product-photo-tools",
+   "with-agent-mode"
+  ],
+  "toolCount": 20,
+  "tools": [
+   {
+    "slug": "heygen",
+    "name": "HeyGen",
+    "summary": "无需本人出镜的AI数字人视频创作平台",
+    "description": "无需本人出镜的AI数字人视频创作平台",
+    "icon": "/assets/icons/heygen.jpeg",
+    "image": "/assets/icons/heygen.jpeg",
+    "link": "/tools/heygen",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "kaipai",
+    "name": "开拍",
+    "summary": "美图公司推出的AI口播视频制作工具",
+    "description": "美图公司推出的AI口播视频制作工具",
+    "icon": "/assets/icons/kaipai.png",
+    "image": "/assets/icons/kaipai.png",
+    "link": "/tools/kaipai",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "keevx",
+    "name": "Keevx",
+    "summary": "专注于AI数字人视频创作的智能化工具",
+    "description": "专注于AI数字人视频创作的智能化工具",
+    "icon": "/assets/icons/keevx.png",
+    "image": "/assets/icons/keevx.png",
+    "link": "/tools/keevx",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "duix",
+    "name": "Duix",
+    "summary": "硅基智能推出的AI数字人交互平台",
+    "description": "硅基智能推出的AI数字人交互平台",
+    "icon": "/assets/icons/duix.jpg",
+    "image": "/assets/icons/duix.jpg",
+    "link": "/tools/duix",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "shanjian",
+    "name": "闪剪",
+    "summary": "AI数字人视频一键创作平台",
+    "description": "AI数字人视频一键创作平台",
+    "icon": "/assets/icons/shanjian.png",
+    "image": "/assets/icons/shanjian.png",
+    "link": "/tools/shanjian",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "chanjing",
+    "name": "蝉镜",
+    "summary": "专注于数字人视频创作的AI平台",
+    "description": "专注于数字人视频创作的AI平台",
+    "icon": "/assets/icons/chanjing.png",
+    "image": "/assets/icons/chanjing.png",
+    "link": "/tools/chanjing",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "laihua",
+    "name": "来画",
+    "summary": "动画和数字人智能生成平台",
+    "description": "动画和数字人智能生成平台",
+    "icon": "/assets/icons/laihua.png",
+    "image": "/assets/icons/laihua.png",
+    "link": "/tools/laihua",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "synthesia",
+    "name": "Synthesia",
+    "summary": "支持140多种语言的AI数字人视频生成平台",
+    "description": "支持140多种语言的AI数字人视频生成平台",
+    "icon": "/assets/icons/synthesia.svg",
+    "image": "/assets/icons/synthesia.svg",
+    "link": "/tools/synthesia",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "colossyan",
+    "name": "Colossyan",
+    "summary": "内置150多种数字人的AI视频生成平台",
+    "description": "内置150多种数字人的AI视频生成平台",
+    "icon": "/assets/icons/colossyan.svg",
+    "image": "/assets/icons/colossyan.svg",
+    "link": "/tools/colossyan",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "wondershare-virbo",
+    "name": "万兴播爆",
+    "summary": "万兴科技推出的AI短视频营销与个人IP打造平台",
+    "description": "万兴科技推出的AI短视频营销与个人IP打造平台",
+    "icon": "/assets/icons/wondershare-virbo.jpeg",
+    "image": "/assets/icons/wondershare-virbo.jpeg",
+    "link": "/tools/wondershare-virbo",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "youyan3d",
+    "name": "有言",
+    "summary": "一站式AIGC视频创作和3D数字人生成平台",
+    "description": "一站式AIGC视频创作和3D数字人生成平台",
+    "icon": "/assets/icons/youyan3d.svg",
+    "image": "/assets/icons/youyan3d.svg",
+    "link": "/tools/youyan3d",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "d-id",
+    "name": "D-ID",
+    "summary": "AI驱动的数字人视频生成平台",
+    "description": "AI驱动的数字人视频生成平台",
+    "icon": "/assets/icons/d-id.svg",
+    "image": "/assets/icons/d-id.svg",
+    "link": "/tools/d-id",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "qingful",
+    "name": "青否数字人",
+    "summary": "AI驱动的数字人直播系统",
+    "description": "AI驱动的数字人直播系统",
+    "icon": "/assets/icons/qingful.png",
+    "image": "/assets/icons/qingful.png",
+    "link": "/tools/qingful",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "t9-digital-human",
+    "name": "T9数字人",
+    "summary": "AI数字分身与克隆工具",
+    "description": "AI数字分身与克隆工具",
+    "icon": "/assets/icons/t9-digital-human.png",
+    "image": "/assets/icons/t9-digital-human.png",
+    "link": "/tools/t9-digital-human",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "16ai-chat",
+    "name": "石榴数字人",
+    "summary": "AI数字人视频创作平台",
+    "description": "AI数字人视频创作平台",
+    "icon": "/assets/icons/16ai-chat.png",
+    "image": "/assets/icons/16ai-chat.png",
+    "link": "/tools/16ai-chat",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "huibo-baidu",
+    "name": "慧播星",
+    "summary": "百度推出的AI电商数字人直播解决方案",
+    "description": "百度推出的AI电商数字人直播解决方案",
+    "icon": "/assets/icons/huibo-baidu.png",
+    "image": "/assets/icons/huibo-baidu.png",
+    "link": "/tools/huibo-baidu",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "dreamavatar",
+    "name": "DreamAvatar",
+    "summary": "美图公司推出的AI数字人生成工具",
+    "description": "美图公司推出的AI数字人生成工具",
+    "icon": "/assets/icons/dreamavatar.svg",
+    "image": "/assets/icons/dreamavatar.svg",
+    "link": "/tools/dreamavatar",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "baidu-xiling",
+    "name": "曦灵数字人",
+    "summary": "百度推出的AI数字人生产与应用平台",
+    "description": "百度推出的AI数字人生产与应用平台",
+    "icon": "/assets/icons/baidu-xiling.png",
+    "image": "/assets/icons/baidu-xiling.png",
+    "link": "/tools/baidu-xiling",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "flyworks",
+    "name": "飞影数字人",
+    "summary": "基于AI的数字人创作与驱动平台",
+    "description": "基于AI的数字人创作与驱动平台",
+    "icon": "/assets/icons/flyworks.png",
+    "image": "/assets/icons/flyworks.png",
+    "link": "/tools/flyworks",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "senseavatar",
+    "name": "商汤如影",
+    "summary": "商汤科技推出的AI数字人视频生成平台",
+    "description": "商汤科技推出的AI数字人视频生成平台",
+    "icon": "/assets/icons/senseavatar.png",
+    "image": "/assets/icons/senseavatar.png",
+    "link": "/tools/senseavatar",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "ai-product-photo-tools",
+  "name": "AI商拍工具",
+  "title": "AI商拍工具",
+  "intro": "AI服饰模特、商品图生成、电商设计、产品摄影工具",
+  "description": "AI服饰模特、商品图生成、电商设计、产品摄影工具",
+  "icon": "/assets/tags/ai-product-photo-tools.svg",
+  "tagIcon": "/assets/tags/ai-product-photo-tools.svg",
+  "memberIcons": [
+   "/assets/icons/ihuiwa.jpeg",
+   "/assets/icons/xfun-design.svg",
+   "/assets/icons/weshop.png",
+   "/assets/icons/pic-copilot.svg",
+   "/assets/icons/yiketu.svg",
+   "/assets/icons/aiqianmian.png"
+  ],
+  "others": [
+   "china-six-ai-stars",
+   "ai-digital-human-tools",
+   "with-agent-mode"
+  ],
+  "toolCount": 17,
+  "tools": [
+   {
+    "slug": "ihuiwa",
+    "name": "绘蛙AI视频",
+    "summary": "阿里推出的AI图生视频工具",
+    "description": "阿里推出的AI图生视频工具",
+    "icon": "/assets/icons/ihuiwa.jpeg",
+    "image": "/assets/icons/ihuiwa.jpeg",
+    "link": "/tools/ihuiwa",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "xfun-design",
+    "name": "XFUN",
+    "summary": "AI驱动的智能商品包装设计平台",
+    "description": "AI驱动的智能商品包装设计平台",
+    "icon": "/assets/icons/xfun-design.svg",
+    "image": "/assets/icons/xfun-design.svg",
+    "link": "/tools/xfun-design",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "weshop",
+    "name": "WeShop唯象",
+    "summary": "蘑菇街推出的AI创意工作室与电商图像编辑工具",
+    "description": "蘑菇街推出的AI创意工作室与电商图像编辑工具",
+    "icon": "/assets/icons/weshop.png",
+    "image": "/assets/icons/weshop.png",
+    "link": "/tools/weshop",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "pic-copilot",
+    "name": "Pic Copilot",
+    "summary": "阿里为电商商家设计的AI电商营销图设计平台",
+    "description": "阿里为电商商家设计的AI电商营销图设计平台",
+    "icon": "/assets/icons/pic-copilot.svg",
+    "image": "/assets/icons/pic-copilot.svg",
+    "link": "/tools/pic-copilot",
+    "tags": [
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "yiketu",
+    "name": "易可图",
+    "summary": "专为电商领域设计的在线图片编辑及海报设计平台",
+    "description": "专为电商领域设计的在线图片编辑及海报设计平台",
+    "icon": "/assets/icons/yiketu.svg",
+    "image": "/assets/icons/yiketu.svg",
+    "link": "/tools/yiketu",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "aiqianmian",
+    "name": "千面AI模特",
+    "summary": "专为电商服装行业打造的AI图片生成工具",
+    "description": "专为电商服装行业打造的AI图片生成工具",
+    "icon": "/assets/icons/aiqianmian.png",
+    "image": "/assets/icons/aiqianmian.png",
+    "link": "/tools/aiqianmian",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "photonaiclub",
+    "name": "光子AI",
+    "summary": "哈啰推出的AI服饰模特商拍工具",
+    "description": "哈啰推出的AI服饰模特商拍工具",
+    "icon": "/assets/icons/photonaiclub.png",
+    "image": "/assets/icons/photonaiclub.png",
+    "link": "/tools/photonaiclub",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "claid-ai",
+    "name": "Claid.ai",
+    "summary": "AI电子商务和产品摄影图像处理工具",
+    "description": "AI电子商务和产品摄影图像处理工具",
+    "icon": "/assets/icons/claid-ai.jpg",
+    "image": "/assets/icons/claid-ai.jpg",
+    "link": "/tools/claid-ai",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "flair-ai",
+    "name": "Flair.ai",
+    "summary": "专业级产品摄影的AI商拍工具",
+    "description": "专业级产品摄影的AI商拍工具",
+    "icon": "/assets/icons/flair-ai.jpg",
+    "image": "/assets/icons/flair-ai.jpg",
+    "link": "/tools/flair-ai",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "chaohui-ai",
+    "name": "超会AI",
+    "summary": "为电商卖家打造的AI运营工具",
+    "description": "为电商卖家打造的AI运营工具",
+    "icon": "/assets/icons/chaohui-ai.jpg",
+    "image": "/assets/icons/chaohui-ai.jpg",
+    "link": "/tools/chaohui-ai",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "pebblely",
+    "name": "Pebblely",
+    "summary": "商品图像AI生成平台",
+    "description": "商品图像AI生成平台",
+    "icon": "/assets/icons/pebblely.jpg",
+    "image": "/assets/icons/pebblely.jpg",
+    "link": "/tools/pebblely",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "clicclic-ai",
+    "name": "Clicclic AI",
+    "summary": "商品图片背景编辑的AI工具",
+    "description": "商品图片背景编辑的AI工具",
+    "icon": "/assets/icons/clicclic-ai.jpg",
+    "image": "/assets/icons/clicclic-ai.jpg",
+    "link": "/tools/clicclic-ai",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "moxiaoxian",
+    "name": "摹小仙",
+    "summary": "为电商和营销领域打造的AI模特商拍工具",
+    "description": "为电商和营销领域打造的AI模特商拍工具",
+    "icon": "/assets/icons/moxiaoxian.jpg",
+    "image": "/assets/icons/moxiaoxian.jpg",
+    "link": "/tools/moxiaoxian",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "k-fashionshop",
+    "name": "潮际好麦",
+    "summary": "AI驱动的电商模特图生成平台",
+    "description": "AI驱动的电商模特图生成平台",
+    "icon": "/assets/icons/k-fashionshop.svg",
+    "image": "/assets/icons/k-fashionshop.svg",
+    "link": "/tools/k-fashionshop",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "poify",
+    "name": "Poify",
+    "summary": "快手推出的AI电商创意作图工具",
+    "description": "快手推出的AI电商创意作图工具",
+    "icon": "/assets/icons/poify.png",
+    "image": "/assets/icons/poify.png",
+    "link": "/tools/poify",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "photostudio-ai",
+    "name": "PhotoStudio AI",
+    "summary": "虹软科技推出的AI智能商拍摄影工具",
+    "description": "虹软科技推出的AI智能商拍摄影工具",
+    "icon": "/assets/icons/photostudio-ai.png",
+    "image": "/assets/icons/photostudio-ai.png",
+    "link": "/tools/photostudio-ai",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "photomagic",
+    "name": "PhotoMagic",
+    "summary": "专为电商行业打造的AI商拍工具",
+    "description": "专为电商行业打造的AI商拍工具",
+    "icon": "/assets/icons/photomagic.png",
+    "image": "/assets/icons/photomagic.png",
+    "link": "/tools/photomagic",
+    "tags": [
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "china-six-ai-stars",
+  "name": "AI六小龙旗下的AI产品",
+  "title": "AI六小龙旗下的AI产品",
+  "intro": "AI六小龙公司（智谱、月之暗面、MiniMax、阶跃星辰、零一万物、百川）推出的AI产品",
+  "description": "AI六小龙公司（智谱、月之暗面、MiniMax、阶跃星辰、零一万物、百川）推出的AI产品",
+  "icon": "/assets/tags/china-six-ai-stars.svg",
+  "tagIcon": "/assets/tags/china-six-ai-stars.svg",
+  "memberIcons": [
+   "/assets/icons/hailuoai-audio.svg",
+   "/assets/icons/autoglm.svg",
+   "/assets/icons/kimi-ppt.png",
+   "/assets/icons/aminer.jpeg",
+   "/assets/icons/kimi-moonshot.png",
+   "/assets/icons/hailuoai-video.png"
+  ],
+  "others": [
+   "ai-product-photo-tools",
+   "ai-digital-human-tools",
+   "with-agent-mode"
+  ],
+  "toolCount": 14,
+  "tools": [
+   {
+    "slug": "hailuoai-audio",
+    "name": "海螺语音",
+    "summary": "MiniMax推出的AI音频合成产品。",
+    "description": "MiniMax推出的AI音频合成产品。",
+    "icon": "/assets/icons/hailuoai-audio.svg",
+    "image": "/assets/icons/hailuoai-audio.svg",
+    "link": "/tools/hailuoai-audio",
+    "tags": [
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "autoglm",
+    "name": "AutoGLM沉思",
+    "summary": "智谱推出的自主智能体",
+    "description": "智谱推出的自主智能体",
+    "icon": "/assets/icons/autoglm.svg",
+    "image": "/assets/icons/autoglm.svg",
+    "link": "/tools/autoglm",
+    "tags": [
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "kimi-ppt",
+    "name": "Kimi PPT助手",
+    "summary": "月之暗面推出的AI PPT生成助手",
+    "description": "月之暗面推出的AI PPT生成助手",
+    "icon": "/assets/icons/kimi-ppt.png",
+    "image": "/assets/icons/kimi-ppt.png",
+    "link": "/tools/kimi-ppt",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "aminer",
+    "name": "AMiner",
+    "summary": "清华大学唐杰教授团队开发的学术搜索平台",
+    "description": "清华大学唐杰教授团队开发的学术搜索平台",
+    "icon": "/assets/icons/aminer.jpeg",
+    "image": "/assets/icons/aminer.jpeg",
+    "link": "/tools/aminer",
+    "tags": [
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "kimi-moonshot",
+    "name": "Kimi",
+    "summary": "由月之暗面公司推出的强大AI智能助手",
+    "description": "由月之暗面公司推出的强大AI智能助手",
+    "icon": "/assets/icons/kimi-moonshot.png",
+    "image": "/assets/icons/kimi-moonshot.png",
+    "link": "/tools/kimi-moonshot",
+    "tags": [
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "hailuoai-video",
+    "name": "海螺视频",
+    "summary": "MiniMax推出的AI视频生成工具",
+    "description": "MiniMax推出的AI视频生成工具",
+    "icon": "/assets/icons/hailuoai-video.png",
+    "image": "/assets/icons/hailuoai-video.png",
+    "link": "/tools/hailuoai-video",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "chatglm",
+    "name": "智谱清言",
+    "summary": "智谱AI团队开发的免费人工智能助手",
+    "description": "智谱AI团队开发的免费人工智能助手",
+    "icon": "/assets/icons/chatglm.png",
+    "image": "/assets/icons/chatglm.png",
+    "link": "/tools/chatglm",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "z-ai",
+    "name": "Z.ai",
+    "summary": "智谱推出的全新AI模型体验平台",
+    "description": "智谱推出的全新AI模型体验平台",
+    "icon": "/assets/icons/z-ai.svg",
+    "image": "/assets/icons/z-ai.svg",
+    "link": "/tools/z-ai",
+    "tags": [
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "chatglm-ppt",
+    "name": "清言PPT",
+    "summary": "智谱清言联合AiPPT推出的PPT生成智能体",
+    "description": "智谱清言联合AiPPT推出的PPT生成智能体",
+    "icon": "/assets/icons/chatglm-ppt.jpeg",
+    "image": "/assets/icons/chatglm-ppt.jpeg",
+    "link": "/tools/chatglm-ppt",
+    "tags": [
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "minimax-chat",
+    "name": "MiniMax",
+    "summary": "上海稀宇科技开发的多模态人工智能助手",
+    "description": "上海稀宇科技开发的多模态人工智能助手",
+    "icon": "/assets/icons/minimax-chat.svg",
+    "image": "/assets/icons/minimax-chat.svg",
+    "link": "/tools/minimax-chat",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "maopaoya",
+    "name": "冒泡鸭",
+    "summary": "阶跃星辰推出的AI聊天机器人和智能体平台",
+    "description": "阶跃星辰推出的AI聊天机器人和智能体平台",
+    "icon": "/assets/icons/maopaoya.png",
+    "image": "/assets/icons/maopaoya.png",
+    "link": "/tools/maopaoya",
+    "tags": [
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "codegeex",
+    "name": "CodeGeex",
+    "summary": "智谱AI推出的免费AI编程助手",
+    "description": "智谱AI推出的免费AI编程助手",
+    "icon": "/assets/icons/codegeex.svg",
+    "image": "/assets/icons/codegeex.svg",
+    "link": "/tools/codegeex",
+    "tags": [
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "xingyeai",
+    "name": "星野",
+    "summary": "MiniMax推出的国内版AI虚拟角色对话App",
+    "description": "MiniMax推出的国内版AI虚拟角色对话App",
+    "icon": "/assets/icons/xingyeai.png",
+    "image": "/assets/icons/xingyeai.png",
+    "link": "/tools/xingyeai",
+    "tags": [
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "talkie-ai",
+    "name": "Talkie",
+    "summary": "MiniMax推出的AI虚拟陪伴聊天应用",
+    "description": "MiniMax推出的AI虚拟陪伴聊天应用",
+    "icon": "/assets/icons/talkie-ai.png",
+    "image": "/assets/icons/talkie-ai.png",
+    "link": "/tools/talkie-ai",
+    "tags": [
+     {
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "completely-free",
+  "name": "免费使用的AI产品",
+  "title": "免费使用的AI产品",
+  "intro": "完全免费的AI产品",
+  "description": "完全免费的AI产品",
+  "icon": "/assets/tags/completely-free.svg",
+  "tagIcon": "/assets/tags/completely-free.svg",
+  "memberIcons": [
+   "/assets/icons/coze-space.svg",
+   "/assets/icons/doubao.png",
+   "/assets/icons/metaso.svg",
+   "/assets/icons/kimi-ppt.png",
+   "/assets/icons/doubao-ai-coding.png",
+   "/assets/icons/tencent-yuanbao.png"
+  ],
+  "others": [
+   "china-six-ai-stars",
+   "ai-product-photo-tools",
+   "ai-digital-human-tools"
+  ],
+  "toolCount": 20,
+  "tools": [
+   {
+    "slug": "coze-space",
+    "name": "扣子空间",
+    "summary": "字节跳动推出的AI智能体开发与协作平台",
+    "description": "字节跳动推出的AI智能体开发与协作平台",
+    "icon": "/assets/icons/coze-space.svg",
+    "image": "/assets/icons/coze-space.svg",
+    "link": "/tools/coze-space",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "doubao",
+    "name": "豆包",
+    "summary": "字节跳动推出的免费AI聊天机器人",
+    "description": "字节跳动推出的免费AI聊天机器人",
+    "icon": "/assets/icons/doubao.png",
+    "image": "/assets/icons/doubao.png",
+    "link": "/tools/doubao",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "metaso",
+    "name": "秘塔AI搜索",
+    "summary": "秘塔科技推出的基于人工智能的搜索引擎",
+    "description": "秘塔科技推出的基于人工智能的搜索引擎",
+    "icon": "/assets/icons/metaso.svg",
+    "image": "/assets/icons/metaso.svg",
+    "link": "/tools/metaso",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "kimi-ppt",
+    "name": "Kimi PPT助手",
+    "summary": "月之暗面推出的AI PPT生成助手",
+    "description": "月之暗面推出的AI PPT生成助手",
+    "icon": "/assets/icons/kimi-ppt.png",
+    "image": "/assets/icons/kimi-ppt.png",
+    "link": "/tools/kimi-ppt",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "doubao-ai-coding",
+    "name": "豆包AI编程",
+    "summary": "字节跳动推出的对话式AI编程工具",
+    "description": "字节跳动推出的对话式AI编程工具",
+    "icon": "/assets/icons/doubao-ai-coding.png",
+    "image": "/assets/icons/doubao-ai-coding.png",
+    "link": "/tools/doubao-ai-coding",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "tencent-yuanbao",
+    "name": "腾讯元宝",
+    "summary": "腾讯旗下推出的AI智能助手",
+    "description": "腾讯旗下推出的AI智能助手",
+    "icon": "/assets/icons/tencent-yuanbao.png",
+    "image": "/assets/icons/tencent-yuanbao.png",
+    "link": "/tools/tencent-yuanbao",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "kimi-moonshot",
+    "name": "Kimi",
+    "summary": "由月之暗面公司推出的强大AI智能助手",
+    "description": "由月之暗面公司推出的强大AI智能助手",
+    "icon": "/assets/icons/kimi-moonshot.png",
+    "image": "/assets/icons/kimi-moonshot.png",
+    "link": "/tools/kimi-moonshot",
+    "tags": [
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "trae-ai",
+    "name": "Trae",
+    "summary": "字节跳动推出的AI编程IDE",
+    "description": "字节跳动推出的AI编程IDE",
+    "icon": "/assets/icons/trae-ai.png",
+    "image": "/assets/icons/trae-ai.png",
+    "link": "/tools/trae-ai",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "Agent模式",
+      "slug": "with-agent-mode",
+      "icon": "/assets/tags/with-agent-mode.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "quark",
+    "name": "夸克",
+    "summary": "阿里推出的集 AI 搜索、网盘、文档创作于一体的智能应用",
+    "description": "阿里推出的集 AI 搜索、网盘、文档创作于一体的智能应用",
+    "icon": "/assets/icons/quark.svg",
+    "image": "/assets/icons/quark.svg",
+    "link": "/tools/quark",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "qbot",
+    "name": "QBot",
+    "summary": "腾讯基于QQ浏览器升级的AI浏览器",
+    "description": "腾讯基于QQ浏览器升级的AI浏览器",
+    "icon": "/assets/icons/qbot.svg",
+    "image": "/assets/icons/qbot.svg",
+    "link": "/tools/qbot",
+    "tags": [
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "dia-browser",
+    "name": "Dia",
+    "summary": "Arc团队推出的AI浏览器",
+    "description": "Arc团队推出的AI浏览器",
+    "icon": "/assets/icons/dia-browser.png",
+    "image": "/assets/icons/dia-browser.png",
+    "link": "/tools/dia-browser",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "nano-banana",
+    "name": "Nano Banana",
+    "summary": "Google最新推出的AI图像生成与编辑模型",
+    "description": "Google最新推出的AI图像生成与编辑模型",
+    "icon": "/assets/icons/nano-banana.png",
+    "image": "/assets/icons/nano-banana.png",
+    "link": "/tools/nano-banana",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "longcat",
+    "name": "LongCat",
+    "summary": "美团推出的AI大模型和聊天助手",
+    "description": "美团推出的AI大模型和聊天助手",
+    "icon": "/assets/icons/longcat.png",
+    "image": "/assets/icons/longcat.png",
+    "link": "/tools/longcat",
+    "tags": [
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "huixiang-baidu",
+    "name": "绘想",
+    "summary": "百度推出的AI视频生成平台",
+    "description": "百度推出的AI视频生成平台",
+    "icon": "/assets/icons/huixiang-baidu.png",
+    "image": "/assets/icons/huixiang-baidu.png",
+    "link": "/tools/huixiang-baidu",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "tbox",
+    "name": "百宝箱",
+    "summary": "蚂蚁集团推出的一站式AI原生应用开发平台",
+    "description": "蚂蚁集团推出的一站式AI原生应用开发平台",
+    "icon": "/assets/icons/tbox.png",
+    "image": "/assets/icons/tbox.png",
+    "link": "/tools/tbox",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "tencent-yuanqi",
+    "name": "腾讯元器",
+    "summary": "腾讯推出的一站式AI智能体创作与分发平台",
+    "description": "腾讯推出的一站式AI智能体创作与分发平台",
+    "icon": "/assets/icons/tencent-yuanqi.jpg",
+    "image": "/assets/icons/tencent-yuanqi.jpg",
+    "link": "/tools/tencent-yuanqi",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "onlook",
+    "name": "Onlook",
+    "summary": "面向设计师的开源可视化AI代码编辑器",
+    "description": "面向设计师的开源可视化AI代码编辑器",
+    "icon": "/assets/icons/onlook.jpg",
+    "image": "/assets/icons/onlook.jpg",
+    "link": "/tools/onlook",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "tencent-hunyuan-3d",
+    "name": "腾讯混元3D",
+    "summary": "腾讯推出的AI驱动的3D内容创作平台",
+    "description": "腾讯推出的AI驱动的3D内容创作平台",
+    "icon": "/assets/icons/tencent-hunyuan-3d.png",
+    "image": "/assets/icons/tencent-hunyuan-3d.png",
+    "link": "/tools/tencent-hunyuan-3d",
+    "tags": [
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "jules",
+    "name": "Jules",
+    "summary": "谷歌推出的AI编程智能体",
+    "description": "谷歌推出的AI编程智能体",
+    "icon": "/assets/icons/jules.svg",
+    "image": "/assets/icons/jules.svg",
+    "link": "/tools/jules",
+    "tags": [
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "nocode",
+    "name": "NoCode",
+    "summary": "美团推出的AI零代码应用生成平台",
+    "description": "美团推出的AI零代码应用生成平台",
+    "icon": "/assets/icons/nocode.svg",
+    "image": "/assets/icons/nocode.svg",
+    "link": "/tools/nocode",
+    "tags": [
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "developed-by-indie-hacker",
+  "name": "独立开发者推出的AI产品",
+  "title": "独立开发者推出的AI产品",
+  "intro": "由独立开发者设计、开发、制作的AI产品",
+  "description": "由独立开发者设计、开发、制作的AI产品",
+  "icon": "/assets/tags/developed-by-indie-hacker.svg",
+  "tagIcon": "/assets/tags/developed-by-indie-hacker.svg",
+  "memberIcons": [
+   "/assets/icons/5ire-app.png",
+   "/assets/icons/bigjpg.jpg",
+   "/assets/icons/autohanding.png",
+   "/assets/icons/dinox.png",
+   "/assets/icons/readpo.png",
+   "/assets/icons/mindshow-fun.png"
+  ],
+  "others": [
+   "china-six-ai-stars",
+   "ai-product-photo-tools",
+   "ai-digital-human-tools"
+  ],
+  "toolCount": 13,
+  "tools": [
+   {
+    "slug": "5ire-app",
+    "name": "5ire",
+    "summary": "免费开源的AI助手和MCP客户端",
+    "description": "免费开源的AI助手和MCP客户端",
+    "icon": "/assets/icons/5ire-app.png",
+    "image": "/assets/icons/5ire-app.png",
+    "link": "/tools/5ire-app",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "bigjpg",
+    "name": "Bigjpg",
+    "summary": "基于AI技术的图片无损放大工具",
+    "description": "基于AI技术的图片无损放大工具",
+    "icon": "/assets/icons/bigjpg.jpg",
+    "image": "/assets/icons/bigjpg.jpg",
+    "link": "/tools/bigjpg",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "autohanding",
+    "name": "凹凸工坊",
+    "summary": "AI在线手写模拟工具",
+    "description": "AI在线手写模拟工具",
+    "icon": "/assets/icons/autohanding.png",
+    "image": "/assets/icons/autohanding.png",
+    "link": "/tools/autohanding",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "dinox",
+    "name": "Dinox",
+    "summary": "AI原生的笔记平台，结合卡片盒笔记法与PARA理念",
+    "description": "AI原生的笔记平台，结合卡片盒笔记法与PARA理念",
+    "icon": "/assets/icons/dinox.png",
+    "image": "/assets/icons/dinox.png",
+    "link": "/tools/dinox",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "readpo",
+    "name": "ReadPo",
+    "summary": "集成内容聚合、AI分析和写作的读写助手",
+    "description": "集成内容聚合、AI分析和写作的读写助手",
+    "icon": "/assets/icons/readpo.png",
+    "image": "/assets/icons/readpo.png",
+    "link": "/tools/readpo",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "mindshow-fun",
+    "name": "MindShow",
+    "summary": "国内开发的导入内容自动生成演示工具",
+    "description": "国内开发的导入内容自动生成演示工具",
+    "icon": "/assets/icons/mindshow-fun.png",
+    "image": "/assets/icons/mindshow-fun.png",
+    "link": "/tools/mindshow-fun",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "xqai",
+    "name": "小秋AI",
+    "summary": "多功能的多模型聚合AI对话平台",
+    "description": "多功能的多模型聚合AI对话平台",
+    "icon": "/assets/icons/xqai.png",
+    "image": "/assets/icons/xqai.png",
+    "link": "/tools/xqai",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "chat-memo",
+    "name": "Chat Memo",
+    "summary": "聚合多模型的AI对话管理工具",
+    "description": "聚合多模型的AI对话管理工具",
+    "icon": "/assets/icons/chat-memo.png",
+    "image": "/assets/icons/chat-memo.png",
+    "link": "/tools/chat-memo",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "jpghd",
+    "name": "jpgHD",
+    "summary": "AI老照片修复与增强工具",
+    "description": "AI老照片修复与增强工具",
+    "icon": "/assets/icons/jpghd.png",
+    "image": "/assets/icons/jpghd.png",
+    "link": "/tools/jpghd",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "deepsider",
+    "name": "DeepSider",
+    "summary": "集成于浏览器侧边栏AI工具助手",
+    "description": "集成于浏览器侧边栏AI工具助手",
+    "icon": "/assets/icons/deepsider.png",
+    "image": "/assets/icons/deepsider.png",
+    "link": "/tools/deepsider",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "chatboxai",
+    "name": "Chatbox AI",
+    "summary": "跨平台的AI智能助手客户端",
+    "description": "跨平台的AI智能助手客户端",
+    "icon": "/assets/icons/chatboxai.png",
+    "image": "/assets/icons/chatboxai.png",
+    "link": "/tools/chatboxai",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "chatwise",
+    "name": "ChatWise",
+    "summary": "本地运行的多模型AI聊天客户端",
+    "description": "本地运行的多模型AI聊天客户端",
+    "icon": "/assets/icons/chatwise.png",
+    "image": "/assets/icons/chatwise.png",
+    "link": "/tools/chatwise",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "jpgrm",
+    "name": "jpgRM",
+    "summary": "AI智能识别擦除图片中不想要的元素",
+    "description": "AI智能识别擦除图片中不想要的元素",
+    "icon": "/assets/icons/jpgrm.png",
+    "image": "/assets/icons/jpgrm.png",
+    "link": "/tools/jpgrm",
+    "tags": [
+     {
+      "name": "独立开发",
+      "slug": "developed-by-indie-hacker",
+      "icon": "/assets/tags/developed-by-indie-hacker.svg",
+      "color": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "editors-picks",
+  "name": "编辑推荐的AI产品",
+  "title": "编辑推荐的AI产品",
+  "intro": "试界导航编辑精选推荐的AI产品",
+  "description": "试界导航编辑精选推荐的AI产品",
+  "icon": "/assets/tags/editors-picks.svg",
+  "tagIcon": "/assets/tags/editors-picks.svg",
+  "memberIcons": [
+   "/assets/icons/coze-space.svg",
+   "/assets/icons/liblib.png",
+   "/assets/icons/seko-ai.png",
+   "/assets/icons/jimeng-ai.png",
+   "/assets/icons/doubao.png",
+   "/assets/icons/ihuiwa.jpeg"
+  ],
+  "others": [
+   "china-six-ai-stars",
+   "ai-product-photo-tools",
+   "ai-digital-human-tools"
+  ],
+  "toolCount": 20,
+  "tools": [
+   {
+    "slug": "coze-space",
+    "name": "扣子空间",
+    "summary": "字节跳动推出的AI智能体开发与协作平台",
+    "description": "字节跳动推出的AI智能体开发与协作平台",
+    "icon": "/assets/icons/coze-space.svg",
+    "image": "/assets/icons/coze-space.svg",
+    "link": "/tools/coze-space",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "liblib",
+    "name": "哩布哩布AI",
+    "summary": "国内领先的AI图像创作平台",
+    "description": "国内领先的AI图像创作平台",
+    "icon": "/assets/icons/liblib.png",
+    "image": "/assets/icons/liblib.png",
+    "link": "/tools/liblib",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "seko-ai",
+    "name": "Seko AI",
+    "summary": "商汤科技推出的AI短片创作智能体",
+    "description": "商汤科技推出的AI短片创作智能体",
+    "icon": "/assets/icons/seko-ai.png",
+    "image": "/assets/icons/seko-ai.png",
+    "link": "/tools/seko-ai",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "jimeng-ai",
+    "name": "即梦AI",
+    "summary": "抖音推出的一站式AI创作平台，支持文字生成图片、视频",
+    "description": "抖音推出的一站式AI创作平台，支持文字生成图片、视频",
+    "icon": "/assets/icons/jimeng-ai.png",
+    "image": "/assets/icons/jimeng-ai.png",
+    "link": "/tools/jimeng-ai",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "doubao",
+    "name": "豆包",
+    "summary": "字节跳动推出的免费AI聊天机器人",
+    "description": "字节跳动推出的免费AI聊天机器人",
+    "icon": "/assets/icons/doubao.png",
+    "image": "/assets/icons/doubao.png",
+    "link": "/tools/doubao",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "ihuiwa",
+    "name": "绘蛙AI视频",
+    "summary": "阿里推出的AI图生视频工具",
+    "description": "阿里推出的AI图生视频工具",
+    "icon": "/assets/icons/ihuiwa.jpeg",
+    "image": "/assets/icons/ihuiwa.jpeg",
+    "link": "/tools/ihuiwa",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "AI商拍",
+      "slug": "ai-product-photo-tools",
+      "icon": "/assets/tags/ai-product-photo-tools.svg",
+      "color": "163 230 53"
+     }
+    ]
+   },
+   {
+    "slug": "flowith",
+    "name": "Flowith",
+    "summary": "画布式AI聊天助手和智能体",
+    "description": "画布式AI聊天助手和智能体",
+    "icon": "/assets/icons/flowith.svg",
+    "image": "/assets/icons/flowith.svg",
+    "link": "/tools/flowith",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     },
+     {
+      "name": "Agent模式",
+      "slug": "with-agent-mode",
+      "icon": "/assets/tags/with-agent-mode.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "metaso",
+    "name": "秘塔AI搜索",
+    "summary": "秘塔科技推出的基于人工智能的搜索引擎",
+    "description": "秘塔科技推出的基于人工智能的搜索引擎",
+    "icon": "/assets/icons/metaso.svg",
+    "image": "/assets/icons/metaso.svg",
+    "link": "/tools/metaso",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "kimi-ppt",
+    "name": "Kimi PPT助手",
+    "summary": "月之暗面推出的AI PPT生成助手",
+    "description": "月之暗面推出的AI PPT生成助手",
+    "icon": "/assets/icons/kimi-ppt.png",
+    "image": "/assets/icons/kimi-ppt.png",
+    "link": "/tools/kimi-ppt",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "AI六小龙",
+      "slug": "china-six-ai-stars",
+      "icon": "/assets/tags/china-six-ai-stars.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "xingliu",
+    "name": "星流",
+    "summary": "新一代的一站式AI设计Agent",
+    "description": "新一代的一站式AI设计Agent",
+    "icon": "/assets/icons/xingliu.png",
+    "image": "/assets/icons/xingliu.png",
+    "link": "/tools/xingliu",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "doubao-ai-coding",
+    "name": "豆包AI编程",
+    "summary": "字节跳动推出的对话式AI编程工具",
+    "description": "字节跳动推出的对话式AI编程工具",
+    "icon": "/assets/icons/doubao-ai-coding.png",
+    "image": "/assets/icons/doubao-ai-coding.png",
+    "link": "/tools/doubao-ai-coding",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "qoder",
+    "name": "Qoder",
+    "summary": "阿里巴巴推出的AI代码编程工具",
+    "description": "阿里巴巴推出的AI代码编程工具",
+    "icon": "/assets/icons/qoder.png",
+    "image": "/assets/icons/qoder.png",
+    "link": "/tools/qoder",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "promptpilot",
+    "name": "PromptPilot",
+    "summary": "字节火山引擎旗下的智能提示词优化平台",
+    "description": "字节火山引擎旗下的智能提示词优化平台",
+    "icon": "/assets/icons/promptpilot.svg",
+    "image": "/assets/icons/promptpilot.svg",
+    "link": "/tools/promptpilot",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "fellou",
+    "name": "Fellou",
+    "summary": "国内团队推出的首个行动型浏览器",
+    "description": "国内团队推出的首个行动型浏览器",
+    "icon": "/assets/icons/fellou.svg",
+    "image": "/assets/icons/fellou.svg",
+    "link": "/tools/fellou",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "dia-browser",
+    "name": "Dia",
+    "summary": "Arc团队推出的AI浏览器",
+    "description": "Arc团队推出的AI浏览器",
+    "icon": "/assets/icons/dia-browser.png",
+    "image": "/assets/icons/dia-browser.png",
+    "link": "/tools/dia-browser",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "tana",
+    "name": "Tana",
+    "summary": "AI原生的知识管理工作空间",
+    "description": "AI原生的知识管理工作空间",
+    "icon": "/assets/icons/tana.jpg",
+    "image": "/assets/icons/tana.jpg",
+    "link": "/tools/tana",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "nano-banana",
+    "name": "Nano Banana",
+    "summary": "Google最新推出的AI图像生成与编辑模型",
+    "description": "Google最新推出的AI图像生成与编辑模型",
+    "icon": "/assets/icons/nano-banana.png",
+    "image": "/assets/icons/nano-banana.png",
+    "link": "/tools/nano-banana",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "emergent-sh",
+    "name": "Emergent",
+    "summary": "AI原生的氛围编程和无代码开发平台",
+    "description": "AI原生的氛围编程和无代码开发平台",
+    "icon": "/assets/icons/emergent-sh.jpg",
+    "image": "/assets/icons/emergent-sh.jpg",
+    "link": "/tools/emergent-sh",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "creaibo",
+    "name": "创伴Creaibo",
+    "summary": "AI内容创作辅助效率工具",
+    "description": "AI内容创作辅助效率工具",
+    "icon": "/assets/icons/creaibo.png",
+    "image": "/assets/icons/creaibo.png",
+    "link": "/tools/creaibo",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "dingtalk-table",
+    "name": "钉钉AI表格",
+    "summary": "钉钉推出的AI多维表管理工具",
+    "description": "钉钉推出的AI多维表管理工具",
+    "icon": "/assets/icons/dingtalk-table.svg",
+    "image": "/assets/icons/dingtalk-table.svg",
+    "link": "/tools/dingtalk-table",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "innovation-startups",
+  "name": "初创公司推出的AI产品",
+  "title": "初创公司推出的AI产品",
+  "intro": "新兴AI初创公司推出的AI产品",
+  "description": "新兴AI初创公司推出的AI产品",
+  "icon": "/assets/tags/innovation-startups.svg",
+  "tagIcon": "/assets/tags/innovation-startups.svg",
+  "memberIcons": [
+   "/assets/icons/liblib.png",
+   "/assets/icons/cursor.png",
+   "/assets/icons/flowith.svg",
+   "/assets/icons/windsurf.svg",
+   "/assets/icons/fellou.svg",
+   "/assets/icons/youmind-ai.svg"
+  ],
+  "others": [
+   "china-six-ai-stars",
+   "ai-product-photo-tools",
+   "ai-digital-human-tools"
+  ],
+  "toolCount": 9,
+  "tools": [
+   {
+    "slug": "liblib",
+    "name": "哩布哩布AI",
+    "summary": "国内领先的AI图像创作平台",
+    "description": "国内领先的AI图像创作平台",
+    "icon": "/assets/icons/liblib.png",
+    "image": "/assets/icons/liblib.png",
+    "link": "/tools/liblib",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "cursor",
+    "name": "Cursor",
+    "summary": "Anysphere推出的AI代码编辑器",
+    "description": "Anysphere推出的AI代码编辑器",
+    "icon": "/assets/icons/cursor.png",
+    "image": "/assets/icons/cursor.png",
+    "link": "/tools/cursor",
+    "tags": [
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     },
+     {
+      "name": "Agent模式",
+      "slug": "with-agent-mode",
+      "icon": "/assets/tags/with-agent-mode.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "flowith",
+    "name": "Flowith",
+    "summary": "画布式AI聊天助手和智能体",
+    "description": "画布式AI聊天助手和智能体",
+    "icon": "/assets/icons/flowith.svg",
+    "image": "/assets/icons/flowith.svg",
+    "link": "/tools/flowith",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     },
+     {
+      "name": "Agent模式",
+      "slug": "with-agent-mode",
+      "icon": "/assets/tags/with-agent-mode.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "windsurf",
+    "name": "Windsurf",
+    "summary": "功能强大的AI代码编辑器",
+    "description": "功能强大的AI代码编辑器",
+    "icon": "/assets/icons/windsurf.svg",
+    "image": "/assets/icons/windsurf.svg",
+    "link": "/tools/windsurf",
+    "tags": [
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     },
+     {
+      "name": "Agent模式",
+      "slug": "with-agent-mode",
+      "icon": "/assets/tags/with-agent-mode.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "fellou",
+    "name": "Fellou",
+    "summary": "国内团队推出的首个行动型浏览器",
+    "description": "国内团队推出的首个行动型浏览器",
+    "icon": "/assets/icons/fellou.svg",
+    "image": "/assets/icons/fellou.svg",
+    "link": "/tools/fellou",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "youmind-ai",
+    "name": "YouMind",
+    "summary": "沉浸式的AI内容创作平台",
+    "description": "沉浸式的AI内容创作平台",
+    "icon": "/assets/icons/youmind-ai.svg",
+    "image": "/assets/icons/youmind-ai.svg",
+    "link": "/tools/youmind-ai",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "minimax-agent",
+    "name": "MiniMax Agent",
+    "summary": "MiniMax推出的AI超级智能体",
+    "description": "MiniMax推出的AI超级智能体",
+    "icon": "/assets/icons/minimax-agent.svg",
+    "image": "/assets/icons/minimax-agent.svg",
+    "link": "/tools/minimax-agent",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "rabbitos-intern",
+    "name": "rabbitOS intern",
+    "summary": "AI硬件公司rabbit推出的通用智能体",
+    "description": "AI硬件公司rabbit推出的通用智能体",
+    "icon": "/assets/icons/rabbitos-intern.jpg",
+    "image": "/assets/icons/rabbitos-intern.jpg",
+    "link": "/tools/rabbitos-intern",
+    "tags": [
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "youchuan",
+    "name": "悠船",
+    "summary": "Midjourney国内官方版",
+    "description": "Midjourney国内官方版",
+    "icon": "/assets/icons/youchuan.png",
+    "image": "/assets/icons/youchuan.png",
+    "link": "/tools/youchuan",
+    "tags": [
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     },
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "made-by-notable-companies",
+  "name": "大厂旗下的AI产品",
+  "title": "大厂旗下的AI产品",
+  "intro": "由互联网大厂/知名公司推出的AI产品",
+  "description": "由互联网大厂/知名公司推出的AI产品",
+  "icon": "/assets/tags/made-by-notable-companies.svg",
+  "tagIcon": "/assets/tags/made-by-notable-companies.svg",
+  "memberIcons": [
+   "/assets/icons/coze-space.svg",
+   "/assets/icons/klingai.svg",
+   "/assets/icons/jimeng-ai.png",
+   "/assets/icons/doubao.png",
+   "/assets/icons/d-design.svg",
+   "/assets/icons/doubao-ai-coding.png"
+  ],
+  "others": [
+   "china-six-ai-stars",
+   "ai-product-photo-tools",
+   "ai-digital-human-tools"
+  ],
+  "toolCount": 20,
+  "tools": [
+   {
+    "slug": "coze-space",
+    "name": "扣子空间",
+    "summary": "字节跳动推出的AI智能体开发与协作平台",
+    "description": "字节跳动推出的AI智能体开发与协作平台",
+    "icon": "/assets/icons/coze-space.svg",
+    "image": "/assets/icons/coze-space.svg",
+    "link": "/tools/coze-space",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "klingai",
+    "name": "可灵AI",
+    "summary": "集图像和视频创作于一体的AI平台",
+    "description": "集图像和视频创作于一体的AI平台",
+    "icon": "/assets/icons/klingai.svg",
+    "image": "/assets/icons/klingai.svg",
+    "link": "/tools/klingai",
+    "tags": [
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "jimeng-ai",
+    "name": "即梦AI",
+    "summary": "抖音推出的一站式AI创作平台，支持文字生成图片、视频",
+    "description": "抖音推出的一站式AI创作平台，支持文字生成图片、视频",
+    "icon": "/assets/icons/jimeng-ai.png",
+    "image": "/assets/icons/jimeng-ai.png",
+    "link": "/tools/jimeng-ai",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "doubao",
+    "name": "豆包",
+    "summary": "字节跳动推出的免费AI聊天机器人",
+    "description": "字节跳动推出的免费AI聊天机器人",
+    "icon": "/assets/icons/doubao.png",
+    "image": "/assets/icons/doubao.png",
+    "link": "/tools/doubao",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "d-design",
+    "name": "堆友AI",
+    "summary": "阿里打造的免费AI绘画生成器",
+    "description": "阿里打造的免费AI绘画生成器",
+    "icon": "/assets/icons/d-design.svg",
+    "image": "/assets/icons/d-design.svg",
+    "link": "/tools/d-design",
+    "tags": [
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "doubao-ai-coding",
+    "name": "豆包AI编程",
+    "summary": "字节跳动推出的对话式AI编程工具",
+    "description": "字节跳动推出的对话式AI编程工具",
+    "icon": "/assets/icons/doubao-ai-coding.png",
+    "image": "/assets/icons/doubao-ai-coding.png",
+    "link": "/tools/doubao-ai-coding",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "tencent-yuanbao",
+    "name": "腾讯元宝",
+    "summary": "腾讯旗下推出的AI智能助手",
+    "description": "腾讯旗下推出的AI智能助手",
+    "icon": "/assets/icons/tencent-yuanbao.png",
+    "image": "/assets/icons/tencent-yuanbao.png",
+    "link": "/tools/tencent-yuanbao",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "qoder",
+    "name": "Qoder",
+    "summary": "阿里巴巴推出的AI代码编程工具",
+    "description": "阿里巴巴推出的AI代码编程工具",
+    "icon": "/assets/icons/qoder.png",
+    "image": "/assets/icons/qoder.png",
+    "link": "/tools/qoder",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "trae-ai",
+    "name": "Trae",
+    "summary": "字节跳动推出的AI编程IDE",
+    "description": "字节跳动推出的AI编程IDE",
+    "icon": "/assets/icons/trae-ai.png",
+    "image": "/assets/icons/trae-ai.png",
+    "link": "/tools/trae-ai",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "Agent模式",
+      "slug": "with-agent-mode",
+      "icon": "/assets/tags/with-agent-mode.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "promptpilot",
+    "name": "PromptPilot",
+    "summary": "字节火山引擎旗下的智能提示词优化平台",
+    "description": "字节火山引擎旗下的智能提示词优化平台",
+    "icon": "/assets/icons/promptpilot.svg",
+    "image": "/assets/icons/promptpilot.svg",
+    "link": "/tools/promptpilot",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "quark",
+    "name": "夸克",
+    "summary": "阿里推出的集 AI 搜索、网盘、文档创作于一体的智能应用",
+    "description": "阿里推出的集 AI 搜索、网盘、文档创作于一体的智能应用",
+    "icon": "/assets/icons/quark.svg",
+    "image": "/assets/icons/quark.svg",
+    "link": "/tools/quark",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "qbot",
+    "name": "QBot",
+    "summary": "腾讯基于QQ浏览器升级的AI浏览器",
+    "description": "腾讯基于QQ浏览器升级的AI浏览器",
+    "icon": "/assets/icons/qbot.svg",
+    "image": "/assets/icons/qbot.svg",
+    "link": "/tools/qbot",
+    "tags": [
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "nano-banana",
+    "name": "Nano Banana",
+    "summary": "Google最新推出的AI图像生成与编辑模型",
+    "description": "Google最新推出的AI图像生成与编辑模型",
+    "icon": "/assets/icons/nano-banana.png",
+    "image": "/assets/icons/nano-banana.png",
+    "link": "/tools/nano-banana",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "longcat",
+    "name": "LongCat",
+    "summary": "美团推出的AI大模型和聊天助手",
+    "description": "美团推出的AI大模型和聊天助手",
+    "icon": "/assets/icons/longcat.png",
+    "image": "/assets/icons/longcat.png",
+    "link": "/tools/longcat",
+    "tags": [
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "kaipai",
+    "name": "开拍",
+    "summary": "美图公司推出的AI口播视频制作工具",
+    "description": "美图公司推出的AI口播视频制作工具",
+    "icon": "/assets/icons/kaipai.png",
+    "image": "/assets/icons/kaipai.png",
+    "link": "/tools/kaipai",
+    "tags": [
+     {
+      "name": "AI数字人",
+      "slug": "ai-digital-human-tools",
+      "icon": "/assets/tags/ai-digital-human-tools.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "dingtalk-table",
+    "name": "钉钉AI表格",
+    "summary": "钉钉推出的AI多维表管理工具",
+    "description": "钉钉推出的AI多维表管理工具",
+    "icon": "/assets/icons/dingtalk-table.svg",
+    "image": "/assets/icons/dingtalk-table.svg",
+    "link": "/tools/dingtalk-table",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "huixiang-baidu",
+    "name": "绘想",
+    "summary": "百度推出的AI视频生成平台",
+    "description": "百度推出的AI视频生成平台",
+    "icon": "/assets/icons/huixiang-baidu.png",
+    "image": "/assets/icons/huixiang-baidu.png",
+    "link": "/tools/huixiang-baidu",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "tbox",
+    "name": "百宝箱",
+    "summary": "蚂蚁集团推出的一站式AI原生应用开发平台",
+    "description": "蚂蚁集团推出的一站式AI原生应用开发平台",
+    "icon": "/assets/icons/tbox.png",
+    "image": "/assets/icons/tbox.png",
+    "link": "/tools/tbox",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "tencent-yuanqi",
+    "name": "腾讯元器",
+    "summary": "腾讯推出的一站式AI智能体创作与分发平台",
+    "description": "腾讯推出的一站式AI智能体创作与分发平台",
+    "icon": "/assets/icons/tencent-yuanqi.jpg",
+    "image": "/assets/icons/tencent-yuanqi.jpg",
+    "link": "/tools/tencent-yuanqi",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "lexiangla",
+    "name": "乐享知识库",
+    "summary": "腾讯推出的AI智能知识库",
+    "description": "腾讯推出的AI智能知识库",
+    "icon": "/assets/icons/lexiangla.svg",
+    "image": "/assets/icons/lexiangla.svg",
+    "link": "/tools/lexiangla",
+    "tags": [
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "with-agent-mode",
+  "name": "有Agent模式的AI产品",
+  "title": "有Agent模式的AI产品",
+  "intro": "带有Agent模式/功能的AI工具和产品集合",
+  "description": "带有Agent模式/功能的AI工具和产品集合",
+  "icon": "/assets/tags/with-agent-mode.svg",
+  "tagIcon": "/assets/tags/with-agent-mode.svg",
+  "memberIcons": [
+   "/assets/icons/cursor.png",
+   "/assets/icons/flowith.svg",
+   "/assets/icons/windsurf.svg",
+   "/assets/icons/trae-ai.png",
+   "/assets/icons/replit.svg",
+   "/assets/icons/forge-code.jpg"
+  ],
+  "others": [
+   "china-six-ai-stars",
+   "ai-product-photo-tools",
+   "ai-digital-human-tools"
+  ],
+  "toolCount": 6,
+  "tools": [
+   {
+    "slug": "cursor",
+    "name": "Cursor",
+    "summary": "Anysphere推出的AI代码编辑器",
+    "description": "Anysphere推出的AI代码编辑器",
+    "icon": "/assets/icons/cursor.png",
+    "image": "/assets/icons/cursor.png",
+    "link": "/tools/cursor",
+    "tags": [
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     },
+     {
+      "name": "Agent模式",
+      "slug": "with-agent-mode",
+      "icon": "/assets/tags/with-agent-mode.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "flowith",
+    "name": "Flowith",
+    "summary": "画布式AI聊天助手和智能体",
+    "description": "画布式AI聊天助手和智能体",
+    "icon": "/assets/icons/flowith.svg",
+    "image": "/assets/icons/flowith.svg",
+    "link": "/tools/flowith",
+    "tags": [
+     {
+      "name": "编辑推荐",
+      "slug": "editors-picks",
+      "icon": "/assets/tags/editors-picks.svg",
+      "color": ""
+     },
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     },
+     {
+      "name": "Agent模式",
+      "slug": "with-agent-mode",
+      "icon": "/assets/tags/with-agent-mode.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "windsurf",
+    "name": "Windsurf",
+    "summary": "功能强大的AI代码编辑器",
+    "description": "功能强大的AI代码编辑器",
+    "icon": "/assets/icons/windsurf.svg",
+    "image": "/assets/icons/windsurf.svg",
+    "link": "/tools/windsurf",
+    "tags": [
+     {
+      "name": "新兴初创",
+      "slug": "innovation-startups",
+      "icon": "/assets/tags/innovation-startups.svg",
+      "color": ""
+     },
+     {
+      "name": "Agent模式",
+      "slug": "with-agent-mode",
+      "icon": "/assets/tags/with-agent-mode.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "trae-ai",
+    "name": "Trae",
+    "summary": "字节跳动推出的AI编程IDE",
+    "description": "字节跳动推出的AI编程IDE",
+    "icon": "/assets/icons/trae-ai.png",
+    "image": "/assets/icons/trae-ai.png",
+    "link": "/tools/trae-ai",
+    "tags": [
+     {
+      "name": "完全免费",
+      "slug": "completely-free",
+      "icon": "/assets/tags/completely-free.svg",
+      "color": ""
+     },
+     {
+      "name": "大厂出品",
+      "slug": "made-by-notable-companies",
+      "icon": "/assets/tags/made-by-notable-companies.svg",
+      "color": ""
+     },
+     {
+      "name": "Agent模式",
+      "slug": "with-agent-mode",
+      "icon": "/assets/tags/with-agent-mode.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "replit",
+    "name": "Replit",
+    "summary": "AI对话生成App和网站的开发平台",
+    "description": "AI对话生成App和网站的开发平台",
+    "icon": "/assets/icons/replit.svg",
+    "image": "/assets/icons/replit.svg",
+    "link": "/tools/replit",
+    "tags": [
+     {
+      "name": "Agent模式",
+      "slug": "with-agent-mode",
+      "icon": "/assets/tags/with-agent-mode.svg",
+      "color": ""
+     }
+    ]
+   },
+   {
+    "slug": "forge-code",
+    "name": "Forge Code",
+    "summary": "面向开发者的终端AI编程助手",
+    "description": "面向开发者的终端AI编程助手",
+    "icon": "/assets/icons/forge-code.jpg",
+    "image": "/assets/icons/forge-code.jpg",
+    "link": "/tools/forge-code",
+    "tags": [
+     {
+      "name": "Agent模式",
+      "slug": "with-agent-mode",
+      "icon": "/assets/tags/with-agent-mode.svg",
+      "color": ""
+     }
+    ]
+   }
+  ]
+ }
+]

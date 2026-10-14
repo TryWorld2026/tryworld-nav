@@ -1,0 +1,402 @@
+/* 试界的字体子集，来自品牌包 `assets/fonts/fonts.css`（113 条 @font-face，
+   101 条 Noto Sans SC + 12 条 Fraunces，按 unicode-range 切片）。CSS 与 woff2
+   都在 public/fonts/，`url()` 已改成绝对路径。 */
+@import url('/fonts/fonts.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Noto Sans SC 承载中英文正文与标题；Fraunces 只用于英文点题（衬线斜体）。
+       回退栈与品牌规范一致：PingFang SC / Microsoft YaHei 兜住中文。 */
+    --font-inter: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+    --font-display: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+    --font-serif: Fraunces, Georgia, 'Songti SC', serif;
+
+    /* 色板映射自试界品牌 token（assets/tokens/brand.json），HSL 三元组格式：
+       paper #F2EEE6 / ink #1B2523 / green #24564E / orange #F2693C
+       muted #616A63 / line #D3D5CB / surface #FBF9F4 / smallAccent #B54826 */
+    --background: 39 35% 93%;
+    --foreground: 168 14% 13%;
+    --card: 47 41% 97%;
+    --card-foreground: 168 14% 13%;
+    --popover: 47 41% 97%;
+    --popover-foreground: 168 14% 13%;
+    --primary: 168 41% 24%;
+    --primary-foreground: 39 35% 93%;
+    --secondary: 47 41% 97%;
+    --secondary-foreground: 168 14% 13%;
+    --muted: 47 41% 97%;
+    --muted-foreground: 138 6% 40%;
+    --accent: 168 41% 24%;
+    --accent-foreground: 39 35% 93%;
+    --destructive: 12 89% 59%;
+    --destructive-foreground: 39 35% 93%;
+    --border: 70 11% 81%;
+    --input: 70 11% 81%;
+    --ring: 168 41% 24%;
+    --magicborder: 70 11% 89%;
+    --radius: 0.5rem;
+    --chart-1: 12 89% 59%;
+    --chart-2: 168 41% 24%;
+    --chart-3: 168 14% 13%;
+    --chart-4: 138 6% 40%;
+    --chart-5: 70 11% 81%;
+    /* 品牌四色，供渐变按钮与顶部色带使用。原站是紫/粉/橙/青/黄五色，这里收敛到
+       品牌的深绿—橙两色之间，保持「少量橙色」的比例。 */
+    --color-1: 168 41% 24%;
+    --color-2: 12 89% 59%;
+    --color-3: 168 41% 30%;
+    --color-4: 12 89% 66%;
+    --color-5: 168 30% 36%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+    font-variation-settings: 'opsz' 32;
+  }
+  /*
+   * The origin ships this as a plain reset rule — every heading level defaults
+   * to 700 unless a utility says otherwise. Because it sits in `@layer base`
+   * it still loses to `font-*` utilities, exactly as it does there.
+   */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+  }
+}
+
+/*
+ * Every animation here is decorative — the palette's fade-in and the hover
+ * lifts. Anyone who has asked their OS for less motion gets the end state
+ * immediately instead.
+ */
+@layer base {
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* The origin loads the `tailwind-scrollbar` plugin and hides the sidebar's
+   * scrollbar until the pointer is over it (`scrollbar-none
+   * hover:scrollbar-thin scrollbar-track-transparent`). The plugin is not a
+   * dependency here, so the one class it contributes that the hand-rolled
+   * `.scrollbar-thin` above does not cover is spelled out by hand. */
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 9999px;
+  }
+}
+
+/*
+ * The origin renders a tool's long-form copy through Tailwind Typography's
+ * `prose prose-stone`, then overrides a handful of slots with `prose-*`
+ * variants. This block is a hand-rolled equivalent of exactly that stack —
+ * the plugin is not a dependency here — so the copy keeps the origin's
+ * rhythm: 1rem/1.75 body, `1.5em` h2, disc bullets, underlined violet links.
+ *
+ * The origin's own classes on the container were:
+ *   prose prose-stone max-w-none px-4 text-foreground/80
+ *   prose-headings:mt-4 prose-headings:font-display prose-headings:text-foreground
+ *   prose-strong:text-foreground prose-a:text-gongke-accent hover:prose-a:text-gongke-accent/80
+ *   prose-code:bg-gongke-gray/20 prose-code:rounded prose-code:px-1.5
+ *   prose-code:py-0.5
+ *   before:prose-code:content-[''] after:prose-code:content-['']
+ *   tool-details
+ * Only `text-foreground/80`, `max-w-none` and `px-4` survive as utilities on
+ * the element itself; everything below is the rest of that stack.
+ */
+@layer components {
+  :is(.tool-details, .article-content) {
+    color: hsl(var(--foreground) / 0.8);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  /* prose-headings:* — font family, colour and margin-top, all four levels. */
+  :is(.tool-details, .article-content) :is(h1, h2, h3, h4, h5, h6, th) {
+    color: hsl(var(--foreground));
+    font-family: var(--font-display);
+    margin-top: 1rem;
+  }
+
+  :is(.tool-details, .article-content) h1 {
+    font-weight: 800;
+    font-size: 2.25em;
+    line-height: 1.1111111;
+    margin-bottom: 0.8888889em;
+  }
+  :is(.tool-details, .article-content) h2 {
+    font-weight: 700;
+    font-size: 1.5em;
+    line-height: 1.3333333;
+    margin-bottom: 1em;
+  }
+  :is(.tool-details, .article-content) h3 {
+    font-weight: 600;
+    font-size: 1.25em;
+    line-height: 1.6;
+    margin-bottom: 0.6em;
+  }
+  :is(.tool-details, .article-content) :is(h4, h5, h6) {
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 0.5em;
+  }
+  /* h2+* / h3+* / hr+* — the origin drops the following block's top margin. */
+  :is(.tool-details, .article-content) :is(h2, h3, hr) + * {
+    margin-top: 0;
+  }
+
+  /*
+   * A sparkles glyph before every h2 inside the long-form copy. The origin used
+   * its violet `#8b5cf6`; this is the brand's deep green `#24564E` instead.
+   * Inlined as a data URI so there is no network call for a 300-byte glyph.
+   */
+  :is(.tool-details, .article-content) h2 {
+    position: relative;
+    padding-left: 1.6rem;
+  }
+  :is(.tool-details, .article-content) h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 1.2rem;
+    height: 1.2rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2324564e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z'/%3E%3Cpath d='M5 3v4'/%3E%3Cpath d='M19 17v4'/%3E%3Cpath d='M3 5h4'/%3E%3Cpath d='M17 19h4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  :is(.tool-details, .article-content) p {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+  }
+  :is(.tool-details, .article-content) :is(ul, ol) {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    padding-inline-start: 1.625em;
+  }
+  :is(.tool-details, .article-content) ul {
+    list-style-type: disc;
+  }
+  :is(.tool-details, .article-content) ol {
+    list-style-type: decimal;
+  }
+  :is(.tool-details, .article-content) li {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+  :is(.tool-details, .article-content) :is(ul, ol) > li {
+    padding-inline-start: 0.375em;
+  }
+  :is(.tool-details, .article-content) ul > li::marker {
+    color: #d6d3d1;
+  }
+  :is(.tool-details, .article-content) ol > li::marker {
+    color: #78716c;
+    font-weight: 400;
+  }
+  :is(.tool-details, .article-content) :is(ul ul, ul ol, ol ul, ol ol) {
+    margin-top: 0.75em;
+    margin-bottom: 0.75em;
+  }
+  /* `.prose>ul>li p` and friends — paragraphs nested directly in a bullet. */
+  :is(.tool-details, .article-content) :is(ul, ol) > li > p {
+    margin-top: 0.75em;
+    margin-bottom: 0.75em;
+  }
+  :is(.tool-details, .article-content) :is(ul, ol) > li > p:first-child {
+    margin-top: 1.25em;
+  }
+  :is(.tool-details, .article-content) :is(ul, ol) > li > p:last-child {
+    margin-bottom: 1.25em;
+  }
+
+  :is(.tool-details, .article-content) strong {
+    color: hsl(var(--foreground));
+    font-weight: 600;
+  }
+  :is(.tool-details, .article-content) a {
+    color: #8b5cf6;
+    font-weight: 500;
+    text-decoration: underline;
+  }
+  :is(.tool-details, .article-content) a:hover {
+    color: #a78bfa;
+  }
+  :is(.tool-details, .article-content) a :is(strong, code) {
+    color: inherit;
+  }
+
+  :is(.tool-details, .article-content) :is(img, picture, video) {
+    margin-top: 2em;
+    margin-bottom: 2em;
+  }
+  :is(.tool-details, .article-content) picture > img {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  :is(.tool-details, .article-content) hr {
+    border-color: #e7e5e4;
+    border-top-width: 1px;
+    margin-top: 3em;
+    margin-bottom: 3em;
+  }
+
+  :is(.tool-details, .article-content) blockquote {
+    border-inline-start-width: 0.25rem;
+    border-inline-start-color: #e7e5e4;
+    color: #1c1917;
+    font-style: italic;
+    font-weight: 500;
+    margin-top: 1.6em;
+    margin-bottom: 1.6em;
+    padding-inline-start: 1em;
+    quotes: '\201C' '\201D' '\2018' '\2019';
+  }
+  :is(.tool-details, .article-content) blockquote p:first-of-type::before {
+    content: open-quote;
+  }
+  :is(.tool-details, .article-content) blockquote p:last-of-type::after {
+    content: close-quote;
+  }
+
+  :is(.tool-details, .article-content) table {
+    width: 100%;
+    table-layout: auto;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    font-size: 0.875em;
+    line-height: 1.7142857;
+  }
+  :is(.tool-details, .article-content) thead {
+    border-bottom-width: 1px;
+    border-bottom-color: #d6d3d1;
+  }
+  :is(.tool-details, .article-content) thead th {
+    color: #1c1917;
+    font-weight: 600;
+    vertical-align: bottom;
+    padding-inline: 0.5714286em;
+    padding-bottom: 0.5714286em;
+  }
+  :is(.tool-details, .article-content) tbody tr {
+    border-bottom-width: 1px;
+    border-bottom-color: #e7e5e4;
+  }
+  :is(.tool-details, .article-content) tbody tr:last-child {
+    border-bottom-width: 0;
+  }
+  :is(.tool-details, .article-content) tbody td {
+    vertical-align: baseline;
+  }
+  :is(.tool-details, .article-content) :is(th, td) {
+    text-align: start;
+  }
+
+  :is(.tool-details, .article-content) pre {
+    background-color: #292524;
+    border-radius: 0.375rem;
+    color: #e7e5e4;
+    font-size: 0.875em;
+    font-weight: 400;
+    line-height: 1.7142857;
+    margin-top: 1.7142857em;
+    margin-bottom: 1.7142857em;
+    overflow-x: auto;
+    padding: 0.8571429em 1.1428571em;
+  }
+  /* prose-code:* — a chip behind inline code, with the backticks stripped. */
+  :is(.tool-details, .article-content) code {
+    background-color: rgb(201 203 205 / 0.2);
+    border-radius: 0.25rem;
+    color: #1c1917;
+    font-size: 0.875em;
+    font-weight: 600;
+    padding-block: 0.125rem;
+    padding-inline: 0.375rem;
+  }
+  :is(.tool-details, .article-content) code::before,
+  :is(.tool-details, .article-content) code::after {
+    content: '';
+  }
+  :is(.tool-details, .article-content) pre code {
+    background-color: transparent;
+    border-width: 0;
+    border-radius: 0;
+    padding: 0;
+    font-weight: inherit;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    line-height: inherit;
+  }
+  :is(.tool-details, .article-content) pre code::before,
+  :is(.tool-details, .article-content) pre code::after {
+    content: none;
+  }
+
+  :is(.tool-details, .article-content) figure > * {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  :is(.tool-details, .article-content) figcaption {
+    color: #78716c;
+    font-size: 0.875em;
+    line-height: 1.4285714;
+    margin-top: 0.8571429em;
+  }
+
+  /*
+   * The origin's page gutter. It is a class rather than a `container` because
+   * it pins the content column at 1536px and adds 1rem of inline padding at
+   * every viewport, which `mx-auto max-w-[1536px] px-4` would also do — this
+   * just keeps it in one place next to the prose rules it sits beside.
+   */
+  .brand-container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1536px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

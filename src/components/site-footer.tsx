@@ -1,0 +1,80 @@
+import Link from 'next/link';
+import { SiteLogo } from './site-logo';
+import { SITE } from '@/lib/data';
+
+/**
+ * The origin's footer, verbatim from its markup.
+ *
+ * Three structural notes:
+ *
+ * - It has no max-width wrapper. Every other container in the site caps at
+ *   1536px; the footer does not, so on a wide viewport its content runs to the
+ *   edge and only the `px-4 sm:px-8` gutter stands between it and the border.
+ * - The second column's right half is an empty `<div className="md:w-1/2">`.
+ *   It is in the origin and is reproduced rather than dropped, because without
+ *   it the link list would stretch to fill the two-thirds.
+ * - 友情链接 is *not* here. It is home-page-only, and it is the *last* element
+ *   of the page body — the origin's shell flushes `$RS("S:2","P:2")` straight
+ *   after it, and `P:1`/`P:2` are the shell's document-order Suspense
+ *   placeholders, so nothing follows. It lives in `src/app/page.tsx`.
+ */
+export function SiteFooter() {
+  return (
+    <footer className="bg-background border-t border-foreground/5 py-8">
+      <div className="px-4 sm:px-8">
+        <div className="md:flex md:justify-between">
+          <div className="md:w-1/3 mb-6 md:mb-0">
+            <Link href="/" className="flex items-center mb-2">
+              {/* 主标是宽幅的（192×116），宽度 + `h-auto` 保持比例。 */}
+              <SiteLogo className="w-8 h-auto text-gongke-dark mr-2" />
+              <div className="text-xl text-foreground font-bold font-display">{SITE.name}</div>
+            </Link>
+            <p className="text-sm text-gongke-muted">
+              © 2026 <Link href="/" className="hover:text-accent">{SITE.name}</Link> 版权所有
+            </p>
+            {/* 原站这一列还挂着它的 ICP 备案号与公安备案徽标。那是另一家公司
+                的真实备案，换牌时整块删掉；本站在取得自己的备案号之前不显示
+                备案行。 */}
+          </div>
+
+          <div className="md:w-2/3 md:flex">
+            <div className="md:w-1/2 mb-6 md:mb-0">
+              <ul className="space-y-2 md:space-y-0 md:grid md:grid-cols-2 md:gap-2">
+                <li>
+                  <Link
+                    className="text-sm text-foreground hover:text-gongke-accent"
+                    href="/about"
+                  >
+                    关于我们
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="text-sm text-foreground hover:text-gongke-accent"
+                    href="/terms-conditions"
+                  >
+                    用户协议
+                  </Link>
+                </li>
+                <li>
+                  {/* 原站的「提交工具」指向它自己的飞书表单，属于另一家公司的
+                      入口，换牌时去掉。本站有了自己的提交入口再挂回来。 */}
+                  <span className="text-sm text-gongke-muted">提交工具（即将开放）</span>
+                </li>
+                <li>
+                  <Link
+                    className="text-sm hover:text-gongke-accent"
+                    href="/privacy-policy"
+                  >
+                    隐私政策
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div className="md:w-1/2"></div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}

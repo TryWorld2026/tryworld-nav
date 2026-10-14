@@ -1,0 +1,34 @@
+# Cloudflare Workers Static Assets.
+#
+# There is no `main` entry point: this is an assets-only Worker. Every route in
+# the app is either prerendered HTML or a client component that filters in the
+# browser, so there is no server code to run — which is why `next.config.mjs`
+# sets `output: 'export'`.
+#
+#   npm run build      → out/   (static files)
+#   npm run prune      → drops the R2-hosted media out of out/
+#   npm run deploy     → build + prune + wrangler deploy
+#
+# NOTE ON MEDIA: this deployment currently carries the media inside the Worker
+# itself (public/assets is copied into out/), because R2 is not enabled on the
+# account. That works but makes the first upload ~1.2 GB / 8.7k files (~20 min).
+# Enabling R2 and setting NEXT_PUBLIC_ASSET_BASE moves the media out of the
+# deploy entirely — see DEPLOY.md.
+name = "tryworld-nav"
+compatibility_date = "2026-10-13"
+
+# Custom domains. The zone (tryworld.com.cn) must already be in this Cloudflare
+# account; wrangler creates the DNS record and the Worker route on deploy.
+routes = [
+  { pattern = "nav.tryworld.com.cn", custom_domain = true },
+]
+
+[assets]
+directory = "./out"
+# Serve out/404.html for unknown paths, so the replica's own 404 page (with the
+# origin's hand-drawn illustration) is what visitors see instead of a
+# Cloudflare-branded error.
+not_found_handling = "404-page"
+
+[observability]
+enabled = false

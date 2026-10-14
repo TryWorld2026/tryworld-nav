@@ -1,0 +1,40 @@
+# Dependencies
+/node_modules
+/.next
+/out
+
+# Media — 336 MB of product icons and screenshots. These live on Cloudflare R2
+# (see scripts/sync-assets.mjs) and are pulled into the build through
+# NEXT_PUBLIC_ASSET_BASE, so they are deliberately not in the repo. GitHub
+# warns above ~1 GB and hard-blocks files over 100 MB, and every CI checkout
+# would otherwise download the whole catalog's media.
+#
+# `assets/site/` is the exception and stays in git: the favicons and the social
+# card belong on the site's own origin — browsers and some scrapers dislike
+# cross-origin favicons — and the four files total 16 KB.
+/public/assets/icons
+/public/assets/shots
+/public/assets/tags
+/public/assets/news
+
+# Wrangler local state
+.wrangler
+
+# Local env
+.env
+.env.local
+.env.*.local
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
