@@ -42,7 +42,7 @@ next build (output: 'export')  ──►  out/
 
 **为什么是全静态导出**：站点没有任何服务端行为了 —— 2140 个页面全部预渲染，`/tools` 的筛选在浏览器里做。所以 `output: 'export'`，部署到 Workers 不需要 Node 运行时，没有冷启动。
 
-**媒体目前跟站点打包在一起**，没有走 R2 —— 因为账号还没开 R2（`wrangler r2 bucket list` 报 10042）。这能跑，但代价是首次上传 1.2 GB / 8,671 个文件、约 20 分钟。后续部署只有 HTML 变化，几十秒。
+**媒体目前跟站点打包在一起**，没有走 R2 —— 因为账号还没开 R2（`wrangler r2 bucket list` 报 10042）。这能跑，但代价是首次上传约 1.05 GB / 8,707 个文件、约 20 分钟。后续部署只有 HTML 变化，几十秒。
 
 ---
 
@@ -84,7 +84,7 @@ npm run assets:push      # 上传 4188 个文件
 
 ```bash
 npm run build
-npm run deploy           # 已执行，8,671 文件 / 20 分钟
+npm run deploy           # 已执行，8,707 文件 / 约 20 分钟
 ```
 
 `wrangler.toml` 里的 `routes` 已配好 `nav.tryworld.com.cn`，DNS 记录由 Cloudflare 自动建。

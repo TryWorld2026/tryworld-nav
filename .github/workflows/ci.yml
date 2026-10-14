@@ -1,0 +1,50 @@
+# Continuous integration.
+#
+# This is the quality gate, deliberately separate from `deploy.yml`. It runs on
+# every pull request and every push to the default branch, and it needs no
+# secrets and no network beyond `npm ci` — the product media in
+# `public/assets/{icons,shots,tags,news}` is gitignored, so a fresh CI checkout
+# never has it, and none of these steps require it:
+#
+#   assets:check  counts and hashes what is there; it only uploads on `--push`
+#   census        reads data/*.json and reports dead cross-references
+#   lint          eslint . (next/core-web-vitals)
+#   tsc           full type check, no emit
+#
+# `deploy.yml` stays workflow_dispatch-only on purpose: a Workers Static Assets
+# deploy REPLACES the whole asset manifest, so deploying from a checkout with no
+# media would silently strip every product image from the live site. See the
+# comment block at the top of that file.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Verify local media matches data/ references
+        run: npm run assets:check
+
+      - name: Census (dead cross-references, coverage)
+        run: npm run census
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npx tsc --noEmit
