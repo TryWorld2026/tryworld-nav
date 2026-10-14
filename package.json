@@ -13,7 +13,9 @@
     "preview": "npx serve out -l 3100",
     "deploy": "npm run build && npm run prune && npx wrangler deploy",
     "prune": "node scripts/prune-out.mjs",
-    "preview:cf": "npx wrangler dev"
+    "preview:cf": "npx wrangler dev",
+    "media:backup": "node scripts/backup-media.mjs",
+    "media:restore": "node scripts/restore-media.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
