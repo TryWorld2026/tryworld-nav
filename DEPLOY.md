@@ -2,16 +2,19 @@
 
 代码在 GitHub，静态站点跑在 Cloudflare Workers，子域名指向站点。
 
-已部署（2026-10-15 更新，Version `c5355d01`）：
+已部署（2026-10-15 更新，Version `b4c66c4d`）：
 
 | | |
 |---|---|
 | 站点 | https://nav.tryworld.com.cn |
 | Worker | `tryworld-nav`（账号 TryWorld，`d59de4a1…cfe359`） |
 | workers.dev | https://tryworld-nav.1822520752.workers.dev（未开通，404 / code 1042） |
-| 部署内容 | 8,707 个文件 / 1.05 GB（含媒体），首次上传约 20 分钟 |
+| 部署内容 | 8,685 个文件 / 1.04 GB（含媒体），首次上传约 20 分钟 |
 
-## ⚠️ 部署的两个坑（2026-10-15 实测）
+部署历史（2026-10-15）：`c5355d01` 补 canonical 与 llms 修复；`b4c66c4d`
+接入 AIHOT 资讯（`/news` 改为卡片流）。
+
+## ⚠️ 部署的三个坑（2026-10-15 实测）
 
 **1. 不要用管道跑 `wrangler deploy`。** 通过 PowerShell 管道（`npx wrangler deploy 2>&1 | Tee-Object …`）
 调用时，进程会卡在 `Building list of assets...` 且**永不恢复**：日志 21 分钟无写入、CPU ≈0%、
@@ -29,8 +32,30 @@ Start-Process -FilePath "node" `
 `Read 8740 files from the assets directory`。所以部署总时长 ≈ 4 分钟建清单 + 上传时间，
 **不要**因为前几分钟没有输出就判定卡死。判断依据应是 CPU 与 TCP 连接，不是日志。
 
-上传阶段实测：`Uploaded 4271 files (4436 already uploaded) (143.69 sec)` —— 增量有效，
-第二次部署只传变更部分，不必等 20 分钟。
+**3. 上传阶段会间歇性 `fetch failed`，重试即可——但要给足时间。** 这是本机网络带宽导致的，
+不是配置错误。2026-10-15 一晚的实际记录：
+
+| 时间 | 结果 | 说明 |
+|---|---|---|
+| 19:30 | ✗ | 上传阶段失败 |
+| 19:34 | ✗ | 失败 |
+| 19:35 | ✓ | 第三次成功，895 KB 日志 |
+| 20:27 | ✗ | 卡在 `Building list of assets` 后无输出 |
+| 20:45 | ✗ | 上传阶段 `fetch failed` |
+| 20:54 | ✓ | 成功，`Uploaded 4255 files (4430 already uploaded) (3107.03 sec)` |
+
+也就是说**三次里成一次是常态**，别把它当成配置问题去改 `wrangler.toml`。
+
+两个判断要点：
+
+- **`Uploaded tryworld-nav` 才是成功标志。** 成功与失败的日志里都会出现 `ERROR` 字样——
+  那是部署完成后 wrangler 上报遥测/校验步骤的报错，**与本次部署无关**，别被它误导。
+- **上传很慢是正常的**：实测到 Cloudflare 的下载带宽约 274 KB/s，4255 个文件耗时 **51 分钟**。
+  所以一次部署要按 **1 小时**预留，不要因为半小时没结束就 kill。中途 kill 是安全的
+  （静态资产按内容寻址，已上传的不会白费），但下一次要重头算。
+
+上传阶段实测对比：快的一次 `Uploaded 4271 files (4436 already uploaded) (143.69 sec)`，
+慢的一次 3107 秒——差 20 倍，取决于当时的线路状况。
 
 ## ⚠️ 部署前必读：媒体不能删
 

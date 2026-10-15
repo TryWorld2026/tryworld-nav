@@ -136,28 +136,43 @@ pricing 徽章分布、`more/related/latest` 的死引用数、prose 总字符�
 
 ## 已验证
 
-`npm run build` 通过（2140 页静态生成，产物 2135 个 `.html`），
+`npm run build` 通过（2130 页静态生成，产物 2125 个 `.html`），
 `npm run lint` exit 0、`npx tsc --noEmit` exit 0。每个路由都带上了
-`<link rel="canonical" href="https://nav.tryworld.com.cn/...">`
-（2134/2135，唯一例外是 `404.html`，它没有规范 URL），
+`<link rel="canonical" href="https://nav.tryworld.com.cn/...">`，
 `npm run prune --lean` 保留 `llms.txt` 与 `llms-full.txt`。
 
-2026-10-15 部署后复验（Version `c5355d01`）：
+2026-10-15 部署后复验（Version `c5355d01`，补 SEO 与 llms 修复）：
 
 - `llms-full.txt` 由 404 转为 **200 / 8,516,507 bytes**（robots.txt 早已声明它）
 - `llms.txt` 47 条链接全部指向本站，指向原站 `tryworld.com.cn` 的为 **0**
 - canonical 在 `/`、`/tools`、`/news`、`/categories`、`/collections`、`/about`、
-  `/tools/[slug]`、`/news/[slug]`、`/privacy-policy` 全部存在
+  `/tools/[slug]`、`/privacy-policy` 全部存在
 - 媒体未丢失：随机抽样 120 个 `/assets/*` **120/120 返回 200**
-- 路由健康：sitemap 2134 条中随机抽 60 条 **60/60 返回 200**
+- 路由健康：sitemap 中随机抽 60 条 **60/60 返回 200**
 - 交互正常：`/tools` 客户端筛选 2081 → 搜「视频」334 → 重置 2081 → 点分类 34，
   浏览器 `pageerror` **0**
+
+2026-10-15 部署后复验（Version `b4c66c4d`，接入 AIHOT 资讯）：
+
+- `/news` 渲染 **109 张卡片**，109 条链接**全部为外链原文**、全部
+  `target=_blank` + `rel=noopener noreferrer`
+- 署名完整：`来源：<来源站>` 与 AIHOT 出处说明均在页面上（合规要求）
+- 无 ISO 时间泄漏（时间已按 `Asia/Shanghai` 格式化）
+- 旧详情页 `/news/{slug}` 返回 **404**；sitemap 由 2134 条降为 **2124 条**，
+  不再收录资讯条目
+- 媒体回归：120 个 `/assets/*` **120/120 返回 200**
+- 回归路由 `/`、`/tools`、`/categories`、`/collections`、`/about`、`/privacy-policy`
+  全部 200，**破图 0**，`pageerror` **0**
+
+抓取降级也已实测：把 API 指向不可达主机后，有历史数据时打印警告并 **exit 0**
+（保留上一版 109 条，构建继续）；删掉 `data/news.json` 后再测才 **exit 1**。
 
 ## 快速开始（命令速查）
 
 ```bash
-npm run build     # 约 3.9 分钟，产出 out/（会先生成 public/llms-full.txt）
-npm run lint      # eslint，当前 exit 0
-npm run deploy    # build + prune + wrangler deploy（约 20 分钟首次）
-npm run census    # 重算数据口径的普查数字
+npm run build       # 约 4 分钟：先抓 AIHOT 资讯，再生成 llms-full.txt，最后 next build
+npm run lint        # eslint，当前 exit 0
+npm run news:fetch  # 只抓资讯（增量，带 ETag）
+npm run deploy      # build + prune + wrangler deploy —— 见 DEPLOY.md 的坑，预留 1 小时
+npm run census      # 重算数据口径的普查数字
 ```
