@@ -40,6 +40,32 @@ jobs:
       - name: Verify local media matches data/ references
         run: npm run assets:check
 
+      - name: Verify news data shape (AIHOT feed)
+        # /news 的卡片依赖 data/news.json 里的几个字段，尤其是 originalUrl
+        # （跳转目标）与 source（署名，AIHOT 规则要求保留）。抓取脚本改了映射
+        # 或上游改了字段名时，这里先报错，而不是等页面渲染出死链。
+        run: |
+          node -e "
+            const n = require('./data/news.json');
+            if (!Array.isArray(n) || n.length === 0) {
+              console.error('::error::data/news.json 为空或不是数组');
+              process.exit(1);
+            }
+            const required = ['id', 'title', 'summary', 'source', 'originalUrl', 'categoryLabel'];
+            const missing = {};
+            for (const k of required) {
+              const c = n.filter(x => !x[k]).length;
+              if (c) missing[k] = c;
+            }
+            if (Object.keys(missing).length) {
+              console.error('::error::字段缺失 ' + JSON.stringify(missing));
+              process.exit(1);
+            }
+            const dupes = n.length - new Set(n.map(x => x.id)).size;
+            if (dupes) { console.error('::error::id 重复 ' + dupes + ' 条'); process.exit(1); }
+            console.log('news.json OK：' + n.length + ' 条，字段齐全，id 唯一');
+          "
+
       - name: Census (dead cross-references, coverage)
         run: npm run census
 

@@ -1,0 +1,76 @@
+name: news-refresh
+
+# 定时抓取 AIHOT 精选，把变更提交回仓库。
+#
+# 为什么需要它：/news 的内容来自 data/news.json，而那个文件只在构建时刷新。
+# 没人构建，新闻就不动。这个工作流让仓库里的数据保持新鲜，下次部署就带着最新
+# 资讯上线。
+#
+# 为什么它**不**直接部署：媒体（public/assets/**，327 MB）不在 git 里，而
+# Workers Static Assets 每次部署会整体替换资产清单 —— 从 CI 部署会把线上 4188
+# 张产品图打成 404。要打通自动部署必须先开 R2（见 DEPLOY.md）。在那之前，
+# 部署仍需在有媒体的机器上跑 scripts/deploy.ps1。
+#
+# 说明：这个工作流只跑抓取，不需要媒体，所以能在 CI 里安全运行。
+on:
+  schedule:
+    # 每天 00:30 UTC = 北京时间 08:30，在 AIHOT 日报生成（08:00）之后。
+    - cron: '30 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# 避免定时触发与手动触发撞在一起。
+concurrency:
+  group: news-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # 需要一个能 push 的 token；默认 GITHUB_TOKEN 即可，因为
+          # 下面的 permissions 已给 contents: write。
+          persist-credentials: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # 强制重抓：ETag 命中时脚本会 304 并保留旧数据，而这里的目的正是
+      # 看有没有新内容，所以要绕过 ETag 缓存。
+      - name: Fetch latest AIHOT items
+        run: npm run news:refresh
+
+      - name: Report what changed
+        run: |
+          if git diff --quiet -- data/news.json; then
+            echo "没有新资讯，data/news.json 未变"
+          else
+            echo "资讯有更新："
+            node -e "
+              const n = require('./data/news.json');
+              console.log('  共 ' + n.length + ' 条');
+              console.log('  最新：' + (n[0] ? n[0].publishedAt + ' ' + n[0].title : '(空)'));
+            "
+          fi
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- data/news.json data/aihot-meta.json; then
+            echo "::notice::没有新资讯，无需提交"
+            exit 0
+          fi
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data/news.json data/aihot-meta.json
+          git commit -m "chore(news): 自动刷新 AIHOT 资讯 $(date -u +%Y-%m-%d)"
+          # 定时任务期间主干可能已前进，rebase 后再推。
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push

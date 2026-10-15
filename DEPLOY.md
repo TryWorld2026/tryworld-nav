@@ -11,8 +11,39 @@
 | workers.dev | https://tryworld-nav.1822520752.workers.dev（未开通，404 / code 1042） |
 | 部署内容 | 8,685 个文件 / 1.04 GB（含媒体），首次上传约 20 分钟 |
 
-部署历史（2026-10-15）：`c5355d01` 补 canonical 与 llms 修复；`b4c66c4d`
-接入 AIHOT 资讯（`/news` 改为卡片流）。
+部署历史（2026-10-15/16）：`c5355d01` 补 canonical 与 llms 修复；`b4c66c4d`
+接入 AIHOT 资讯（`/news` 改为卡片流）；`3cd35c14` 落稳定 buildId；`aa4d0a13`
+验证增量上传生效。
+
+## ✅ 已修：稳定 buildId（部署从 51 分钟降到 24 秒）
+
+**这是部署慢和频繁 `fetch failed` 的根因。** Next.js 默认给每次构建生成一个**随机**
+buildId，并把它写进每个 HTML 与 RSC payload。实测两次相邻构建：
+
+```
+RKtEuuKNkLP1GDVT9nR5N   →   ko5WKLYZkNT5XXWWY5Tcy
+```
+
+于是 2125 个 HTML（460 MB）+ 2128 个 `.txt`（248 MB）**字节全部改变**。而 Workers
+Static Assets 按内容哈希判断是否上传 —— 字节一变就等于全量重传。**只改一篇资讯，
+也要重传 700 MB。**
+
+修法是 `next.config.mjs` 里的 `generateBuildId`：用 sha256 汇总 `src/`、参与渲染的
+`data/*.json` 与配置文件，算出内容派生的 buildId。刻意**排除** `data/aihot-meta.json`
+——它的 `fetchedAt` 每次都变，会污染 buildId（第一版漏了这个，buildId 照样churn）。
+
+实测结论：
+
+| 场景 | buildId | 上传量 | 耗时 |
+|---|---|---|---|
+| 内容不变，连续构建 | 稳定 `aa5a133094b0a434` | 抽样 113 文件**逐字节一致** | — |
+| 改动 `home-rails.json` | 变为 `a7a95f3858a7621f` | — | — |
+| 恢复内容后重建 | 回到 `aa5a133094b0a434` | 与首次一致 | — |
+| 部署（内容未变） | — | **`No updated asset files to upload.`** | **0.4 分钟** |
+| 部署（过渡，线上仍是旧随机 id） | — | 4250 文件 | 13 分钟 |
+
+最后两行是关键：稳定 buildId 上线后，**内容没变再部署 = 0 个文件 / 24 秒**。
+改动的只有真正变化的文件，增量上传终于名副其实。
 
 ## ⚠️ 部署的三个坑（2026-10-15 实测）
 
@@ -32,8 +63,10 @@ Start-Process -FilePath "node" `
 `Read 8740 files from the assets directory`。所以部署总时长 ≈ 4 分钟建清单 + 上传时间，
 **不要**因为前几分钟没有输出就判定卡死。判断依据应是 CPU 与 TCP 连接，不是日志。
 
-**3. 上传阶段会间歇性 `fetch failed`，重试即可——但要给足时间。** 这是本机网络带宽导致的，
-不是配置错误。2026-10-15 一晚的实际记录：
+**3. 上传阶段会间歇性 `fetch failed`，重试即可——但要给足时间。** 根因是本机线路：
+`nav.tryworld.com.cn` 解析到 `198.18.0.45`（RFC 2544 保留网段，本机代理的虚拟网卡），
+**约 40% 的连接直接超时**。实测 5 次请求同一文件：3 次 200（1–2 秒）、2 次挂到 19–21 秒后
+失败。这是本机环境问题，不是站点或配置问题。2026-10-15 一晚的实际记录：
 
 | 时间 | 结果 | 说明 |
 |---|---|---|
@@ -43,19 +76,20 @@ Start-Process -FilePath "node" `
 | 20:27 | ✗ | 卡在 `Building list of assets` 后无输出 |
 | 20:45 | ✗ | 上传阶段 `fetch failed` |
 | 20:54 | ✓ | 成功，`Uploaded 4255 files (4430 already uploaded) (3107.03 sec)` |
+| 23:21 | ✗ | 卡在清单读取后无输出 |
+| 23:46 | ✓ | 成功，4250 文件 / 580 秒 |
+| 00:00 | ✓ | **`No updated asset files to upload.` / 24 秒** |
 
-也就是说**三次里成一次是常态**，别把它当成配置问题去改 `wrangler.toml`。
+修好 buildId 之前**三次里成一次是常态**；修好之后，内容没变的部署几乎不会失败
+（只需上传极少量文件，暴露在丢包线路下的时间从 51 分钟降到几秒）。
 
 两个判断要点：
 
 - **`Uploaded tryworld-nav` 才是成功标志。** 成功与失败的日志里都会出现 `ERROR` 字样——
   那是部署完成后 wrangler 上报遥测/校验步骤的报错，**与本次部署无关**，别被它误导。
-- **上传很慢是正常的**：实测到 Cloudflare 的下载带宽约 274 KB/s，4255 个文件耗时 **51 分钟**。
-  所以一次部署要按 **1 小时**预留，不要因为半小时没结束就 kill。中途 kill 是安全的
-  （静态资产按内容寻址，已上传的不会白费），但下一次要重头算。
-
-上传阶段实测对比：快的一次 `Uploaded 4271 files (4436 already uploaded) (143.69 sec)`，
-慢的一次 3107 秒——差 20 倍，取决于当时的线路状况。
+- **部署前先确认 buildId 是否稳定**：`Get-ChildItem out\_next\static` 里除 `chunks`/`css`
+  之外的那个目录名就是 buildId。连续两次构建后它若变了，说明有"每次都变"的输入混进了
+  `contentBuildId()`，先修那个再部署，否则必然全量重传。
 
 ## ⚠️ 部署前必读：媒体不能删
 

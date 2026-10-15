@@ -50,14 +50,35 @@ Worker 名 `tryworld-nav`，自定义域名 `nav.tryworld.com.cn`。
 `wrangler.toml` 里 `not_found_handling = "404-page"`，所以 `out/not-found.html`
 会成为全站 404 页（实测 94 KB）。
 
-**CI 自动部署目前是关的**（`.github/workflows/deploy.yml` 只有
-`workflow_dispatch`），原因写在工作流里：媒体不进 git，从 CI 部署会因为
-Workers Static Assets 的整体替换清单把线上产品图删光。要打通 CI 必须先有
-R2（账号当前报 10042，未开通）并把 `NEXT_PUBLIC_ASSET_BASE` 接上——
+**部署用 `scripts/deploy.ps1`，不要手敲 `npx wrangler deploy`。** 这个脚本把
+2026-10-15 一晚上踩出来的坑固化了下来（手工部署曾三次里只成一次）：
+
+```powershell
+.\scripts\deploy.ps1                 # build + 守卫检查 + prune + 部署（带重试）
+.\scripts\deploy.ps1 -SkipBuild      # 直接部署现有 out/（调试用）
+.\scripts\deploy.ps1 -MaxAttempts 5  # 线路差时多试几次
+```
+
+它做四件事：**不用管道**（管道调用 wrangler 会静默卡死在 `Building list of
+assets`）、**媒体守卫**（媒体少于 4000 个文件就中止，否则会把线上 4188 张产品图
+打成 404）、**buildId 稳定性检查**、**失败自动重试**（按 `Uploaded tryworld-nav`
+判定成败，而不是日志里的 `ERROR` 字样）。
+
+**部署已经从 51 分钟降到 24 秒。** 原先 Next.js 每次构建生成随机 buildId 并写进
+每个 HTML，导致每次部署全量重传 700 MB；现在 `next.config.mjs` 用内容派生
+buildId，内容不变时实测 `No updated asset files to upload.`（0 个文件 / 24 秒）。
+细节见 [DEPLOY.md](DEPLOY.md)。
+
+**CI 自动部署仍是关的**（`.github/workflows/deploy.yml` 只有 `workflow_dispatch`）：
+媒体不进 git，从 CI 部署会因 Workers Static Assets 的整体替换清单把线上产品图删光。
+要打通必须先开 R2（账号当前报 10042，未开通）并把 `NEXT_PUBLIC_ASSET_BASE` 接上——
 `src/lib/assets.ts` 已支持这个开关。
 
-`.github/workflows/ci.yml` 跑 lint / tsc / census / assets:check（不需要媒体），
-已在 `b1af50a` 推送后生效。
+**但新闻数据已经自动化了**：`.github/workflows/news-refresh.yml` 每天 00:30 UTC
+（北京时间 08:30，在 AIHOT 日报之后）跑 `npm run news:refresh`，有变更就提交回仓库。
+它只碰 `data/`，不需要媒体，所以在 CI 里安全。下次部署就会带上最新资讯。
+
+`.github/workflows/ci.yml` 跑 assets:check / news 数据校验 / census / lint / tsc。
 
 部署细节与回滚见 [DEPLOY.md](DEPLOY.md)，媒体备份还原见 [MIGRATION.md](MIGRATION.md)。
 
@@ -173,6 +194,7 @@ pricing 徽章分布、`more/related/latest` 的死引用数、prose 总字符�
 npm run build       # 约 4 分钟：先抓 AIHOT 资讯，再生成 llms-full.txt，最后 next build
 npm run lint        # eslint，当前 exit 0
 npm run news:fetch  # 只抓资讯（增量，带 ETag）
-npm run deploy      # build + prune + wrangler deploy —— 见 DEPLOY.md 的坑，预留 1 小时
+npm run news:refresh # 强制重抓资讯（绕过 ETag）
+.\scripts\deploy.ps1 # 推荐：build + 守卫 + prune + 部署（带重试）。见 DEPLOY.md
 npm run census      # 重算数据口径的普查数字
 ```

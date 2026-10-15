@@ -11,7 +11,7 @@
     "assets:check": "node scripts/sync-assets.mjs --check",
     "assets:push": "node scripts/sync-assets.mjs",
     "preview": "npx serve out -l 3100",
-    "deploy": "npm run build && npm run prune && npx wrangler deploy",
+    "deploy": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/deploy.ps1",
     "prune": "node scripts/prune-out.mjs",
     "preview:cf": "npx wrangler dev",
     "media:backup": "node scripts/backup-media.mjs",

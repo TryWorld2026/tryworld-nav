@@ -1,5 +1,44 @@
 [
   {
+    "id": "srhtsyvk0kxb4368shueq84pf",
+    "title": "Wallet Wars：AI 智能体支付之争的格局与走向",
+    "originalTitle": "Wallet Wars",
+    "summary": "Terry Angelos 分析智能体商业带来的支付竞争，指出两场战斗：谁帮智能体付款，以及谁让智能体以本人身份交易。",
+    "source": "a16z：News（RSS）",
+    "originalUrl": "https://www.a16z.news/p/wallet-wars",
+    "aihotUrl": "https://aihot.news/items/srhtsyvk0kxb4368shueq84pf",
+    "publishedAt": "2026-10-15T14:08:21.000Z",
+    "category": "opinion",
+    "categoryLabel": "观点",
+    "reason": "作者区分了帮智能体付款和让智能体以本人身份交易两场竞争，并用支付代币化和卡组织新标准给出分析框架。"
+  },
+  {
+    "id": "l3g1uzem751ki1oxckrxa1b3e",
+    "title": "StepFun 展示 Step 5 Preview 在 NVIDIA GB300 上的推理性能",
+    "originalTitle": "Great to see Step 5 Preview delivering strong inference performance on NVIDIA GB300.",
+    "summary": "StepFun 表示 Step 5 Preview 在 NVIDIA GB300 上推理表现出色，并期待看到开发者用它构建的应用。其转发的 NVIDIA 内容称该模型是 StepFun 最大的开源权重发布，600B MoE 架构，可处理最长 24 小时的 Agent 任务，在 GB300 上用 NVFP4 达到近 8K tokens/sec/GPU，提供 NVFP4 checkpoint（https://huggingface.co/stepfun-ai/Step-5-Preview-NVFP4），并支持 SGLang、vLLM、NeMo Automodel 后训练和 NVIDIA NIM 一键部署。",
+    "source": "X：阶跃星辰 StepFun (@StepFun_ai)",
+    "originalUrl": "https://x.com/StepFun_ai/status/2110732706518835353",
+    "aihotUrl": "https://aihot.news/items/l3g1uzem751ki1oxckrxa1b3e",
+    "publishedAt": "2026-10-15T14:01:07.000Z",
+    "category": "ai-models",
+    "categoryLabel": "AI 模型",
+    "reason": "原文补充了 Step 5 Preview 在 NVIDIA GB300 上的推理表现和 NVFP4 权重入口，可帮助开发者评估部署选择。"
+  },
+  {
+    "id": "v0dw619te36yzweiqtuw7pjxs",
+    "title": "阶跃星辰开放 Step 5 Preview 权重",
+    "originalTitle": "Step 5 Preview is now open weights.",
+    "summary": "阶跃星辰（StepFun）宣布 Step 5 Preview 开放权重，BF16 和 FP8 权重已上线 Hugging Face 和 ModelScope，并附技术博客。",
+    "source": "X：阶跃星辰 StepFun (@StepFun_ai)",
+    "originalUrl": "https://x.com/StepFun_ai/status/2110717330657616092",
+    "aihotUrl": "https://aihot.news/items/v0dw619te36yzweiqtuw7pjxs",
+    "publishedAt": "2026-10-15T13:00:01.000Z",
+    "category": "ai-models",
+    "categoryLabel": "AI 模型",
+    "reason": "官方公告直接给出权重规格和下载入口，需要开源 MoE 权重的读者可据此评估是否纳入自己的工作流。"
+  },
+  {
     "id": "pd501xipe38ooxo1t7jn7hphn",
     "title": "The Verge 实测 Eiliko 机器人玩具：68000 台设备数据可被任意访问并可远程劫持",
     "originalTitle": "Your secrets aren’t safe with this cute robot toy — they’re on Chinese servers ready to be hacked",
@@ -65,19 +104,6 @@
     "reason": "作者实测开源Skill Anatomy并给出成本、耗时和适用模型的数字，可帮读者判断是否值得装来生成科普视频。"
   },
   {
-    "id": "k8xyrz2we9s3o7wcn9sdzmvgi",
-    "title": "阶跃星辰开放 Step 5 Preview 权重并发布技术博客",
-    "originalTitle": "阶跃 Step 5 Preview 权重开放，技术博客同步上线",
-    "summary": "阶跃星辰正式开放 Step 5 Preview 模型权重，提供 BF16 与 FP8 版本，已上线 Hugging Face 和 ModelScope。",
-    "source": "公众号：阶跃星辰（Step）",
-    "originalUrl": "https://mp.weixin.qq.com/s?__biz=MzkyNTYxNzg5Mg%3D%3D&mid=2247488160&idx=1&sn=427a3dc2e5b84b0977e1e5ea075cfbd7",
-    "aihotUrl": "https://aihot.news/items/k8xyrz2we9s3o7wcn9sdzmvgi",
-    "publishedAt": "2026-10-15T03:02:38.000Z",
-    "category": "ai-models",
-    "categoryLabel": "AI 模型",
-    "reason": "官方开放权重的同一天给出架构与训练细节，开发者可据此评估部署成本与长程 Agent 任务的适配性。"
-  },
-  {
     "id": "hie2iw214agnrwu3mxy3t79af",
     "title": "蚂蚁百灵正式开源 Ling-3.1-flash，560B 参数模型可 4 卡部署",
     "originalTitle": "Ling-3.1-flash 正式开源：让真实业务需求更快变成可用成果",
@@ -115,6 +141,19 @@
     "category": "tip",
     "categoryLabel": "教程",
     "reason": "作者实测了开源 Anatomy Skill 生成原理科普视频的效果，还给出额度消耗、耗时和模型配置等一手数据，方便读者评估是否上手。"
+  },
+  {
+    "id": "ojpe4mr67tjbrt5atyi6hyapl",
+    "title": "Google 工程师讲解如何系统评测 AI 智能体，告别 vibe check",
+    "originalTitle": "Evaluating AI agents: moving past the vibe check",
+    "summary": "Google Developers Blog 发布智能体评测实践指南，指出仅靠终端跑几个提示词的 vibe check 无法发现智能体重试循环、工具参数幻觉等隐性失败。",
+    "source": "Google Developers Blog（RSS）",
+    "originalUrl": "https://developers.googleblog.com/evaluating-ai-agents-moving-past-the-vibe-check/",
+    "aihotUrl": "https://aihot.news/items/ojpe4mr67tjbrt5atyi6hyapl",
+    "publishedAt": "2026-10-15T00:00:00.000Z",
+    "category": "tip",
+    "categoryLabel": "教程",
+    "reason": "原文给出从 CUJ 定义到 CI/CD 门禁的完整智能体评测流程，可用 agent-eval 工具包直接复现，避开四个常见评测陷阱。"
   },
   {
     "id": "eg7f0ohfzuyjux9ndx2ggk72s",
@@ -232,6 +271,19 @@
     "category": "tip",
     "categoryLabel": "教程",
     "reason": "LangChain 以竞争分析 Agent 为例，讲清 offloading、summarization、skills、subagents 和长期记忆五类上下文管理技术如何通过 middleware 落地。"
+  },
+  {
+    "id": "virsb1x13670yw25mr9fyxqtt",
+    "title": "Tessl Verifiers 正式发布，用仓库内纯文本规则检查每次 Agent 代码变更",
+    "originalTitle": "Verifiers: enforce your repo's rules on every agent change",
+    "summary": "Tessl 发布 Verifiers，规则以 JSON 文件形式存放在仓库中，每次代码变更时由 LLM judge 逐条给出 pass 或 fail，可像 lint 或测试一样在本地、pre-commit 或 CI 中使用。",
+    "source": "Tessl：产品与工程博客",
+    "originalUrl": "https://tessl.io/blog/verifiers-enforce-your-repos-rules-on-every-agent-change",
+    "aihotUrl": "https://aihot.news/items/virsb1x13670yw25mr9fyxqtt",
+    "publishedAt": "2026-10-14T16:00:00.000Z",
+    "category": "ai-products",
+    "categoryLabel": "AI 产品",
+    "reason": "官方详细介绍 Verifiers 的机制、配置与接入方式，读者可据此把它当作 lint 或测试之外的确定性检查接入现有工作流。"
   },
   {
     "id": "pqpqgxyiu4qyu86fbljd726v9",
@@ -1222,19 +1274,6 @@
     "reason": "原文给出完整的自动化重写流程和与 Claude Code 等工具的对比数据，读者可以评估多智能体重写代码的实际方法和收益。"
   },
   {
-    "id": "cal34hameqt3bh6d52vaqt58v",
-    "title": "Zenity 披露 AgentCore 漏洞链：一个公开 AI Agent 可控制同账户同区域所有 Agent",
-    "originalTitle": "One public-facing AI agent on AWS could read, rewrite, and delete every other agent in the region",
-    "summary": "Zenity Labs 发现 AWS Bedrock AgentCore 的漏洞链“AgentCorruption”，只需对一个公开 Agent 发送一条提示词，即可窃取凭证并接管同 AWS 账户和区域内所有 Agent，读取私有对话、下载源代码并篡改长期记忆。",
-    "source": "The Decoder：AI News（RSS）",
-    "originalUrl": "https://the-decoder.com/a-single-prompt-was-enough-to-hijack-every-ai-agent-in-an-aws-account-zenity-researchers-found/",
-    "aihotUrl": "https://aihot.news/items/cal34hameqt3bh6d52vaqt58v",
-    "publishedAt": "2026-10-08T13:01:01.000Z",
-    "category": "paper",
-    "categoryLabel": "论文",
-    "reason": "原文完整还原了攻击链、AWS 的修复时间线和最小权限权衡，对评估云端 Agent 部署风险有直接参考价值。"
-  },
-  {
     "id": "gq8yjkqlcdbpy0l5uc8ch2sj8",
     "title": "Anthropic 用 Claude Managed Agents 构建定时智能体自动化的实践指南",
     "originalTitle": "Building effective agent automations",
@@ -1246,19 +1285,6 @@
     "category": "tip",
     "categoryLabel": "教程",
     "reason": "文章把定时智能体自动化拆成可复用的六个组件，并给出书签、台账和权限等可直接迁移的防错规则。"
-  },
-  {
-    "id": "pl2oa5clmf0gp3t7x3qsn71kc",
-    "title": "Waymo 完成 50 亿美元债务融资，加速业务扩张",
-    "originalTitle": "Waymo Closes $5 Billion Debt Financing to Accelerate Business Expansion",
-    "summary": "Waymo 宣布完成 50 亿美元定期贷款，这是其首次债务融资。PIMCO、Blackstone 和 Sixth Street 担任牵头银团贷方，Goldman Sachs 担任独家主账簿管理人；资金将用于加速其全自动驾驶打车服务在美国及国际市场的扩张。此前今年早些时候 Waymo 完成了 160 亿美元股权融资，上个月刚在第十五个美国城市启动服务。",
-    "source": "Waymo：Blog（网页）",
-    "originalUrl": "https://waymo.com/blog/2026/10/waymo-closes-5-billion-debt-financing",
-    "aihotUrl": "https://aihot.news/items/pl2oa5clmf0gp3t7x3qsn71kc",
-    "publishedAt": "2026-10-08T07:00:00.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "官方宣布首笔 50 亿美元债务融资并列出主要贷方，可结合此前的 160 亿美元股权融资了解其资金布局。"
   },
   {
     "id": "ylkp4aqm4r5fn7aul2l9kfmxw",
