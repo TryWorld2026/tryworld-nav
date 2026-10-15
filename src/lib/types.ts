@@ -146,56 +146,41 @@ export type ToolPlatform = {
 };
 
 /**
- * One entry of the 相关新闻 rail on a news article page. The origin renders the
- * same card shape there as on the index — title, summary, calendar + date — but
- * hoists the `time` element out of each link object into a sibling flight row,
- * so the dates below are cross-filled from the article that owns the slug.
+ * 一条 AIHOT 资讯，来自 `data/news.json`（由 `scripts/fetch-aihot.mjs` 生成）。
+ *
+ * 这个栏目在 2026-10-15 之前是原站十篇长文的复刻（`bodyHtml` 全文 + 详情页）。
+ * 现在改为 AIHOT 精选的资讯卡片流：卡片显示标题/摘要/来源/时间，点击跳原文，
+ * 站内不再有 `/news/{slug}` 详情页。原因见 `scripts/fetch-aihot.mjs` 顶部注释。
+ *
+ * `source` / `aihotUrl` / `originalUrl` 三个字段是**署名与溯源**，不是可选装饰：
+ * AIHOT《公开使用规则》v1.1 第 5、6 条要求保留机器响应里的来源与 canonical
+ * 信息、不得删除或伪造署名，所以 UI 必须把它们展示出来。
+ *
+ * `publishedAt` 是 ISO-8601 UTC。展示时统一按北京时间格式化（见 `lib/news.ts`），
+ * 因为直接切字符串会得到 UTC 日期，与中国读者的「今天/昨天」差 8 小时。
  */
-export type NewsRelated = {
-  slug: string;
-  href: string;
+export type NewsItem = {
+  /** AIHOT 的 cuid 字符串，不是数字。用作 React key 与去重键。 */
+  id: string;
+  /** 中文标题（AIHOT 已 normalize）。 */
   title: string;
+  /** 英文原标题；仅当与 `title` 不同时存在。 */
+  originalTitle: string | null;
+  /** AIHOT 生成的 LLM 中文摘要。不要当原文引用——引用要回 `originalUrl` 核对。 */
   summary: string;
-  /** ISO timestamp the origin's `dateTime` attribute carries. */
-  dateTime: string;
-  /** Human label, e.g. `2025年8月14日 16:18`. */
-  dateLabel: string;
-};
-
-/**
- * One AI新闻 article. `bodyHtml` is the origin's own HTML for the article body —
- * Feishu/Lark export markup, the same provenance as `ToolExtras.prose` and
- * injected the same way, so the same sanitisation contract applies: the harvest
- * pass kept no slug carrying a script/style/iframe/object/embed/form element, an
- * `on*` attribute or a `javascript:` URL.
- */
-export type NewsArticle = {
-  slug: string;
-  href: string;
-  title: string;
-  /** Index-card summary; the detail page does not render it. */
-  summary: string;
-  /** Badge label — 新闻报道 on all ten. */
-  category: string;
-  /** `2025年8月14日` — the index card's date. */
-  date: string;
-  /** `2025/8/14` — the index card's footer date. */
-  dateShort: string;
-  /** Local cover image, `/assets/news/<file>`. */
-  image: string;
-  /** Index-card alt text. */
-  alt: string;
-  readMore: string;
-  /** `<meta name="description">` of the origin's article page. */
-  seoDescription: string;
-  /** `<meta name="keywords">`, comma-joined. */
-  keywords: string;
-  dateTime: string;
-  dateLabel: string;
-  cover: string;
-  coverAlt: string;
-  bodyHtml: string;
-  related: NewsRelated[];
+  /** 来源站名，例如 `The Verge：AI（RSS）`。 */
+  source: string;
+  /** 原文链接——卡片的跳转目标。 */
+  originalUrl: string;
+  /** AIHOT 上该条目的页面，canonical 与署名用。 */
+  aihotUrl: string | null;
+  publishedAt: string | null;
+  /** v1 的英文分类 slug，例如 `ai-models`；可能为 null。 */
+  category: string | null;
+  /** 分类的中文徽章文案，已由抓取脚本映射好。 */
+  categoryLabel: string;
+  /** AIHOT 的入选理由（编辑视角的一句话），可为 null。 */
+  reason: string | null;
 };
 
 /**

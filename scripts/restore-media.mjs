@@ -108,6 +108,10 @@ for (const c of collections) {
   for (const t of c.tools) { add(t.icon); add(t.image); }
 }
 for (const c of cards) for (const m of c.members) add(m.icon);
+// `data/news.json` 在 2026-10-15 改为 AIHOT 资讯流后不再带 `image` / `cover`：
+// 卡片是纯文字的，AIHOT 不提供配图。所以这两行现在什么都加不进来——保留是防御
+// 性的（万一以后又给资讯配图，字段名沿用即可）。`public/assets/news/` 里那 11 张
+// 旧长文封面仍在磁盘与备份包里，只是已无引用；media:backup 按目录打包，不受影响。
 for (const a of news) { add(a.image); add(a.cover); }
 for (const t of tags) add(t.iconUrl);
 // The site's own icons ship with the repo, but pull them too for completeness.

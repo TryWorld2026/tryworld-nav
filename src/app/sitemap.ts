@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { SITE, categories, collections, newsArticles, tools } from '@/lib/data';
+import { SITE, categories, collections, tools } from '@/lib/data';
 
 // Required by `output: 'export'`: without it Next treats the sitemap as a
 // request-time route and refuses to emit it as a file.
@@ -47,12 +47,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     })),
-    ...newsArticles.map((a) => ({
-      url: `${SITE.url}/news/${a.slug}`,
-      lastModified: CATALOG_UPDATED,
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    })),
+    // 资讯条目不再进 sitemap：/news 现在是 AIHOT 精选的外链卡片流，站内没有
+    // /news/{slug} 页面可索引（详情页已于 2026-10-15 移除），而把外链原文塞进
+    // 本站 sitemap 是错的——那些 URL 不属于本域。索引页本身留在 STATIC_ROUTES。
     ...tools.map((t) => ({
       url: `${SITE.url}/tools/${t.slug}`,
       lastModified: CATALOG_UPDATED,

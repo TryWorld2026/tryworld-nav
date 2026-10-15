@@ -5,7 +5,7 @@
   "description": "试界导航 — 智能体与 AI 工具导航门户",
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/generate-llms-full.mjs && next build",
+    "build": "node scripts/fetch-aihot.mjs && node scripts/generate-llms-full.mjs && next build",
     "start": "next start",
     "lint": "eslint .",
     "assets:check": "node scripts/sync-assets.mjs --check",
@@ -17,6 +17,8 @@
     "media:backup": "node scripts/backup-media.mjs",
     "media:restore": "node scripts/restore-media.mjs",
     "census": "node scripts/census.mjs",
+    "news:fetch": "node scripts/fetch-aihot.mjs",
+    "news:refresh": "node scripts/fetch-aihot.mjs --force",
     "llms:full": "node scripts/generate-llms-full.mjs"
   },
   "dependencies": {

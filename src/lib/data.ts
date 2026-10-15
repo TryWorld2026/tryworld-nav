@@ -14,7 +14,7 @@ import type {
   Category,
   Collection,
   Featured,
-  NewsArticle,
+  NewsItem,
   Tool,
   ToolExtras,
 } from './types';
@@ -95,17 +95,18 @@ export const hotCategories = categories.filter((c) => c.hot);
 export const allCategories = categories;
 
 /**
- * AI新闻 articles, newest first. The origin's index is emitted in its own
- * (newest-first) order by the payload walk, so the harvest preserved it; sorting
- * here only guards against a re-run producing a different order. The dates are
- * the origin's `dateTime` values, all ISO-8601 UTC.
+ * AIHOT 资讯，最新在前。
+ *
+ * `data/news.json` 由 `scripts/fetch-aihot.mjs` 在构建前生成（`npm run build`
+ * 的第一步），抓的是 AIHOT 最近 7 天的精选条目。这里再排一次序只是防御：
+ * 脚本已经排好，但数据文件是外部产物，顺序不该由渲染层假定。
+ *
+ * 与工具数据不同，这里**没有** `asset()` 映射：AIHOT 不提供配图，卡片是纯文字，
+ * 所以不存在需要解析的 `/assets/...` 路径。
  */
-export const newsArticles: NewsArticle[] = (rawNews as NewsArticle[])
+export const newsItems: NewsItem[] = (rawNews as NewsItem[])
   .slice()
-  .sort((a, b) => (a.dateTime < b.dateTime ? 1 : a.dateTime > b.dateTime ? -1 : 0))
-  .map((a) => ({ ...a, image: asset(a.image), cover: asset(a.cover) }));
-
-export const newsBySlug = new Map(newsArticles.map((a) => [a.slug, a]));
+  .sort((a, b) => String(b.publishedAt ?? '').localeCompare(String(a.publishedAt ?? '')));
 
 /**
  * The tools in one category, in the origin's own order.
