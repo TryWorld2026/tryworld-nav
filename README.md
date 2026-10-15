@@ -56,6 +56,9 @@ Workers Static Assets 的整体替换清单把线上产品图删光。要打通 
 R2（账号当前报 10042，未开通）并把 `NEXT_PUBLIC_ASSET_BASE` 接上——
 `src/lib/assets.ts` 已支持这个开关。
 
+`.github/workflows/ci.yml` 跑 lint / tsc / census / assets:check（不需要媒体），
+已在 `b1af50a` 推送后生效。
+
 部署细节与回滚见 [DEPLOY.md](DEPLOY.md)，媒体备份还原见 [MIGRATION.md](MIGRATION.md)。
 
 ## 与原站的差异（DEVIATIONS）
@@ -82,7 +85,7 @@ R2（账号当前报 10042，未开通）并把 `NEXT_PUBLIC_ASSET_BASE` 接上�
 - **`llms.txt` / `llms-full.txt` 的域名已改写**：`data/llms.txt` 是原站索引，47 个绝对链接都指向 `tryworld.com.cn`，生成时统一改成本站，否则等于给原站导流。`llms-full.txt`（8.3 MB）由 `scripts/generate-llms-full.mjs` 生成并挂进 `npm run build`，不会再出现 robots 声明了却 404 的情况。
 - **首页 HTML 5.86 MB / 1496 个 `<img>`**：图片都带 `loading=lazy` 和宽高，但没有 `srcset`、没有 `fetchpriority`，移动端首屏是明确风险。
 - **`.txt`（RSC flight）2135 个占 240 MB**：`npm run prune` 的 `--lean` 可裁掉，但会保留 `llms.txt` / `llms-full.txt`（两者由 robots.txt 声明，删了就是 404）。
-- **零测试**，CI 也不跑 build/lint。
+- **零测试**，CI 不跑 build（跑 lint / tsc / census / assets:check）。
 - `package.json` 的 `name` 是 `tryworld-portal`，与仓库名、Worker 名不一致。
 - eslint 9 仍用 `FlatCompat` 桥接 `next/core-web-vitals`（官方已弃用的接法）。
 
@@ -98,10 +101,21 @@ pricing 徽章分布、`more/related/latest` 的死引用数、prose 总字符�
 ## 已验证
 
 `npm run build` 通过（2140 页静态生成，产物 2135 个 `.html`），
-`npm run lint` exit 0。每个路由都带上了
+`npm run lint` exit 0、`npx tsc --noEmit` exit 0。每个路由都带上了
 `<link rel="canonical" href="https://nav.tryworld.com.cn/...">`
 （2134/2135，唯一例外是 `404.html`，它没有规范 URL），
 `npm run prune --lean` 保留 `llms.txt` 与 `llms-full.txt`。
+
+2026-10-15 部署后复验（Version `c5355d01`）：
+
+- `llms-full.txt` 由 404 转为 **200 / 8,516,507 bytes**（robots.txt 早已声明它）
+- `llms.txt` 47 条链接全部指向本站，指向原站 `tryworld.com.cn` 的为 **0**
+- canonical 在 `/`、`/tools`、`/news`、`/categories`、`/collections`、`/about`、
+  `/tools/[slug]`、`/news/[slug]`、`/privacy-policy` 全部存在
+- 媒体未丢失：随机抽样 120 个 `/assets/*` **120/120 返回 200**
+- 路由健康：sitemap 2134 条中随机抽 60 条 **60/60 返回 200**
+- 交互正常：`/tools` 客户端筛选 2081 → 搜「视频」334 → 重置 2081 → 点分类 34，
+  浏览器 `pageerror` **0**
 
 ## 快速开始（命令速查）
 

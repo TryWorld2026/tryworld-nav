@@ -2,14 +2,35 @@
 
 代码在 GitHub，静态站点跑在 Cloudflare Workers，子域名指向站点。
 
-已部署（2026-10-14 更新）：
+已部署（2026-10-15 更新，Version `c5355d01`）：
 
 | | |
 |---|---|
 | 站点 | https://nav.tryworld.com.cn |
 | Worker | `tryworld-nav`（账号 TryWorld，`d59de4a1…cfe359`） |
-| workers.dev | https://tryworld-nav.1822520752.workers.dev |
+| workers.dev | https://tryworld-nav.1822520752.workers.dev（未开通，404 / code 1042） |
 | 部署内容 | 8,707 个文件 / 1.05 GB（含媒体），首次上传约 20 分钟 |
+
+## ⚠️ 部署的两个坑（2026-10-15 实测）
+
+**1. 不要用管道跑 `wrangler deploy`。** 通过 PowerShell 管道（`npx wrangler deploy 2>&1 | Tee-Object …`）
+调用时，进程会卡在 `Building list of assets...` 且**永不恢复**：日志 21 分钟无写入、CPU ≈0%、
+没有任何 ESTABLISHED TCP 连接。表现与网络故障一模一样，但实际是管道缓冲问题。用直接文件重定向：
+
+```powershell
+Start-Process -FilePath "node" `
+  -ArgumentList "node_modules\wrangler\bin\wrangler.js","deploy" `
+  -WorkingDirectory "D:\codingXM\工具平台" `
+  -RedirectStandardOutput "work\deploy.out" -RedirectStandardError "work\deploy.err" `
+  -NoNewWindow -Wait
+```
+
+**2. 读取资产清单本身就要约 4 分钟。** `wrangler deploy --dry-run` 实测 247 秒，全部花在
+`Read 8740 files from the assets directory`。所以部署总时长 ≈ 4 分钟建清单 + 上传时间，
+**不要**因为前几分钟没有输出就判定卡死。判断依据应是 CPU 与 TCP 连接，不是日志。
+
+上传阶段实测：`Uploaded 4271 files (4436 already uploaded) (143.69 sec)` —— 增量有效，
+第二次部署只传变更部分，不必等 20 分钟。
 
 ## ⚠️ 部署前必读：媒体不能删
 
