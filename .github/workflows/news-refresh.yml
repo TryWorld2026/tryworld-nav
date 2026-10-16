@@ -14,8 +14,13 @@ name: news-refresh
 # 说明：这个工作流只跑抓取，不需要媒体，所以能在 CI 里安全运行。
 on:
   schedule:
-    # 每天 00:30 UTC = 北京时间 08:30，在 AIHOT 日报生成（08:00）之后。
-    - cron: '30 0 * * *'
+    # 每天 01:17 UTC = 北京时间 09:17，在 AIHOT 日报生成（08:00）之后。
+    #
+    # 为什么不是整点/半点：GitHub Actions 的 schedule 在高峰期（每小时 0 分附近）
+    # 会**排队延迟**，官方文档明确说 "may be delayed during periods of high loads"。
+    # 选一个非整点、非半点的分钟（17 分）能显著降低被推迟的概率。这个工作流本身
+    # 不赶时间，但延迟到跨天就白跑一次，所以顺手避开高峰。
+    - cron: '17 1 * * *'
   workflow_dispatch:
 
 permissions:
