@@ -19,7 +19,8 @@
     "census": "node scripts/census.mjs",
     "news:fetch": "node scripts/fetch-aihot.mjs",
     "news:refresh": "node scripts/fetch-aihot.mjs --force",
-    "llms:full": "node scripts/generate-llms-full.mjs"
+    "llms:full": "node scripts/generate-llms-full.mjs",
+    "test": "node --test \"tests/**/*.test.mjs\""
   },
   "dependencies": {
     "clsx": "^2.1.1",

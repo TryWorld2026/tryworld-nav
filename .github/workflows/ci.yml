@@ -69,6 +69,13 @@ jobs:
       - name: Census (dead cross-references, coverage)
         run: npm run census
 
+      - name: Test
+        # Node 内置测试运行器，无额外依赖。覆盖两处最容易悄悄出错的地方：
+        # src/lib/news.ts 的时区格式化（退回切字符串会让日期差一天，而页面上看不出来）
+        # 与 scripts/fetch-aihot.mjs 的字段映射/降级（上游改字段名会静默丢署名或产生死链）。
+        # 抓取测试用本地假 API，不联网。
+        run: npm test
+
       - name: Lint
         run: npm run lint
 

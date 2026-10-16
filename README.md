@@ -140,9 +140,19 @@ npm run news:refresh   # 强制重抓
 
 - **媒体只有一份本地副本** + `D:\tryworld-backups\` 的 tar.gz。git 里没有，机器坏了就没了。定期跑 `npm run media:backup`。（2026-10-15 核对：备份包 4183 个文件与磁盘**逐文件一致**，抽样解压 SHA256 相符。）
 - **`llms.txt` / `llms-full.txt` 的域名已改写**：`data/llms.txt` 是原站索引，47 个绝对链接都指向 `tryworld.com.cn`，生成时统一改成本站，否则等于给原站导流。`llms-full.txt`（8.3 MB）由 `scripts/generate-llms-full.mjs` 生成并挂进 `npm run build`，不会再出现 robots 声明了却 404 的情况。
-- **首页 HTML 5.86 MB / 1496 个 `<img>`**：图片都带 `loading=lazy` 和宽高，但没有 `srcset`、没有 `fetchpriority`，移动端首屏是明确风险。
+- **首页 HTML 5.86 MB 是磁盘大小，不是访客下载量。** 2026-10-16 实测（Chromium，线上）：
+  首页 Brotli 传输 **167 KB**、整页首次加载 **364 KB / 14 个请求**；1496 张图**全部
+  `loading=lazy`**，首屏只加载 2 张。完整滚到底：移动端 390×844 传 **4.2 MB**（203 张图，
+  2.27 MB），桌面端 1440×900 传 **4.15 MB**。也就是说首屏没有风险，代价在**深度滚动**——
+  平均每张截图 149 KB 且没有 `srcset`，所以高分屏拿到的是比显示尺寸大得多的原图。
+  真要优化就从 `srcset` + 预生成缩略图入手，不是"首屏"问题。（本节早先写"移动端首屏是
+  明确风险"，那是只看未压缩字节得出的错误结论，已按实测更正。）
 - **`.txt`（RSC flight）2135 个占 240 MB**：`npm run prune` 的 `--lean` 可裁掉，但会保留 `llms.txt` / `llms-full.txt`（两者由 robots.txt 声明，删了就是 404）。
-- **零测试**，CI 不跑 build（跑 lint / tsc / census / assets:check）。
+- **测试覆盖很薄**：13 个测试（`npm test`，Node 内置运行器，无额外依赖），只覆盖
+  `src/lib/news.ts` 的时区格式化与 `scripts/fetch-aihot.mjs` 的字段映射/降级。
+  其余（`lib/data.ts` 的确定性抽样、`lib/pricing.ts`、各页面渲染）仍无测试。
+  CI 跑 lint / tsc / test / census / assets:check，但**不跑 build**——所以
+  "能不能构建成功"只有本地部署时才会暴露。
 - `package.json` 的 `name` 是 `tryworld-portal`，与仓库名、Worker 名不一致。
 - eslint 9 仍用 `FlatCompat` 桥接 `next/core-web-vitals`（官方已弃用的接法）。
 
