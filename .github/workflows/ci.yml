@@ -7,14 +7,31 @@
 # never has it, and none of these steps require it:
 #
 #   assets:check  counts and hashes what is there; it only uploads on `--push`
+#   news shape    checks data/news.json has the fields the cards need
 #   census        reads data/*.json and reports dead cross-references
+#   test          node --test (timezone formatting, AIHOT field mapping)
 #   lint          eslint . (next/core-web-vitals)
 #   tsc           full type check, no emit
+#   build         next build — catches prerender errors that lint/tsc miss
 #
 # `deploy.yml` stays workflow_dispatch-only on purpose: a Workers Static Assets
 # deploy REPLACES the whole asset manifest, so deploying from a checkout with no
 # media would silently strip every product image from the live site. See the
 # comment block at the top of that file.
+#
+# THE BUILD STEP IS A CHECK, NOT A DEPLOY SOURCE. It runs with no media and
+# its `out/` is thrown away — deployment still happens from a machine that has
+# `public/assets/`. That is safe precisely because the two are separate: this
+# step only answers "does the code still build?".
+#
+# Verified 2026-10-16 in a media-less git worktree (exactly what CI checks out):
+#   - `npm run build` exits 0 in 4.8 min with 0 media files present
+#   - injecting a throw into a page component makes it exit 1 and name the
+#     failing route ("Error occurred prerendering page /about")
+# So it catches code and prerender regressions but NOT missing media: image
+# paths are baked-in strings, and nothing checks the file exists. That gap is
+# covered by the media guard in scripts/deploy.ps1 and by deploy.yml's
+# pre-build check, both of which run where the media actually is.
 name: ci
 
 on:
@@ -81,3 +98,12 @@ jobs:
 
       - name: Typecheck
         run: npx tsc --noEmit
+
+      - name: Build
+        # 抓 lint/tsc 抓不到的静态渲染错误：某页在 prerender 时抛错，tsc 是过得去的
+        # （类型没错），只有真正跑一次 build 才会暴露。实测注入一个 throw 后
+        # 这里会 exit 1 并点名出错的路由。
+        #
+        # 这一步在**没有媒体**的检出上跑（CI 就是这样），产物只用于验证、不部署 ——
+        # 见文件顶部的说明。跑一次约 5 分钟，比"推到线上才发现构建挂了"便宜得多。
+        run: npm run build
