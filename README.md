@@ -101,6 +101,8 @@ lint / tsc / **build**。其中 build 这一步是**检查而非部署源**：CI
 | 5 | 「类似工具」同理，但保留按品类抽取的关系 | `src/lib/data.ts` |
 | 6 | `layout.tsx` 里 `<main>` 套 `<main>` 是无效 HTML，但它是侧栏全高边线对齐的唯一手段，有意保留 | `src/app/layout.tsx` |
 | 7 | 没有登录/注册等用户功能：原站这些是服务端能力，静态站没有对应实现，只保留按钮外观 | `src/components/header.tsx` |
+| 8 | 404 插图的 `height="auto"` 改为 CSS `h-auto w-[300px]`——SVG 的 width/height 属性不接受 `auto`，原样保留会让浏览器控制台报错 | `src/components/not-found-art.tsx` |
+| 9 | 工具页 prose 里指向已删新闻详情页的 `/news/{slug}` 链接降级为纯文本（原站那批长文已随改版下线，站内无等价目标） | `src/components/tool-details.tsx` |
 
 `data/tool-extras.json` 里的 `more` / `related` / `latest` 三个字段同样
 不参与渲染，只作溯源保留——原因见 `src/lib/types.ts` 的类型注释。
@@ -153,9 +155,10 @@ npm run news:refresh   # 强制重抓
   真要优化就从 `srcset` + 预生成缩略图入手，不是"首屏"问题。（本节早先写"移动端首屏是
   明确风险"，那是只看未压缩字节得出的错误结论，已按实测更正。）
 - **`.txt`（RSC flight）2135 个占 240 MB**：`npm run prune` 的 `--lean` 可裁掉，但会保留 `llms.txt` / `llms-full.txt`（两者由 robots.txt 声明，删了就是 404）。
-- **测试覆盖很薄**：13 个测试（`npm test`，Node 内置运行器，无额外依赖），只覆盖
-  `src/lib/news.ts` 的时区格式化与 `scripts/fetch-aihot.mjs` 的字段映射/降级。
-  其余（`lib/data.ts` 的确定性抽样、`lib/pricing.ts`、各页面渲染）仍无测试。
+- **测试覆盖很薄**：18 个测试。13 个纯单元（`npm run test:unit`：时区格式化、
+  AIHOT 字段映射与降级），5 个交互回归（`npm run test:interaction`，需要先起
+  `npm run preview`；服务器不可达时自动 skip 而不是 fail）。其余（`lib/data.ts`
+  的确定性抽样、`lib/pricing.ts`、各页面渲染）仍无测试。
   CI 已跑 lint / tsc / test / census / assets:check / **build**。
 - `package.json` 的 `name` 是 `tryworld-portal`，与仓库名、Worker 名不一致。
 - eslint 9 仍用 `FlatCompat` 桥接 `next/core-web-vitals`（官方已弃用的接法）。
@@ -201,6 +204,34 @@ pricing 徽章分布、`more/related/latest` 的死引用数、prose 总字符�
 
 抓取降级也已实测：把 API 指向不可达主机后，有历史数据时打印警告并 **exit 0**
 （保留上一版 109 条，构建继续）；删掉 `data/news.json` 后再测才 **exit 1**。
+
+2026-10-16 对抗式回归（桌面 1440×900 + 移动 390×844 两套视口，逐控件点击）：
+
+- **穷举内部链接**：2125 个页面里 **316,029** 个内部引用，断链 **0 个**
+- **移动端修复**：汉堡菜单原先**完全打不开**（见下方"已修缺陷"），修复后面板
+  正常弹出、含 3 个导航入口 + 常用推荐 + 22 个热门分类，关闭按钮 / Esc / 点链接
+  导航三种关闭路径都可用
+- **桌面端**：所有分类面板开合、登录弹窗开合、搜索弹窗（Ctrl+K）选中后跳转并
+  关闭、`/tools` 筛选全链路（输入→334、清空→2081、分类→34、重置→2081、加载更多）、
+  分享/收藏按钮状态切换与 localStorage 写入
+- **深链接**：`/tools?q=视频` 与 `/tools?cat=ai-coding` 进入后筛选态正确回填
+- **后退键**：在筛选过的 `/tools` 上返回，状态与 URL 一致（`?cat=ai-coding`，136 个）
+- **404 页**：三种视口（390×844、320×568、1440×900）下按钮均可见可点、无横向滚动
+- 全流程 `pageerror` 与 console error 均为 **0**
+
+### 已修缺陷（2026-10-16 对抗测试发现）
+
+| 缺陷 | 影响 | 根因 |
+|---|---|---|
+| **移动菜单完全打不开** | 移动端唯一的主导航入口失效——点汉堡按钮页面纹丝不动 | `mobile-nav.tsx` 里 `useEffect(() => onClose(), [pathname, onClose])` 在**挂载时也会执行一次**，菜单刚开就被关掉，DOM 里面板只存在一帧 |
+| **404 插图控制台报错** | 每次访问 404 都有一条 `Error: <svg> attribute height: Expected length, "auto"` | 原站写 `height="auto"`，而 SVG 的 width/height 属性不接受 `auto` |
+| **工具页残留 404 链接** | `/tools/bing-image-creator` 的 prose 里指向 `/news/how-to-use-bing-create-images`，该路由已随新闻改版删除 | 删详情页时未检查 prose 内的引用；已在渲染层降级为纯文本 |
+
+第一个缺陷**只在移动端出现**，桌面端一切正常（"所有分类"面板是 header 内联渲染的，
+不走那个组件）——所以只做桌面测试会完全漏掉。这也是为什么回归测试按视口分开跑。
+
+两个修复都做了**反向验证**：把代码回滚到有 bug 的版本后，测试确实 FAIL
+（`AssertionError: 菜单应出现`），修复后 5/5 PASS。测试不是空转的。
 
 ## 快速开始（命令速查）
 

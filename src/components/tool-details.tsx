@@ -42,9 +42,33 @@ export function ToolProse({ prose }: { prose: string }) {
       <div className="relative">
         <div
           className="prose prose-stone max-w-none px-4 text-foreground/80 prose-headings:mt-4 prose-headings:font-display prose-headings:text-foreground prose-strong:text-foreground prose-a:text-gongke-accent hover:prose-a:text-gongke-accent/80 prose-code:bg-gongke-gray/20 prose-code:rounded prose-code:px-1.5 prose-code:py-0.5 before:prose-code:content-[''] after:prose-code:content-[''] tool-details"
-          dangerouslySetInnerHTML={{ __html: prose }}
+          dangerouslySetInnerHTML={{ __html: stripDeadNewsLinks(prose) }}
         />
       </div>
     </div>
+  );
+}
+
+/**
+ * 把指向**已不存在的站内新闻页**的链接降级成纯文本。
+ *
+ * 为什么需要：prose 是原站抓来的原文，里面有些链接指向 `/news/{slug}` 详情页。
+ * 那个路由在 2026-10-15 随 `/news` 改版（改成 AIHOT 资讯卡片流）一起删掉了，
+ * 所以这些链接现在**线上是 404**。实测整个语料里只有一处：
+ * `/tools/bing-image-creator` 的「更加详细的指南，请查看：如何使用Bing创建图像」。
+ *
+ * 为什么不直接改数据：`data/tool-extras.json` 是抓取产物，重新抓取会覆盖手改。
+ * 改数据等于埋一个"下次抓取就丢失"的补丁。渲染层处理才是持久的。
+ *
+ * 为什么是降级成纯文本而不是改指别处：原站那篇长文已随改版下线，没有等价的
+ * 站内目标可指；指向 AIHOT 首页又不是读者点这个链接时想要的东西。保留文字、
+ * 去掉链接，读者不会撞上 404，也不会有错误的跳转。
+ *
+ * 只匹配**站内** `/news/` 开头的 href；外链与其它站内路由一律不动。
+ */
+function stripDeadNewsLinks(html: string): string {
+  return html.replace(
+    /<a\b([^>]*?)href="\/news\/[^"]*"([^>]*?)>([\s\S]*?)<\/a>/gi,
+    (_m, _pre, _post, inner) => inner,
   );
 }

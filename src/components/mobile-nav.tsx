@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { X } from 'lucide-react';
@@ -26,9 +26,33 @@ const LINKS = [
 export function MobileNav({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
 
-  // Any navigation dismisses the drawer, so a stale panel never covers the
-  // page the user just asked for.
-  useEffect(() => onClose(), [pathname, onClose]);
+  /**
+   * 导航离开时关闭抽屉，避免旧面板盖住用户刚请求的页面。
+   *
+   * ⚠️ 这里**必须**记住上一次的 pathname，只在它**变化**时关闭。
+   *
+   * 原先写的是 `useEffect(() => onClose(), [pathname, onClose])` —— 少了"变化"
+   * 这个条件。React 的 effect 在**首次挂载后也会执行一次**，于是菜单刚被打开
+   * （`open` 变 true 触发挂载）就立刻被这次 effect 关掉，表现为**移动端点汉堡
+   * 菜单毫无反应**：DOM 里面板只存在一帧。2026-10-16 用 MutationObserver 抓到
+   * 了这一点（`appeared: true` 但 `count: 1`，之后 `close_btn` 归 0）。
+   *
+   * 桌面端不受影响，因为"所有分类"面板是 header 内联渲染的，不走这个组件 ——
+   * 所以只看桌面测试会漏掉这个 bug，移动端必须单独回归。
+   *
+   * 另外 `onClose` 每次渲染都是新函数（header 里传的是内联箭头函数），若把它
+   * 放进依赖数组，任何一次父组件重渲染都会触发这个 effect。所以这里用 ref 拿
+   * 最新的 onClose，依赖只留 pathname。
+   */
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  const lastPathname = useRef(pathname);
+  useEffect(() => {
+    if (lastPathname.current !== pathname) {
+      lastPathname.current = pathname;
+      onCloseRef.current();
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (!open) return;
