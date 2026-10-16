@@ -114,6 +114,35 @@ async function launchBrowser() {
   throw lastErr;
 }
 
+/**
+ * 等 React hydrate 完成再交互。
+ *
+ * 为什么需要：在 hydrate 之前点击，元素上**还没有 onClick**，点击自然没反应 ——
+ * 会被误判成"按钮坏了"。2026-10-16 验证线上时就这么误报过一次：本地服务器
+ * 毫秒级响应看不出问题，而线上首页 6MB、本机线路还丢包，hydration 要等几秒，
+ * 当时 `hydrated: false` 就点了，菜单/面板双双"打不开"，等网络空闲后全部正常。
+ *
+ * 判据用 React 的内部属性：客户端组件挂载后，元素上会出现 `__react*` 键。
+ */
+async function waitHydrated(page, timeoutMs = 60_000) {
+  try {
+    await page.waitForLoadState('networkidle', { timeout: timeoutMs });
+  } catch {
+    /* 慢网络上 networkidle 可能等不到，继续用下面的轮询兜底 */
+  }
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const ok = await page.evaluate(() => {
+      const el = document.querySelector("button[aria-label='Toggle mobile menu'], button[aria-label='Search']");
+      if (!el) return false;
+      return Object.keys(el).some((k) => k.startsWith('__react'));
+    });
+    if (ok) return true;
+    await page.waitForTimeout(300);
+  }
+  return false;
+}
+
 /** 起一个浏览器上下文，收集 console error / pageerror。 */
 async function openPage(viewport, mobile) {
   const browser = await launchBrowser();
@@ -138,6 +167,7 @@ describe('移动端交互', () => {
     const { browser, page, errors } = await openPage({ width: 390, height: 844 }, true);
     try {
       await page.goto(BASE + '/', { waitUntil: 'domcontentloaded' });
+      await waitHydrated(page);
       await page.waitForTimeout(2000);
 
       // 打开
@@ -179,6 +209,7 @@ describe('移动端交互', () => {
     const { browser, page } = await openPage({ width: 390, height: 844 }, true);
     try {
       await page.goto(BASE + '/', { waitUntil: 'domcontentloaded' });
+      await waitHydrated(page);
       await page.waitForTimeout(2000);
       await page.locator("button[aria-label='Toggle mobile menu']").first().click();
       await page.waitForTimeout(800);
@@ -203,6 +234,7 @@ describe('移动端交互', () => {
     const { browser, page } = await openPage({ width: 390, height: 844 }, true);
     try {
       await page.goto(BASE + '/', { waitUntil: 'domcontentloaded' });
+      await waitHydrated(page);
       await page.waitForTimeout(2000);
       const overflow = await page.evaluate(
         () => document.documentElement.scrollWidth > window.innerWidth,
@@ -244,6 +276,7 @@ describe('桌面端交互', () => {
     const { browser, page, errors } = await openPage({ width: 1440, height: 900 }, false);
     try {
       await page.goto(BASE + '/', { waitUntil: 'domcontentloaded' });
+      await waitHydrated(page);
       await page.waitForTimeout(2000);
 
       const cat = page.locator("button:has-text('所有分类')").first();

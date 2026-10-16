@@ -30,7 +30,11 @@
 [CmdletBinding()]
 param(
   [switch]$SkipBuild,
-  [int]$MaxAttempts = 3
+  [int]$MaxAttempts = 3,
+  # 单次尝试的上限分钟数。默认 45 是**故意宽松**的：实测最慢一次是 8 分钟读
+  # 清单 + 51 分钟上传，而"读清单"阶段 CPU 与输出都接近静止，任何更紧的阈值
+  # 都会误杀正常部署（见下方等待循环的注释）。
+  [int]$TimeoutMinutes = 45
 )
 
 $ErrorActionPreference = 'Stop'
@@ -42,6 +46,7 @@ Set-Location $ROOT
 foreach ($a in $args) {
   if ($a -match '^--?SkipBuild$')    { $SkipBuild = $true }
   if ($a -match '^--?MaxAttempts=(\d+)$') { $MaxAttempts = [int]$Matches[1] }
+  if ($a -match '^--?TimeoutMinutes=(\d+)$') { $TimeoutMinutes = [int]$Matches[1] }
 }
 
 function Write-Step($msg) { Write-Host "`n=== $msg ===" -ForegroundColor Cyan }
@@ -122,43 +127,50 @@ while ($attempt -lt $MaxAttempts) {
   #   - CPU 在涨  -> 它在干活，无论输出是否安静，都继续等
   #   - CPU 不动 + 输出不动 -> 才是真卡死
   # 真正的卡死（管道缓冲那个 bug）特征是 CPU 完全冻结，所以这个判据很准。
-  $lastSize = -1
-  $lastCpu = -1.0
-  $cpuIdleSince = Get-Date
-  $hardCap = (Get-Date).AddMinutes(90)   # 兜底上限，防止无限等待
+  # 等待，但**不要**用单一阈值判断卡死 —— 这里连踩了两次坑：
+  #
+  #   第一次：只看输出增长、阈值 8 分钟。`wrangler deploy` 在 `Read N files`
+  #   之后有一段很长的静默期（本地比对 8716 个文件的哈希、与远端清单求差集，
+  #   stdout 一个字都不写），实测静默超过 8 分钟 —— 误杀了自己的部署。
+  #
+  #   第二次：改用「CPU 20 秒内涨 > 0.2 秒」。但读 1GB 文件是 **I/O 密集**阶段，
+  #   CPU 增速远低于 0.2s/20s，于是又被判成静止 —— 2026-10-16 连续误杀三次。
+  #
+  # 结论：这个阶段 CPU 与输出**本来就都接近静止**，任何「静止 N 分钟就 kill」
+  # 的规则都会误伤。可靠的做法是**让它跑**，只在明确的结论上停下：
+  #
+  #   1. 进程自己退出（成功或失败都算有结论）
+  #   2. 超过一个足够宽的兜底上限（默认 45 分钟；实测最慢一次是 8 分钟读清单
+  #      + 51 分钟上传，所以上限按"明显异常"定，而不是按"我觉得该结束了"）
+  #
+  # 代价：真卡死时要等满上限才重试。但比"每次都把正常部署杀掉"划算 —— 后者
+  # 是 100% 失败，前者只是慢。
+  $hardCap = (Get-Date).AddMinutes($TimeoutMinutes)
+  $lastReport = Get-Date
 
   while (-not $proc.HasExited) {
-    Start-Sleep -Seconds 20
+    Start-Sleep -Seconds 15
     $proc.Refresh()
     if ($proc.HasExited) { break }
 
     if ((Get-Date) -gt $hardCap) {
-      Write-Warn2 '超过 90 分钟上限，终止本次尝试'
+      Write-Warn2 "超过 $TimeoutMinutes 分钟上限，终止本次尝试"
       try { $proc.Kill() } catch {}
       break
     }
 
-    $size = if (Test-Path $outLog) { (Get-Item $outLog).Length } else { 0 }
-    $cpu = $proc.CPU
-    if ($null -eq $cpu) { $cpu = 0 }
-
-    $outputGrew = $size -ne $lastSize
-    # CPU 涨了 0.2 秒以上就算在干活（20 秒采样窗口，正常工作量远超这个值）
-    $cpuBusy = ($cpu - $lastCpu) -gt 0.2
-
-    if ($outputGrew) { $lastSize = $size }
-    if ($cpuBusy) { $lastCpu = $cpu; $cpuIdleSince = Get-Date }
-
-    if (-not $outputGrew -and -not $cpuBusy) {
-      $idle = ((Get-Date) - $cpuIdleSince).TotalMinutes
-      if ($idle -ge 6) {
-        Write-Warn2 "CPU 与输出均已静止 $([math]::Round($idle,1)) 分钟，判定卡死，终止本次尝试"
-        try { $proc.Kill() } catch {}
-        break
+    # 每 2 分钟报一次状态，让人看得出它在跑而不是死了
+    if (((Get-Date) - $lastReport).TotalMinutes -ge 2) {
+      $lastReport = Get-Date
+      $elapsed = [math]::Round($sw.Elapsed.TotalMinutes, 1)
+      $cpuNow = if ($null -eq $proc.CPU) { 0 } else { [math]::Round($proc.CPU, 1) }
+      $tail = ''
+      if (Test-Path $outLog) {
+        $last = Get-Content $outLog -Tail 1 -EA SilentlyContinue
+        if ($last) { $tail = ($last -replace '\s+', ' ').Trim() }
+        if ($tail.Length -gt 55) { $tail = $tail.Substring($tail.Length - 55) }
       }
-      if ($idle -ge 3) {
-        Write-Host "  …静默 $([math]::Round($idle,1)) 分钟（CPU 亦静止），再观察一会儿" -ForegroundColor DarkGray
-      }
+      Write-Host "  …已跑 $elapsed 分钟  CPU=${cpuNow}s  $tail" -ForegroundColor DarkGray
     }
   }
   $sw.Stop()
