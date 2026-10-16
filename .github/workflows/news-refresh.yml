@@ -63,12 +63,19 @@ jobs:
 
       - name: Commit if changed
         run: |
-          if git diff --quiet -- data/news.json data/aihot-meta.json; then
+          # 只看 data/news.json 判断"有没有新资讯"。
+          #
+          # 不要用 data/aihot-meta.json 参与判断：它的 fetchedAt 是抓取时刻，
+          # 每次运行都变，哪怕一条资讯都没动，也会让 git diff 非空 —— 于是每天
+          # 产生一个内容毫无意义的提交。资讯内容才是这里唯一的判据。
+          if git diff --quiet -- data/news.json; then
             echo "::notice::没有新资讯，无需提交"
             exit 0
           fi
           git config user.name  'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
+          # meta 一起提交，但只在资讯确实变了的时候 —— 它的 etag/fetchedAt
+          # 跟这次真实的内容变更配套，读者看提交历史时不会看到噪声。
           git add data/news.json data/aihot-meta.json
           git commit -m "chore(news): 自动刷新 AIHOT 资讯 $(date -u +%Y-%m-%d)"
           # 定时任务期间主干可能已前进，rebase 后再推。

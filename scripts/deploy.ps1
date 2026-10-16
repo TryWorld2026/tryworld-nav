@@ -112,19 +112,53 @@ while ($attempt -lt $MaxAttempts) {
     -RedirectStandardError $errLog `
     -NoNewWindow -PassThru
 
-  # 等待，但不盲等：每 25 秒看一次输出是否增长，超过 8 分钟无增长就判定卡死。
+  # 等待，但不盲等，也不能只看输出增长 —— 这一点踩过坑：
+  #
+  # `wrangler deploy` 在 `Read N files` 之后有一段**很长的静默期**：它在本地比对
+  # 8716 个文件的哈希、与远端清单求差集，这期间 stdout 一个字都不写。2026-10-16
+  # 实测这段静默超过 8 分钟，被过激的阈值误判为卡死并 kill，连杀三次。
+  #
+  # 所以判活的依据是**进程 CPU 时间是否在涨**，不是输出是否在涨：
+  #   - CPU 在涨  -> 它在干活，无论输出是否安静，都继续等
+  #   - CPU 不动 + 输出不动 -> 才是真卡死
+  # 真正的卡死（管道缓冲那个 bug）特征是 CPU 完全冻结，所以这个判据很准。
   $lastSize = -1
-  $stallSince = Get-Date
+  $lastCpu = -1.0
+  $cpuIdleSince = Get-Date
+  $hardCap = (Get-Date).AddMinutes(90)   # 兜底上限，防止无限等待
+
   while (-not $proc.HasExited) {
-    Start-Sleep -Seconds 25
+    Start-Sleep -Seconds 20
     $proc.Refresh()
     if ($proc.HasExited) { break }
-    $size = if (Test-Path $outLog) { (Get-Item $outLog).Length } else { 0 }
-    if ($size -ne $lastSize) { $lastSize = $size; $stallSince = Get-Date }
-    elseif (((Get-Date) - $stallSince).TotalMinutes -ge 8) {
-      Write-Warn2 "输出已 8 分钟无增长，判定卡死，终止本次尝试"
+
+    if ((Get-Date) -gt $hardCap) {
+      Write-Warn2 '超过 90 分钟上限，终止本次尝试'
       try { $proc.Kill() } catch {}
       break
+    }
+
+    $size = if (Test-Path $outLog) { (Get-Item $outLog).Length } else { 0 }
+    $cpu = $proc.CPU
+    if ($null -eq $cpu) { $cpu = 0 }
+
+    $outputGrew = $size -ne $lastSize
+    # CPU 涨了 0.2 秒以上就算在干活（20 秒采样窗口，正常工作量远超这个值）
+    $cpuBusy = ($cpu - $lastCpu) -gt 0.2
+
+    if ($outputGrew) { $lastSize = $size }
+    if ($cpuBusy) { $lastCpu = $cpu; $cpuIdleSince = Get-Date }
+
+    if (-not $outputGrew -and -not $cpuBusy) {
+      $idle = ((Get-Date) - $cpuIdleSince).TotalMinutes
+      if ($idle -ge 6) {
+        Write-Warn2 "CPU 与输出均已静止 $([math]::Round($idle,1)) 分钟，判定卡死，终止本次尝试"
+        try { $proc.Kill() } catch {}
+        break
+      }
+      if ($idle -ge 3) {
+        Write-Host "  …静默 $([math]::Round($idle,1)) 分钟（CPU 亦静止），再观察一会儿" -ForegroundColor DarkGray
+      }
     }
   }
   $sw.Stop()
