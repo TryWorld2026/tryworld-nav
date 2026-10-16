@@ -78,7 +78,12 @@ buildId，内容不变时实测 `No updated asset files to upload.`（0 个文�
 （北京时间 08:30，在 AIHOT 日报之后）跑 `npm run news:refresh`，有变更就提交回仓库。
 它只碰 `data/`，不需要媒体，所以在 CI 里安全。下次部署就会带上最新资讯。
 
-`.github/workflows/ci.yml` 跑 assets:check / news 数据校验 / census / lint / tsc。
+`.github/workflows/ci.yml` 跑 assets:check / news 数据校验 / census / test /
+lint / tsc / **build**。其中 build 这一步是**检查而非部署源**：CI 检出没有媒体
+（`public/assets/{icons,shots,tags,news}` 被 gitignore），产出的 `out/` 直接丢弃，
+部署仍从有媒体的机器上进行。实测它在 0 个媒体文件下 exit 0（约 5 分钟），而注入
+一个预渲染错误后会 exit 1 并点名出错路由——所以它抓代码与渲染回归，**不抓媒体缺失**；
+那个缺口由 `deploy.ps1` 的媒体守卫覆盖。
 
 部署细节与回滚见 [DEPLOY.md](DEPLOY.md)，媒体备份还原见 [MIGRATION.md](MIGRATION.md)。
 
@@ -151,8 +156,7 @@ npm run news:refresh   # 强制重抓
 - **测试覆盖很薄**：13 个测试（`npm test`，Node 内置运行器，无额外依赖），只覆盖
   `src/lib/news.ts` 的时区格式化与 `scripts/fetch-aihot.mjs` 的字段映射/降级。
   其余（`lib/data.ts` 的确定性抽样、`lib/pricing.ts`、各页面渲染）仍无测试。
-  CI 跑 lint / tsc / test / census / assets:check，但**不跑 build**——所以
-  "能不能构建成功"只有本地部署时才会暴露。
+  CI 已跑 lint / tsc / test / census / assets:check / **build**。
 - `package.json` 的 `name` 是 `tryworld-portal`，与仓库名、Worker 名不一致。
 - eslint 9 仍用 `FlatCompat` 桥接 `next/core-web-vitals`（官方已弃用的接法）。
 
