@@ -452,7 +452,7 @@ export function NewsDailyPage({
         )}
 
         {/* 本期完 + 翻页 ------------------------------------------- */}
-        <p className="mt-12 text-center text-xs tracking-[0.3em] text-muted-foreground/70">
+        <p className="mt-12 text-center text-xs tracking-[0.3em] text-muted-foreground">
           （本期完）
         </p>
 

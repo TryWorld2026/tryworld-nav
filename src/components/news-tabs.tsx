@@ -216,7 +216,7 @@ function PagerSide({
     return (
       <span
         aria-disabled="true"
-        className={`${base} border-foreground/5 text-muted-foreground/60 ${dir === 'next' ? 'text-right' : ''}`}
+        className={`${base} border-foreground/5 text-muted-foreground ${dir === 'next' ? 'text-right' : ''}`}
       >
         {body}
       </span>
