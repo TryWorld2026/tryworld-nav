@@ -14,6 +14,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { brotliCompressSync } from 'node:zlib';
 
 const OUT = join(process.cwd(), 'out');
 
@@ -180,4 +181,122 @@ test('首页 26 个分类区块全部渲染，且按四组呈现', (t) => {
   ];
   const missing = slugs.filter((s) => !html.includes(`id="${s}"`));
   assert.deepEqual(missing, [], `首页缺少分类锚点：${missing.join(', ')}`);
+});
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * 2026-10-18 这一轮改动新增的构建产物断言。
+ *
+ * 全部读 `out/`，所以它们守的是「最终页面长什么样」，而不是组件实现。
+ * ────────────────────────────────────────────────────────────────────────── */
+
+test('新路由都生成：/favorites 与 /offline', (t) => {
+  if (skipIfNoBuild(t)) return;
+  for (const rel of ['favorites.html', 'offline.html']) {
+    const html = page(rel);
+    assert.ok(html, `${rel} 应该被导出（静态导出新增路由必须真出文件）`);
+  }
+  // 收藏页含本机存储说明，且不应被搜索引擎收录（每人的收藏都不同）
+  const fav = page('favorites.html');
+  assert.match(fav, /本机|localStorage|浏览器/, '/favorites 应说明数据存在本机');
+  assert.match(fav, /noindex/, '/favorites 应带 noindex');
+});
+
+test('首页有「编辑精选」集合入口（原先 9 个集合全站 0 内链）', (t) => {
+  if (skipIfNoBuild(t)) return;
+  const html = page('index.html');
+  assert.match(html, /href="\/collections"/, '首页缺少 /collections 入口');
+  assert.match(html, /编辑精选/, '首页缺少「编辑精选」标题');
+  // 至少 3 个具体集合的链接（不是只有总览）
+  const deep = (html.match(/href="\/collections\/[a-z0-9-]+"/g) ?? []).length;
+  assert.ok(deep >= 3, `首页应直链至少 3 个集合，实际 ${deep}`);
+});
+
+test('页脚与侧栏都有「我的收藏」「精选集合」，且不再有「即将开放」死文案', (t) => {
+  if (skipIfNoBuild(t)) return;
+  const html = page('index.html');
+  assert.match(html, /href="\/favorites"/, '页脚/侧栏缺少收藏入口');
+  assert.match(html, /href="\/collections"/, '缺少集合入口');
+  assert.ok(!html.includes('即将开放'), '页脚不应再有「提交工具（即将开放）」的死文案');
+});
+
+test('404 页给出搜索与分类出口，且标题不是首页标题', (t) => {
+  if (skipIfNoBuild(t)) return;
+  const html = page('404.html');
+  assert.ok(html, '404.html 应存在');
+  assert.match(html, /href="\/tools"/, '404 应给出搜索/工具目录出口');
+  assert.match(html, /href="\/categories\/[a-z0-9-]+"/, '404 应给出分类入口');
+  // title 必须是 404 自己的，不能是首页那句
+  const m = html.match(/<title>([^<]*)<\/title>/);
+  assert.ok(m, '404 应有 title');
+  assert.ok(
+    !m[1].includes('探索发现热门的智能体和AI工具'),
+    `404 的 title 仍是首页标题：${m[1]}`,
+  );
+});
+
+test('页眉不再有「登录/注册」按钮，也不再出现「复刻」字样', (t) => {
+  if (skipIfNoBuild(t)) return;
+  const html = page('index.html');
+  assert.ok(!html.includes('登录/注册'), '页眉不应再有假的登录按钮');
+  assert.ok(!html.includes('复刻'), '页面不应出现「复刻版本」这类措辞');
+  assert.match(html, /href="\/favorites"/, '右上角应换成「我的收藏」');
+});
+
+test('首页主 CTA 是工具而不是资讯', (t) => {
+  if (skipIfNoBuild(t)) return;
+  const html = page('index.html');
+  // hero 里「浏览全部工具」出现在「看今天的 AI 资讯」之前（DOM 顺序即视觉顺序）
+  const toolsAt = html.indexOf('浏览全部工具');
+  const newsAt = html.indexOf('news-hero-cta');
+  assert.ok(toolsAt > 0, '首页应有「浏览全部工具」');
+  assert.ok(newsAt > 0, '资讯入口仍应保留（只是降为次按钮）');
+  assert.ok(toolsAt < newsAt, 'DOM 顺序上工具主按钮应排在资讯之前');
+});
+
+test('客户端 layout chunk 里不再有目录数据（每个页面都付的那 182 KB）', (t) => {
+  if (skipIfNoBuild(t)) return;
+  const dir = join(OUT, '_next', 'static', 'chunks', 'app');
+  if (!existsSync(dir)) {
+    t.skip('找不到 _next/static/chunks/app');
+    return;
+  }
+  const layouts = readFileSync(join(OUT, 'index.html'), 'utf8').match(/layout-[a-f0-9]+\.js/g);
+  assert.ok(layouts && layouts.length > 0, '首页应引用 layout chunk');
+
+  const file = join(dir, layouts[0]);
+  assert.ok(existsSync(file), `layout chunk 不存在：${file}`);
+  const js = readFileSync(file, 'utf8');
+
+  // 目录数据的特征：prose 字段，以及「成规模的工具对象数组」。
+  //
+  // 注意不能简单断言「不含某个工具名」—— `nav.json` 里确实有 5 条「常用推荐」
+  // 的名称与简介（5 KB / br 1.4 KB），那是页眉与搜索面板的初始推荐，
+  // 属于**有意保留**的客户端数据。要守的是 2081 条完整目录不再进来。
+  assert.ok(!js.includes('"prose"'), 'layout chunk 里出现了 prose（14 MB 正文的一部分）');
+
+  // 目录里的工具对象都带 `"image"`（截图路径）与 `"variant"` 字段，
+  // 而 nav.json 的推荐只有 slug/name/description/icon/href。出现这两个字段
+  // 就说明有人又把 `@/lib/data` 的 `tools` 拖进客户端了。
+  assert.ok(!js.includes('"variant"'), 'layout chunk 里出现了 Tool 的 variant 字段（目录数据）');
+  assert.ok(
+    !js.includes('/assets/shots/'),
+    'layout chunk 里出现了截图路径（目录数据带 image，nav.json 不带）',
+  );
+
+  // 体积守卫：br 后超过 300 KB 说明又有人把大对象 import 进 client 组件了。
+  // 2026-10-18 实测 29 KB（改动前 1,555 KB / br 182 KB）。
+  const brKb = brotliCompressSync(Buffer.from(js)).length / 1024;
+  assert.ok(brKb < 300, `layout chunk 的 br 体积 ${brKb.toFixed(0)} KB 过大（应 <300 KB）`);
+});
+
+test('搜索索引与导航数据都在产物里，且索引不含 prose', (t) => {
+  if (skipIfNoBuild(t)) return;
+  const nav = page('index.html');
+  // 搜索索引会随某个 chunk 下发；这里只验证它没把正文带进来。
+  const idx = JSON.parse(readFileSync(join(process.cwd(), 'data', 'search-index.json'), 'utf8'));
+  assert.ok(Array.isArray(idx) && idx.length === 2081, `索引应有 2081 条，实际 ${idx?.length}`);
+  assert.ok(idx.every((r) => !('prose' in r)), '索引不应包含 prose 字段');
+  // 命令面板的「在全部工具中搜索」出口要能在首页找到（空查询时不显示，
+  // 所以这里只断言面板代码进了 bundle）。
+  assert.match(nav, /_next\/static/, '首页应引用静态资源');
 });

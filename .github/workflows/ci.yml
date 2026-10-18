@@ -9,7 +9,9 @@
 #   assets:check  counts and hashes what is there; it only uploads on `--push`
 #   news shape    checks data/news.json has the fields the cards need
 #   census        reads data/*.json and reports dead cross-references
-#   test          node --test (timezone formatting, AIHOT field mapping)
+#   gen:check     re-derives data/{nav,search-index}.json and byte-compares
+#   verdicts      schema check for the hand-written 「怎么选」 data
+#   test          node --test (timezone, AIHOT mapping, search, favorites, filter URL)
 #   lint          eslint . (next/core-web-vitals)
 #   tsc           full type check, no emit
 #   build         next build — catches prerender errors that lint/tsc miss
@@ -86,11 +88,26 @@ jobs:
       - name: Census (dead cross-references, coverage)
         run: npm run census
 
+      - name: Verify generated client data is in sync
+        # 2026-10-18 起，客户端需要的导航数据与搜索索引是**生成物**
+        # （data/nav.json / data/search-index.json）。它们由数据源派生，
+        # 如果有人改了 data/tools.json 或 categories.json 却忘了跑
+        # `npm run gen:all`，页面上的分类名与搜索结果就是旧的，而 lint/tsc
+        # 都不会报错。`--check` 会重算一遍并逐字节比对。
+        run: npm run gen:check
+
+      - name: Verify tool verdicts schema
+        # 「怎么选」面板里的内容是人工维护的事实性主张（缺点、同类对比、起价）。
+        # 这里守 schema：slug 必须存在、日期不能是未来、文本长度有上限。
+        # 内容是否准确只能靠人工，但格式能自动守。
+        run: npm run verdicts:check
+
       - name: Test
         # Node 内置测试运行器，无额外依赖。覆盖两处最容易悄悄出错的地方：
         # src/lib/news.ts 的时区格式化（退回切字符串会让日期差一天，而页面上看不出来）
         # 与 scripts/fetch-aihot.mjs 的字段映射/降级（上游改字段名会静默丢署名或产生死链）。
         # 抓取测试用本地假 API，不联网。
+        # 另有搜索意图词、收藏存储、筛选 URL 三组纯函数用例（用 Node 原生解析 .ts）。
         run: npm test
 
       - name: Lint

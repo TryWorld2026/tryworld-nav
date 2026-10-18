@@ -214,12 +214,30 @@ describe('移动端交互', () => {
       await page.locator("button[aria-label='Toggle mobile menu']").first().click();
       await page.waitForTimeout(800);
 
-      const link = page.locator("a[href='/categories']");
+      // 限定在抽屉内：桌面侧栏在移动端是 `hidden lg:block`，而它现在也有
+      // 一个 `a[href='/categories']`（「全部 26 个分类」出口）。直接
+      // `.first()` 会取到那个不可见元素，点击会一直重试到超时。
+      const drawer = page.locator("[role='dialog'][aria-label='站内导航']");
+      const link = drawer.locator("a[href='/categories']");
       assert.ok(await link.count() > 0, '菜单里应有 /categories 链接');
       await link.first().click();
-      await page.waitForTimeout(2500);
 
-      assert.ok(page.url().replace(/\/$/, '').endsWith('/categories'), `应导航到 /categories，实际 ${page.url()}`);
+      /**
+       * 等 URL 真的变成 /categories，而不是固定 sleep 2.5s。
+       *
+       * 为什么改：2026-10-18 起「所有分类」下拉底部也有 `/categories` 链接，
+       * 而 `/categories` 页面本身的 HTML 有 444 KB（26 个分类卡 + 全部工具计数），
+       * 客户端导航要在主线程解析完才 commit —— 本地 serve 上实测偶发超过 3s。
+       * 固定等待会让这条断言变成「机器快慢的测试」而不是「行为是否正确的测试」。
+       * `waitForURL` 有 15s 上限，真的导航不过去仍会红。
+       */
+      await page.waitForURL(/\/categories$/, { timeout: 15000 });
+      await page.waitForTimeout(600);
+
+      assert.ok(
+        page.url().replace(/\/$/, '').endsWith('/categories'),
+        `应导航到 /categories，实际 ${page.url()}`,
+      );
       assert.equal(
         await page.locator("button[aria-label='关闭菜单']").count(), 0,
         '导航后菜单应自动关闭（这是 pathname 变化时关闭抽屉的正确行为）',
@@ -288,7 +306,7 @@ describe('移动端交互', () => {
 });
 
 describe('404 页', () => {
-  test('无 SVG 属性错误，返回首页按钮可用', async (t) => {
+  test('无 SVG 属性错误，给出搜索与分类出口，返回首页链接可用', async (t) => {
     if (!ready(t)) return;
     const { browser, page, errors } = await openPage({ width: 390, height: 844 }, true);
     try {
@@ -299,10 +317,22 @@ describe('404 页', () => {
       const svgErrs = errors.filter((e) => /svg|Expected length/i.test(e));
       assert.deepEqual(svgErrs, [], '不应有 SVG 属性错误（height="auto" 那处）');
 
-      const btn = page.locator("a:has(button:has-text('返回首页'))");
-      assert.equal(await btn.count(), 1, '应有返回首页按钮');
-      assert.ok(await btn.first().isVisible(), '按钮应可见');
-      await btn.first().click();
+      // 2026-10-18 重做后：404 从「只有一个返回首页」变成三条出路。
+      //
+      // 注意选择器要限定在 404 的正文容器里：`a[href='/tools']` 在整页里有
+      // 三个（页眉「查看全部」、移动底栏「工具」、404 正文主按钮），
+      // 而移动端的页眉导航是 `hidden lg:flex` —— 直接 `.first()` 会命中一个
+      // 不可见元素，断言就变成「页眉在不在」而不是「404 有没有给出路」。
+      const main = page.locator('main').first();
+      const toolsLink = main.locator("a[href='/tools']").first();
+      assert.ok(await toolsLink.isVisible(), '404 应给出「搜索全部工具」出口');
+
+      const catLinks = await main.locator("a[href^='/categories/']").count();
+      assert.ok(catLinks >= 3, `404 应给出分类入口，实际 ${catLinks} 个`);
+
+      const home = main.locator("a[href='/']").first();
+      assert.ok(await home.isVisible(), '应有返回首页链接');
+      await home.click();
       await page.waitForTimeout(2500);
       assert.ok(page.url().replace(/\/$/, '') === BASE.replace(/\/$/, ''), '点击应回到首页');
     } finally {
@@ -312,7 +342,7 @@ describe('404 页', () => {
 });
 
 describe('桌面端交互', () => {
-  test('所有分类面板能开能关，登录弹窗能开能关', async (t) => {
+  test('所有分类面板能开能关，下拉底部有分类总览/精选集合出口', async (t) => {
     if (!ready(t)) return;
     const { browser, page, errors } = await openPage({ width: 1440, height: 900 }, false);
     try {
@@ -328,26 +358,103 @@ describe('桌面端交互', () => {
         (await page.locator("a[href^='/categories/']").count()) >= 26,
         '分类面板应含全部 26 个分类',
       );
+      // 2026-10-18：下拉里补了三个出口，原先只有 26 个分类、没有去总览的路。
+      assert.ok(
+        await page.locator("a[href='/categories']").first().isVisible(),
+        '下拉底部应有「分类总览」',
+      );
+      assert.ok(
+        await page.locator("a[href='/collections']").first().isVisible(),
+        '下拉底部应有「精选集合」',
+      );
 
       await page.mouse.click(700, 500);
       await page.waitForTimeout(800);
       assert.equal(await cat.getAttribute('aria-expanded'), 'false', '点外部应关闭面板');
-
-      const auth = page.locator("button:has-text('登录/注册')").first();
-      if (await auth.isVisible()) {
-        await auth.click();
-        await page.waitForTimeout(900);
-        assert.ok(await page.locator('[role=dialog]').count() > 0, '登录弹窗应打开');
-        const ack = page.locator("button:has-text('知道了')");
-        assert.ok(await ack.count() > 0, '弹窗应有「知道了」按钮');
-        await ack.first().click();
-        await page.waitForTimeout(700);
-        assert.equal(await page.locator('[role=dialog]').count(), 0, '「知道了」应关闭弹窗');
-      }
 
       assert.deepEqual(errors, [], '桌面端首页不应有 console 错误');
     } finally {
       await browser.close();
     }
   });
+
+  /**
+   * 换掉假登录之后新增的断言：右上角应该是真的「我的收藏」，点进去是真实页面。
+   *
+   * 原先这里测的是「登录/注册」弹窗能开能关 —— 那个弹窗的正文写着
+   * 「复刻版本未包含账号系统，登录与注册暂不可用」，是首访最伤信任的一处。
+   * 现在按钮直接链到 /favorites，所以断言也换成「链接存在且能到达」。
+   */
+  test('右上角是「我的收藏」，可到达 /favorites 并看到空态', async (t) => {
+    if (!ready(t)) return;
+    const { browser, page, errors } = await openPage({ width: 1440, height: 900 }, false);
+    try {
+      await page.goto(BASE + '/', { waitUntil: 'domcontentloaded' });
+      await waitHydrated(page);
+      await page.waitForTimeout(1500);
+
+      const favLink = page.locator("a[href='/favorites']").first();
+      assert.ok(await favLink.isVisible(), '页眉应有「我的收藏」入口');
+      // 全站不应再出现「复刻」两个字（那是上一版弹窗的措辞）。
+      const body = await page.evaluate(() => document.body.innerText);
+      assert.ok(!body.includes('复刻'), '页面上不应出现「复刻版本」这类措辞');
+
+      await favLink.click();
+      await page.waitForTimeout(1500);
+      assert.ok(page.url().includes('/favorites'), '应导航到 /favorites');
+      assert.ok(
+        (await page.locator('body').innerText()).includes('还没有收藏'),
+        '没有收藏时应显示空态',
+      );
+      assert.deepEqual(errors, [], '/favorites 不应有 console 错误');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  /**
+   * 筛选状态进 URL + 返回恢复 —— 这轮修的最重的体验问题。
+   *
+   * 原实现只在挂载时读一次 URL，用户操作不写回；筛到 297 条后点进详情再
+   * 按返回，计数会变回 2081、输入框清空。这里断言三件事：
+   *   1. 输入关键词后地址栏带上 ?q=；
+   *   2. 点分类 chip 后地址栏带上 ?cat=；
+   *   3. 刷新页面后筛选态还在（这是「可分享」的最直接证明）。
+   */
+  test('筛选写进 URL：输入与分类都更新地址栏，刷新后仍生效', async (t) => {
+    if (!ready(t)) return;
+    const { browser, page, errors } = await openPage({ width: 1440, height: 900 }, false);
+    try {
+      await page.goto(BASE + '/tools', { waitUntil: 'domcontentloaded' });
+      await waitHydrated(page);
+      await page.waitForTimeout(1500);
+
+      const input = page.locator("input[placeholder*='搜索工具名称']");
+      await input.fill('视频');
+      await page.waitForTimeout(700); // 250ms 防抖 + 余量
+
+      assert.match(page.url(), /[?&]q=/, `输入后地址栏应带 q，实际：${page.url()}`);
+
+      const chip = page.locator("button[aria-pressed]:has-text('AI视频/动画')").first();
+      await chip.click();
+      await page.waitForTimeout(500);
+      assert.match(page.url(), /[?&]cat=ai-video-animation/, `点分类后应带 cat，实际：${page.url()}`);
+
+      // 刷新后状态从 URL 还原
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await waitHydrated(page);
+      await page.waitForTimeout(1500);
+      assert.equal(await input.inputValue(), '视频', '刷新后输入框应回填');
+      assert.equal(
+        await chip.getAttribute('aria-pressed'),
+        'true',
+        '刷新后分类 chip 应保持选中',
+      );
+
+      assert.deepEqual(errors, [], '筛选过程不应有 console 错误');
+    } finally {
+      await browser.close();
+    }
+  });
+
 });
