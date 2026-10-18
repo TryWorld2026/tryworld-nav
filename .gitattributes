@@ -1,0 +1,19 @@
+# 生成物的换行符固定为 LF。
+#
+# 为什么需要这个文件：`scripts/generate-nav.mjs` 与 `generate-search-index.mjs`
+# 都是「写出文件 → CI 用 --check 逐字节比对」的模式。而 Git for Windows 默认
+# `core.autocrlf=true`（本机就是），checkout 时会把仓库里的 LF 改写成 CRLF ——
+# 于是 `npm run gen:check` 在干净的检出上也会报「与数据源不一致」，即使内容分毫
+# 未变。这不是数据问题，是换行符问题，但它的报错信息和真的数据漂移一模一样，
+# 每次都要花时间排查。
+#
+# 固定成 LF 之后：仓库、工作区、生成脚本三者一致，`--check` 才有意义。
+# 其余文件不受影响（继续走 `core.autocrlf` 的默认行为）。
+data/nav.json text eol=lf
+data/search-index.json text eol=lf
+src/thumbs.json text eol=lf
+
+# sw.js 由 `scripts/generate-sw.mjs` 生成、被浏览器直接执行。BOM 与 CRLF 对它
+# 没有功能影响，但它是「生成 → 逐字节比较」链条的一部分（版本号就是模板内容
+# 哈希），固定成 LF 可以避免同类误报。
+public/sw.js text eol=lf
