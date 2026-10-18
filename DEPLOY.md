@@ -111,7 +111,7 @@ npx wrangler deploy
 ## 架构
 
 ```
-GitHub TryWorld2026/tryworld-nav（私有，代码 ~28 MB，无媒体）
+GitHub TryWorld2026/tryworld-nav（公开，代码 ~28 MB，无媒体）
    │  push → Actions（目前 manual only，见下）
    ▼
 next build (output: 'export')  ──►  out/

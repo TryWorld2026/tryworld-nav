@@ -2,7 +2,7 @@
 
 一个 AI 工具导航站，静态导出后部署在 Cloudflare Workers Static Assets 上。
 
-线上：https://nav.tryworld.com.cn ｜ 仓库：`github.com/TryWorld2026/tryworld-nav`（私有）
+线上：https://nav.tryworld.com.cn ｜ 仓库：`github.com/TryWorld2026/tryworld-nav`（公开）
 
 ## 这是什么
 
@@ -26,10 +26,20 @@ Next.js 15.5.27（`output: 'export'`）+ React 19 + Tailwind 3.4 的纯静态站
 ```bash
 npm install       # node_modules 不在 git 里
 npm run dev       # http://localhost:3000
-npm run build     # 约 3.9 分钟，产出 out/
+npm run build     # 约 8–11 分钟，产出 out/
 npm run lint      # eslint，当前 exit 0
-npm run deploy    # build + prune + wrangler deploy（约 20 分钟首次）
+npm test          # 91 项；产物断言需要先 build
 ```
+
+**新检出会没有媒体文件。** `public/assets/{icons,shots,tags,news}`（约 4200 个
+文件、327 MB）**不在 git**，理由见 `.gitignore` 里的注释。没有它们也能：
+`npm run dev` / `npm run build` / `npm test` **全部正常**——图片路径是烘焙进
+HTML 的字符串，没人检查文件是否存在，页面上的图会 404 但不会报错。要让图片
+真的显示，从备份包还原（`npm run media:restore`，见 [MIGRATION.md](MIGRATION.md)）。
+
+同理，缩略图（`public/assets/thumbs/`，6245 个 webp）也不在 git，
+`npm run build` 会自动重新生成；单独跑用 `npm run gen:thumbs`。
+缺失时页面不输出 `srcSet`、直接退回原图，不会破图。
 
 `out/` 很大（1040 MB）是因为媒体全量打包，见下面「部署」。
 
