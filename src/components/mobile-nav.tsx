@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { X } from 'lucide-react';
 import { CategoryIcon } from './category-icon';
-import { featured, hotCategories, SITE } from '@/lib/data';
+import { navFeatured as featured, navHotCategories as hotCategories } from '@/lib/nav';
+import { SITE } from '@/lib/site';
 import { rgb, rgbAlpha } from '@/lib/utils';
 
 const LINKS = [
@@ -158,7 +159,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
         <nav className="grid grid-cols-2 gap-1">
           {hotCategories.map((c) => (
             <Link
-              key={c.id}
+              key={c.slug}
               href={`/categories/${c.slug}`}
               className="flex items-center rounded-md px-2 py-2 text-sm text-foreground/80 transition-colors hover:bg-foreground/5"
             >

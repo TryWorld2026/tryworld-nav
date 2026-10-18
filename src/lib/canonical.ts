@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { SITE } from '@/lib/data';
+import { SITE } from '@/lib/site';
 
 /**
  * `alternates.canonical` for one route, merged into whatever metadata the page

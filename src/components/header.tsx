@@ -2,12 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ChevronDown, LayoutList, Layers2, Menu, Newspaper, ScanFace, Search } from 'lucide-react';
+import { ArrowRight, Bookmark, ChevronDown, LayoutList, Layers2, Menu, Newspaper, ScanFace, Search } from 'lucide-react';
 import { CommandDialog } from './command-dialog';
 import { MobileNav } from './mobile-nav';
 import { SiteLogo } from './site-logo';
 import { CategoryIcon } from './category-icon';
-import { allCategories, SITE } from '@/lib/data';
+import { navCategories as allCategories } from '@/lib/nav';
+import { SITE } from '@/lib/site';
 
 /**
  * The origin's header, transcribed from its markup.
@@ -45,8 +46,25 @@ import { allCategories, SITE } from '@/lib/data';
  * `[background-clip:padding-box,border-box,border-box]` + 透明边框裁出一圈
  * 渐变环，去掉光晕后描边仍在。所以这里只删 `before:*` 那一段。
  */
-const MAGIC_BUTTON_CLASS =
-  'group relative inline-flex h-11 cursor-pointer items-center justify-center rounded-xl border-0 bg-[length:200%] px-8 py-2 font-medium text-primary-foreground transition-colors [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-[linear-gradient(#121213,#121213),linear-gradient(#121213_50%,rgba(18,18,19,0.6)_80%,rgba(18,18,19,0)),linear-gradient(90deg,hsl(var(--color-1)),hsl(var(--color-5)),hsl(var(--color-3)),hsl(var(--color-4)),hsl(var(--color-2)))] text-sm whitespace-nowrap';
+/**
+ * 右上角的主按钮 —— 2026-10-18 从「登录/注册」换成「我的收藏」。
+ *
+ * 换掉的原因（这是本轮最伤信任的一处，见 work/analysis-ia.md §9②）：
+ * 原按钮点开是一个 hand-rolled 弹窗，正文写着「复刻版本未包含账号系统，登录与
+ * 注册暂不可用」。它是首屏视觉权重第二高的元素（仅次于 logo），第一次到访的
+ * 用户点下去就被告知「这是个没做完的复制站」；而 `/about` 又写着「没有账号
+ * 体系」，两处自相矛盾。
+ *
+ * 静态站确实做不了账号，但可以做「收藏 + 本机可见」：详情页的收藏按钮从
+ * 2026-10 起就一直在往 localStorage 写数据，只是全站没有出口。现在这个按钮
+ * 指向 `/favorites`，一个真实的、能在本机工作的页面。
+ *
+ * 视觉沿用原登录按钮的「深墨实心 + 描边」体量（h-11 / px-5），保留首屏的
+ * 右侧重量，但不再使用那套 `--color-1..5` 渐变描边（它是原站深底页眉的产物，
+ * 在纸色底上读起来像一块彩色污渍，注释见上方 FAVORITES_BUTTON_CLASS 处）。
+ */
+const FAVORITES_BUTTON_CLASS =
+  'group inline-flex h-11 items-center justify-center gap-1.5 rounded-xl bg-gongke-dark px-5 text-sm font-medium text-[#F2EEE6] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#253230] hover:shadow-lg hover:shadow-[#1B2523]/20 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gongke-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 /** The three top-level nav items share this exact class string in the origin. */
 const NAV_ITEM_CLASS =
@@ -64,7 +82,6 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
-  const [authOpen, setAuthOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   /** 滚动方向：向下滚时收起顶栏，向上滚时立刻出现。 */
   const [hidden, setHidden] = useState(false);
@@ -142,7 +159,6 @@ export function Header() {
       }
       if (e.key === 'Escape') {
         setCatOpen(false);
-        setAuthOpen(false);
       }
     };
     document.addEventListener('keydown', onKey);
@@ -237,6 +253,34 @@ export function Header() {
                           </li>
                         ))}
                       </ul>
+                      {/* 下拉里原先只有 26 个分类，没有通向「分类总览」或
+                          「精选集合」的路 —— 桌面端去 /categories 的唯一入口
+                          埋在首页下半屏。两个出口放到底部一条细线之后。 */}
+                      <div className="mt-1.5 flex items-center gap-3 border-t border-foreground/[0.07] px-2 pt-2 text-[12.5px]">
+                        <Link
+                          href="/categories"
+                          onClick={() => setCatOpen(false)}
+                          className="inline-flex items-center gap-1 font-medium text-gongke-accent hover:underline"
+                        >
+                          分类总览
+                          <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                        </Link>
+                        <Link
+                          href="/collections"
+                          onClick={() => setCatOpen(false)}
+                          className="inline-flex items-center gap-1 font-medium text-gongke-accent hover:underline"
+                        >
+                          精选集合
+                          <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                        </Link>
+                        <Link
+                          href="/favorites"
+                          onClick={() => setCatOpen(false)}
+                          className="ml-auto inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
+                        >
+                          我的收藏
+                        </Link>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -271,13 +315,11 @@ export function Header() {
                 </button>
 
                 <div className="hidden lg:block">
-                  <button
-                    type="button"
-                    onClick={() => setAuthOpen(true)}
-                    className={MAGIC_BUTTON_CLASS}
-                  >
-                    登录/注册
-                  </button>
+                  {/* 指向真实的 /favorites，不再弹「未包含账号系统」的说明框。 */}
+                  <Link href="/favorites" className={FAVORITES_BUTTON_CLASS}>
+                    <Bookmark className="h-4 w-4" aria-hidden="true" />
+                    我的收藏
+                  </Link>
                 </div>
 
                 <button
@@ -296,33 +338,6 @@ export function Header() {
 
       <CommandDialog open={open} onOpenChange={setOpen} />
       <MobileNav open={menuOpen} onClose={() => setMenuOpen(false)} />
-
-      {authOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-          onClick={() => setAuthOpen(false)}
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="登录/注册"
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-lg border border-border bg-background p-6 shadow-lg"
-          >
-            <h2 className="text-lg font-semibold text-foreground">登录/注册</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              复刻版本未包含账号系统，登录与注册暂不可用。
-            </p>
-            <button
-              type="button"
-              onClick={() => setAuthOpen(false)}
-              className="mt-5 inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-            >
-              知道了
-            </button>
-          </div>
-        </div>
-      )}
     </>
   );
 }

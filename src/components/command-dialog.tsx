@@ -3,11 +3,41 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
-import { Search, X } from 'lucide-react';
+import { ArrowRight, Search, X } from 'lucide-react';
 import { CategoryIcon } from './category-icon';
-import { categories, featured, hotCategories, searchTools, tools } from '@/lib/data';
+import { navCategories, navFeatured, navHotCategories } from '@/lib/nav';
+import { searchIndex, type SearchRecord } from '@/lib/search';
+import { useBodyScrollLock } from '@/lib/use-body-scroll-lock';
 import { rgb, rgbAlpha } from '@/lib/utils';
+import rawSearchIndex from '../../data/search-index.json';
 
+const INDEX = rawSearchIndex as SearchRecord[];
+/** slug → 记录，避免每次渲染都在 2081 条里线性 find。 */
+const BY_SLUG = new Map(INDEX.map((r) => [r.s, r]));
+
+/**
+ * 全站唯一的搜索面板（页眉按钮、⌘K / Ctrl+K、`/`、移动端底部中央圆钮共用）。
+ *
+ * 2026-10-18 重做，三处行为变了：
+ *
+ *   1. **数据源换成 `data/search-index.json` + `lib/nav.ts`**。原先它直接
+ *      `import { categories, featured, searchTools, tools } from '@/lib/data'`，
+ *      而 `header.tsx` 是客户端组件 —— 于是 2081 条工具、26 个分类（内嵌工具
+ *      列表）、资讯、合集全部被打进 layout chunk，**每个页面白付 182 KB（br）**。
+ *      现在面板只要索引（59 KB br）与 5 KB 导航数据。
+ *
+ *   2. **结果顺序改了**：查询非空时「工具」组排第一，分类排第二。原先分类在
+ *      前，用户输「视频」按回车会落到 `/categories/ai-video-animation` ——
+ *      想找一个工具，却先到分类页，还要再点一次。
+ *
+ *   3. **给 30 条上限一个出口**：底部原先只有一行死的「共 2081 个工具」。
+ *      现在换成「在全部工具中搜索 “X” →」，把关键词带进 `/tools?q=`，
+ *      那里没有条数上限、可继续用分类/标签收窄。
+ *
+ * 键盘工程保持不变（这些在 2026-10-17 已经做对，别改坏）：自动聚焦、
+ * `Esc` 关闭、焦点归还触发元素、`aria-modal` + Tab 陷阱、`↑↓` 循环。
+ * 新增：打开时锁住背景滚动（原先 `aria-modal=true` 但背景照样能滚）。
+ */
 export function CommandDialog({
   open,
   onOpenChange,
@@ -17,6 +47,7 @@ export function CommandDialog({
 }) {
   const router = useRouter();
   const [query, setQuery] = useState('');
+  useBodyScrollLock(open);
 
   useEffect(() => {
     if (!open) setQuery('');
@@ -74,14 +105,15 @@ export function CommandDialog({
     [onOpenChange, router],
   );
 
-  const toolResults = useMemo(() => searchTools(query, 30), [query]);
+  const trimmed = query.trim();
+  const toolResults = useMemo(() => searchIndex(INDEX, query, 30), [query]);
   const catResults = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return hotCategories.slice(0, 8);
-    return categories
+    const q = trimmed.toLowerCase();
+    if (!q) return navHotCategories.slice(0, 8);
+    return navCategories
       .filter((c) => c.name.toLowerCase().includes(q) || c.slug.includes(q))
       .slice(0, 6);
-  }, [query]);
+  }, [trimmed]);
 
   if (!open) return null;
 
@@ -106,10 +138,12 @@ export function CommandDialog({
               autoFocus
               value={query}
               onValueChange={setQuery}
-              placeholder="搜索 AI 工具、分类…"
-              className="h-12 w-full rounded bg-transparent text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
+              placeholder="搜索 AI 工具、分类，或直接说你想做什么…"
+              aria-label="搜索 AI 工具"
+              className="h-12 w-full rounded bg-transparent text-base outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring md:text-sm"
             />
             <button
+              type="button"
               onClick={() => onOpenChange(false)}
               aria-label="关闭"
               className="rounded-md p-1 text-muted-foreground hover:bg-foreground/5 focus-visible:ring-1 focus-visible:ring-ring"
@@ -119,20 +153,56 @@ export function CommandDialog({
           </div>
 
           <Command.List className="scrollbar-thin max-h-[60vh] overflow-y-auto p-2">
-            {query.trim() !== '' && toolResults.length === 0 && catResults.length === 0 && (
-              <Command.Empty className="py-10 text-center text-sm text-muted-foreground">
-                未找到 “{query}” 相关的工具
+            {trimmed !== '' && toolResults.length === 0 && catResults.length === 0 && (
+              <Command.Empty className="px-4 py-10 text-center text-sm text-muted-foreground">
+                <p>没有直接匹配「{trimmed}」的工具。</p>
+                <p className="mt-1 text-xs">换个说法再试，或去分类里逛逛。</p>
               </Command.Empty>
+            )}
+
+            {/* 工具组在前：用户是来找工具的，回车应该落在工具上。 */}
+            {toolResults.length > 0 && (
+              <Command.Group
+                heading={`工具 · ${toolResults.length}`}
+                className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground"
+              >
+                {toolResults.map((h) => {
+                  const t = BY_SLUG.get(h.slug);
+                  if (!t) return null;
+                  return (
+                    <Command.Item
+                      key={t.s}
+                      value={t.s}
+                      onSelect={() => go(`/tools/${t.s}`)}
+                      className="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 text-sm aria-selected:bg-accent/10"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={t.i}
+                        alt=""
+                        width={28}
+                        height={28}
+                        loading="lazy"
+                        className="h-7 w-7 shrink-0 rounded-md border border-border object-contain p-0.5"
+                      />
+                      <span className="min-w-0 flex-1 truncate font-medium">{t.n}</span>
+                      <span className="max-w-[55%] truncate text-xs text-muted-foreground">
+                        {t.d}
+                      </span>
+                    </Command.Item>
+                  );
+                })}
+              </Command.Group>
             )}
 
             {catResults.length > 0 && (
               <Command.Group
-                heading={query.trim() ? '分类' : '热门分类'}
+                heading={trimmed ? '分类' : '热门分类'}
                 className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground"
               >
                 {catResults.map((c) => (
                   <Command.Item
-                    key={c.id}
+                    key={c.slug}
                     value={`cat-${c.slug}`}
                     onSelect={() => go(`/categories/${c.slug}`)}
                     className="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 text-sm aria-selected:bg-accent/10"
@@ -144,22 +214,19 @@ export function CommandDialog({
                       <CategoryIcon name={c.icon} className="h-4 w-4" />
                     </span>
                     <span className="flex-1 truncate">{c.name}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {tools.filter((t) => t.categories.some((x) => x.id === c.id)).length} 个工具
-                    </span>
                   </Command.Item>
                 ))}
               </Command.Group>
             )}
 
-            {query.trim() === '' && (
+            {trimmed === '' && (
               <Command.Group
                 heading="常用推荐"
                 className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground"
               >
-                {featured.slice(0, 6).map((t) => (
+                {navFeatured.slice(0, 5).map((t) => (
                   <Command.Item
-                    key={t.name}
+                    key={t.slug}
                     value={`feat-${t.slug}`}
                     onSelect={() => go(t.href)}
                     className="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 text-sm aria-selected:bg-accent/10"
@@ -167,7 +234,10 @@ export function CommandDialog({
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={t.icon}
-                      alt={t.name}
+                      alt=""
+                      width={28}
+                      height={28}
+                      loading="lazy"
                       className="h-7 w-7 rounded-md border border-border object-contain p-0.5"
                     />
                     <span className="flex-1 truncate">{t.name}</span>
@@ -178,38 +248,23 @@ export function CommandDialog({
                 ))}
               </Command.Group>
             )}
-
-            {toolResults.length > 0 && (
-              <Command.Group
-                heading={`工具 · ${toolResults.length}`}
-                className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground"
-              >
-                {toolResults.map((t) => (
-                  <Command.Item
-                    key={t.id}
-                    value={t.slug}
-                    onSelect={() => go(`/tools/${t.slug}`)}
-                    className="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 text-sm aria-selected:bg-accent/10"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={t.icon}
-                      alt={t.name}
-                      className="h-7 w-7 rounded-md border border-border object-contain p-0.5"
-                    />
-                    <span className="flex-1 truncate font-medium">{t.name}</span>
-                    <span className="max-w-[55%] truncate text-xs text-muted-foreground">
-                      {t.description}
-                    </span>
-                  </Command.Item>
-                ))}
-              </Command.Group>
-            )}
           </Command.List>
 
-          <div className="flex items-center justify-between border-t border-border px-4 py-2 text-[11px] text-muted-foreground">
-            <span>↑↓ 选择 · ↵ 打开 · Esc 关闭</span>
-            <span>共 {tools.length} 个工具</span>
+          <div className="flex items-center justify-between gap-3 border-t border-border px-4 py-2 text-[11px] text-muted-foreground">
+            <span className="hidden sm:inline">↑↓ 选择 · ↵ 打开 · Esc 关闭</span>
+            {trimmed ? (
+              // 30 条之外的出口：把原话带进 /tools，那里没有条数上限。
+              <Command.Item
+                value="__see-all__"
+                onSelect={() => go(`/tools?q=${encodeURIComponent(trimmed)}`)}
+                className="ml-auto flex cursor-pointer items-center gap-1 rounded px-1.5 py-1 font-medium text-gongke-accent aria-selected:bg-gongke-accent/10"
+              >
+                在全部工具中搜索「{trimmed}」
+                <ArrowRight className="h-3 w-3" aria-hidden="true" />
+              </Command.Item>
+            ) : (
+              <span className="ml-auto">共 {INDEX.length} 个工具</span>
+            )}
           </div>
         </Command>
       </div>

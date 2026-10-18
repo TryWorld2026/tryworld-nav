@@ -19,6 +19,8 @@ import type {
   ToolExtras,
 } from './types';
 import { asset, assetList } from './assets';
+import rawSearchIndex from '../../data/search-index.json';
+import { searchIndex, type SearchRecord } from './search';
 
 export const tools = (rawTools as Tool[]).map((t) => ({
   ...t,
@@ -36,6 +38,16 @@ export const collections = (rawCollections as Collection[]).map((c) => ({
 export const collectionBySlug = new Map(collections.map((c) => [c.slug, c]));
 export const toolBySlug = new Map(tools.map((t) => [t.slug, t]));
 export const categoryBySlug = new Map(categories.map((c) => [c.slug, c]));
+
+/**
+ * 客户端搜索索引（由 `scripts/generate-search-index.mjs` 生成）。
+ *
+ * 它**只交给客户端**（命令面板与 `/tools` 的筛选器），服务端不需要它 ——
+ * 服务端的搜索只在 `searchTools()` 里用到，而那个函数本身就是给 `/tools`
+ * 预渲染时算初始列表用的。这份数据 329 KB raw / 59 KB br，是「搜索能接住
+ * 任务语」的代价，比原先被打进 layout chunk 的 1.4 MB 目录 JSON 便宜得多。
+ */
+export const searchIndexRecords = rawSearchIndex as SearchRecord[];
 
 // Re-exported so server components keep their single `@/lib/data` import; the
 // client-side consumer (`ToolMiniCard`) imports `@/lib/tags` directly instead,
@@ -257,61 +269,29 @@ export const latestAdditions: Tool[] = (() => {
   return resolveSlugs(slugs);
 })();
 
+/**
+ * 搜索 —— 委托给 `lib/search.ts` 的纯函数实现。
+ *
+ * 原实现（2026-10-18 之前）是纯小写子串匹配，实测 22 个真实意图词里 6 个
+ * 在 Ctrl+K 与 `/tools` 两处都 0 命中；索引 prose 后 22/22 都能召回。
+ * 现在走同一份 `data/search-index.json`（含正文里挖出来的任务词），
+ * 客户端面板与服务端调用得到完全一致的结果。
+ *
+ * 保留这个导出的理由：`/tools` 的服务端筛选与任何未来的服务端调用点都要一个
+ * 「给字符串、拿 Tool[]」的入口，而 `search.ts` 返回的是 hit（slug + 分数）。
+ */
 export function searchTools(query: string, limit = 40): Tool[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return [];
-  const scored: { tool: Tool; score: number }[] = [];
-  for (const t of tools) {
-    // Read defensively: this runs in the search palette, which every page
-    // mounts, so one malformed catalog entry would break search everywhere
-    // instead of just failing to match that one tool.
-    const name = (t.name ?? '').toLowerCase();
-    const description = (t.description ?? '').toLowerCase();
-    const cats = t.categories ?? [];
-    const tagNames = t.tags ?? [];
-    let score = -1;
-    if (name === q) score = 100;
-    else if (name.startsWith(q)) score = 80;
-    else if (name.includes(q)) score = 60;
-    else if (description.includes(q)) score = 30;
-    else if (cats.some((c) => (c.name ?? '').toLowerCase().includes(q))) score = 20;
-    else if (tagNames.some((g) => g.toLowerCase().includes(q))) score = 10;
-    if (score > 0) scored.push({ tool: t, score });
-  }
-  scored.sort((a, b) => b.score - a.score);
-  return scored.slice(0, limit).map((s) => s.tool);
+  const hits = searchIndex(searchIndexRecords, query, limit);
+  return hits.map((h) => toolBySlug.get(h.slug)).filter((t): t is Tool => Boolean(t));
 }
 
 /**
- * 站点自身的品牌常量。改这里就是改全站的站名、域名与 SEO 文案——它喂给
- * layout 的 metadata、sitemap、robots.txt 以及各路由的 generateMetadata。
+ * 站点自身的品牌常量 —— 现在住在 `lib/site.ts`（客户端安全）。
  *
- * 品牌取面试界 TryWorld（`~/.claude/skills/tryworld-brand`，v1.4.0）。站名是
- * 「主品牌 + 品类后缀」的形式，`name` 与 `url` 是唯一事实来源。
- *
- * 注意：`title` 与 `description` 里的品类句式（「探索发现热门的智能体和AI工具」）
- * 沿用了原站 hero 的措辞。这是站点自身的文案，不是抓取内容，若日后要彻底脱离
- * 原站行文，从这两条和 `hero.tsx` 的 HERO_LEAD 改起。
+ * 这里继续 re-export，是为了让 `layout.tsx` / `manifest.ts` / `robots.txt`
+ * 等 15 处既有 `from '@/lib/data'` 的 import 一行都不用改。真正的理由是
+ * 客户端组件（页脚、侧栏）只要站名，不该为此拖进 1.4 MB 目录 JSON ——
+ * 见 `lib/site.ts` 顶部的说明。
  */
-export const SITE = {
-  name: '试界导航',
-  url: 'https://nav.tryworld.com.cn',
-  title: '试界导航 - 探索发现热门的智能体和AI工具',
-  description:
-    '试界导航是专注于智能体和AI工具的门户网站，我们致力于为用户介绍最新、热门的智能体和AI工具，帮助用户快速找到适合自己的学习、工作、生活的AI利器。',
-  keywords: [
-    '试界导航',
-    '试界导航官网',
-    'tryworld.com.cn',
-    '试界',
-    'TryWorld',
-    '智能体',
-    'AI工具',
-    'AI导航',
-    'AI工具导航',
-    'AI工具推荐',
-    '智能体导航',
-    '智能体大全',
-  ],
-  ogImage: asset('/assets/site/og.png'),
-};
+export { SITE } from './site';
+

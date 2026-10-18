@@ -1,7 +1,7 @@
 import { ArrowUpRight, Newspaper } from 'lucide-react';
 import Link from 'next/link';
 import { SiteLogo } from './site-logo';
-import { SITE } from '@/lib/data';
+import { SITE } from '@/lib/site';
 
 /**
  * The origin's footer, verbatim from its markup.
@@ -67,12 +67,27 @@ export function SiteFooter() {
                 </li>
                 <li>
                   {/* 原站的「提交工具」指向它自己的飞书表单，属于另一家公司的
-                      入口，换牌时去掉。本站有了自己的提交入口再挂回来。 */}
-                  <span className="text-sm text-gongke-muted">提交工具（即将开放）</span>
+                      入口，换牌时去掉。现在这一格改成真实可用的「我的收藏」+
+                      「精选集合」—— 页脚原先只有 4 个链接，却挂着一条「即将开放」
+                      的死文案，是导航站最不该有的兜底空洞。 */}
+                  <Link
+                    className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
+                    href="/favorites"
+                  >
+                    我的收藏
+                  </Link>
                 </li>
                 <li>
                   <Link
-                    className="inline-flex min-h-6 items-center text-sm hover:text-gongke-accent"
+                    className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
+                    href="/collections"
+                  >
+                    精选集合
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
                     href="/privacy-policy"
                   >
                     隐私政策

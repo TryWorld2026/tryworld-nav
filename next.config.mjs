@@ -77,6 +77,13 @@ function contentBuildId() {
     'data/category-cards.json',
     'data/tags.json',
     'data/llms.txt',
+    // 2026-10-18 起，客户端需要的两份派生数据由 `npm run gen:all` 生成：
+    //   - nav.json            26 分类 / 5 推荐 / 9 标签（页眉、侧栏、搜索面板）
+    //   - search-index.json   2081 条搜索索引（命令面板与 /tools 的筛选）
+    // 它们都进页面与产物，必须参与哈希；否则「只改了搜索索引」不会换 buildId，
+    // 浏览器缓存命中旧 chunk，线上还是旧结果。
+    'data/nav.json',
+    'data/search-index.json',
   ]) {
     try {
       h.update(rel);
@@ -103,6 +110,22 @@ function contentBuildId() {
     } catch {
       /* 可选文件，缺了就算了 */
     }
+  }
+
+  /*
+   * `public/sw.js` 是 `scripts/generate-sw.mjs` 的产物，版本号来自它自己的
+   * 模板哈希。它**不进任何页面 HTML**，但每次它的字节都可能变（改了缓存策略
+   * 就是新的 SW）—— 而它又是「部署时要上传的文件」之一。
+   *
+   * 不把它算进 buildId 的后果是：某个改动只影响 sw.js 时，buildId 不变，
+   * 部署脚本按内容哈希判断「无需上传」，于是线上的 Service Worker 永远停在
+   * 旧版本。这不是理论风险：缓存策略的修正只在 sw.js 里，漏传等于没修。
+   */
+  try {
+    h.update('public/sw.js');
+    h.update(readFileSync(join(ROOT, 'public', 'sw.js')));
+  } catch {
+    /* 还没生成过 SW 的检出（比如纯 CI 检查）不影响 buildId */
   }
 
   return h.digest('hex').slice(0, 16);

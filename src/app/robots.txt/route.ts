@@ -1,4 +1,4 @@
-import { SITE } from '@/lib/data';
+import { SITE } from '@/lib/site';
 
 /**
  * robots.txt, served as raw text because the origin emits two non-standard
@@ -21,6 +21,12 @@ export function GET(): Response {
     'Disallow: /user/',
     'Disallow: /verify-email/',
     'Disallow: /reset-password/',
+    // `/offline` 是断网时才显示的兜底页，页内已经把 title 与 body 写成
+    // 「你断网了」。抓进去只会让搜索结果标题里多一句错误提示 —— 它本身
+    // 也带 `<meta name="robots" content="noindex">`，这里是双保险。
+    // 只 Disallow 这一条，不顺手把 `/sw.js` 也拦掉：SW 脚本被拦不影响
+    // 爬虫（爬虫不跑 SW），但拦了以后人工排查「线上能否装上」会看不见它。
+    'Disallow: /offline',
     '',
     'User-Agent: GPTBot',
     'Allow: /llms.txt',
@@ -47,6 +53,7 @@ export function GET(): Response {
     'Disallow: /user/',
     'Disallow: /verify-email/',
     'Disallow: /reset-password/',
+    'Disallow: /offline',
     '',
     `Sitemap: ${SITE.url}/sitemap.xml`,
     '',

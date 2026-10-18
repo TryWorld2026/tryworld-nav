@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { ChevronRight, Layers2, Newspaper, Sparkles } from 'lucide-react';
+import { Bookmark, ChevronRight, Layers2, Newspaper, Sparkles } from 'lucide-react';
 import { CategoryIcon } from './category-icon';
 import { SiteLogo } from './site-logo';
-import { featured, hotCategories, SITE } from '@/lib/data';
+import { navFeatured as featured, navHotCategories as hotCategories } from '@/lib/nav';
+import { SITE } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
 /**
@@ -197,7 +198,7 @@ export function SiteSidebar() {
         <div className="mb-8">
           <h2 className={HEADING_CLASS}>
             <Layers2 className="w-4 h-4 mr-2" aria-hidden="true" />
-            热门分类
+            常用分类
           </h2>
           <nav className="space-y-1">
             {rows.map((c) => (
@@ -208,6 +209,44 @@ export function SiteSidebar() {
                 <span className={LABEL_CLASS}>{c.name}</span>
               </Link>
             ))}
+            {/* 侧栏原先只列 18 个分类（写死的 SIDEBAR_SLUGS），其余 8 类
+                （网站制作、记录摘要、文档办公、学习教育、营销推广、翻译、
+                金融投资、客服系统）在桌面端只能从页眉下拉进。补一个出口，
+                并把标题从「热门分类」改成「常用分类」—— 它是写死的清单，
+                不是按热度算的，原来的名字在说谎。 */}
+            <Link
+              href="/categories"
+              className={`${NAV_CLASS} text-gongke-accent`}
+              data-testid="sidebar-all-categories"
+            >
+              <div className="w-5 h-5 relative mr-3 flex-shrink-0 flex items-center justify-center">
+                <ChevronRight className="w-4 h-4" aria-hidden="true" />
+              </div>
+              <span className="text-sm font-medium">全部 26 个分类</span>
+            </Link>
+          </nav>
+        </div>
+
+        <div className="mb-8">
+          <h2 className={HEADING_CLASS}>
+            <Sparkles className="w-4 h-4 mr-2" aria-hidden="true" />
+            编辑精选
+          </h2>
+          <nav className="space-y-1">
+            {/* 9 个编辑集合原先全站 0 内链（只在 sitemap 里），是最接近
+                「第一次来不知道选哪个」的内容，却没有任何入口。 */}
+            <Link href="/collections" className={NAV_CLASS} data-testid="sidebar-collections">
+              <div className="w-5 h-5 relative mr-3 flex-shrink-0 flex items-center justify-center">
+                <Layers2 className="w-4 h-4 text-gongke-accent" aria-hidden="true" />
+              </div>
+              <span className={LABEL_CLASS}>9 个工具清单</span>
+            </Link>
+            <Link href="/favorites" className={NAV_CLASS}>
+              <div className="w-5 h-5 relative mr-3 flex-shrink-0 flex items-center justify-center">
+                <Bookmark className="w-4 h-4 text-gongke-accent" aria-hidden="true" />
+              </div>
+              <span className={LABEL_CLASS}>我的收藏</span>
+            </Link>
           </nav>
         </div>
       </div>
