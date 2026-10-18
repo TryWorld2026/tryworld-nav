@@ -1,123 +1,123 @@
 [
- {
-  "id": "td9789zo1n69808",
-  "slug": "lovart-ai",
-  "name": "Lovart",
-  "description": "全球首个专业AI设计Agent",
-  "icon": "/assets/icons/lovart-ai.png",
-  "image": "/assets/shots/lovart-ai.jpeg",
-  "variant": "mini",
-  "tags": [],
-  "categories": [
-   {
-    "id": "tg8ri1e9y87823h",
-    "slug": "ai-image-design",
-    "name": "AI图像/设计",
-    "icon": "image",
-    "color": "16 185 129"
-   },
-   {
-    "id": "30vv02cxnnx6iey",
-    "slug": "ai-agents",
-    "name": "AI智能体",
-    "icon": "brain-circuit",
-    "color": "245 158 11"
-   }
-  ]
- },
- {
-  "id": "06wzkx2umthytkv",
-  "slug": "updream",
-  "name": "updream",
-  "description": "专业级一站式 AI 视频创作平台",
-  "icon": "/assets/icons/updream.png",
-  "image": "/assets/shots/updream.jpeg",
-  "variant": "mini",
-  "tags": [],
-  "categories": [
-   {
-    "id": "n039af5rfj00581",
-    "slug": "ai-video-animation",
-    "name": "AI视频/动画",
-    "icon": "clapperboard",
-    "color": "239 68 68"
-   }
-  ]
- },
- {
-  "id": "78o122z9v2mzs22",
-  "slug": "office-xiaohuanxiong",
-  "name": "办公小浣熊",
-  "description": "商汤旗下的AI数据分析和报告撰写工具",
-  "icon": "/assets/icons/office-xiaohuanxiong.svg",
-  "image": "/assets/shots/office-xiaohuanxiong.png",
-  "variant": "mini",
-  "tags": [],
-  "categories": [
-   {
-    "id": "lidu041ybv9uo03",
-    "slug": "ai-data-analysis",
-    "name": "AI数据分析",
-    "icon": "chart-area",
-    "color": "132 204 22"
-   },
-   {
-    "id": "8vrbi328a85enh8",
-    "slug": "ai-document-tools",
-    "name": "AI文档办公",
-    "icon": "scroll-text",
-    "color": "217 70 239"
-   }
-  ]
- },
- {
-  "id": "5dfb9h82erzzj2m",
-  "slug": "liblib",
-  "name": "哩布哩布AI",
-  "description": "国内领先的AI图像创作平台",
-  "icon": "/assets/icons/liblib.png",
-  "image": "/assets/shots/liblib.jpeg",
-  "variant": "mini",
-  "tags": [
-   "编辑推荐",
-   "新兴初创"
-  ],
-  "categories": [
-   {
-    "id": "tg8ri1e9y87823h",
-    "slug": "ai-image-design",
-    "name": "AI图像/设计",
-    "icon": "image",
-    "color": "16 185 129"
-   }
-  ]
- },
- {
-  "id": "j2hg62cq6j2fj49",
-  "slug": "seko-ai",
-  "name": "Seko AI",
-  "description": "商汤科技推出的AI短片创作智能体",
-  "icon": "/assets/icons/seko-ai.png",
-  "image": "/assets/shots/seko-ai.jpeg",
-  "variant": "mini",
-  "tags": [
-   "编辑推荐"
-  ],
-  "categories": [
-   {
-    "id": "n039af5rfj00581",
-    "slug": "ai-video-animation",
-    "name": "AI视频/动画",
-    "icon": "clapperboard",
-    "color": "239 68 68"
-   },
-   {
-    "id": "30vv02cxnnx6iey",
-    "slug": "ai-agents",
-    "name": "AI智能体",
-    "icon": "brain-circuit",
-    "color": "245 158 11"
-   }
-  ]
- }
+  {
+    "id": "td9789zo1n69808",
+    "slug": "lovart-ai",
+    "name": "Lovart",
+    "description": "全球首个专业AI设计Agent",
+    "icon": "/assets/icons/lovart-ai.png",
+    "image": "/assets/shots/lovart-ai.jpeg",
+    "variant": "mini",
+    "tags": [],
+    "categories": [
+      {
+        "id": "tg8ri1e9y87823h",
+        "slug": "ai-image-design",
+        "name": "AI图像/设计",
+        "icon": "image",
+        "color": "244 63 94"
+      },
+      {
+        "id": "30vv02cxnnx6iey",
+        "slug": "ai-agents",
+        "name": "AI智能体",
+        "icon": "brain-circuit",
+        "color": "234 88 12"
+      }
+    ]
+  },
+  {
+    "id": "06wzkx2umthytkv",
+    "slug": "updream",
+    "name": "updream",
+    "description": "专业级一站式 AI 视频创作平台",
+    "icon": "/assets/icons/updream.png",
+    "image": "/assets/shots/updream.jpeg",
+    "variant": "mini",
+    "tags": [],
+    "categories": [
+      {
+        "id": "n039af5rfj00581",
+        "slug": "ai-video-animation",
+        "name": "AI视频/动画",
+        "icon": "clapperboard",
+        "color": "239 68 68"
+      }
+    ]
+  },
+  {
+    "id": "78o122z9v2mzs22",
+    "slug": "office-xiaohuanxiong",
+    "name": "办公小浣熊",
+    "description": "商汤旗下的AI数据分析和报告撰写工具",
+    "icon": "/assets/icons/office-xiaohuanxiong.svg",
+    "image": "/assets/shots/office-xiaohuanxiong.png",
+    "variant": "mini",
+    "tags": [],
+    "categories": [
+      {
+        "id": "lidu041ybv9uo03",
+        "slug": "ai-data-analysis",
+        "name": "AI数据分析",
+        "icon": "chart-area",
+        "color": "5 150 105"
+      },
+      {
+        "id": "8vrbi328a85enh8",
+        "slug": "ai-document-tools",
+        "name": "AI文档办公",
+        "icon": "scroll-text",
+        "color": "68 64 60"
+      }
+    ]
+  },
+  {
+    "id": "5dfb9h82erzzj2m",
+    "slug": "liblib",
+    "name": "哩布哩布AI",
+    "description": "国内领先的AI图像创作平台",
+    "icon": "/assets/icons/liblib.png",
+    "image": "/assets/shots/liblib.jpeg",
+    "variant": "mini",
+    "tags": [
+      "编辑推荐",
+      "新兴初创"
+    ],
+    "categories": [
+      {
+        "id": "tg8ri1e9y87823h",
+        "slug": "ai-image-design",
+        "name": "AI图像/设计",
+        "icon": "image",
+        "color": "244 63 94"
+      }
+    ]
+  },
+  {
+    "id": "j2hg62cq6j2fj49",
+    "slug": "seko-ai",
+    "name": "Seko AI",
+    "description": "商汤科技推出的AI短片创作智能体",
+    "icon": "/assets/icons/seko-ai.png",
+    "image": "/assets/shots/seko-ai.jpeg",
+    "variant": "mini",
+    "tags": [
+      "编辑推荐"
+    ],
+    "categories": [
+      {
+        "id": "n039af5rfj00581",
+        "slug": "ai-video-animation",
+        "name": "AI视频/动画",
+        "icon": "clapperboard",
+        "color": "239 68 68"
+      },
+      {
+        "id": "30vv02cxnnx6iey",
+        "slug": "ai-agents",
+        "name": "AI智能体",
+        "icon": "brain-circuit",
+        "color": "234 88 12"
+      }
+    ]
+  }
 ]

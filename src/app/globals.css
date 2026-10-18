@@ -62,6 +62,21 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: 'cv11', 'ss01';
     font-variation-settings: 'opsz' 32;
+    /* 中文正文的默认字距。Noto Sans SC 的字面比西文宽，浏览器默认的 normal
+       在 14–16px 下会显得松；-0.006em 是把整站正文收紧半档、又不破坏标点的
+       最小改动。标题另有 `tracking-tight`。 */
+    letter-spacing: -0.006em;
+    /* 骨白纸面：加一层极淡的暖色噪点，让大面积的 #F2EEE6 不显得像纯色色块。
+       用 SVG feTurbulence 内联，约 300 字节，不发请求；`background-attachment:
+       fixed` 让纹理相对视口而不是文档，长页面滚动时不会看到纹理跟着跑。 */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    background-attachment: fixed;
+  }
+  /* 标题的默认字距与字重层级。Noto Sans SC 的 700 在 32px 以上会显得过实，
+     标题统一收到 -0.02em，并用 650 的可变字重（字体是 100–900 可变字体，
+     650 是可用的，且比 700 更接近印刷品的「重但不糊」）。 */
+  :is(h1, h2, h3) {
+    letter-spacing: -0.02em;
   }
   /*
    * The origin ships this as a plain reset rule — every heading level defaults
@@ -75,6 +90,13 @@
   h5,
   h6 {
     font-weight: 700;
+  }
+  /* 可选字重：Noto Sans SC 是 100–900 的可变字体（见 public/fonts/fonts.css），
+     650 在标题上比 700 少一点「糊」，在 28–40px 这一档尤其明显。 */
+  h1,
+  h2 {
+    font-variation-settings: 'opsz' 32;
+    font-weight: 650;
   }
 }
 
@@ -93,6 +115,107 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+@layer utilities {
+  /* 墨色横幅（首页 hero、日报头条、期报报头）。深墨绿底 + 极淡的网格与光晕，
+     与骨白纸面形成整页唯一的强对比区域 —— 没有它，整站从顶到底都是浅底浅字，
+     视觉上没有一个「落点」。 */
+  .ink-band {
+    background-color: #1b2523;
+    background-image:
+      radial-gradient(120% 120% at 85% -20%, rgba(242, 105, 60, 0.16), transparent 55%),
+      radial-gradient(90% 90% at 0% 110%, rgba(74, 122, 111, 0.22), transparent 60%),
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size:
+      auto,
+      auto,
+      36px 36px,
+      36px 36px;
+    color: #f2eee6;
+  }
+
+  /* 滚动进入视口的一次性淡入。初始态就在这里，`data-in="true"` 时回到原位。
+   `will-change` 只在未入场时给，入场后撤掉，避免长列表里常驻几十个合成层。 */
+  .reveal {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal[data-in='true'] {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+  /* 减少动效时直接给终态：内容始终可见，也不做位移。 */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* 由路由切换的页面入场（`app/template.tsx`）。与 .reveal 分开，
+     因为模板每次导航都会重新挂载，这条只播一次且不依赖 JS 观察器。 */
+  .page-enter {
+    animation: page-enter 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* 底部抽屉与遮罩（`mobile-nav.tsx`）。抽屉从下沿滑上来、遮罩淡入；
+     关闭是立即卸载，所以不需要退出动画 —— 多点一次就要多等 280ms，
+     反而拖慢。 */
+  @keyframes sheet-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes sheet-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* 底部 Tab 栏与手机上的页面预留：内容最后一行不能被固定栏盖住。
+     `env(safe-area-inset-bottom)` 兜住 iPhone 的 Home 指示条。 */
+  .pb-tabbar {
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 1024px) {
+    .pb-tabbar {
+      padding-bottom: 0;
+    }
+  }
+
+  /* 横向滚动的隐藏滚动条（频道 pill 栏、日期条）。与 .scrollbar-none 相同的
+     行为，但语义更清楚，避免新代码误用侧栏那条带 hover 的规则。 */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -138,8 +261,11 @@
  *   prose-code:py-0.5
  *   before:prose-code:content-[''] after:prose-code:content-['']
  *   tool-details
- * Only `text-foreground/80`, `max-w-none` and `px-4` survive as utilities on
- * the element itself; everything below is the rest of that stack.
+ * Only `text-foreground/80` and `max-w-[48rem]` survive as utilities on the
+ * element itself; everything below is the rest of that stack. The origin's
+ * `px-4` was dropped — the prose box already sits inside the column, and the
+ * extra 16px put the copy's left edge out of line with the screenshot above it
+ * and the 「更多AI工具」 heading below it.
  */
 @layer components {
   :is(.tool-details, .article-content) {
@@ -254,13 +380,19 @@
     color: hsl(var(--foreground));
     font-weight: 600;
   }
+  /* 原站这里用紫罗兰 #8b5cf6 / #a78bfa。试界品牌无紫（见 `lib/news.ts` 的
+     同一条约束），改成品牌深绿，`:hover` 用橙 —— 正文里的链接本来就是「可去
+     的下一步」，橙色在这一页只出现在这一处，指向性更强。 */
   :is(.tool-details, .article-content) a {
-    color: #8b5cf6;
+    color: #24564e;
     font-weight: 500;
     text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: rgb(36 86 78 / 0.3);
   }
   :is(.tool-details, .article-content) a:hover {
-    color: #a78bfa;
+    color: #b54826;
+    text-decoration-color: rgb(181 72 38 / 0.4);
   }
   :is(.tool-details, .article-content) a :is(strong, code) {
     color: inherit;
@@ -398,5 +530,219 @@
     max-width: 1536px;
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+
+}
+
+/*
+ * 站点的**唯一**内容容器。
+ *
+ * 2026-10-17 实测：没有它的时候，主页与工具列表的内容列在 1920 视口下被拉
+ * 到 1728px、2560 下 2368px —— 一行字长到 120+ 字符，卡片被拉成又扁又长的
+ * 条，标题大量截断（1920 下首页有 12 个标题被 line-clamp 吃掉）。同时
+ * `/news` 的频道栏与筛选条是满宽、正文却居中在 1180px，两者左右边界差了
+ * 近 200px，宽屏上一眼就能看出「两套排版叠在一起」。
+ *
+ * 放在所有 `@layer` 之外是刻意的：`@layer components` 的优先级低于
+ * `@layer utilities`，而 Tailwind 的 `px-*`/`max-w-*` 都在 utilities 里，
+ * 会把这个类的 `padding`/`max-width` 覆盖掉（第一次改完实测宽度纹丝不动，
+ * 就是这个原因）。
+ *
+ * 1280 是「13 寸笔记本满宽」到「27 寸显示器仍舒适」的平衡点：正文行长约
+ * 70–80 字符，4 列工具卡每张约 290px，和侧栏 192px 相加后整页重心居中。
+ *
+ * ── 2026-10-17 第二次修正：1280 只在笔记本上是平衡点，不是上限 ──────────
+ *
+ * 上面那段实测是「没有容器」的对照组，结论是对的，但把 1280 当成了所有屏
+ * 的终点。在 2560 显示器上实测：正文列仍只有 1280，侧栏之外左右各空 544px，
+ * 内容只占可用宽度的 54%；1920 上两侧也各空 416px。用户在 27 寸上看到的
+ * 「宽屏布局塌陷」就是这 1088px 的空白 —— 页面像一张居中的 A4 纸贴在墙上。
+ *
+ * 所以上限改成随视口分级放大，而不是一个常数：
+ *
+ *   < 1536        1280   （笔记本：保持原结论，行长 70–80 字符）
+ *   ≥ 1536        1440   （2xl，13→15 寸 / 1080p 外接屏）
+ *   ≥ 1800        1600   （4xl，2560 显示器单窗口）
+ *   ≥ 2100        1760   （5xl，2560 显示器最大化 / 3440 带鱼屏）
+ *
+ * 1440/1600/1760 不是随手取的：它们让**侧栏 192px + 容器**在对应视口下
+ * 仍留出 ≥ 200px 的呼吸边距（2560 下 192+1760+608，两侧各 304px），同时
+ * 工具卡从 4 列升到 5–6 列后单卡仍 ≥ 270px，不会退化成又扁又长的条。
+ *
+ * 阅读型页面（prose / 资讯卡正文）另有自己的行长上限，不受这里影响 ——
+ * 见 `prose-page.tsx` 的 `max-w-[45rem]` 与 `news-feed.tsx` 的正文列宽。
+ */
+.content-container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .content-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .content-container {
+    max-width: 1440px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .content-container {
+    max-width: 1600px;
+  }
+}
+
+@media (min-width: 2100px) {
+  .content-container {
+    max-width: 1760px;
+  }
+}
+
+/**
+ * `.reading-container` —— 阅读型页面的宽度 token。
+ *
+ * `.content-container` 会随视口放大到 1760，那是给**工具网格**用的：卡片是
+ * 短文本块，越宽只是列数越多。但资讯流、周报、月报、热点榜是**整段正文**，
+ * 1760 下摘要会被拉成一行 100+ 字符，中文阅读时眼球横移距离过大，读三行就
+ * 找不到下一行的起点。
+ *
+ * 68rem（1088px）约合 52 个汉字/行 —— 中文正文的舒适上限（西文排版常用的
+ * 45–75 字符区间，中文字宽约为西文两倍）。这个值与 `news-feed.tsx` 里
+ * 列表的宽度一致，两处必须同步改。
+ *
+ * 与 `.content-container` 一样刻意放在所有 `@layer` 之外：`@layer components`
+ * 会被 utilities 覆盖，`px-*` / `max-w-*` 会把这里的规则冲掉。
+ */
+.reading-container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 68rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .reading-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/**
+ * `.rail-container` —— **带侧栏的阅读页**的宽度 token。
+ *
+ * 现在有两个消费者：日报正文页（左归档 216 + 中正文 + 右日历 248）和工具
+ * 详情页（正文 2/3 + 右侧信息栏 1/3）。它们的共同点是「正文旁边永远有一列
+ * 导航或元信息」，所以中间那一列必须封顶在 48 个汉字左右（西文排版常用的
+ * 45–75 字符区间，中文字宽约为西文两倍），不能让它跟着视口无限变宽。
+ *
+ * **2026-10-18：外框从固定的 86rem 改成与 `.content-container` 同一条阶梯
+ * （1280 / 1440@1536 / 1600@1800 / 1760@2100）。** 原来的 86rem 在 ≥1800 上
+ * 比全站窄 224–384px：顶栏、页脚、`/tools`、`/categories` 全部停在 1760，
+ * 点进任意一个工具页（2081 页）整个版心忽然向内缩 192px，页脚还会比正文
+ * 每侧多出 192px —— 同一个页面自己的头尾都对不齐。那不是「阅读宽度」，
+ * 是版面没对齐。
+ *
+ * 外框交给 token，行长交给消费者自己的列封顶：
+ *   - 工具页：`grid-cols-3` 的正文列在 1760 下有 1120px 宽，prose 仍由
+ *     `tool-details.tsx` 的 `max-w-[48rem]` 收在 768，多出来的宽度是文字块
+ *     的右边距；「更多AI工具」等卡片带铺满整列，形成「窄正文 + 宽卡片带」
+ *     的层次，而不是把正文拉成一行 70 字。
+ *   - 日报正文页：≥1800 时中栏固定 48rem、两侧列宽不变，多出来的宽度
+ *     分给两道栏距（`justify-between`），头条与正文的字号、行长、图片
+ *     宽度与 1440 下逐像素一致。
+ *
+ * 同样放在所有 `@layer` 之外 —— 这是这个文件里第三次重复同一个原因：
+ * `@layer components` 的规则会被 utilities 里的 `max-w-*` 冲掉。
+ */
+.rail-container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .rail-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .rail-container {
+    max-width: 1440px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .rail-container {
+    max-width: 1600px;
+  }
+}
+
+@media (min-width: 2100px) {
+  .rail-container {
+    max-width: 1760px;
+  }
+}
+
+/**
+ * `.period-container` —— 周报 / 月报的窄栏阅读 token。
+ *
+ * 期报是「导语 + 编号栏目 + 条目列表」的单栏阅读流，没有侧栏，也没有卡片
+ * 网格，所以既不需要 `.rail-container` 的整版宽度，也不需要
+ * `.reading-container` 的散文宽度 —— 14/15px 的段落铺到 1088 会拉成一行
+ * 八十多个汉字，眼球横移找不到下一行。
+ *
+ * 860 与日报正文栏（`.rail-container` 里中栏 768）接近，两种「日报形态」
+ * 的行长口径因此一致。这个值此前是散落在 4 处的 `max-w-[860px]`：期报正文、
+ * 周报返回链接、月报返回链接、以及资讯频道栏在期报页的宽度。任何一处漏改
+ * 都会出现「频道栏比正文宽 114px」的左缘错位（2560 实测 113px），所以提成
+ * 一个 token，四处共用。
+ *
+ * 1536 起放宽到 1088：从 2xl 开始期报右侧多出一条栏目目录（见
+ * `news-period-page.tsx`），容器要同时装下「正文 + 目录」。1088 − 64 内边距
+ * − 208 目录 − 48 列距 = 768，正文仍是日报中栏那个行长，**只是把原来浪费在
+ * 两侧的空白变成了可用的导航**，不是把正文拉宽。
+ *
+ * 2026-10-18：容器既然已经把正文收在 768（≈51 个汉字），栏目小结与条目
+ * 摘要上的 `max-w-[68ch]`（14px 下实测 528px）就只会让段落在栏里再短
+ * 240px、右缘与标题参差 —— 那是「同一处毛病换了三个位置」。这些 ch 上限
+ * 已全部移除，现在这 768 就是行长本身。
+ *
+ * 依然在所有 `@layer` 之外：`@layer components` 会被 utilities 的 `max-w-*`
+ * 覆盖 —— 这是这个文件里第四次写同一句话，因为它已经被踩了四次。
+ */
+.period-container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 860px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .period-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .period-container {
+    max-width: 1088px;
   }
 }

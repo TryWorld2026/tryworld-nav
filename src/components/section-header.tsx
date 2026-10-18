@@ -1,29 +1,24 @@
 import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 /**
- * The outline button that carries 查看全部 / 查看更多, verbatim from the
- * origin's React tree (flight chunk `33:`).
- */
-const MORE_BUTTON_CLASS =
-  'justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 border bg-background shadow-sm hover:bg-background/90 hover:text-foreground h-9 px-4 py-2 flex text-foreground/80 items-center border-gongke-gray/20';
-
-/**
- * A section heading row, verbatim from the origin.
+ * A section heading row.
  *
- * The origin has three of these on the home page and they differ in exactly
- * three ways, which is why `href`, `linkLabel`, `icon`, `id` and `compact` are
- * all optional:
+ * 2026-10-17 重做。原来是一行 18px 粗体 + 右侧一个小描边按钮，字号与下面的
+ * 卡片标题只差 2px，26 个分类区块全部长一样 —— 整页滚下来没有任何节奏，
+ * 用户说的「排版粗糙、缺少层次」主要就是这里。
  *
- *   热门工具      wrapper `mb-12`, row `mb-4`, Rocket 20×20, 查看全部 → /tools
- *   最新添加      wrapper (none),  row `mb-4`, ConciergeBell 20×20, no link
- *   26 categories wrapper `mt-8 space-y-4`, row `gap-4` only (no `mb-4`),
- *                a 20×20 category icon, 查看更多 → /categories/{slug}, and an
- *                `id` on the `<h2>` so the sidebar's category list can anchor
- *                straight to it.
+ * 现在的层级：
  *
- * `compact` is the origin's category-row case: the wrapper already owns the
- * vertical rhythm (`space-y-4`), so the row must not add its own `mb-4`.
+ *   - 区块标题 20px（`text-xl`），前面一个品牌绿的小图标块（32px 的浅绿底圆角
+ *     方）而不是悬空的 20px 线条图标 —— 图标有了「底」，标题行就有了起点；
+ *   - 标题右侧跟一条**发丝线**铺满剩余宽度，把标题与「查看更多」连成一行，
+ *     视线不会在中间断掉；
+ *   - 「查看更多」平时是灰字，hover 才变绿并右移箭头 —— 区块标题不该和内容
+ *     抢注意力，原站的描边按钮在 26 个区块里重复 26 次，太重。
+ *
+ * `compact` 保留原语义：分类区块的外层已经用 `space-y-4` 管住间距，这一行
+ * 不再自己加 `mb-4`。
  */
 export function SectionHeader({
   title,
@@ -42,28 +37,37 @@ export function SectionHeader({
 }) {
   return (
     <div
-      className={`flex flex-col gap-4 md:flex-row md:items-center md:justify-between${
-        compact ? '' : ' mb-4'
-      }`}
+      className={`flex items-center gap-3${compact ? '' : ' mb-4'}`}
     >
-      <div>
-        <h2 className="flex items-center text-lg font-bold text-foreground/80" id={id}>
-          <span className="mr-2 text-gray-500">{icon}</span>
-          {title}
-        </h2>
-      </div>
+      <h2
+        className="flex shrink-0 items-center gap-2.5 text-[19px] font-semibold text-foreground"
+        id={id}
+      >
+        {icon && (
+          <span
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gongke-accent/[0.07] text-gongke-accent ring-1 ring-inset ring-gongke-accent/10"
+            aria-hidden="true"
+          >
+            {icon}
+          </span>
+        )}
+        {title}
+      </h2>
+
+      {/* 发丝线：从标题一直铺到右侧的链接，把两者钉在同一行上。 */}
+      <span className="h-px min-w-4 flex-1 bg-foreground/10" aria-hidden="true" />
 
       {href && (
-        <div className="flex flex-col items-stretch gap-3 md:flex-row md:items-center">
-          {/* The origin nests a <button> inside this <a>. That is invalid HTML
-              (interactive content inside interactive content), so the button's
-              own classes are applied to the anchor instead — same rendered
-              result, valid document. */}
-          <Link href={href} className={`hidden md:block ${MORE_BUTTON_CLASS}`}>
-            {linkLabel}
-            <ChevronRight className="h-4 w-4" />
-          </Link>
-        </div>
+        <Link
+          href={href}
+          className="group inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[13px] font-medium text-muted-foreground transition-colors hover:text-gongke-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {linkLabel}
+          <ArrowRight
+            className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+            aria-hidden="true"
+          />
+        </Link>
       )}
     </div>
   );

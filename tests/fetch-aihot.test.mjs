@@ -120,7 +120,10 @@ test('缺 links.original 的条目被丢弃（不渲染死链）', async () => {
   }));
   try {
     const { code, stdout } = await runFetch(port);
-    assert.equal(code, 0);
+    // 断言带上 stdout：这条用例曾在整机跑 build 时偶发 code=1，而子进程的输出
+    // 被断言吞掉了，只能看到「实际 1」看不出原因。机器过载时 Node 起不来也是 1，
+    // 和「抓取失败且无历史数据」的 1 长得一样，必须靠输出区分。
+    assert.equal(code, 0, `脚本应成功退出，实际 ${code}：\n${stdout}`);
     const n = JSON.parse(readFileSync(NEWS, 'utf8'));
     assert.equal(n.length, 1, '只应保留有原文链接的那条');
     assert.equal(n[0].id, 'cm_test_1');

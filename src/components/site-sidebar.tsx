@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Layers2, Sparkles } from 'lucide-react';
+import { ChevronRight, Layers2, Newspaper, Sparkles } from 'lucide-react';
 import { CategoryIcon } from './category-icon';
 import { SiteLogo } from './site-logo';
 import { featured, hotCategories, SITE } from '@/lib/data';
@@ -24,15 +24,22 @@ import { cn } from '@/lib/utils';
  *
  *   label  ai-writing                 AI写作      -> AI文章写作
  *   label  ai-coding                  AI代码编程  -> AI编程代码
- *   tone   ai-agents                  amber-500   -> rose-500
- *   tone   ai-coding                  stone-500   -> slate-500
- *   tone   ai-ppt                     teal-500    -> violet-500
- *   tone   ai-browser                 pink-500    -> yellow-500
- *   tone   ai-mindmap-whiteboard      sky-500     -> blue-500
- *   tone   ai-content-detection       indigo-500  -> purple-500
- *   tone   ai-prompt-tools            blue-700    -> emerald-500
- *   tone   ai-recruiting-tools        indigo-600  -> violet-600
- *   tone   ai-lawer-tools             yellow-400  -> yellow-500
+ *
+ * 2026-10-17：原站还给 `ai-ppt` / `ai-content-detection` / `ai-recruiting-tools`
+ * 各指定了一个紫系色（violet-500 / purple-500 / violet-600）。试界品牌无紫，
+ * 那三条覆盖已整体删除，这三行改回由 `categories.json` 驱动 —— 数据侧现在给出
+ * teal-700 / red-700 / green-700。
+ *
+ * 同一天，剩下 5 条**纯色**覆盖（ai-agents rose-500 / ai-coding slate-500 /
+ * ai-browser yellow-500 / ai-mindmap-whiteboard blue-500 / ai-prompt-tools
+ * emerald-500 / ai-lawer-tools yellow-500）也一并删除，理由同样是「对不上」：
+ * 侧栏的「AI浏览器」是黄的、分类页却是青的，「AI法律助手」在侧栏与分类页之间
+ * 还差一档（yellow-500 vs yellow-400）。更要命的是这 5 条覆盖里有 3 条撞色
+ * （yellow-500 出现 3 次、blue-500 与 emerald-500 各 2 次），而 `categories.json`
+ * 现在是 26 个互不重复的色相。删完之后 18 行侧栏色相全唯一，且每一行都和它
+ * 对应的分类页、工具卡圆点同色。
+ *
+ * 覆盖表因此只剩**标签**：原站确实另起了名字，且这不影响任何颜色一致性。
  *
  * The 18 icon names match the payload exactly, so those stay data-driven.
  */
@@ -59,18 +66,10 @@ const SIDEBAR_SLUGS = [
   'ai-lawer-tools',
 ] as const;
 
-/** Rows where the origin's hardcoded label/tone beats the payload's. */
+/** Rows where the origin's hardcoded label beats the payload's. */
 const SIDEBAR_PRESENTATION: Record<string, { name?: string; tailwind?: string }> = {
   'ai-writing': { name: 'AI文章写作' },
-  'ai-coding': { name: 'AI编程代码', tailwind: 'text-slate-500' },
-  'ai-agents': { tailwind: 'text-rose-500' },
-  'ai-ppt': { tailwind: 'text-violet-500' },
-  'ai-browser': { tailwind: 'text-yellow-500' },
-  'ai-mindmap-whiteboard': { tailwind: 'text-blue-500' },
-  'ai-content-detection': { tailwind: 'text-purple-500' },
-  'ai-prompt-tools': { tailwind: 'text-emerald-500' },
-  'ai-recruiting-tools': { tailwind: 'text-violet-600' },
-  'ai-lawer-tools': { tailwind: 'text-yellow-500' },
+  'ai-coding': { name: 'AI编程代码' },
 };
 
 /**
@@ -88,6 +87,20 @@ const NAV_CLASS =
 const LABEL_CLASS = 'text-sm text-foreground/80';
 const HEADING_CLASS = 'text-sm font-semibold text-gray-500 mb-4 flex items-center';
 
+/**
+ * 「AI 资讯」是侧栏里唯一的顶级入口，也是本轮**有意偏离原站**的一处。
+ *
+ * 原站的侧栏只有两组：常用推荐（外链产品）+ 热门分类（站内分类页）。本站自己
+ * 做了 AIHOT 聚合栏目，它既不是「一个工具」也不是「一个分类」，塞进任何一组
+ * 都会语义错位，所以在两组之上单独给它一个顶级块。
+ *
+ * 视觉上用品牌绿底白字而不是复用 `NAV_CLASS` 的幽灵行：这是站内唯一一个
+ * 「内容栏目」入口（其余全是导航/索引），值得被看见，也是用户反馈「界面上
+ * 看不到新闻资讯的按钮」最直接的回应。`mb-8` 与下面两组的间距对齐。
+ */
+const NEWS_BLOCK_CLASS =
+  'group mb-8 flex items-center rounded-lg bg-gongke-accent px-3 py-2.5 text-white shadow-sm transition-all duration-200 hover:bg-gongke-accent/90 hover:shadow-md active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gongke-accent focus-visible:ring-offset-2';
+
 export function SiteSidebar() {
   const rows = SIDEBAR_SLUGS.map((slug) => {
     const c = hotCategories.find((x) => x.slug === slug);
@@ -97,8 +110,9 @@ export function SiteSidebar() {
       slug,
       name: override?.name ?? c.name,
       icon: c.icon,
-      // Falls back to the payload's tone for the 8 rows the origin leaves alone;
-      // the `text-` prefix is in the data already, so it is used verbatim.
+      // Every row now takes its tone from the payload — see the note above on
+      // why the origin's five colour overrides were removed. The `text-` prefix
+      // is in the data already, so it is used verbatim.
       tailwind: override?.tailwind ?? c.tailwind,
     };
   }).filter((r): r is NonNullable<typeof r> => r !== null);
@@ -107,7 +121,7 @@ export function SiteSidebar() {
     <aside
       className={cn(
         'scrollbar-none hover:scrollbar-thin scrollbar-track-transparent',
-        'w-48 border-r border-foreground/5 h-screen p-4 bg-white',
+        'w-48 border-r border-foreground/[0.07] h-screen p-4 bg-card',
         'hidden lg:block fixed left-0 top-0 bottom-0 overflow-y-auto',
       )}
     >
@@ -115,7 +129,7 @@ export function SiteSidebar() {
           slide under it. Its width is `calc(14rem-56px)` while the panel is
           `w-48` (12rem) — the calc is a leftover from a wider panel and is kept
           as-is rather than corrected. */}
-      <div className="fixed top-0 left-0 w-[calc(14rem-56px)] bg-white p-4 z-10">
+      <div className="fixed top-0 left-0 w-[calc(14rem-56px)] bg-card p-4 z-10">
         {/* This points at the site root; the replica's home is
             its own root, which is the same destination within this app. The
             origin writes a bare <a>; a <Link> renders identical markup but lets
@@ -129,6 +143,19 @@ export function SiteSidebar() {
       </div>
 
       <div className="mt-16">
+        {/* 见 NEWS_BLOCK_CLASS 处的说明：对原站复刻的有意偏离。 */}
+        <Link href="/news" className={NEWS_BLOCK_CLASS} data-testid="news-sidebar-link">
+          <Newspaper
+            className="mr-2.5 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:-rotate-6"
+            aria-hidden="true"
+          />
+          <span className="text-sm font-medium">AI 资讯</span>
+          <ChevronRight
+            className="ml-auto h-3.5 w-3.5 shrink-0 opacity-50 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:opacity-90"
+            aria-hidden="true"
+          />
+        </Link>
+
         <div className="mb-8">
           <h2 className={HEADING_CLASS}>
             <Sparkles className="w-4 h-4 mr-2" aria-hidden="true" />

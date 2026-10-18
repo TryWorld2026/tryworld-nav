@@ -31,15 +31,24 @@ const TONES = {
     className:
       'bg-green-50 bg-opacity-50 text-green-700 ring-green-600/20',
   },
+  /*
+   * 原站的四档用的是 Tailwind 的 purple / yellow 色相。免费增值是**最常见**
+   * 的一档（2081 个工具里 1737 个），等于每一页工具详情都挂着一枚紫色胶囊 ——
+   * 直接违反试界「禁紫色」的品牌约束（`src/lib/news.ts` 里对资讯分类写过同一条）。
+   *
+   * 改成品牌绿：绿在试界的语义是「可用/正向」，免费增值本来就是「有免费额度」，
+   * 语义也对得上。付费保留暖色，但收到品牌橙的浅档（#B54826 家族），
+   * 不再用 Tailwind 的 yellow-700。
+   */
   freemium: {
     label: '免费增值',
     className:
-      'bg-purple-50 bg-opacity-50 text-purple-700 ring-purple-600/20',
+      'bg-gongke-accent/[0.07] bg-opacity-50 text-gongke-accent ring-gongke-accent/20',
   },
   paid: {
     label: '付费',
     className:
-      'bg-yellow-50 bg-opacity-50 text-yellow-700 ring-yellow-600/20',
+      'bg-[#F2693C]/10 bg-opacity-50 text-[#B54826] ring-[#B54826]/20',
   },
   open: {
     label: '免费开源',

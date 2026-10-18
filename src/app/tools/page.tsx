@@ -17,10 +17,11 @@ export const metadata: Metadata = {
  */
 export default function ToolsPage() {
   return (
-    <div className="space-y-6">
+    <div className="content-container space-y-7 py-8 md:py-10">
       <PageHeader
+        eyebrow="工具目录"
         title="全部工具"
-        description={`共收录 ${tools.length} 个 AI 工具与智能体，覆盖 ${allCategories.length} 个分类。`}
+        description={`共收录 ${tools.length} 个 AI 工具与智能体，覆盖 ${allCategories.length} 个分类。按分类、标签或关键词筛选。`}
       />
       <ToolsExplorer tools={tools} categories={allCategories} tags={tags} />
     </div>

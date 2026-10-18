@@ -65,8 +65,11 @@ export function ToolInfoPanel({
   if (info.length === 0 && platforms.length === 0) return null;
 
   return (
-    <div className="rounded-lg border border-muted bg-white p-6 backdrop-blur-sm">
-      <h2 className="mb-4 font-display text-xl font-medium text-foreground">
+    <div className="rounded-xl border border-foreground/10 bg-card p-5">
+      {/* 与右栏另外两张卡（类似工具 / 最新收录）同一档标题：
+          14px/600。原来是 20px 的 font-display，三张同级卡片里
+          只有它像个小节标题，读起来像是「相关信息」比别的卡重要。 */}
+      <h2 className="mb-3 text-sm font-semibold text-foreground">
         相关信息
       </h2>
 

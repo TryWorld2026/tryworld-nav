@@ -71,6 +71,7 @@ function contentBuildId() {
     'data/latest-additions.json',
     'data/collections.json',
     'data/news.json',
+    'data/aihot-daily.json',
     'data/home-rails.json',
     'data/category-order.json',
     'data/category-cards.json',
@@ -79,7 +80,17 @@ function contentBuildId() {
   ]) {
     try {
       h.update(rel);
-      h.update(readFileSync(join(ROOT, rel)));
+      const buf = readFileSync(join(ROOT, rel));
+      // `data/aihot-daily.json` 顶层带 `fetchedAt`（抓取时刻，每次构建都变）。
+      // 它**不进页面**，所以从哈希输入里剥掉；否则每天定时抓取一次就换 buildId，
+      // 全站 HTML 重新命名、增量上传失效（这正是本节开头要避免的问题）。
+      // 用字符串替换而不是 JSON.parse/stringify：文件 1.4 MB，构建期不值得
+      // 再解析一遍，而 `"fetchedAt":"…"` 在顶层只出现一次。
+      h.update(
+        rel === 'data/aihot-daily.json'
+          ? Buffer.from(buf.toString('utf8').replace(/"fetchedAt":"[^"]*"/, '"fetchedAt":""'))
+          : buf,
+      );
     } catch {
       /* 可选文件，缺了就算了 */
     }

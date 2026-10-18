@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ChevronDown, LayoutList, Layers2, Menu, ScanFace, Search } from 'lucide-react';
+import { ChevronDown, LayoutList, Layers2, Menu, Newspaper, ScanFace, Search } from 'lucide-react';
 import { CommandDialog } from './command-dialog';
 import { MobileNav } from './mobile-nav';
 import { SiteLogo } from './site-logo';
@@ -31,16 +31,34 @@ import { allCategories, SITE } from '@/lib/data';
  */
 
 /**
- * The origin's 登录/注册 button, verbatim. It is a three-layer background: the
- * solid fill, a fade, and the animated `--color-*` sweep that also feeds the
- * blurred `::before` glow.
+ * The origin's 登录/注册 button. It is a three-layer background: the solid
+ * fill, a fade, and the `--color-*` sweep that `background-clip: border-box`
+ * paints as a hairline gradient ring around the button.
+ *
+ * 与原站的唯一差异：原站还有一个 `before:` 模糊光晕（`bottom-[-20%]` +
+ * `blur(0.8rem)`），从按钮下沿溢出来。原站页眉是深底，光晕融在里面像辉光；
+ * 本站页眉是纸色（#F2EEE6），同一块光晕在浅底上读起来是**一块彩色污渍**，
+ * 而且页眉下沿正好有一条发丝线，光晕会越过它渗进内容区 —— 2560 截图里
+ * 表现为「登录/注册」正下方一团绿橙残影。
+ *
+ * 按钮的「魔法描边」本身不依赖这个光晕：三层背景的第三层由
+ * `[background-clip:padding-box,border-box,border-box]` + 透明边框裁出一圈
+ * 渐变环，去掉光晕后描边仍在。所以这里只删 `before:*` 那一段。
  */
 const MAGIC_BUTTON_CLASS =
-  'group relative inline-flex h-11 cursor-pointer items-center justify-center rounded-xl border-0 bg-[length:200%] px-8 py-2 font-medium text-primary-foreground transition-colors [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 before:absolute before:bottom-[-20%] before:left-1/2 before:z-0 before:h-1/5 before:w-3/5 before:-translate-x-1/2 before:bg-[linear-gradient(90deg,hsl(var(--color-1)),hsl(var(--color-5)),hsl(var(--color-3)),hsl(var(--color-4)),hsl(var(--color-2)))] before:[filter:blur(calc(0.8*1rem))] bg-[linear-gradient(#121213,#121213),linear-gradient(#121213_50%,rgba(18,18,19,0.6)_80%,rgba(18,18,19,0)),linear-gradient(90deg,hsl(var(--color-1)),hsl(var(--color-5)),hsl(var(--color-3)),hsl(var(--color-4)),hsl(var(--color-2)))] text-sm';
+  'group relative inline-flex h-11 cursor-pointer items-center justify-center rounded-xl border-0 bg-[length:200%] px-8 py-2 font-medium text-primary-foreground transition-colors [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-[linear-gradient(#121213,#121213),linear-gradient(#121213_50%,rgba(18,18,19,0.6)_80%,rgba(18,18,19,0)),linear-gradient(90deg,hsl(var(--color-1)),hsl(var(--color-5)),hsl(var(--color-3)),hsl(var(--color-4)),hsl(var(--color-2)))] text-sm whitespace-nowrap';
 
 /** The three top-level nav items share this exact class string in the origin. */
 const NAV_ITEM_CLASS =
   'font-medium text-foreground/70 hover:text-foreground/80 inline-flex items-center';
+
+/**
+ * 「AI 资讯」是本轮新增的第四个导航项，原站没有对应入口——试界自己做了
+ * AIHOT 聚合栏目，必须让它在桌面导航里可见（用户反馈「界面上看不到新闻资讯
+ * 的按钮和界面」）。图标与字号沿用上面三个原站项的规格（`w-3.5 h-3.5 mr-1`），
+ * 所以四个项的高度与视觉重量保持一致，不会出现某一项特别突出。
+ */
+const NEWS_NAV_CLASS = `${NAV_ITEM_CLASS} relative`;
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -48,9 +66,66 @@ export function Header() {
   const [catOpen, setCatOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  /** 滚动方向：向下滚时收起顶栏，向上滚时立刻出现。 */
+  const [hidden, setHidden] = useState(false);
   const catRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const lastY = useRef(0);
 
   useEffect(() => setMounted(true), []);
+
+  /**
+   * 阅读时让位给内容：向下滚超过一屏的一半才收起，往回滚 8px 就出现。
+   *
+   * 两个阈值不对称是故意的 —— 收起要「确认用户真的在往下读」，出现要「一有
+   * 回看的意图就响应」。否则轻微的惯性抖动会让顶栏反复抽搐。接近页顶（<80px）
+   * 时永远显示，避免在首屏就藏掉导航。
+   */
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      const dy = y - lastY.current;
+      if (y < 80) setHidden(false);
+      else if (dy > 6 && y > 160) setHidden(true);
+      else if (dy < -8) setHidden(false);
+      lastY.current = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  /**
+   * 底部 Tab 栏的搜索圆钮不自己弹一个面板，而是派发 `tryworld:search`，
+   * 由这里打开唯一的 CommandDialog。全站只有一份搜索状态，不会出现两套弹层
+   * 叠在一起，也不会因为两处各自维护 query 而互相覆盖。
+   */
+  useEffect(() => {
+    const onSearch = () => setOpen(true);
+    window.addEventListener('tryworld:search', onSearch as EventListener);
+    return () => window.removeEventListener('tryworld:search', onSearch as EventListener);
+  }, []);
+
+  /**
+   * 把顶栏的**实际高度**写进根元素的 CSS 变量 `--site-header-h`，供
+   * `news-tabs.tsx` 的 sticky 频道栏做偏移；顶栏收起后置 0，频道栏顶上补位。
+   *
+   * 为什么量而不是写死：顶栏在 lg 以下只有搜索与汉堡（约 52px），lg 以上多出
+   * 一个 h-11 的登录按钮（约 60px），两个断点不一样。写死一个值必然有一个
+   * 断点对不齐，而 sticky 偏移错 8px 就会出现一条穿帮的缝隙。
+   */
+  useEffect(() => {
+    const el = headerRef.current;
+    const root = document.documentElement;
+    const sync = () => {
+      root.style.setProperty('--site-header-h', hidden ? '0px' : `${el?.offsetHeight ?? 0}px`);
+    };
+    sync();
+    window.addEventListener('resize', sync);
+    return () => {
+      window.removeEventListener('resize', sync);
+      root.style.removeProperty('--site-header-h');
+    };
+  }, [hidden]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -88,79 +163,106 @@ export function Header() {
 
   return (
     <>
-      <header className="supports-backdrop-blur:bg-background/90 sticky top-0 z-40 w-full border-b border-foreground/5 bg-background/40 backdrop-blur-lg">
+      <header
+        ref={headerRef}
+        data-hidden={hidden ? 'true' : 'false'}
+        className={`supports-backdrop-blur:bg-background/90 sticky top-0 z-40 w-full border-b bg-background/40 backdrop-blur-lg transition-[transform,border-color,box-shadow] duration-300 ease-out ${
+          hidden ? '-translate-y-full border-transparent' : 'translate-y-0 border-foreground/5'
+        }`}
+      >
         <div className="relative">
-          <div className="px-4">
-            <div className="flex items-center justify-between py-2">
-              <div className="flex items-center space-x-6">
+          {/* 顶栏的左右内容也要落在同一条竖线上，否则宽屏下 logo 贴左、登录
+              按钮贴右，与下面的正文完全对不齐。 */}
+          {/* 顶栏改成三栏网格（品牌/菜单/动作）：两侧内容各占 1fr，中间导航
+              真正居中。原先 `justify-between` 让导航贴着左侧品牌走，宽屏下
+              四个菜单项挤在左三分之一，右侧留一大片空白 —— 顶栏看起来像
+              没排完。 */}
+          <div className="content-container">
+            {/* 手机上导航是 `hidden`，三栏网格的中间格宽度为 0 —— 两侧各剩
+                `1fr`，品牌名会被挤到折行（390px 实测折成「试界导 / 航」两行）。
+                所以只有 `lg` 以上才切三栏，手机仍是两端对齐的两栏。 */}
+            <div className="flex items-center justify-between py-2 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-4">
+              <div className="flex min-w-0 items-center space-x-6">
                 {/* Mobile-only lockup: this is where the sidebar's brand block
                     would be, but the sidebar is `hidden lg:block`. */}
-                <Link href="/" className="flex items-center lg:hidden">
+                <Link href="/" className="flex min-w-0 items-center lg:hidden">
                   {/* 主标是宽幅的（192×116），宽度 + `h-auto` 保持比例。 */}
-                  <SiteLogo className="w-8 h-auto text-gongke-dark mr-2" />
-                  <div className="text-xl text-foreground font-bold font-display">{SITE.name}</div>
-                </Link>
-
-                <nav className="hidden lg:flex items-center text-sm space-x-6">
-                  <Link href="/tools" className={NAV_ITEM_CLASS}>
-                    <LayoutList className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-                    查看全部
-                  </Link>
-
-                  {/* See the note at the top of this file. */}
-                  <div ref={catRef} className="relative">
-                    <button
-                      type="button"
-                      data-state={catOpen ? 'open' : 'closed'}
-                      aria-expanded={catOpen}
-                      aria-haspopup="true"
-                      onClick={() => setCatOpen((v) => !v)}
-                      className="group inline-flex h-9 w-max items-center justify-center rounded-md py-2 text-sm transition-colors group font-medium text-foreground/70 hover:text-foreground/80 px-0"
-                    >
-                      <Layers2 className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-                      所有分类
-                      <ChevronDown
-                        className="relative top-[1px] ml-1 h-3 w-3 transition duration-300 group-data-[state=open]:rotate-180"
-                        aria-hidden="true"
-                      />
-                    </button>
-
-                    {catOpen && (
-                      <div className="absolute left-1/2 top-full z-50 mt-1 w-[34rem] -translate-x-1/2 rounded-md border border-border bg-popover p-2 text-popover-foreground shadow-lg">
-                        <ul className="grid grid-cols-3 gap-0.5">
-                          {allCategories.map((c) => (
-                            <li key={c.slug}>
-                              <Link
-                                href={`/categories/${c.slug}`}
-                                onClick={() => setCatOpen(false)}
-                                className="flex items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-foreground/70 transition-colors hover:bg-foreground/5 hover:text-foreground"
-                              >
-                                <CategoryIcon name={c.icon} className={`h-4 w-4 shrink-0 ${c.tailwind}`} />
-                                <span className="truncate">{c.name}</span>
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                  <SiteLogo className="mr-2 h-auto w-8 shrink-0 text-gongke-dark" />
+                  <div className="truncate text-xl font-bold font-display text-foreground">
+                    {SITE.name}
                   </div>
-
-                  <Link href="/about" className={NAV_ITEM_CLASS}>
-                    <ScanFace className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-                    关于我们
-                  </Link>
-                </nav>
+                </Link>
               </div>
 
-              <div className="flex items-center space-x-3">
+              {/* 导航是网格的第二格（`auto` 宽），因此**必须**是
+                  `grid-cols-[1fr_auto_1fr]` 的直接子元素才能居中；放在左侧
+                  那个 `1fr` 格子里时它只会贴左。 */}
+              <nav className="hidden items-center space-x-6 text-sm lg:flex">
+                <Link href="/tools" className={NAV_ITEM_CLASS}>
+                  <LayoutList className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+                  查看全部
+                </Link>
+
+                {/* See the note at the top of this file. */}
+                <div ref={catRef} className="relative">
+                  <button
+                    type="button"
+                    data-state={catOpen ? 'open' : 'closed'}
+                    aria-expanded={catOpen}
+                    aria-haspopup="true"
+                    onClick={() => setCatOpen((v) => !v)}
+                    className="group inline-flex h-9 w-max items-center justify-center rounded-md py-2 text-sm transition-colors group font-medium text-foreground/70 hover:text-foreground/80 px-0"
+                  >
+                    <Layers2 className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+                    所有分类
+                    <ChevronDown
+                      className="relative top-[1px] ml-1 h-3 w-3 transition duration-300 group-data-[state=open]:rotate-180"
+                      aria-hidden="true"
+                    />
+                  </button>
+
+                  {catOpen && (
+                    <div className="absolute left-1/2 top-full z-50 mt-1 w-[34rem] -translate-x-1/2 rounded-md border border-border bg-popover p-2 text-popover-foreground shadow-lg">
+                      <ul className="grid grid-cols-3 gap-0.5">
+                        {allCategories.map((c) => (
+                          <li key={c.slug}>
+                            <Link
+                              href={`/categories/${c.slug}`}
+                              onClick={() => setCatOpen(false)}
+                              className="flex items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-foreground/70 transition-colors hover:bg-foreground/5 hover:text-foreground"
+                            >
+                              <CategoryIcon name={c.icon} className={`h-4 w-4 shrink-0 ${c.tailwind}`} />
+                              <span className="truncate">{c.name}</span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                <Link href="/about" className={NAV_ITEM_CLASS}>
+                  <ScanFace className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+                  关于我们
+                </Link>
+
+                {/* 见文件顶部 NEWS_NAV_CLASS 处的说明。插在「关于我们」之前，
+                    与右侧搜索按钮相邻，扫读顺序是「目录 -> 资讯 -> 关于」。 */}
+                <Link href="/news" className={NEWS_NAV_CLASS} data-testid="news-nav-link">
+                  <Newspaper className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+                  AI 资讯
+                </Link>
+              </nav>
+
+              <div className="flex items-center space-x-3 lg:justify-self-end">
                 <button
                   type="button"
                   onClick={() => setOpen(true)}
                   aria-label="Search"
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-gongke-muted hover:bg-gongke-gray/10 transition-colors"
+                  className="flex shrink-0 items-center space-x-2 rounded-md px-3 py-2 text-gongke-muted transition-colors hover:bg-gongke-gray/10"
                 >
                   <Search className="h-4 w-4" aria-hidden="true" />
-                  <span className="hidden md:inline text-sm">
+                  <span className="hidden text-sm md:inline lg:hidden xl:inline">
                     搜索AI工具
                     <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
                       <span className="text-xs">⌘</span>K

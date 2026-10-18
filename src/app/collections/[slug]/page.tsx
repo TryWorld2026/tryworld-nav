@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
 import { collectionBySlug, collections, SITE, toolBySlug } from '@/lib/data';
-import { ToolMiniCard } from '@/components/tool-card';
+import { TOOL_GRID, ToolMiniCard } from '@/components/tool-card';
 import type { Tool } from '@/lib/types';
 import { canonical } from '@/lib/canonical';
 
@@ -80,32 +81,66 @@ export default async function CollectionDetailPage({
 
   return (
     <>
-      <div className="pt-10 bg-background">
-        <div className="px-4 sm:px-8 mx-auto">
+      <div className="border-b border-foreground/10 bg-background py-9 md:py-11">
+        <div className="content-container">
+          {/* 分类详情页头之下就有一条「返回所有分类」。合集详情原先只有
+              正文末尾那个按钮，读完一屏才够得着；两页都是「列表 → 详情」，
+              出口应该在同一处。样式与 `categories/[slug]` 保持一致。 */}
           <div className="mb-6">
-            <div className="w-14 h-14 rounded-full mb-4 flex items-center justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={collection.tagIcon}
-                alt={collection.title}
-                width={56}
-                height={56}
-                loading="lazy"
-                decoding="async"
-                className="object-contain rounded-lg"
-              />
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2 font-display">{collection.title}</h1>
+            <Link
+              href="/collections"
+              className="inline-flex items-center gap-1.5 rounded-md text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              返回所有集合
+            </Link>
           </div>
-          <div className="max-w-3xl">
-            <p className="text-gongke-muted leading-relaxed">{collection.intro}</p>
+          {/* 与 `categories/[slug]` 同一副刊头：标题块在左，计数块钉在右缘
+              （那一页的注释写了为什么要把计数从眉标里搬出来 —— 2560 下页头
+              右侧 1447px 全空，而下面是一条通栏发丝线 + 满宽网格）。两页
+              共用一副骨架，改一处就得改另一处，否则从分类切到集合时页头又
+              换了一套排版。 */}
+          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
+            <div className="flex min-w-0 items-start gap-4">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-foreground/[0.035] ring-1 ring-inset ring-foreground/5">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={collection.tagIcon}
+                  alt=""
+                  width={40}
+                  height={40}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-10 w-10 object-contain"
+                />
+              </span>
+              <div className="min-w-0">
+                <p className="mb-1 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                  精选集合
+                </p>
+                <h1 className="font-display text-3xl leading-tight text-foreground md:text-4xl">
+                  {collection.title}
+                </h1>
+                <p className="mt-2.5 max-w-[62ch] text-[15px] leading-relaxed text-gongke-muted">
+                  {collection.intro}
+                </p>
+              </div>
+            </div>
+            <div className="flex shrink-0 items-baseline gap-1.5 md:border-l md:border-foreground/10 md:pl-8">
+              <span className="font-display text-xl leading-none tabular-nums text-foreground md:text-2xl">
+                {members.length}
+              </span>
+              <span className="text-xs text-muted-foreground">个工具</span>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="py-8">
-        <div className="px-4 sm:px-8 mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 4xl:grid-cols-7 5xl:grid-cols-8 gap-6">
+        <div className="content-container">
+          {/* 与全站其它工具网格同一条轨道规则（280px 最小轨道）。原先这里
+              从 `lg` 就开三列、`4xl` 才五列，1440 下比首页窄一档。 */}
+          <div className={TOOL_GRID}>
             {members.map(({ member, tool }) => (
               <ToolMiniCard
                 key={tool.slug}
@@ -116,23 +151,23 @@ export default async function CollectionDetailPage({
                 // than falling back to category chips, and `chips` is what
                 // suppresses the card's default category row.
                 chips={
-                  <div className="flex flex-nowrap overflow-x-clip text-nowrap gap-1 mt-1.5">
+                  <div className="flex flex-wrap gap-1.5">
                     {member.tags.map((g) => (
                       <span
                         key={g.slug}
-                        className="text-xs text-foreground/60 border border-foreground/5 rounded-md px-1 py-0.5 shadow-sm inline-flex min-w-fit items-center gap-1"
+                        className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-[11px] text-foreground/70"
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={g.icon}
-                          alt={g.name}
-                          width={16}
-                          height={16}
+                          alt=""
+                          width={14}
+                          height={14}
                           loading="lazy"
                           decoding="async"
-                          className="rounded"
+                          className="h-3.5 w-3.5 shrink-0 rounded-[3px]"
                         />
-                        {g.name}
+                        <span className="truncate">{g.name}</span>
                       </span>
                     ))}
                   </div>
@@ -144,45 +179,52 @@ export default async function CollectionDetailPage({
       </div>
 
       {others.length > 0 && (
-        <div className="py-4">
-          <div className="px-4 sm:px-8 mx-auto">
-            <h2 className="text-2xl font-bold mb-8 font-display">其他集合</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 4xl:grid-cols-7 5xl:grid-cols-8 gap-6">
+        <div className="border-t border-foreground/10 py-10">
+          <div className="content-container">
+            <h2 className="mb-4 text-[19px] font-semibold text-foreground">其他集合</h2>
+            {/* 每个集合的 `others` 恰好 3 项（9 个集合互指），所以列数只能取
+                3 的约数：sm 2 列（2+1，读作「一共三个」）→ lg 起 3 列一行
+                排满。原先写的是 lg:grid-cols-4 —— 在 ≥1024 上永远空着第四
+                格，三张卡片靠左挤成 3/4 宽的一条，右边留给一片什么都没有的
+                白；这和页面底部「其他分类」「其他集合」的整行铺满不是一套
+                语言。卡片是「图标 + 两行字」的横卡，1440 下 394px 一列很
+                宽松，不必为了更密而缩到 4 列。 */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {others.map((o) => (
-                <Link key={o.slug} href={`/collections/${o.slug}`} className="block group">
-                  <div className="bg-white rounded-lg border border-magicborder overflow-hidden hover:shadow-sm transition-shadow p-4">
-                    <div className="flex items-start">
-                      <div className="w-12 h-12 rounded-lg mr-5 flex-shrink-0">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={o.tagIcon}
-                          alt={o.title}
-                          width={48}
-                          height={48}
-                          loading="lazy"
-                          decoding="async"
-                          className="object-contain rounded-lg"
-                        />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-bold mb-1 group-hover:text-gongke-accent transition-colors">
-                          {o.title}
-                        </h3>
-                        <p className="text-gongke-muted text-sm">{o.description}</p>
-                      </div>
-                    </div>
+                <Link
+                  key={o.slug}
+                  href={`/collections/${o.slug}`}
+                  className="group flex items-start gap-3 rounded-xl border border-foreground/10 bg-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-md active:translate-y-0"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-foreground/[0.035] ring-1 ring-inset ring-foreground/5">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={o.tagIcon}
+                      alt=""
+                      width={32}
+                      height={32}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-8 w-8 object-contain"
+                    />
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="text-[15px] font-semibold leading-snug text-foreground transition-colors group-hover:text-gongke-accent">
+                      {o.title}
+                    </h3>
+                    <p className="mt-0.5 line-clamp-2 text-[13px] leading-relaxed text-gongke-muted">
+                      {o.description}
+                    </p>
                   </div>
                 </Link>
               ))}
             </div>
             <div className="mt-8 text-center">
-              <Link href="/collections">
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 shadow h-9 px-4 py-2 bg-gongke-dark text-white hover:bg-gongke-dark/90"
-                >
-                  查看所有集合
-                </button>
+              <Link
+                href="/collections"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-gongke-dark px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-gongke-dark/90 hover:shadow-md active:translate-y-0 active:scale-[0.98]"
+              >
+                查看所有集合
               </Link>
             </div>
           </div>

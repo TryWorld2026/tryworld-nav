@@ -38,7 +38,8 @@
  *   node scripts/fetch-aihot.mjs --force      # 忽略 ETag，强制重抓
  *   node scripts/fetch-aihot.mjs --max=300    # 覆盖条目上限（默认 240）
  */
-import { readFileSync, writeFileSync, renameSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { writeAtomicSync } from './atomic-write.mjs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -229,10 +230,10 @@ async function main() {
   if (dropped > 0) console.log(`  跳过 ${dropped} 条（缺 title 或 links.original）`);
 
   // 原子写：先写临时文件再 rename，避免构建中途读到半截 JSON。
+  // rename 在 Windows 上会被正在扫描/打开目标的进程以 EPERM 拒掉，
+  // 所以走 `writeAtomicSync`（内部重试），见 scripts/atomic-write.mjs。
   mkdirSync(dirname(NEWS_PATH), { recursive: true });
-  const tmp = `${NEWS_PATH}.tmp`;
-  writeFileSync(tmp, `${JSON.stringify(capped, null, 2)}\n`, 'utf8');
-  renameSync(tmp, NEWS_PATH);
+  writeAtomicSync(NEWS_PATH, `${JSON.stringify(capped, null, 2)}\n`);
 
   writeFileSync(
     META_PATH,

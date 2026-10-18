@@ -40,8 +40,23 @@ export function ToolProse({ prose }: { prose: string }) {
   return (
     <div className="mb-6">
       <div className="relative">
+        {/* 2026-10-17：`max-w-none` → `max-w-[48rem]`。
+            容器会随视口放大到 1760，正文列（2/3）于是有 1100+，中文每行
+            66 字以上，读到行尾要横移视线，长文会累。48rem（768px）约合
+            48 个汉字/行，是中文正文的舒适上限；1440 下正文列本就有 810，
+            收窄到 768 几乎看不出差别，2560 下则明显更像「文章」而不是
+            「说明表格」。注意不能在外层加 `max-w-*` 后保留 `max-w-none` ——
+            两个都是 utilities，后者会赢。
+
+            2026-10-18：加 `[text-wrap:balance]`（`text-wrap` 是继承属性，
+            写在根上即可覆盖整段 prose）。抓来的原文里有不少两三行的短段，
+            末行只剩两个字——实测 Lovart 页 390 下 32/358（9%）、1024 下
+            48/469（10%）、1440 下 80/422（19%）。注入实测：`pretty` 几乎
+            不动中文（13%/10%/19%），`balance` 把末行抬到 62%/68%/52%，
+            行数一条没变。Chromium 只对短块做均衡（实测 11 行的段落在
+            balance 下宽度分毫未动），所以长段落不会被排成两端对齐的样子。 */}
         <div
-          className="prose prose-stone max-w-none px-4 text-foreground/80 prose-headings:mt-4 prose-headings:font-display prose-headings:text-foreground prose-strong:text-foreground prose-a:text-gongke-accent hover:prose-a:text-gongke-accent/80 prose-code:bg-gongke-gray/20 prose-code:rounded prose-code:px-1.5 prose-code:py-0.5 before:prose-code:content-[''] after:prose-code:content-[''] tool-details"
+          className="prose prose-stone max-w-[48rem] text-foreground/80 [text-wrap:balance] prose-headings:mt-4 prose-headings:font-display prose-headings:text-foreground prose-strong:text-foreground prose-a:text-gongke-accent hover:prose-a:text-gongke-accent/80 prose-code:bg-gongke-gray/20 prose-code:rounded prose-code:px-1.5 prose-code:py-0.5 before:prose-code:content-[''] after:prose-code:content-[''] tool-details"
           dangerouslySetInnerHTML={{ __html: stripDeadNewsLinks(prose) }}
         />
       </div>

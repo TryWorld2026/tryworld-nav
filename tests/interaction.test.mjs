@@ -229,19 +229,60 @@ describe('移动端交互', () => {
     }
   });
 
-  test('首页无横向滚动', async (t) => {
+  /**
+   * 横向溢出回归（2026-10-17 实测到的真实缺陷）。
+   *
+   * 当时手机 390px 视口下 `/news/daily` 的 `scrollWidth` 是 765px —— 半页内容
+   * 被推出屏幕。根因有三处，单独看每一处都不像 bug：
+   *
+   *   1. `layout.tsx` 的正文列是 flex 子项，默认 `min-width:auto`，取内容的
+   *      最小固有宽度，于是被内层一条 `whitespace-nowrap` 长标题撑开；
+   *   2. `news-tabs.tsx` 用 `-mx-4` 做贴边出血，父容器却没有 `overflow` 裁剪；
+   *   3. 归档列表是 `grid` 但没写 `grid-cols-1`，列宽 `auto` 被最小内容撑到 680px。
+   *
+   * 单测首页是不够的（首页恰好没踩到），所以这里按**资讯频道全部页面**跑，
+   * 且三档视口都跑 —— 桌面端 1440 当时也有 32px 溢出（`-mx-8`），只有手机
+   * 的断言同样会漏。
+   */
+  test('资讯频道所有页面在 320/390/1440 下都无横向滚动', async (t) => {
     if (!ready(t)) return;
-    const { browser, page } = await openPage({ width: 390, height: 844 }, true);
-    try {
-      await page.goto(BASE + '/', { waitUntil: 'domcontentloaded' });
-      await waitHydrated(page);
-      await page.waitForTimeout(2000);
-      const overflow = await page.evaluate(
-        () => document.documentElement.scrollWidth > window.innerWidth,
-      );
-      assert.equal(overflow, false, '移动端不应出现横向滚动');
-    } finally {
-      await browser.close();
+    const PAGES = [
+      '/',
+      '/news',
+      '/news/daily',
+      '/news/daily/2026-10-17',
+      '/news/daily/archive',
+      '/news/weekly',
+      '/news/monthly',
+      '/news/hot',
+      '/tools',
+      '/categories',
+    ];
+    const VIEWPORTS = [
+      { width: 320, height: 568 },
+      { width: 390, height: 844 },
+      { width: 1440, height: 900 },
+    ];
+
+    for (const vp of VIEWPORTS) {
+      const mobile = vp.width < 800;
+      const { browser, page } = await openPage(vp, mobile);
+      try {
+        for (const path of PAGES) {
+          await page.goto(BASE + path, { waitUntil: 'domcontentloaded' });
+          await page.waitForTimeout(600);
+          const { scrollW, clientW } = await page.evaluate(() => ({
+            scrollW: document.documentElement.scrollWidth,
+            clientW: document.documentElement.clientWidth,
+          }));
+          assert.ok(
+            scrollW <= clientW + 1,
+            `${vp.width}px 视口下 ${path} 横向溢出：${scrollW} > ${clientW}`,
+          );
+        }
+      } finally {
+        await browser.close();
+      }
     }
   });
 });

@@ -14,7 +14,7 @@ Next.js 15.5.27（`output: 'export'`）+ React 19 + Tailwind 3.4 的纯静态站
 |---|---|
 | 工具 | 2081 个（`data/tools.json`） |
 | 分类 | 26 个 |
-| 页面 | 2135 个（`out/*.html`） |
+| 页面 | 2340 个（`out/*.html`，含日报 179 期 × 2 种变体） |
 | 新闻 | 10 篇（2026-10-15 起改为 AIHOT 精选卡片流，条数随抓取变化） |
 | 配套数据 | `data/tool-extras.json` 2081 条，与 `tools.json` 一一对应，0 缺失 |
 | 构建产物 | `out/` 8706 个文件 / 1040 MB |
@@ -143,6 +143,37 @@ npm run news:refresh   # 强制重抓
 **已知取舍**：AIHOT 不提供配图，卡片是纯文字的；`public/assets/news/` 里那 11 张
 旧长文封面已无引用（仍在磁盘与备份包里）。
 
+### 频道结构（2026-10-17 起）
+
+`/news` 不再只是一张列表，而是一个有五个分区的栏目，顶部的粘性分段控件
+（`src/components/news-tabs.tsx`）把它们串起来：
+
+| 分区 | 路由 | 内容 |
+|---|---|---|
+| 资讯流 | `/news` | 近 7 天精选卡片流，客户端搜索 / 分类 / 来源 / 时间筛选 |
+| AI 日报 | `/news/daily` | 每日 08:00（北京时间）出刊，逐期静态页 + 全部往期归档 |
+| 周报 | `/news/weekly` | 每周回顾 |
+| 月报 | `/news/monthly` | 每月回顾 |
+| 热点 | `/news/hot` | 跨来源信号量的十条热点榜 |
+
+日报、周报、月报的**每一期**都是构建期预渲染的独立静态页（`generateStaticParams`
+读出全部日期），所以可以收藏、分享具体某一天。归档页 `/news/daily/archive`
+按月分组列出全部 179 期。
+
+数据在 `npm run build` 里由两个脚本抓取：
+
+```bash
+node scripts/fetch-aihot.mjs        # 资讯流 → data/news.json
+node scripts/fetch-aihot-daily.mjs  # 日报/周报/月报/热点 → data/aihot-daily.json
+```
+
+第二个脚本是**增量**的：已抓过的日报正文不重抓（按日期复用上一份数据），
+只有新出刊的日期才会发请求，避免每天 179 次请求打到 AIHOT。接口限流 429 时
+保留旧数据并 exit 0，断网不会把构建搞挂。
+
+`data/aihot-daily.json` 约 2 MB，只被 `src/lib/daily-data.ts`（server-only）
+读取，不会进客户端 bundle；资讯卡片流用的 `data/news.json` 才随页面下发。
+
 ## 已知问题
 
 - **媒体只有一份本地副本** + `D:\tryworld-backups\` 的 tar.gz。git 里没有，机器坏了就没了。定期跑 `npm run media:backup`。（2026-10-15 核对：备份包 4183 个文件与磁盘**逐文件一致**，抽样解压 SHA256 相符。）
@@ -155,7 +186,7 @@ npm run news:refresh   # 强制重抓
   真要优化就从 `srcset` + 预生成缩略图入手，不是"首屏"问题。（本节早先写"移动端首屏是
   明确风险"，那是只看未压缩字节得出的错误结论，已按实测更正。）
 - **`.txt`（RSC flight）2135 个占 240 MB**：`npm run prune` 的 `--lean` 可裁掉，但会保留 `llms.txt` / `llms-full.txt`（两者由 robots.txt 声明，删了就是 404）。
-- **测试覆盖很薄**：18 个测试。13 个纯单元（`npm run test:unit`：时区格式化、
+- **测试覆盖很薄**：46 个测试。41 个纯单元（`npm run test:unit`：时区格式化、
   AIHOT 字段映射与降级），5 个交互回归（`npm run test:interaction`，需要先起
   `npm run preview`；服务器不可达时自动 skip 而不是 fail）。其余（`lib/data.ts`
   的确定性抽样、`lib/pricing.ts`、各页面渲染）仍无测试。
@@ -178,6 +209,40 @@ pricing 徽章分布、`more/related/latest` 的死引用数、prose 总字符�
 `npm run lint` exit 0、`npx tsc --noEmit` exit 0。每个路由都带上了
 `<link rel="canonical" href="https://nav.tryworld.com.cn/...">`，
 `npm run prune --lean` 保留 `llms.txt` 与 `llms-full.txt`。
+
+2026-10-17 夜间验收（资讯频道 + APP 壳，本轮）：
+
+- **构建**：`npm run build` exit 0，静态页 **2340** 个（上一轮 2135）。
+- **测试**：`npm test` **46/46 通过**；`tests/interaction.test.mjs` 新增的
+  「资讯频道所有页面在 320/390/1440 下都无横向滚动」通过。
+- **横向溢出**：修复前手机 390px 下 `/news/daily` 的 `scrollWidth` 是 **765px**
+  （半页被推出屏幕），`/news/daily/2026-10-17` 694px，桌面 1440 下 7 个资讯页
+  各溢出 32px。修复后 **10 个页面 × 3 档视口全部 `scrollWidth == clientWidth`**。
+  三处根因（正文列 `min-width:auto`、`-mx-4` 出血无裁剪、`grid` 未写
+  `grid-cols-1`）都已写进对应文件的注释，避免后人改回去。
+- **水合**：Playwright 跑 10 条路由 × 2 视口，`pageerror` 与 console error
+  均为 **0**。本轮修掉的真实缺陷是 `/categories` 的 `<a>` 嵌套 `<a>`
+  （无效 HTML，浏览器解析时拆开外层锚点，报 `Minified React error #418`）。
+- **触控目标**：移动端所有导航/翻页/筛选控件 ≥ 24px；正文内的行内链接
+  （AIHOT 署名、来源名）保持文字尺寸，符合 WCAG 2.5.8 的行内例外。
+- **PWA**：`manifest.webmanifest` 导出、`display: standalone`、
+  `viewport-fit=cover`、iOS `apple-mobile-web-app-*` 元数据齐全。
+
+2026-10-17 部署后线上复验（Version `918db0db`，资讯频道上线）：
+
+- **版本**：`918db0db-0ca8-4896-9413-092bc8d6587e` 已 100% 接流；
+  本次增量上传 **364 个**文件（8751 个已存在被复用），耗时 170 秒。
+- **路由**：15 条抽样全部 200 —— 含最新一期/较早一期日报、日报归档、周报、
+  月报、热点、`sitemap.xml`、`robots.txt`、`manifest.webmanifest`、`llms.txt`。
+- **渲染**：320/390/1440 三档视口 × 11 条页面，`pageerror` 与 console error
+  均为 **0**；每页 `h1` 恰好 1 个；全部页面带 canonical；移动端底部 Tab 栏在位。
+- **横向溢出**：线上实测 `scrollWidth == clientWidth`，**0 页溢出**。
+- **内容**：资讯页外链原文且带 `AIHOT` 署名；抽样 14 个 JS/CSS/媒体资源
+  全部 200（媒体未因发布丢失）。
+- **manifest**：线上 `display=standalone`、2 个图标、`lang=zh-CN`。
+- 备注：本机 DNS 把域名解析到代理网卡（`198.18.x`），Chromium 默认优先
+  IPv6 会 `ERR_TIMED_OUT`，验收脚本用 `--dns-result-order=ipv4first`；
+  这不影响真实访客。
 
 2026-10-15 部署后复验（Version `c5355d01`，补 SEO 与 llms 修复）：
 

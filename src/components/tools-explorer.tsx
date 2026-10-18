@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Search, X } from 'lucide-react';
-import { ToolMiniCard } from './tool-card';
+import { TOOL_GRID, ToolMiniCard } from './tool-card';
 import { CategoryIcon } from './category-icon';
 import { Button } from './ui/button';
 import { rgb, rgbAlpha } from '@/lib/utils';
@@ -41,6 +41,13 @@ export function ToolsExplorer({
   const [active, setActive] = useState<string[]>([]);
   const [activeTag, setActiveTag] = useState('');
   const [limit, setLimit] = useState(PAGE);
+  // 手机上的分类墙折叠。26 个分类 chip 铺开是 404px，390 宽的首屏里一张工具
+  // 卡都露不出来；折叠到 8 个之后第一张卡落在 540px 左右，844 高的手机上
+  // 完整可见。折叠只发生在手机上（`max-md:!hidden`），桌面仍然一次列全。
+  // 已选中的分类不参与折叠 —— `/tools?cat=ai-legal`（索引 24）这类深链
+  // 否则会出现「筛选生效了，但看不见是哪个 chip」。
+  const [expanded, setExpanded] = useState(false);
+  const MOBILE_CATEGORY_LIMIT = 8;
 
   // Apply the URL filter once, on the first render after the effect lands.
   useEffect(() => {
@@ -89,7 +96,10 @@ export function ToolsExplorer({
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3">
-        <div className="relative">
+        {/* 搜索框在 2560 下会拉成 1696px 的空带 —— 一个单行输入框铺满整版
+            只会让读者以为哪里没加载完。限宽加在定位外层，放大镜与清空按钮
+            跟着一起收窄；手机上仍是满宽。 */}
+        <div className="relative md:max-w-2xl">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             value={query}
@@ -112,43 +122,57 @@ export function ToolsExplorer({
         </div>
 
         {tags.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-muted-foreground">标签</span>
-            {tags.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => {
-                  setActiveTag((p) => (p === t.name ? '' : t.name));
-                  setLimit(PAGE);
-                }}
-                aria-pressed={activeTag === t.name}
-                className={
-                  activeTag === t.name
-                    ? 'inline-flex items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-2.5 py-1 text-xs font-medium text-accent'
-                    : 'inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground'
-                }
-              >
-                {t.name}
-              </button>
-            ))}
+          /* 手机上单行横滑（26 个标签铺开是第二道墙），桌面回到换行。
+             标签名用 sticky 钉在左侧，横滑时不会跟着滚走；右缘一道渐隐，
+             提示右边还有内容 —— 直接切掉半个 chip 看起来像溢出。 */
+          <div className="relative -mx-4 md:static md:mx-0">
+            <div className="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto px-4 md:flex-wrap md:overflow-visible md:px-0">
+              <span className="sticky left-0 shrink-0 bg-background pr-2 text-xs text-muted-foreground">
+                标签
+              </span>
+              {tags.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => {
+                    setActiveTag((p) => (p === t.name ? '' : t.name));
+                    setLimit(PAGE);
+                  }}
+                  aria-pressed={activeTag === t.name}
+                  className={
+                    activeTag === t.name
+                      ? 'inline-flex shrink-0 items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-2.5 py-1 max-md:py-1.5 text-xs font-medium text-accent'
+                      : 'inline-flex shrink-0 items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 max-md:py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground'
+                  }
+                >
+                  {t.name}
+                </button>
+              ))}
+            </div>
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-background to-transparent md:hidden"
+            />
           </div>
         )}
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div id="tools-category-chips" className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-muted-foreground">分类</span>
-          {categories.map((c) => {
+          {categories.map((c, i) => {
             const on = active.includes(c.slug);
+            const foldedOnMobile =
+              !expanded && i >= MOBILE_CATEGORY_LIMIT && !active.includes(c.slug);
             return (
               <button
                 key={c.id}
                 onClick={() => toggleCategory(c.slug)}
                 aria-pressed={on}
                 className={
-                  on
+                  (on
                     ? // A transparent border keeps the chip the same height as the
                       // unselected ones, so the row doesn't jump when toggling.
-                      'inline-flex items-center gap-1 rounded-full border border-transparent px-2.5 py-1 text-xs font-medium'
-                    : 'inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground'
+                      'inline-flex items-center gap-1 rounded-full border border-transparent px-2.5 py-1 max-md:py-1.5 text-xs font-medium'
+                    : 'inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 max-md:py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground') +
+                  (foldedOnMobile ? ' max-md:!hidden' : '')
                 }
                 style={
                   on
@@ -161,6 +185,15 @@ export function ToolsExplorer({
               </button>
             );
           })}
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            aria-expanded={expanded}
+            aria-controls="tools-category-chips"
+            className="inline-flex items-center gap-1 rounded-full border border-dashed border-border px-2.5 py-1 max-md:py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground md:hidden"
+          >
+            {expanded ? '收起分类' : `全部分类（${categories.length}）`}
+          </button>
         </div>
       </div>
 
@@ -181,7 +214,11 @@ export function ToolsExplorer({
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 4xl:grid-cols-7 5xl:grid-cols-8">
+          {/* 列数由 `TOOL_GRID` 的 280px 最小轨道决定，与首页/分类页/集合页
+              同一条规则：1440 四列 284、1536 四列 308、≥2100 五列 326。
+              列表页条目最多（2000+），固定列数时它的卡片总比别处小一档，
+              从首页点进来字号和密度会突然变一次。 */}
+          <div className={TOOL_GRID}>
             {visible.map((t) => (
               <ToolMiniCard key={t.id} tool={t} />
             ))}

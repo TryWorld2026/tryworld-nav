@@ -11,8 +11,17 @@ import { rgb, rgbAlpha } from '@/lib/utils';
 const LINKS = [
   { href: '/tools', label: '查看全部' },
   { href: '/categories', label: '所有分类' },
+  { href: '/news', label: 'AI 资讯' },
   { href: '/about', label: '关于我们' },
 ];
+
+/**
+ * 原站的这个网格是 `grid-cols-3` 三项。加「AI 资讯」变成四项后改成了四列 ——
+ * 三列会让第四项自己换行占满一行，四个按钮变成 3+1 的跛脚布局。
+ * `grid-cols-2`（两行两列）在 320px 宽的屏幕上按钮太矮，点击区不够 APP 感，
+ * 所以选四列单行：每个按钮约 70px 宽，仍然是舒适的点按尺寸。
+ */
+const LINKS_GRID_CLASS = 'mb-6 grid grid-cols-4 gap-2';
 
 /**
  * The drawer the header's `lg:hidden` menu button opens.
@@ -63,12 +72,43 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
+  /**
+   * 抽屉打开时锁住页面滚动。
+   *
+   * 不锁的话，手指在抽屉上滑动会先滚页面、抽屉跟着乱动，这是「网页感」最
+   * 明显的一处。用 `overflow: hidden` 而不是 `position: fixed` —— 后者在
+   * iOS 上会让页面跳回顶部。同时记下原来的 `overflow` 值，关闭时原样还原，
+   * 避免和别处（比如搜索弹窗）抢着改 body 样式。
+   */
+  useEffect(() => {
+    if (!open) return;
+    const body = document.body;
+    const prev = body.style.overflow;
+    body.style.overflow = 'hidden';
+    return () => {
+      body.style.overflow = prev;
+    };
+  }, [open]);
+
   if (!open) return null;
 
   return (
     <>
-      <div className="fixed inset-0 top-14 z-30 bg-black/40 lg:hidden" onClick={onClose} aria-hidden />
-      <div className="fixed inset-x-0 top-14 z-40 max-h-[calc(100vh-3.5rem)] overflow-y-auto scrollbar-thin border-b border-border bg-background px-4 py-5 shadow-lg lg:hidden">
+      <div
+        className="fixed inset-0 z-50 bg-black/40 animate-[sheet-fade_0.2s_ease-out] lg:hidden"
+        onClick={onClose}
+        aria-hidden
+      />
+      {/* 底部抽屉：从屏幕下沿滑上来，圆角、抓手条、安全区内边距 —— 这是
+          手机上最像原生 APP 的导航形态（顶部下拉是另一套，底部上滑更顺手）。
+          `max-h-[85dvh]` 用动态视口单位，避免 iOS 地址栏伸缩时抽屉被截断。 */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="站内导航"
+        className="fixed inset-x-0 bottom-0 z-50 max-h-[85dvh] animate-[sheet-up_0.28s_cubic-bezier(0.22,1,0.36,1)] overflow-y-auto scrollbar-thin rounded-t-2xl border-t border-border bg-background px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-3 shadow-2xl lg:hidden"
+      >
+        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-foreground/15" aria-hidden />
         <div className="mb-5 flex items-center justify-between lg:hidden">
           <span className="text-base font-bold font-display text-foreground">{SITE.name}</span>
           <button
@@ -81,7 +121,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
           </button>
         </div>
 
-        <nav className="mb-6 grid grid-cols-3 gap-2">
+        <nav className={LINKS_GRID_CLASS}>
           {LINKS.map((l) => (
             <Link
               key={l.href}
