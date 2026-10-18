@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { CategoryIcon } from '@/components/category-icon';
 import { TOOL_GRID, ToolMiniCard } from '@/components/tool-card';
 import { categories, categoryBySlug, categoryCards, SITE, toolsByCategory } from '@/lib/data';
@@ -92,11 +92,24 @@ export default async function CategoryDetailPage({
                 )}
               </div>
             </div>
-            <div className="flex shrink-0 items-baseline gap-1.5 md:border-l md:border-foreground/10 md:pl-8">
-              <span className="font-display text-xl leading-none tabular-nums text-foreground md:text-2xl">
-                {list.length}
-              </span>
-              <span className="text-xs text-muted-foreground">个工具</span>
+            <div className="flex shrink-0 flex-col items-end gap-2 md:border-l md:border-foreground/10 md:pl-8">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-display text-xl leading-none tabular-nums text-foreground md:text-2xl">
+                  {list.length}
+                </span>
+                <span className="text-xs text-muted-foreground">个工具</span>
+              </div>
+              {/* 分类页原先只能硬滚：297 张卡没有排序、没有分页、也没有筛选
+                  （实测移动端页高 33,663px，桌面 10,767px）。这个入口把
+                  「在该分类内继续筛」交给 /tools —— 那里有搜索、标签与价格
+                  筛选，还能把条件写进 URL 分享出去。 */}
+              <Link
+                href={`/tools?cat=${category.slug}`}
+                className="inline-flex items-center gap-1 rounded-full border border-foreground/15 px-3 py-1 text-[12px] font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
+              >
+                在工具目录中筛选
+                <ArrowRight className="h-3 w-3" aria-hidden="true" />
+              </Link>
             </div>
           </div>
         </div>

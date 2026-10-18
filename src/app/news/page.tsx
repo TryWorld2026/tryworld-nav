@@ -4,6 +4,7 @@ import { NewsTabs } from '@/components/news-tabs';
 import { NewsFeed } from '@/components/news-feed';
 import { MastheadMeta, NewsMasthead } from '@/components/news-masthead';
 import { newsItems } from '@/lib/data';
+import { newsToolLinks } from '@/lib/news-links';
 import { formatDateShort } from '@/lib/news';
 import { canonical } from '@/lib/canonical';
 
@@ -70,7 +71,7 @@ export default function NewsIndexPage() {
             暂时没有资讯。数据由构建前的 <code>scripts/fetch-aihot.mjs</code> 抓取。
           </p>
         ) : (
-          <NewsFeed items={newsItems} />
+          <NewsFeed items={newsItems} toolLinks={newsToolLinks(newsItems)} />
         )}
       </div>
     </div>

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { ArrowUpRight, ConciergeBell, LayoutGrid, Link2, Rocket } from 'lucide-react';
 import { Hero } from '@/components/hero';
 import { HomeNews } from '@/components/home-news';
+import { HomeCollections } from '@/components/home-collections';
 import { CategoryIcon } from '@/components/category-icon';
 import { SectionHeader } from '@/components/section-header';
 import { TOOL_GRID, ToolMiniCard } from '@/components/tool-card';
@@ -163,6 +164,11 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 编辑精选：9 个集合原先全站 0 内链（只有 sitemap 能到），而它们正好
+          对应「第一次来、不知道选哪个」的需求。放在「最新添加」之后、
+          资讯之前：读者先看到量大（2081）、再看到上新，然后是少而精的选择。 */}
+      <HomeCollections />
+
       {/* 资讯插在「工具发现」与「按分类逛」之间：读者已经看过热门与上新，
           接下来要么去逛分类、要么看行业动态，资讯在这里是第二个自然的出口。
           顺序改动见 `home-news.tsx` 顶部注释。 */}
@@ -221,7 +227,7 @@ export default function HomePage() {
                     </h3>
                     <p className="mt-0.5 text-[12.5px] text-muted-foreground">{group.note}</p>
                   </div>
-                  <span className="mb-0.5 ml-auto shrink-0 text-[11px] tabular-nums text-muted-foreground/70">
+                  <span className="mb-0.5 ml-auto shrink-0 text-[11px] tabular-nums text-muted-foreground">
                     {items.length} 个分类
                   </span>
                 </div>

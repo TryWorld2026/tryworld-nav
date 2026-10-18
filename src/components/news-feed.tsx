@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import {
   ArrowUpRight,
   ChevronDown,
@@ -28,6 +29,11 @@ import {
 } from '@/lib/news';
 import type { NewsItem } from '@/lib/types';
 import type { NewsRange } from '@/lib/news';
+import type { SearchRecord } from '@/lib/search';
+import rawSearchIndex from '../../data/search-index.json';
+
+/** 站内条目的名称与图标从搜索索引里取（2081 条，br 59 KB）。 */
+const SEARCH_INDEX = rawSearchIndex as SearchRecord[];
 
 /**
  * 资讯流 —— `/news` 的主体。
@@ -79,7 +85,18 @@ function useUrlState() {
   return { ...state, ready };
 }
 
-export function NewsFeed({ items }: { items: NewsItem[] }) {
+export function NewsFeed({
+  items,
+  toolLinks = {},
+}: {
+  items: NewsItem[];
+  /**
+   * `{ [newsId]: toolSlug[] }` —— 构建期算好的「这条资讯里提到的站内工具」。
+   * 客户端不再重复匹配（2081 × 124 次子串扫描会拖慢首次渲染），
+   * 由 `lib/news-links.ts` 在 server component 里算一次。
+   */
+  toolLinks?: Record<string, string[]>;
+}) {
   const initial = useUrlState();
   const [query, setQuery] = useState('');
   const [cats, setCats] = useState<string[]>([]);
@@ -175,6 +192,25 @@ export function NewsFeed({ items }: { items: NewsItem[] }) {
 
   const groups = useMemo(() => groupByDay(filtered), [filtered]);
   const hasFilter = Boolean(query.trim() || cats.length || range !== 'all' || source);
+
+  /**
+   * `toolLinks`（slug 数组）→ 渲染需要的 `{slug,name,icon}`。
+   * 这里用 `navCategories` 之外的轻量数据源：`search-index.json` 里已有
+   * 全部 2081 条的名称与图标，59 KB br，比拖进整个目录便宜。
+   */
+  const linkedToolMap = useMemo(() => {
+    const out = new Map<string, { slug: string; name: string; icon: string }[]>();
+    if (!toolLinks || Object.keys(toolLinks).length === 0) return out;
+    const bySlug = new Map(SEARCH_INDEX.map((r) => [r.s, r]));
+    for (const [newsId, slugs] of Object.entries(toolLinks)) {
+      const list = slugs
+        .map((s) => bySlug.get(s))
+        .filter((r): r is SearchRecord => Boolean(r))
+        .map((r) => ({ slug: r.s, name: r.n, icon: r.i }));
+      if (list.length) out.set(newsId, list);
+    }
+    return out;
+  }, [toolLinks]);
 
   // 「加载更多」按条目总数计，而不是按组 —— 组头只在跨组时出现，按组计数会
   // 让「20 条」变成「20 天」。
@@ -400,7 +436,7 @@ export function NewsFeed({ items }: { items: NewsItem[] }) {
               {months.length > 1 && (
                 <p className="border-t border-foreground/5 pt-2.5 text-[11px] text-muted-foreground">
                   时间跨度：{months[months.length - 1].label} – {months[0].label}
-                  <span className="ml-2 text-muted-foreground/70">
+                  <span className="ml-2 text-muted-foreground">
                     （共 {months.reduce((n, m) => n + m.count, 0)} 条）
                   </span>
                 </p>
@@ -417,7 +453,7 @@ export function NewsFeed({ items }: { items: NewsItem[] }) {
       <div className="content-container mt-6">
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-foreground/15 px-6 py-20 text-center">
-            <Newspaper className="mb-3 h-8 w-8 text-muted-foreground/40" aria-hidden="true" />
+            <Newspaper className="mb-3 h-8 w-8 text-muted-foreground" aria-hidden="true" />
             <p className="text-sm font-medium text-foreground/70">没有匹配的资讯</p>
             <p className="mt-1 max-w-xs text-xs text-muted-foreground">
               {hasFilter
@@ -474,7 +510,7 @@ export function NewsFeed({ items }: { items: NewsItem[] }) {
                       delay={Math.min(i, 6)}
                       className="min-w-0"
                     >
-                      <NewsCard item={it} />
+                      <NewsCard item={it} linkedTools={linkedToolMap.get(it.id) ?? []} />
                     </Reveal>
                   ))}
                 </ul>
@@ -528,7 +564,14 @@ export function NewsFeed({ items }: { items: NewsItem[] }) {
  * 「AIHOT 条目」是独立的小链接 —— 嵌套 `<a>` 是无效 HTML，所以它们放在主
  * 链接之外，用 `stopPropagation` 把点击与卡片跳转分开。
  */
-function NewsCard({ item }: { item: NewsItem }) {
+function NewsCard({
+  item,
+  linkedTools = [],
+}: {
+  item: NewsItem;
+  /** 这条资讯里提到的站内工具（构建期匹配，见 `lib/news-links.ts`）。 */
+  linkedTools?: { slug: string; name: string; icon: string }[];
+}) {
   const tone = categoryTone(item.category);
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-foreground/10 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/15 hover:shadow-md active:translate-y-0 active:scale-[0.995]">
@@ -551,7 +594,7 @@ function NewsCard({ item }: { item: NewsItem }) {
               {formatDateShort(item.publishedAt)}
             </time>
           </span>
-          <span className="min-w-0 truncate text-muted-foreground/80">{item.source}</span>
+          <span className="min-w-0 truncate text-muted-foreground">{item.source}</span>
         </div>
 
         {/* `text-balance`：卡片宽 320–542px，标题大多正好折成两行，均衡换行
@@ -582,9 +625,37 @@ function NewsCard({ item }: { item: NewsItem }) {
 
         {/* `mt-auto`：同一行里摘要长短不一时，把「AIHOT 条目 / 入选理由」
             这一行压到卡片底部，多列布局下才能对齐。 */}
+        {/* 站内条目：这条新闻里提到的工具，如果站内收录了就挂一个 chip。
+            原先资讯与工具目录**零互链**（work/analysis-ia.md §7），读者读到
+            「某产品发布」没有任何路径回到站内收录页，结构上把同一个站拆成
+            两个产品。chip 必须 `relative z-10` 才能盖住标题链接的 `after:inset-0`
+            大面积点击层（整卡可点），否则点 chip 会跳去外链。 */}
+        {linkedTools.length > 0 && (
+          <div className="relative z-10 mt-2.5 flex flex-wrap gap-1.5">
+            {linkedTools.map((t) => (
+              <Link
+                key={t.slug}
+                href={`/tools/${t.slug}`}
+                className="inline-flex items-center gap-1 rounded-md border border-foreground/10 bg-foreground/[0.02] px-1.5 py-0.5 text-[11px] text-foreground/70 transition-colors hover:border-gongke-accent/30 hover:text-gongke-accent"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={t.icon}
+                  alt=""
+                  width={12}
+                  height={12}
+                  loading="lazy"
+                  className="h-3 w-3 rounded-[2px] object-contain"
+                />
+                站内收录 · {t.name}
+              </Link>
+            ))}
+          </div>
+        )}
+
         <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-2.5 text-[11px] text-muted-foreground">
           {item.originalTitle && item.originalTitle !== item.title && (
-            <span className="line-clamp-1 max-w-full text-muted-foreground/60">
+            <span className="line-clamp-1 max-w-full text-muted-foreground">
               {item.originalTitle}
             </span>
           )}

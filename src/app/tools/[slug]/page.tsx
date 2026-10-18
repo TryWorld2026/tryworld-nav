@@ -7,8 +7,11 @@ import { AdSlot } from '@/components/ad-slot';
 import { CategoryIcon } from '@/components/category-icon';
 import { ToolActions } from '@/components/tool-actions';
 import { ToolInfoPanel } from '@/components/tool-info-panel';
-import { TOOL_GRID, ToolMiniCard, ToolRowCard } from '@/components/tool-card';
+import { TOOL_GRID, ToolMiniCard, ToolRowCard, shotSrcSet } from '@/components/tool-card';
 import { ToolProse } from '@/components/tool-details';
+import { ToolVerdict } from '@/components/tool-verdict';
+import { ToolNewsPanel } from '@/components/tool-news-panel';
+import { verdictBySlug } from '@/lib/tool-verdicts';
 import {
   SITE,
   extrasBySlug,
@@ -154,6 +157,16 @@ export default async function ToolDetailPage({
                 slug={tool.slug}
                 name={tool.name}
                 description={tool.description}
+                icon={tool.icon}
+                {...(primary
+                  ? {
+                      category: {
+                        slug: primary.slug,
+                        name: primary.name,
+                        color: primary.color,
+                      },
+                    }
+                  : {})}
               />
               {/* 访问官网 — the origin links straight to the product's own
                   site, harvested per entry. The earlier Bing search button
@@ -247,15 +260,46 @@ export default async function ToolDetailPage({
             列距仍由 `gap-8` 给 2rem。 */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-y-2">
           <div className="md:col-span-2 md:row-start-1">
+            {/* 「怎么选」面板放在截图与正文之前。
+                用户读完一句话定位，第一个问题是「适合我吗、和同类比怎么样」，
+                而不是「它有哪些功能」。没有判断数据的工具整块不渲染（这里用
+                `verdictBySlug` 判断，而不是让组件返回 null 再藏空盒），
+                所以 2081 页里没写到的那些零回归。 */}
+            {verdictBySlug(tool.slug) && (
+              <div className="mb-8">
+                <ToolVerdict slug={tool.slug} />
+              </div>
+            )}
+
             {tool.image && (
               <div className="mb-8 overflow-hidden rounded-lg border border-muted">
+                {/* 原图平均 149 KB、宽 1270–3840（中位 1920），而这一列在实测的
+                    各档视口下只渲染 670–1118 CSS px。加 `srcSet` 后 1280/1440
+                    两档（渲染 670 / 777）拿到 800w 的 webp —— 单张约 14 KB，
+                    比原图小一个数量级。更宽的屏仍然用原图，因为 800w 铺 1120
+                    会糊，而多一档 1600w 要给部署再加 2081 个文件（见
+                    `scripts/gen-thumbs.mjs` 顶部关于文件数的说明）。
+
+                    清单为空时 `shotSrcSet()` 返回 undefined、属性整个不渲染 ——
+                    见 `components/tool-card.tsx` 里那段「srcSet 不会自动退回
+                    src」的实测记录。
+
+                    `sizes` 用的是**逐档实测的渲染宽度**，不是按容器公式推的：侧栏
+                    占掉 192px 之后，`.rail-container` 三列栅格里的两列在 1536
+                    视口只有 841 宽，而不是按 1440 容器算出来的 906。实测值
+                    依次是 1024→501 / 1280→670 / 1440→777 / 1536→841 /
+                    1800→1011 / 2100→1118。写大了浏览器会以为 800w 不够用、
+                    直接去拿原图，白回退——这正是「两档候选」最容易被写坏的地方。 */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={tool.image}
+                  srcSet={shotSrcSet(tool.image)}
+                  sizes="(min-width: 2100px) 1118px, (min-width: 1800px) 1011px, (min-width: 1536px) 841px, (min-width: 1440px) 777px, (min-width: 1280px) 670px, (min-width: 1024px) 501px, 100vw"
                   alt={`${tool.name} 截图`}
                   width={800}
                   height={450}
                   loading="lazy"
+                  decoding="async"
                   className="h-auto w-full"
                 />
               </div>
@@ -299,6 +343,10 @@ export default async function ToolDetailPage({
               info={extras?.info ?? []}
               platforms={extras?.platforms ?? []}
             />
+
+            {/* 相关资讯：这个工具在最近 7 天的资讯里被提到过就列出来。
+                没有匹配时组件返回 null（大多数长尾工具不会有），不占空位。 */}
+            <ToolNewsPanel slug={tool.slug} name={tool.name} />
 
             <div className="rounded-xl border border-foreground/10 bg-card p-5">
               <h2 className="mb-3 text-sm font-semibold text-foreground">类似工具</h2>

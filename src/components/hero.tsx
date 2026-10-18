@@ -123,18 +123,24 @@ export function Hero() {
               <span className="whitespace-nowrap">{allCategories.length} 个场景</span>；每天还有一期 AIHOT 精选日报，告诉你圈里发生了什么。
             </p>
 
+            {/* CTA 主次在 2026-10-18 对调。
+                原文是「看今天的 AI 资讯」占实心白（主），「浏览全部工具」描边（次）——
+                一个 AI 工具导航站，把首屏唯一的主按钮给了另一个产品（资讯），
+                访客读完 hero 的第一反应应该是「去哪找工具」，而不是「去看新闻」。
+                现在主按钮 = 浏览全部工具，资讯降为次按钮（仍保留 testid，
+                既有测试与埋点不用改）。 */}
             <div className="mt-7 flex flex-wrap items-center gap-3">
-              <Link href="/news" className={CTA_PRIMARY} data-testid="news-hero-cta">
-                <Newspaper className="h-4 w-4 shrink-0" aria-hidden="true" />
-                看今天的 AI 资讯
+              <Link href="/tools" className={CTA_PRIMARY}>
+                <LayoutGrid className="h-4 w-4 shrink-0" aria-hidden="true" />
+                浏览全部工具
                 <ArrowRight
                   className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-1"
                   aria-hidden="true"
                 />
               </Link>
-              <Link href="/tools" className={CTA_SECONDARY}>
-                <LayoutGrid className="h-4 w-4 shrink-0" aria-hidden="true" />
-                浏览全部工具
+              <Link href="/news" className={CTA_SECONDARY} data-testid="news-hero-cta">
+                <Newspaper className="h-4 w-4 shrink-0" aria-hidden="true" />
+                看今天的 AI 资讯
               </Link>
             </div>
 
