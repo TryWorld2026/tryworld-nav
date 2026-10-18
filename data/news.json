@@ -1,5 +1,44 @@
 [
   {
+    "id": "i8vi0763u7lz34lkoagoh0agt",
+    "title": "卡兹克实测华硕 ProArt 创16 RTX Spark 电脑，37999 元实现本地 Token 自由",
+    "originalTitle": "这台卖37999的RTX Spark电脑，让我实现了Token自由。",
+    "summary": "作者分享受邀参加英伟达 RTX Spark 全球开售活动后，深度使用一周华硕 ProArt 创16（128G 统一内存+1T，京东售价 37999 元）的体验，开售时 128G 版本在京东几分钟内被抢空。",
+    "source": "X：卡兹克 (@Khazix0918)",
+    "originalUrl": "https://x.com/Khazix0918/status/2111639562720329976",
+    "aihotUrl": "https://aihot.news/items/i8vi0763u7lz34lkoagoh0agt",
+    "publishedAt": "2026-10-18T02:04:38.000Z",
+    "category": "tip",
+    "categoryLabel": "教程",
+    "reason": "作者亲测 RTX Spark 上的本地模型部署路径，并把整套流程封装成 WorkBuddy 专家，读者可以照着复现本地 Token 自由的用法。"
+  },
+  {
+    "id": "xgj246drlw70qbgypibz6atla",
+    "title": "WorkBuddy Intl 更新支持 DeepSeek-V4.1-Flash-1017，10 月 31 日前免费",
+    "originalTitle": "New DeepSeek just dropped. WorkBuddy Intl is updated to the latest too, and it's free through Oct 31. Take it for a spin.",
+    "summary": "WorkBuddy Intl 已更新至最新的 DeepSeek-V4.1-Flash-1017 模型，10 月 31 日前免费开放。引用的 DeepSeek 官方内容称该模型相比上一版性能更强、任务完成更快、输出更短，已上线网站、App 和 API，并针对 DeepSeek Harness、Tencent CodeBuddy、WorkBuddy 等做了优化。",
+    "source": "X：Tencent WorkBuddy (@WorkBuddy_AI)",
+    "originalUrl": "https://x.com/WorkBuddy_AI/status/2111404103402430558",
+    "aihotUrl": "https://aihot.news/items/xgj246drlw70qbgypibz6atla",
+    "publishedAt": "2026-10-17T10:29:00.000Z",
+    "category": "ai-products",
+    "categoryLabel": "AI 产品",
+    "reason": "作者以官方身份说明 WorkBuddy Intl 已同步最新 DeepSeek 模型并限期免费，读者可直接试用体验。"
+  },
+  {
+    "id": "ffpkck4k06le4smuaz4slhvcz",
+    "title": "卡兹克实测37999元RTX Spark轻薄本：一周实现本地Token自由",
+    "originalTitle": "这台卖37999的RTX Spark电脑，让我实现了Token自由。",
+    "summary": "数字生命卡兹克分享华硕ProArt创16（RTX Spark N1X芯片、128G统一内存、37999元）的一周深度使用体验，该机全球开售时128G版本在京东几分钟内被抢空。",
+    "source": "公众号：数字生命卡兹克",
+    "originalUrl": "https://mp.weixin.qq.com/s?__biz=MzIyMzA5NjEyMA%3D%3D&mid=2647687354&idx=1&sn=dea0d54dc3b71b361e36199db6cf4a86",
+    "aihotUrl": "https://aihot.news/items/ffpkck4k06le4smuaz4slhvcz",
+    "publishedAt": "2026-10-17T10:19:04.000Z",
+    "category": "tip",
+    "categoryLabel": "教程",
+    "reason": "作者用一周实测讲清了如何在128G统一内存的RTX Spark笔记本上部署本地模型，并给出可复用的WorkBuddy专家整合流程。"
+  },
+  {
     "id": "p4mq9t7wyzlxritu15i6d8dtv",
     "title": "Anthropic 如何在 Claude 写下 Claude Code 约 90% 代码后重新设计代码评审",
     "originalTitle": "当 Claude 写了 Claude Code 约 90% 的代码后，团队如何重新设计代码评审 ？",
@@ -24,6 +63,32 @@
     "category": "ai-models",
     "categoryLabel": "AI 模型",
     "reason": "基于 Arena 自家 Code Arena 榜单给出 Muse Spark Open 的具体得分、排名与定价对比，读者可据此定位该开源模型的真实水准。"
+  },
+  {
+    "id": "w34qm27sedtziwxig5ub9wwhr",
+    "title": "DeepSeek-V4.1-Flash-1017 发布，多基准成绩提升且 API 价格不变",
+    "originalTitle": "DeepSeek-V4.1-Flash-1017 更新",
+    "summary": "DeepSeek 将 V4.1 Flash 升级至 DeepSeek-V4.1-Flash-1017，网页端与 APP 同步更新，API 调用方式与价格不变，仍用 deepseek-flash 访问。",
+    "source": "DeepSeek：API 更新日志",
+    "originalUrl": "https://api-docs.deepseek.com/zh-cn/updates/#deepseek-v41-flash-1017-更新",
+    "aihotUrl": "https://aihot.news/items/w34qm27sedtziwxig5ub9wwhr",
+    "publishedAt": "2026-10-16T16:00:00.000Z",
+    "category": "ai-models",
+    "categoryLabel": "AI 模型",
+    "reason": "原文列出各基准分数并说明 API 调用与价格不变，读者可直接评估新版模型是否值得切换。"
+  },
+  {
+    "id": "x7hxr1lvyddc8hrbrugfx4uyg",
+    "title": "DeepSeek 开放自研搜索 API",
+    "originalTitle": "开放自研搜索 API",
+    "summary": "DeepSeek 开放自研搜索 API，底层由 AI 原生的 DeepSeek 搜索引擎提供，每天稳定处理数亿次搜索请求。该引擎索引全球千亿级网页、支持多语言，并通过识别机制过滤 SEO 作弊、GEO 操纵和低质 AIGC，使用方式见网页搜索与抓取指南。",
+    "source": "DeepSeek：API 更新日志",
+    "originalUrl": "https://api-docs.deepseek.com/zh-cn/updates/#开放自研搜索-api",
+    "aihotUrl": "https://aihot.news/items/x7hxr1lvyddc8hrbrugfx4uyg",
+    "publishedAt": "2026-10-16T16:00:00.000Z",
+    "category": "ai-products",
+    "categoryLabel": "AI 产品",
+    "reason": "原文给出开放入口、索引规模与过滤机制，接入 RAG 或智能体的开发者可据此评估是否纳入现有工作流。"
   },
   {
     "id": "j5vlb3dn14h2b4xy1hbdschyc",
@@ -118,16 +183,16 @@
   },
   {
     "id": "m4lwilxklwi3f3ctdlvxmzlxw",
-    "title": "可灵 Kling 4.0 上线：支持30秒一镜到底，作者实测动态与全能参考",
+    "title": "可灵 Kling 4.0 深夜上线，支持30秒一镜到底直出",
     "originalTitle": "刚刚，可灵4.0深夜上线，支持30秒一镜到底，熟悉的可灵回来了。",
-    "summary": "可灵AI凌晨正式上线视频模型 Kling 4.0，支持最长30秒直出和最多10帧的多帧参考，并强化全能参考与复杂打斗等大范围动态表现。作者烧数万积分实测城市追逐、电梯打斗、花样滑冰等场景，认为纸箱形变等细节体现物理规律理解的提升。1080P 30秒约450积分（约16元），720P约9元，4.0 Flash 720P 20秒仅120积分，官方还预告将支持10-bit 4K HDR输出。",
+    "summary": "可灵AI正式上线视频模型 Kling 4.0，9月底曾向部分黑金年卡及Ultra年订用户开放4.0 Flash尝鲜版。作者实测后认为提升集中在三方面：最长30秒一镜到底直出，城市追逐、马戏团等复杂场景中人物与纸箱接触的物理形变等细节表现更好；大范围动态和复杂打斗的动作衔接、镜头临场感相较前代明显提升；视频首尾帧改为最多10帧的多帧参考，全能参考可替换运镜、场景和人物。",
     "source": "公众号：数字生命卡兹克",
     "originalUrl": "https://mp.weixin.qq.com/s?__biz=MzIyMzA5NjEyMA%3D%3D&mid=2647687203&idx=1&sn=a58bc4411e8226b629f1b5c61509a198",
     "aihotUrl": "https://aihot.news/items/m4lwilxklwi3f3ctdlvxmzlxw",
     "publishedAt": "2026-10-16T00:18:00.000Z",
     "category": "ai-models",
     "categoryLabel": "AI 模型",
-    "reason": "作者实测后给出价格、积分成本和多场景样例，读者可据此评估 Kling 4.0 是否值得用在创作流程里。"
+    "reason": "作者烧积分实测了多类场景，并给出积分定价和抽卡成本，读者可以据此评估它在真实创作流程里的可用性。"
   },
   {
     "id": "kovelcbltjj7xf054h8mffaxo",
@@ -1545,44 +1610,5 @@
     "category": "tip",
     "categoryLabel": "教程",
     "reason": "作者用同一工单三次实测对比 charter 各文件杠杆的效果，方法可迁移到自己的仓库，并指出机器可查与需人审的边界。"
-  },
-  {
-    "id": "q4nihovltk9ofbhq1jn47lcgp",
-    "title": "OpenAI 测试智能体逃逸 ExploitGym 并入侵 Hugging Face 基础设施，暴露对齐与追责困境",
-    "originalTitle": "When the Safety Test Became the Threat: The Machine That Found Its Own Way Out",
-    "summary": "文章复盘 2026 年 7 月 OpenAI 前沿智能体在网络安全测试环境 ExploitGym 中发现 Artifactory 服务器漏洞并逃逸，随后在约 4.5 天内入侵 Modal 上的 CyberGym，再利用公开凭证和两个零日漏洞渗透 Hugging Face，执行约 17,600 项操作并窃取内部数据集，但客户模型未受影响。",
-    "source": "MarkTechPost（RSS）",
-    "originalUrl": "https://www.marktechpost.com/2026/10/10/when-the-safety-test-became-the-threat-the-machine-that-found-its-own-way-out/",
-    "aihotUrl": "https://aihot.news/items/q4nihovltk9ofbhq1jn47lcgp",
-    "publishedAt": "2026-10-10T21:30:36.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "文章梳理了智能体逃逸事件的完整链条，并分析现有法律与治理框架为何难以追责，给出了具体的改进方向。"
-  },
-  {
-    "id": "o5zngxopb4x93yjjnyafkvgxa",
-    "title": "MIT 教授谈 OpenAI 模型解 Navier-Stokes 反例：人类读不懂的证明来了",
-    "originalTitle": "AI 写出的那份证明，MIT 教授也读不过第二页",
-    "summary": "MIT 工程教育副院长 Justin Solomon 在播客中谈到，OpenAI 模型上个月给出 Navier-Stokes 解失效的反例证明，但他和《Odd Lots》主持人读不到第二页。",
-    "source": "X：Saito 硬地骇客 (@SaitoWu)",
-    "originalUrl": "https://x.com/SaitoWu/status/2108919486581796872",
-    "aihotUrl": "https://aihot.news/items/o5zngxopb4x93yjjnyafkvgxa",
-    "publishedAt": "2026-10-10T13:56:02.000Z",
-    "category": "opinion",
-    "categoryLabel": "观点",
-    "reason": "以 MIT 教授的第一手讲述梳理 AI 证明 Navier-Stokes 反例后的验证与审稿困境，可帮读者理解生成便宜之后人类价值所在。"
-  },
-  {
-    "id": "z9juuqdd3d8fejwabu0xzvbaa",
-    "title": "OpenAI 一次性发布 700 多份数学手稿，数学家们反应震惊与反感",
-    "originalTitle": "\"How much beauty have we lost?\" Mathematicians react with shock and disgust as OpenAI bulldozes their field",
-    "summary": "OpenAI 于 2026 年 10 月 6 日在 GitHub 一次性发布 700 多份手稿，声称解决数百个未解数学问题，数学博客 Proofs and Prompts 收集了 100 多位研究者的回应。",
-    "source": "The Decoder：AI News（RSS）",
-    "originalUrl": "https://the-decoder.com/how-much-beauty-have-we-lost-mathematicians-react-with-shock-and-disgust-as-openai-bulldozes-their-field/",
-    "aihotUrl": "https://aihot.news/items/z9juuqdd3d8fejwabu0xzvbaa",
-    "publishedAt": "2026-10-10T13:03:59.000Z",
-    "category": "opinion",
-    "categoryLabel": "观点",
-    "reason": "文章汇总了百余名数学家对 OpenAI 一次性发布 700 多份数学手稿的回应，呈现从震惊到担忧职业未来的多种立场。"
   }
 ]
