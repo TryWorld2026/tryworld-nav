@@ -1,7 +1,9 @@
-/* 试界的字体子集，来自品牌包 `assets/fonts/fonts.css`（113 条 @font-face，
-   101 条 Noto Sans SC + 12 条 Fraunces，按 unicode-range 切片）。CSS 与 woff2
-   都在 public/fonts/，`url()` 已改成绝对路径。 */
-@import url('/fonts/fonts.css');
+/* 字体声明（101 条 Noto Sans SC 的 @font-face）现在在 `src/app/fonts.css`，
+   由 `layout.tsx` 与这份文件一起 import —— 两份 CSS 进同一条打包链路，产出
+   一个文件、一个 <link>。原先这里写的是 `@import url('/fonts/fonts.css')`，
+   而 CSS 的 @import 是串行的：浏览器要等 74 KB 的 globals.css 下载并解析到
+   这一行，才知道还有一个 106 KB 的字体样式表要拉，字体请求因此晚整整一个
+   RTT，而它偏偏卡在首屏文字上。详见 `src/app/fonts.css` 顶部注释。 */
 
 @tailwind base;
 @tailwind components;
@@ -9,11 +11,15 @@
 
 @layer base {
   :root {
-    /* Noto Sans SC 承载中英文正文与标题；Fraunces 只用于英文点题（衬线斜体）。
-       回退栈与品牌规范一致：PingFang SC / Microsoft YaHei 兜住中文。 */
+    /* Noto Sans SC 承载中英文正文与标题。回退栈与品牌规范一致：
+       PingFang SC / Microsoft YaHei 兜住中文。 */
     --font-inter: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
     --font-display: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
-    --font-serif: Fraunces, Georgia, 'Songti SC', serif;
+    /* 品牌规范里 Fraunces 只承担英文点题，但全站已经 0 处 `font-serif` 调用，
+       12 条 Fraunces @font-face / 6 个 woff2 / 233 KB 是纯死重，已从字体包里
+       删掉。栈里也一并去掉这个族名 —— 留着只会让浏览器为每一段 serif 文本
+       白做一次族名匹配，最后仍然落到 Georgia。 */
+    --font-serif: Georgia, 'Songti SC', serif;
 
     /* 色板映射自试界品牌 token（assets/tokens/brand.json），HSL 三元组格式：
        paper #F2EEE6 / ink #1B2523 / green #24564E / orange #F2693C

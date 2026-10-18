@@ -1,10 +1,19 @@
 import type { Metadata, Viewport } from 'next';
+// 字体声明（101 条 @font-face）作为源码 CSS 引入，而不是留在 public/fonts/
+// 让 globals.css 用 `@import url(...)` 去引。原因只有一个字：串行。
+// CSS 的 @import 必须等引用它的那份样式表解析到那一行才发出请求，于是
+// globals.css(74 KB) → fonts.css(106 KB) → woff2 是三级瀑布，字体比首屏
+// 文字晚两个 RTT 才到。写成 import 之后两份 CSS 由 webpack 合成同一个产物、
+// 同一个 <link>，字体请求与 CSS 同时发出。（用户看到的是 font-display: swap
+// 造成的回退字形闪一下，闪完才换成 Noto Sans SC，观感上像「字突然变了」。）
 import './globals.css';
+import './fonts.css';
 import { Header } from '@/components/header';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteSidebar } from '@/components/site-sidebar';
 import { MobileTabBar } from '@/components/mobile-tab-bar';
-import { SITE } from '@/lib/data';
+import { SwRegister } from '@/components/sw-register';
+import { SITE } from '@/lib/site';
 
 export const metadata: Metadata = {
   // Absolute URLs need a base, or openGraph/twitter images resolve against
@@ -87,6 +96,16 @@ export default function RootLayout({
       {/* body 只挂 `bg-background`，`min-h-screen` / `font-sans` /
           `text-foreground` 都来自 globals.css 的 body 规则。 */}
       <body className="bg-background">
+        {/* 跳转到主内容的链接。全站页眉有 4 个导航项 + 搜索 + 收藏，侧栏还有
+            18 个分类 —— 键盘用户每次换页都要 Tab 几十次才能到正文
+            （a11y 审计里 `landmarks.skipLink: false`）。这个链接平时视觉隐藏，
+            聚焦时才出现，是 WCAG 2.4.1 的最小实现。 */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:inline-flex focus:h-10 focus:items-center focus:rounded-md focus:bg-gongke-dark focus:px-4 focus:text-sm focus:font-medium focus:text-[#F2EEE6] focus:shadow-lg"
+        >
+          跳到主要内容
+        </a>
         <div className="flex">
           <SiteSidebar />
           {/* `min-w-0` 是关键：flex 子项默认 `min-width:auto`，取内容的最小
@@ -104,7 +123,7 @@ export default function RootLayout({
                 `min-w-0` 只加在最外层时下一层仍会被内容撑宽。 */}
             <main className="min-w-0">
               <div className="min-h-screen flex flex-col">
-                <main className="min-w-0 flex-grow flex">
+                <main id="main-content" className="min-w-0 flex-grow flex">
                   <div className="min-w-0 flex-1">{children}</div>
                 </main>
               </div>
@@ -117,6 +136,12 @@ export default function RootLayout({
         {/* 移动端底部 Tab 栏。`lg:hidden` 在组件内部，桌面端不占位。
             挂在 flex 容器外，避免参与侧栏与正文的两栏布局。 */}
         <MobileTabBar />
+
+        {/* Service Worker 注册 —— 「添加到主屏幕」与断网兜底页的接线。
+            组件本身 `return null`，不产出任何 DOM，挂在这里只是让它进客户端
+            bundle；实际注册发生在 `window.load` 之后，且只在 https 下执行，
+            本地开发不受影响（见 components/sw-register.tsx）。 */}
+        <SwRegister />
 
         {/* 让「添加到主屏幕」的启动画面与浏览器 chrome 同色。Next 会把
             `viewport.themeColor` 写进 <meta>，这里再给 iOS 的状态栏留一个

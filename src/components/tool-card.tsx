@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { tagByName } from '@/lib/tags';
+import { asset } from '@/lib/assets';
 import { rgb, rgbAlpha } from '@/lib/utils';
 import type { Tool } from '@/lib/types';
+import thumbs from '@/thumbs.json';
 
 /**
  * 全站工具网格的唯一轨道定义。
@@ -23,6 +25,96 @@ import type { Tool } from '@/lib/types';
  */
 export const TOOL_GRID =
   'grid grid-cols-[repeat(auto-fill,minmax(min(280px,100%),1fr))] gap-4';
+
+/**
+ * 缩略图 srcSet。清单 `src/thumbs.json` 由 `scripts/gen-thumbs.mjs` 全量跑完后
+ * 写入；计数为 0 时（媒体目录不存在、或只跑了 `--limit` 验证）整组属性都不输出，
+ * 页面退回原图 —— 这是唯一安全的形式。
+ *
+ * 为什么必须由清单开关，而不是「srcSet 挂了浏览器会退回 src」：实测不成立。
+ * 用 Chromium 1248 逐条验证过 —— `<img src="ok.png" srcSet="missing.webp 88w">`、
+ * `<img srcSet="missing.webp 800w, ok.png 1920w">`、`<picture><source srcset="missing.webp">`
+ * 三种写法，`currentSrc` 全部停在那个 404 的候选上、`naturalWidth` 为 0，
+ * **浏览器不会回退到 `src`**（请求记录里两个文件都发了，但失败后不重选）。
+ * 所以「只指向 thumbs、留 src 兜底」只会在没跑过脚本的机器上换成一屏破图，
+ * 比不做更糟。
+ *
+ * 页面渲染在构建期跑（server component 与 client 组件的首屏 HTML 都是），
+ * 构建期读 `fs` 判断单个文件是否存在也可以，但 `tool-card.tsx` 同时被
+ * `tools-explorer.tsx`（'use client'）引用，模块级 `fs` 会让客户端打包直接
+ * 失败。所以把判断前移到脚本：脚本生成文件、同时记下计数，页面只读一个
+ * 两键 JSON（`src/thumbs.json`，由 `contentBuildId()` 一起哈希，因为清单变了
+ * 页面字节就变）。
+ */
+const HAS_ICON_THUMBS = thumbs.icons > 0;
+const HAS_SHOT_THUMBS = thumbs.shots > 0;
+
+/**
+ * `/assets/icons/lovart-ai.png` → `/assets/thumbs/icons/lovart-ai.webp`。
+ *
+ * 传进来的 `src` 已经过 `asset()`（可能带 `NEXT_PUBLIC_ASSET_BASE` 主机前缀），
+ * 所以不能直接换字符串前缀；取 `/assets/{kind}/` 之后的部分重新走一遍
+ * `asset()`，两种前缀形式都对。文件名与 slug 一致是媒体目录的既有约定
+ * （实测 2082 个图标 / 2081 张截图里，只有 1 个图标 `libtv` 不对应任何 slug）。
+ */
+function thumbPath(src: string, kind: 'icons' | 'shots', suffix: string): string | undefined {
+  const marker = `/assets/${kind}/`;
+  const at = src.indexOf(marker);
+  if (at < 0) return undefined;
+  const file = src.slice(at + marker.length);
+  if (!file || file.includes('/')) return undefined;
+  const slug = file.replace(/\.[^./]+$/, '');
+  if (!slug || slug === file) return undefined;
+  return asset(`/assets/thumbs/${kind}/${slug}${suffix}`);
+}
+
+/**
+ * 图标候选：88w 的 webp + 原图。
+ *
+ * `sizes="44px"` 对应卡片里 44×44 的盒子，DPR 2 要 88px —— 正好落在 webp 上，
+ * 所以 Retina 也吃缩略图。原图只作为 3x 以上的候选，因此**矢量图标不进
+ * srcSet**：SVG 没有固有像素宽度，`w` 描符对它没有意义，而矢量本身也没有
+ * 「缩到 88px 省流量」这回事。
+ */
+/**
+ * 图标候选：88w + 176w 两档缩略图。
+ *
+ * 为什么需要 88w **和** 176w 两档：卡片里的盒子是 44 CSS px，DPR1/2 要
+ * 44/88 device px，88w 够；**DPR3 的手机要 132px**，88w 不够，浏览器就会在
+ * 88w 与「原图 176w」之间挑后者 —— 实测 DPR3 下 390 宽的首页，10 张可见图标
+ * 全部退回原图（48 KB，缩略图只要 8 KB），而 icons/ 里最大一张原图 1.25 MB。
+ * 176w 把 DPR4 也盖住（44×4），两档合计每个图标约 4 KB。
+ *
+ * 原图**刻意不进候选**：这两档已经把 DPR1–4 全覆盖，多留一条原图只会给浏览器
+ * 多一个「挑到 1.25 MB」的机会，而没有任何画质收益（44px 的盒子里看不出
+ * 176px 与 1024px 的差别）。`src` 属性仍然指向原图，那是清单关闭时的出口。
+ *
+ * **矢量图标不进来**：SVG 没有固有像素宽度，`w` 描符对它没有意义，而矢量
+ * 本身也没有「缩小省流量」这回事。
+ */
+export function iconSrcSet(src: string): string | undefined {
+  if (!HAS_ICON_THUMBS || !src) return undefined;
+  if (/\.svg$/i.test(src)) return undefined;
+  const thumb = thumbPath(src, 'icons', '.webp');
+  const big = thumbPath(src, 'icons', '-176.webp');
+  if (!thumb || !big) return undefined;
+  return `${thumb} 88w, ${big} 176w`;
+}
+
+/**
+ * 详情页截图候选：800w 的 webp + 原图。
+ *
+ * 原图那一条给的 `1600w` 是按截图宽度的**中位数档**估的（实测 p10 就已是
+ * 1600，中位 1920）。w 描符只用于让浏览器在「需要 2x」时选它，候选本身不会被
+ * 缩放，所以标偏小一点没有画质风险，只是让它在 DPR2 的窄屏上不被选中。
+ * 逐张读真实宽度要多跑 2081 次 sharp metadata，构建期不值得。
+ */
+export function shotSrcSet(src: string): string | undefined {
+  if (!HAS_SHOT_THUMBS || !src) return undefined;
+  if (/\.svg$/i.test(src)) return undefined;
+  const thumb = thumbPath(src, 'shots', '-800.webp');
+  return thumb ? `${thumb} 800w, ${src} 1600w` : undefined;
+}
 
 /*
  * The origin's 更多AI工具 grid uses a different, denser card — shadcn's "magic
@@ -135,6 +227,16 @@ export function ToolMiniCard({
   return (
     <Link
       href={`/tools/${tool.slug}`}
+      // `prefetch={false}` —— 这几行是首页/分类/工具页共用的卡片，全站首屏可见
+      // 的工具有 39 个链接（首页）、/tools 是 60 个、分类页整屏 —— 而 Next 的
+      // App Router 默认对**视口内**的每一条 <a> 预取整份 RSC payload。工具页的
+      // RSC payload 实测平均 107 KB（`out/tools/*.txt`，2081 个文件），39 张卡
+      // 全进视口等于凭空拉 4 MB，命中第一屏时还抢字体与图片的带宽。
+      //
+      // 代价是点进去时要等一次 RSC（本地 20–50 ms，线上多一个 RTT）。这是
+      // 「首屏优先」的取舍：导航站的主要动作是**扫读**，一次读 20 张卡、只点 1
+      // 张，为 19 张没被点开的预取付带宽不划算。
+      prefetch={false}
       className={`group flex h-full flex-col rounded-xl border border-foreground/10 bg-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-lg hover:shadow-foreground/5 active:translate-y-0 active:scale-[0.995] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
         emphasis ? 'hover:shadow-lg' : 'hover:shadow-md'
       }`}
@@ -145,6 +247,8 @@ export function ToolMiniCard({
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={tool.icon}
+              srcSet={iconSrcSet(tool.icon)}
+              sizes="44px"
               alt={tool.name}
               width={44}
               height={44}
@@ -184,13 +288,19 @@ export function ToolMiniCard({
  */
 export function ToolRowCard({ tool }: { tool: Tool }) {
   return (
-    <Link href={`/tools/${tool.slug}`}>
+    // 这个行卡在工具页右栏出现 **两处 × 10 行**（类似工具 / 最新收录），
+    // 所以一个工具详情页一打开就有 20 条视口内的链接在请求 RSC payload ——
+    // 那不是「预取下一屏」，而是把右栏二十个页面的 2 MB 预取塞进出站队列，
+    // 与截图、字体抢同一条连接。见 ToolMiniCard 上的同一条注释。
+    <Link href={`/tools/${tool.slug}`} prefetch={false}>
       <div className="flex items-center group border-b border-muted border-dashed py-1">
         <div className="w-8 h-8 rounded-md mr-1 flex items-center justify-center overflow-hidden">
           {tool.icon ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={tool.icon}
+              srcSet={iconSrcSet(tool.icon)}
+              sizes="24px"
               alt={tool.name}
               width={24}
               height={24}

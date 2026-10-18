@@ -17,6 +17,23 @@
 /public/assets/tags
 /public/assets/news
 
+# Generated thumbnails — 2082 icons (88w + 176w) + 2081 shots @800w of webp,
+# produced from the two directories above by `scripts/gen-thumbs.mjs`. They are
+# build artifacts, not assets: never hand-edit one, and they can be rebuilt in
+# about a minute. Same reasoning as the media they derive from — the deploy copies
+# whatever is in `public/`, so a fresh clone needs one run of the script before
+# `npm run deploy`, or every srcSet candidate 404s. `npm run build` runs it.
+#
+# NOT gitignored next to them: `src/thumbs.json`, the two-number manifest that is
+# the page-side switch for "emit srcSet at all". It lives in `src/` because the
+# component reading it is also in the client bundle and cannot touch `fs`; it must
+# therefore exist in the checkout. It is committed at the counts of this machine's
+# media, and `npm run build` rewrites it from the filesystem right before
+# `next build` — so on a media-less CI checkout it comes out as 0/0, which makes
+# every page degrade to plain `<img src>` instead of pointing at files that are
+# not there. Do not hand-edit it.
+/public/assets/thumbs
+
 # Wrangler local state
 .wrangler
 
