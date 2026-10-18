@@ -12,15 +12,20 @@ Static Assets。<https://nav.tryworld.com.cn>
 
 ```bash
 npm run dev                 # next dev，不跑抓取脚本
-npm run build               # 抓 AIHOT 资讯 → 生成 llms-full.txt → next build（8–11 分钟）
+npm run build               # 抓 AIHOT → llms-full → gen:all → sw → next build（8–11 分钟）
 npm run lint                # eslint .（不是 npx eslint src —— 那是解析不到 executable 的旧坑）
 npx tsc --noEmit            # 类型检查，CI 里单独一步
 npm test                    # node --test，全部测试
-npm run test:unit           # 只跑两个文件：tests/news.test.mjs + tests/fetch-aihot.test.mjs
-                            # （news-period / app-shell 的用例只在 npm test 里跑）
+npm run test:unit           # news / fetch-aihot / search / favorites / filter-url（不含交互与产物）
 npm run test:interaction    # Playwright 交互回归，需先起服务器，否则自动 skip
 npm run preview             # npx serve out -l 3100（interaction 测试默认连这个地址）
 npm run census              # 重算数据口径（覆盖率、pricing 分布、死引用、媒体文件数）
+npm run gen:all             # 重算客户端用的 nav.json 与 search-index.json（改了数据就跑）
+npm run gen:check           # 校验上面两份生成物是否与数据源一致（CI 用）
+npm run gen:thumbs          # 生成缩略图（可选，未生成时页面回退原图）
+npm run gen:pwa-icons       # 从 icon.svg 重新生成 192/512/maskable 图标
+npm run verdicts:check      # 校验「怎么选」判断数据的 schema
+npm run verdicts:draft      # 从 prose 抽价格/场景候选到 work/verdict-drafts.md（人工审阅）
 npm run deploy              # build + 守卫 + prune + wrangler deploy
 ```
 
@@ -28,15 +33,70 @@ npm run deploy              # build + 守卫 + prune + wrangler deploy
 
 ```bash
 node --test tests/news.test.mjs
+node --test tests/search.test.mjs
 node --test --test-name-pattern="北京时间" tests/news.test.mjs
 node --test --test-name-pattern="汉堡菜单" tests/interaction.test.mjs   # 需先 npm run preview
 ```
 
 **不要用 `npx eslint src`**，用 `npm run lint`。测试用 `node --test`，没有 jest/vitest 依赖。
+`work/` 与 `public/sw.js` 已在 eslint ignore 里（一次性分析脚本与生成产物）。
+
+### 2026-10-18 新增的两份**生成物**（改数据后必须重跑）
+
+客户端组件不能 import `@/lib/data`（那会把 2081 条目录打进 layout chunk，
+每个页面白付约 182 KB br）。所以把客户端真正需要的东西抽成两份生成物：
+
+| 文件 | 生成脚本 | 内容 | 体积 | 谁用 |
+|---|---|---|---|---|
+| `data/nav.json` | `scripts/generate-nav.mjs` | 26 分类 / 5 推荐（href 构建期解析好）/ 9 标签 | 5 KB（br 1.4 KB） | 页眉、移动抽屉、侧栏、搜索面板、页脚 |
+| `data/search-index.json` | `scripts/generate-search-index.mjs` | 2081 条 `{slug,name,desc,icon,cats,tags,keywords}` | 398 KB（br 68 KB） | 命令面板、`/tools` 筛选、资讯的「站内收录」chip |
+
+- 两者都**进 `contentBuildId()` 的输入清单**（`next.config.mjs`），否则「只改了索引」
+  不会换 buildId，浏览器缓存会命中旧 chunk。
+- `data/search-index.json` 的 `keywords` 由 `src/lib/search.ts` 里的 `LEXICON` 扫 prose 得到，
+  生成脚本还有一道 `MAX_DF=300` 的文档频次上限——出现超过 300 次的词（营销、报告、识别）
+  对排序是噪音、对体积是灾难，会被整体剔除。
+- **改完 `data/tools.json` / `featured.json` / `tags.json` / `categories.json` 一定要跑
+  `npm run gen:all`**，否则页面上的分类名与搜索结果是旧的。CI 的 `gen:check` 会拦。
+
+### 收藏（`/favorites`）—— 本机，不是账号
+
+- 存储键 `tryworld:favorites`，**v2 结构** `{version:2, items:[{slug,name,description,icon,category,addedAt}]}`。
+- **必须兼容 v1**（纯 `string[]`，2026-10 之前写入的）：`lib/favorites.ts` 的 `parseStore`
+  读到数组会转成只带 slug 的条目，下次写入自动升级。改动这里务必保留这条路径，
+  否则老用户的收藏会被静默清空。
+- 全站唯一入口：页眉右上「我的收藏」、侧栏、页脚、页眉分类下拉底部、移动抽屉。
+  详情页的「添加收藏」通过 `tryworld:favorites-changed` 自定义事件与收藏页联动
+  （`storage` 事件只在跨标签页触发，同 tab 内不生效）。
+- 数据不上传、不需要账号，隐私政策里如实写明。
+
+### 「怎么选」判断数据（`src/lib/tool-verdicts.ts`）
+
+- **人工维护，不是抓取产物**。字段：`bestFor / notFor / diff / vs / price / confidence`。
+- 详情页的 `<ToolVerdict>` 在该工具没有条目时**整块不渲染**，所以 2081 页里没写到的
+  那些零回归。
+- 为什么必须人工：这里写的是缺点、同类对比、起价，编造一条比不写更伤信任。
+  `scripts/draft-verdicts.mjs` 只把候选写到 `work/`，**绝不写 data/**。
+- 新增条目跑 `npm run verdicts:check`：它会校验 slug 存在、日期不是未来、长度上限等。
+
+### PWA 与离线
+
+- `public/sw.js` 由 `scripts/generate-sw.mjs` 生成（经典脚本，零 import），
+  `npm run build` 里会跑。编译期版本号是**模板内容哈希**（不是随机），所以没改逻辑时
+  不会留下无意义的 diff。
+- 策略：`_next/static` / `/fonts/` / `/assets/thumbs/` cache-first；导航 network-first，
+  失败回退 `/offline`，再失败用内联兜底 HTML。**不缓存 HTML**（页面写死 buildId，
+  缓存旧 HTML 会在部署后白屏）。
+- `src/components/sw-register.tsx` 只在 `https:` 下注册，本地 http 不注册。
+- 图标三张（192/512/maskable）用 `scripts/gen-pwa-icons.mjs` 从 `icon.svg` 生成，
+  **进 git**（`public/assets/site/` 未被 gitignore）。
+
+---
 
 ## 架构
 
 ### 静态导出的硬约束
+
 
 `next.config.mjs` 设 `output: 'export'`：**没有服务端**。任何路由碰到
 `searchParams` / `cookies()` / `headers()` / Node 内建模块都会让构建失败。

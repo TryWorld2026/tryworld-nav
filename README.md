@@ -100,9 +100,20 @@ lint / tsc / **build**。其中 build 这一步是**检查而非部署源**：CI
 | 4 | 「更多AI工具」网格原站是每次渲染重掷的随机抽样，这里改成 slug 的纯函数（同一工具页永远同样网格） | `src/lib/data.ts` 的 `moreTools` |
 | 5 | 「类似工具」同理，但保留按品类抽取的关系 | `src/lib/data.ts` |
 | 6 | `layout.tsx` 里 `<main>` 套 `<main>` 是无效 HTML，但它是侧栏全高边线对齐的唯一手段，有意保留 | `src/app/layout.tsx` |
-| 7 | 没有登录/注册等用户功能：原站这些是服务端能力，静态站没有对应实现，只保留按钮外观 | `src/components/header.tsx` |
+| 7 | **没有登录/注册**：原站的账号体系是服务端能力，静态站做不了。2026-10-18 起把页眉右上那个「登录/注册」换成了「我的收藏」→ `/favorites`（本机 localStorage，无需账号）。原按钮点开是一个写着「复刻版本未包含账号系统」的弹窗，是首访最伤信任的一处 | `src/components/header.tsx`、`src/app/favorites/page.tsx` |
 | 8 | 404 插图的 `height="auto"` 改为 CSS `h-auto w-[300px]`——SVG 的 width/height 属性不接受 `auto`，原样保留会让浏览器控制台报错 | `src/components/not-found-art.tsx` |
 | 9 | 工具页 prose 里指向已删新闻详情页的 `/news/{slug}` 链接降级为纯文本（原站那批长文已随改版下线，站内无等价目标） | `src/components/tool-details.tsx` |
+| 10 | 404 页从「原站复刻的一行按钮」改成**三条出路**（搜索全部工具 / 返回首页 / 6 个分类），并修正了 `<title>`（原先是首页标题） | `src/app/not-found.tsx` |
+| 11 | 首页主次 CTA 对调：主按钮从「看今天的 AI 资讯」换成「浏览全部工具」——工具导航站的首屏主操作应该是找工具 | `src/components/hero.tsx` |
+| 12 | `/tools` 的筛选状态**写进 URL**（`?q=&cat=&tag=&price=`），原先只在挂载时读一次，用户筛选后返回会全部丢失 | `src/components/tools-explorer.tsx`、`src/lib/filter-url.ts` |
+| 13 | 搜索从「纯小写子串」改成**意图展开 + 关键词索引**：22 个真实意图词里原先有 6 个零命中（写代码/做视频/论文润色/小红书文案/做网站/电商详情页），现在全部有结果 | `src/lib/search.ts`、`scripts/generate-search-index.mjs` |
+| 14 | 新增 `/collections` 的站内入口（首页「编辑精选」条、侧栏、页脚、页眉下拉）——9 个集合原先**全站 0 内链**，只有 sitemap 能到 | `src/components/home-collections.tsx` 等 |
+| 15 | 资讯卡片新增「站内收录 · X」chip、工具详情页新增「相关资讯」——原先资讯与工具目录**零互链** | `src/lib/news-links.ts`、`src/components/tool-news-panel.tsx` |
+| 16 | 详情页新增「怎么选」面板（适合/不适合/与同类差异/起价），数据来自**人工维护**的 `src/lib/tool-verdicts.ts`，没有条目的工具整块不渲染 | `src/components/tool-verdict.tsx` |
+| 17 | 新增 `/offline` 离线页 + Service Worker + 可安装的三档图标（原 manifest 只有 2 个图标、无 192/512/maskable，Chrome 判定不满足安装条件） | `scripts/generate-sw.mjs`、`src/app/manifest.ts` |
+| 18 | 缩略图：`/assets/thumbs/` 由 `scripts/gen-thumbs.mjs` 预生成 webp，页面用 `srcSet` 指过去（首页 33 个可见图标 880 KB → 92 KB） | `scripts/gen-thumbs.mjs`、`src/components/tool-card.tsx` |
+| 19 | 字体 CSS 从 `globals.css` 的 `@import` 改为 `layout.tsx` 直接 import（去掉一级串行 RTT），删除 12 条全站未使用的 Fraunces `@font-face` | `src/app/fonts.css`、`src/app/layout.tsx` |
+| 20 | 列表卡片关闭 Next 的视口内 RSC 预取（2000+ 链接）；长列表加 `content-visibility`；「加载更多」步长 120→60、累计上限 1200 | `src/components/tool-card.tsx`、`src/components/tools-explorer.tsx` |
 
 `data/tool-extras.json` 里的 `more` / `related` / `latest` 三个字段同样
 不参与渲染，只作溯源保留——原因见 `src/lib/types.ts` 的类型注释。
@@ -186,13 +197,22 @@ node scripts/fetch-aihot-daily.mjs  # 日报/周报/月报/热点 → data/aihot
   真要优化就从 `srcset` + 预生成缩略图入手，不是"首屏"问题。（本节早先写"移动端首屏是
   明确风险"，那是只看未压缩字节得出的错误结论，已按实测更正。）
 - **`.txt`（RSC flight）2135 个占 240 MB**：`npm run prune` 的 `--lean` 可裁掉，但会保留 `llms.txt` / `llms-full.txt`（两者由 robots.txt 声明，删了就是 404）。
-- **测试覆盖很薄**：46 个测试。41 个纯单元（`npm run test:unit`：时区格式化、
-  AIHOT 字段映射与降级），5 个交互回归（`npm run test:interaction`，需要先起
-  `npm run preview`；服务器不可达时自动 skip 而不是 fail）。其余（`lib/data.ts`
-  的确定性抽样、`lib/pricing.ts`、各页面渲染）仍无测试。
-  CI 已跑 lint / tsc / test / census / assets:check / **build**。
+- **测试**：91 个（2026-10-18）。单元 84 条（`npm run test:unit`：时区格式化、AIHOT
+  字段映射与降级、22 个搜索意图词、收藏存储 v1→v2、筛选 URL 往返），产物断言 19 条
+  （`tests/app-shell.test.mjs`，读 `out/*.html`，含「layout chunk 不得含目录数据」的体积守卫），
+  交互 7 条（`npm run test:interaction`，需先 `npm run preview`）。
+  仍无测试的：`lib/data.ts` 的确定性抽样、`lib/pricing.ts`、`lib/news-links.ts` 的匹配规则。
+  CI 已跑 lint / tsc / test / census / assets:check / **gen:check** / **verdicts:check** / build。
 - `package.json` 的 `name` 是 `tryworld-portal`，与仓库名、Worker 名不一致。
 - eslint 9 仍用 `FlatCompat` 桥接 `next/core-web-vitals`（官方已弃用的接法）。
+- **首屏仍有一半是字体**：实测首页桌面 2104 KB 里 Font 999 KB（47.5%），18 个 woff2
+  分片，全部是 Noto Sans SC 的可变字体 unicode-range 切片。再往下压需要裁分片或
+  按站点实际用字做子集化，属于独立的字体工程，本轮没做。
+- **RSC 预取仍是第二开销**：首屏 669 KB（31.8%）来自视口内链接的 `.txt?_rsc=` 预取
+  （`/tools.txt` 单条 117 KB）。工具卡已关预取，剩下的是侧栏、分类索引、导航这些
+  真正在首屏的链接 —— 关掉会让点击变慢，属于取舍不是 bug。
+- **「怎么选」数据只覆盖 5 个工具**（0.2%）。渲染层对缺失条目整块不渲染，所以没有
+  回归；填充需要人工核对（见 `npm run verdicts:draft`），不能自动生成。
 
 ## 数据可信度
 
