@@ -163,6 +163,27 @@ async function waitHydrated(page, timeoutMs = 60_000) {
   return false;
 }
 
+/**
+ * 把「媒体文件缺失导致的 404」从错误列表里滤掉。
+ *
+ * 为什么需要：`public/assets/{icons,shots,tags,news}`（约 4200 个文件 / 327 MB）
+ * 被 gitignore，**CI 与任何干净检出都没有它们**。缺媒体时页面本身完全正常
+ * （图片路径是烘焙进 HTML 的字符串，浏览器取不到就 404），但每条 404 都会往
+ * 控制台写一条 "Failed to load resource: 404"。
+ *
+ * 2026-10-19 把交互测试接进 CI 时第一次暴露：本机有媒体 → 0 错误；干净检出
+ * → 100+ 条 404，断言 `deepEqual(errors, [])` 直接红。这不是产品缺陷，
+ * 是测试把「环境缺媒体」误判成了「页面有错」。
+ *
+ * 只滤 `Failed to load resource` 且状态 404 的那一类；JS 异常、React 水合
+ * 错误、SVG 属性错误等仍然照常断言 —— 那些才是测试真正要守的东西。
+ */
+function realErrors(errors) {
+  return errors.filter(
+    (e) => !/Failed to load resource.*404|Failed to load resource.*Not Found/i.test(e),
+  );
+}
+
 /** 起一个浏览器上下文，收集 console error / pageerror。 */
 async function openPage(viewport, mobile) {
   const browser = await launchBrowser();
@@ -218,7 +239,7 @@ describe('移动端交互', () => {
       await page.waitForTimeout(800);
       assert.equal(await page.locator("button[aria-label='关闭菜单']").count(), 0, 'Esc 应关掉菜单');
 
-      assert.deepEqual(errors, [], '移动端首页不应有 console 错误');
+      assert.deepEqual(realErrors(errors), [], '移动端首页不应有 console 错误');
     } finally {
       await browser.close();
     }
@@ -444,7 +465,7 @@ describe('桌面端交互', () => {
       await page.waitForTimeout(800);
       assert.equal(await cat.getAttribute('aria-expanded'), 'false', '点外部应关闭面板');
 
-      assert.deepEqual(errors, [], '桌面端首页不应有 console 错误');
+      assert.deepEqual(realErrors(errors), [], '桌面端首页不应有 console 错误');
     } finally {
       await browser.close();
     }
@@ -478,7 +499,7 @@ describe('桌面端交互', () => {
         (await page.locator('body').innerText()).includes('还没有收藏'),
         '没有收藏时应显示空态',
       );
-      assert.deepEqual(errors, [], '/favorites 不应有 console 错误');
+      assert.deepEqual(realErrors(errors), [], '/favorites 不应有 console 错误');
     } finally {
       await browser.close();
     }
@@ -523,7 +544,7 @@ describe('桌面端交互', () => {
         '刷新后分类 chip 应保持选中',
       );
 
-      assert.deepEqual(errors, [], '筛选过程不应有 console 错误');
+      assert.deepEqual(realErrors(errors), [], '筛选过程不应有 console 错误');
     } finally {
       await browser.close();
     }
