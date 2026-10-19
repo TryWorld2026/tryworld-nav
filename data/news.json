@@ -1,5 +1,44 @@
 [
   {
+    "id": "ezjbo6ic6xfvpyxyghjekaude",
+    "title": "n8n 教程：在 NVIDIA DGX Spark 上离线运行全套 AI 工作流",
+    "originalTitle": "Run your n8n AI workflows on NVIDIA DGX Spark, with no cloud API",
+    "summary": "n8n 博客发布教程，讲解如何在一台 NVIDIA DGX Spark（128GB 统一内存）上部署七个本地模型，通过 LiteLLM 单一 OpenAI 兼容端点驱动 n8n 工作流，全程不调用云 API。",
+    "source": "n8n Blog",
+    "originalUrl": "https://blog.n8n.io/n8n-nvidia-dgx-spark/",
+    "aihotUrl": "https://aihot.news/items/ezjbo6ic6xfvpyxyghjekaude",
+    "publishedAt": "2026-10-19T13:22:17.000Z",
+    "category": "tip",
+    "categoryLabel": "教程",
+    "reason": "作者在自有 DGX Spark 上实测整套本地模型栈，给出内存分配、License 筛选和并发性能数据，可迁移到小型团队的私有化部署。"
+  },
+  {
+    "id": "ebl13m9gich6kfjixzvfiw5bq",
+    "title": "Meta 详解 Prometheus 吉瓦级超集群：一期已完成并用于训练 Muse 模型",
+    "originalTitle": "Inside Prometheus: Meta’s Journey to a Gigawatt-Scale Supercluster",
+    "summary": "Meta 介绍其位于俄亥俄州 New Albany 的吉瓦级超集群 Prometheus，一期已建成并用于训练 Muse 系列基础模型，目标扩展到约 100 万张 GPU。",
+    "source": "Meta Engineering Blog（RSS）",
+    "originalUrl": "https://engineering.fb.com/2026/10/19/data-center-engineering/inside-prometheus-meta-gigawatt-scale-supercluster/",
+    "aihotUrl": "https://aihot.news/items/ebl13m9gich6kfjixzvfiw5bq",
+    "publishedAt": "2026-10-19T13:00:10.000Z",
+    "category": "tip",
+    "categoryLabel": "教程",
+    "reason": "Meta 官方拆解其俄亥俄超集群的网络、散热与可靠性工程，读者可了解吉瓦级训练集群的实际运行细节。"
+  },
+  {
+    "id": "szf3v3re4888fzekwoohhu8b4",
+    "title": "AWS 发布 TorchNeuron：Trainium 的原生 PyTorch 后端",
+    "originalTitle": "Introducing TorchNeuron: Native PyTorch backend for AWS Trainium",
+    "summary": "AWS 宣布 TorchNeuron，一个面向 Trainium 芯片的开源原生 PyTorch 后端，10 月 20 日起以 Apache 2.0 协议公开 Beta，代码位于 github.com/aws-neuron/torch-neuronx。",
+    "source": "PyTorch：Blog（RSS）",
+    "originalUrl": "https://pytorch.org/blog/introducing-torchneuron-native-pytorch-backend-for-aws-trainium/",
+    "aihotUrl": "https://aihot.news/items/szf3v3re4888fzekwoohhu8b4",
+    "publishedAt": "2026-10-19T12:45:23.000Z",
+    "category": "ai-products",
+    "categoryLabel": "AI 产品",
+    "reason": "原文给出执行模式、分布式 API 和 100k 模型兼容性测试等细节，开发者可据此评估现有 PyTorch 代码迁移到 Trainium 的改动成本。"
+  },
+  {
     "id": "bm95oliei5mcgy2tau7e22d59",
     "title": "DeepSeek-V4.1-Flash-20261017 登顶 Code Arena: WebDev 开源模型榜首",
     "originalTitle": "Exciting news: DeepSeek-V4.1-Flash-20261017 (Max) by @deepseek_ai is now the #1 open model in Code Arena: WebDev, surpassing Kimi K3 (Max...",
@@ -13,17 +52,17 @@
     "reason": "Arena 榜单给出了具体排名、分数和价格点，读者可以据此评估 DeepSeek 新版模型在 WebDev 编码上的性价比位置。"
   },
   {
-    "id": "c7pt5mbzh5h0atlbprfzbs8o0",
-    "title": "Anthropic 内部研究显示初级技术岗位占比下降，AI Agent 工时达员工六倍",
-    "originalTitle": "Anthropic has nearly stopped hiring junior staff because AI agents now work six times as many hours",
-    "summary": "Anthropic 发布内部研究称，技术部门初级岗位占比从 2025 年初的 21% 降至 14%，新招初级占比从 27% 降至 9%，空缺初级职位降至 6%，非技术部门基本稳定。",
-    "source": "The Decoder：AI News（RSS）",
-    "originalUrl": "https://the-decoder.com/anthropic-has-nearly-stopped-hiring-junior-staff-because-ai-agents-now-work-six-times-as-many-hours/",
-    "aihotUrl": "https://aihot.news/items/c7pt5mbzh5h0atlbprfzbs8o0",
-    "publishedAt": "2026-10-18T13:22:26.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "Anthropic 内部数据显示初级技术岗位占比明显下降而 Agent 工时升至人力六倍，报道还保留了研究自身对数据局限性的说明。"
+    "id": "wrnv8dd428iozlj5xax99zbmj",
+    "title": "MiniMax 发布 M3.1 Flash，推理提速近三倍、用量成本降低 70%",
+    "originalTitle": "MiniMax M3.1 Flash: Redefining Agent Performance and Cost",
+    "summary": "MiniMax 发布 MiniMax M3.1 Flash，匿名模型 Space Bunny 是其早期版本，曾处理超过 200 万亿 token。",
+    "source": "MiniMax：Blog（网页）",
+    "originalUrl": "https://www.minimax.io/blog/minimax-m31f",
+    "aihotUrl": "https://aihot.news/items/wrnv8dd428iozlj5xax99zbmj",
+    "publishedAt": "2026-10-18T16:00:00.000Z",
+    "category": "ai-models",
+    "categoryLabel": "AI 模型",
+    "reason": "官方给出具体基准分数、推理速度和每百万 token 定价，读者可直接对比智能体任务的性价比变化。"
   },
   {
     "id": "bbr25r9mbi8zbbtmu2uiati7f",
@@ -625,16 +664,16 @@
   },
   {
     "id": "x02vc0ewajam37hjrbpwsfnre",
-    "title": "Claude Code 团队如何做代码审查",
+    "title": "Claude Code 团队如何做代码审查：六层检查与风险分级审批",
     "originalTitle": "How the Claude Code team does code review",
-    "summary": "Anthropic 团队介绍 Claude Code 的代码审查流程，机器承担大部分阅读，人类注意力集中在高风险决策。6 月至 9 月合并 PR 翻倍以上，回退率下降超过 40%；monorepo 每日变更量从 5 月约 2,500 增至 9 月超过 30,000。",
+    "summary": "Anthropic Claude Code 团队详解在 Claude 写约 90% 代码的情况下如何组织代码审查：审查从终点关卡变为持续进行，每个 PR 经过验证、必需 CI、AI 审查、安全审查、按风险分级的人工审批和合并队列六层检查，再辅以快速回滚。",
     "source": "Anthropic：Claude.dev 开发者博客（RSS）",
     "originalUrl": "https://claude.dev/blog/solving-code-review-at-anthropic/",
     "aihotUrl": "https://aihot.news/items/x02vc0ewajam37hjrbpwsfnre",
     "publishedAt": "2026-10-15T12:00:00.000Z",
     "category": "tip",
     "categoryLabel": "教程",
-    "reason": "Claude Code 团队亲述自家六层代码审查流程与衡量指标，读者可对照调整自己团队的 AI 审查与人工介入方式。"
+    "reason": "Anthropic 自家团队复盘 Claude 代码审查流程，给出分层检查、风险分级审批等可直接迁移的落地做法和真实收敛数据。"
   },
   {
     "id": "pd501xipe38ooxo1t7jn7hphn",
@@ -1051,6 +1090,19 @@
     "category": "ai-products",
     "categoryLabel": "AI 产品",
     "reason": "官方详细介绍 Verifiers 的机制、配置与接入方式，读者可据此把它当作 lint 或测试之外的确定性检查接入现有工作流。"
+  },
+  {
+    "id": "wf6iajzunoqkfmxl7n6fdgeqe",
+    "title": "蚂蚁百灵开源 Ling-3.1-flash：总参数约 560B、每 Token 激活约 25B，支持 1M 上下文",
+    "originalTitle": "Ling-3.1-flash 正式开源：让真实业务需求更快变成可用成果",
+    "summary": "蚂蚁百灵正式开源 Ling-3.1-flash，权重可在 Hugging Face 和 ModelScope 获取。模型总参数约 560B、每 Token 激活约 25B、最高支持 1M 上下文；经 MXFP4 与 block-FP8 量化后权重占用从约 534GB 降至 292GB，Hopper GPU 测试中服务部署由 8 卡降至 4 卡。",
+    "source": "蚂蚁百灵：Developer Blog（网页）",
+    "originalUrl": "https://developer.ant-ling.com/zh-CN/blogs/ling-3.1-flash-open-source",
+    "aihotUrl": "https://aihot.news/items/wf6iajzunoqkfmxl7n6fdgeqe",
+    "publishedAt": "2026-10-14T16:00:00.000Z",
+    "category": "ai-models",
+    "categoryLabel": "AI 模型",
+    "reason": "官方开源公告给出权重入口、Artificial Analysis 与 Design Arena 评测数据和 4 卡部署实测，便于评估自部署可行性。"
   },
   {
     "id": "pqpqgxyiu4qyu86fbljd726v9",
@@ -1508,45 +1560,6 @@
     "reason": "收购方官方公告给出交易目的与产品整合方向，并附 Moondream 3.1 的推理速度和成本对比数字，可作了解两家技术互补的参考。"
   },
   {
-    "id": "zqlqer8tnl7ejg2ow3xoq7b9q",
-    "title": "微软发布自研芯片 Maia 300 并将大规模扩展 Maia 推理部署",
-    "originalTitle": "Today we are announcing our biggest bet yet on our own silicon.",
-    "summary": "微软宣布明年起将 Maia 芯片家族扩展到多吉瓦级部署，作为自家产品和服务的首选推理系统，并发布 Maia 300，每瓦 token 产出比主流 GPU 系统高 40%。Maia 200 已在美国、欧洲和澳大利亚部署，在 Teams 和 Copilot 场景中每瓦 token 产出提升最高 1.7x。",
-    "source": "X：Satya Nadella (@satyanadella)",
-    "originalUrl": "https://x.com/satyanadella/status/2109631106404487523",
-    "aihotUrl": "https://aihot.news/items/zqlqer8tnl7ejg2ow3xoq7b9q",
-    "publishedAt": "2026-10-12T13:03:45.000Z",
-    "category": "ai-products",
-    "categoryLabel": "AI 产品",
-    "reason": "作者本人官宣自研芯片路线，给出了 Maia 300 与 Maia 200 的能效数字和部署范围，可对比主流 GPU 方案的取舍。"
-  },
-  {
-    "id": "wzxf68r0rchangmvwm48qqhfk",
-    "title": "AlphaProof Nexus 攻克 9 个未解 Erdős 问题并经同行评审",
-    "originalTitle": "Google Deepmind's AlphaProof Nexus solved dozens of open math problems and actually got peer reviewed",
-    "summary": "Science 新研究显示，Google DeepMind 的 AlphaProof Nexus 独立解决了 353 个开放 Erdős 问题中的 9 个，其中 2 个悬置 56 年。",
-    "source": "The Decoder：AI News（RSS）",
-    "originalUrl": "https://the-decoder.com/google-deepminds-alphaproof-nexus-solved-dozens-of-open-math-problems-and-actually-got-peer-reviewed/",
-    "aihotUrl": "https://aihot.news/items/wzxf68r0rchangmvwm48qqhfk",
-    "publishedAt": "2026-10-12T09:35:54.000Z",
-    "category": "paper",
-    "categoryLabel": "论文",
-    "reason": "这条报道把系统架构和同行评审安排都讲清了，读者可以据此理解形式化证明工作流的可行性与验证方式。"
-  },
-  {
-    "id": "svvvhr5j2nnywgdw29pso7o49",
-    "title": "用 Claude Opus 5.5、Blender、Unreal Engine 和 Meshy 构建游戏的七步教程",
-    "originalTitle": "How to build a game with Claude Opus 5.5 + Blender + Unreal Engine + Meshy 🎮",
-    "summary": "一篇教程介绍用 Claude Opus 5.5 配合 Claude Code、Blender、Unreal Engine 5 和 Meshy 构建游戏的方法。核心思路是给每个工具分配单一职责：通过 MCP 连接 Blender 和 Meshy，由 Meshy 生成道具和角色、Blender 清理和放置、Unreal 负责光照物理和游戏本身、Opus 在一个对话里调度三者。流程为先让 Opus 头脑风暴 5 个游戏点子再展开，告知 GPU 以便压满画面性能，首个完整构建约花 4 小时和约 19% 的每周 Max plan 用量，之后因素材复用会快很多。",
-    "source": "X：Meshy (@MeshyAI)",
-    "originalUrl": "https://x.com/MeshyAI/status/2109550836934471864",
-    "aihotUrl": "https://aihot.news/items/svvvhr5j2nnywgdw29pso7o49",
-    "publishedAt": "2026-10-12T07:44:47.000Z",
-    "category": "tip",
-    "categoryLabel": "教程",
-    "reason": "原文给出七步工具分工流程和实际耗时与费用，读者可以直接照搬搭建游戏的工作流。"
-  },
-  {
     "id": "uy4hvoyz7fwtyycpu0p62dudn",
     "title": "xAI 推出 The X Subscription 整合 Grok、Grok Bot、Cursor 与 X Premium",
     "originalTitle": "Product·Oct 12, 2026 Introducing The X Subscription",
@@ -1610,18 +1623,5 @@
     "category": "ai-models",
     "categoryLabel": "AI 模型",
     "reason": "Artificial Analysis 独立实测了两款新模型的智能指数、token 用量和成本，读者可据此对比它们在同类模型中的位置。"
-  },
-  {
-    "id": "twhuaks920iaqd2y7frq8bgbw",
-    "title": "如何只用自己拥有的文件约束编码智能体",
-    "originalTitle": "How to constrain a coding agent using only files you own",
-    "summary": "Tessl 博客文章介绍用四个可拥有的文件杠杆约束编码智能体：CLAUDE.md 指令、.claude/rules/ 路径级规则、.claude/ 下的能力配置和 .claude/hooks/ 钩子。",
-    "source": "Tessl：产品与工程博客",
-    "originalUrl": "https://tessl.io/blog/how-to-constrain-a-coding-agent-using-only-files-you-own",
-    "aihotUrl": "https://aihot.news/items/twhuaks920iaqd2y7frq8bgbw",
-    "publishedAt": "2026-10-11T16:00:00.000Z",
-    "category": "tip",
-    "categoryLabel": "教程",
-    "reason": "作者用同一工单三次实测对比 charter 各文件杠杆的效果，方法可迁移到自己的仓库，并指出机器可查与需人审的边界。"
   }
 ]
