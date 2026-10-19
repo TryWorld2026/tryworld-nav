@@ -39,10 +39,23 @@ const BUDGET_KB = 70;
 const tools = JSON.parse(readFileSync(join(ROOT, 'data', 'tools.json'), 'utf8'));
 const extras = JSON.parse(readFileSync(join(ROOT, 'data', 'tool-extras.json'), 'utf8'));
 
-/** 从 TS 模块里取词表：它就是纯常量数组，用正则抽字符串字面量足够稳。 */
+/**
+ * 从 TS 模块里取词表：它就是纯常量数组，用正则抽字符串字面量足够稳。
+ *
+ * 锚点必须精确到**声明本身**（`export const LEXICON: string[] = [`），不能只
+ * 搜 `export const LEXICON`：`INTENTS` 的文档注释里也写着 "`LEXICON`" 这个词，
+ * 于是 slice 会从注释开始，把整个 `INTENTS` 数组的键与别名（`画图`、`做播客`、
+ * `电子邮件`…）一并当成词表成分 —— 这些词文档频次都不到 MAX_DF=300，会被
+ * 判为"有区分度"，挤进每个工具的关键词列表，索引因此超预算。
+ *
+ * 2026-10-19 复现：加了几条口语意图后索引从 69.8 KB 涨到 71.2 KB 并触发
+ * generate 脚本的 70 KB 硬预算 exit 1，根因就是这里抽错了区间。
+ */
 function loadLexicon() {
   const src = readFileSync(join(ROOT, 'src', 'lib', 'search.ts'), 'utf8');
-  const block = src.slice(src.indexOf('export const LEXICON'));
+  const decl = src.search(/export const LEXICON\s*:\s*string\[\]\s*=/);
+  if (decl < 0) throw new Error('找不到 `export const LEXICON: string[] =` 声明');
+  const block = src.slice(decl);
   const body = block.slice(block.indexOf('['), block.indexOf('];') + 1);
   const words = [...body.matchAll(/'([^']+)'/g)].map((m) => m[1]);
   if (words.length < 20) throw new Error(`词表解析异常，只抽到 ${words.length} 个词`);

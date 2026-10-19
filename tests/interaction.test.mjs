@@ -30,6 +30,26 @@ const MOBILE_UA =
   'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 ' +
   '(KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1';
 
+/**
+ * 页眉汉堡按钮的选择器：**新旧两套 aria-label 都认**。
+ *
+ * 2026-10-19 页眉改版把 `aria-label="Toggle mobile menu"` 换成了中文
+ * `aria-label="打开导航菜单"`（对屏幕阅读器更友好）。测试里写死的英文标签
+ * 于是全部命中不到，4 条移动端用例以 30s 超时失败 —— 报错是"找不到按钮"，
+ * 看起来像"菜单坏了"，实际只是选择器过期。
+ *
+ * 用逗号并集同时接受两套：后续再改文案不会连带打挂交互回归；如果真把汉堡
+ * 入口删了，两边都命中不到，测试仍然会红。
+ */
+const MENU_BUTTON =
+  "button[aria-label='打开导航菜单'], button[aria-label='Toggle mobile menu']";
+
+/** 命令面板的触发按钮，同理（`Search` → `搜索AI工具`）。 */
+const SEARCH_BUTTON = "button[aria-label='搜索AI工具'], button[aria-label='Search']";
+
+/** 「页面已水合」的判定锚点：页眉里任意一个可交互按钮（汉堡或搜索）。 */
+const HYDRATION_ANCHOR = `${MENU_BUTTON}, ${SEARCH_BUTTON}`;
+
 let chromium = null;
 let serverUp = false;
 let skipReason = null;
@@ -132,11 +152,11 @@ async function waitHydrated(page, timeoutMs = 60_000) {
   }
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
-    const ok = await page.evaluate(() => {
-      const el = document.querySelector("button[aria-label='Toggle mobile menu'], button[aria-label='Search']");
+    const ok = await page.evaluate((sel) => {
+      const el = document.querySelector(sel);
       if (!el) return false;
       return Object.keys(el).some((k) => k.startsWith('__react'));
-    });
+    }, HYDRATION_ANCHOR);
     if (ok) return true;
     await page.waitForTimeout(300);
   }
@@ -171,7 +191,7 @@ describe('移动端交互', () => {
       await page.waitForTimeout(2000);
 
       // 打开
-      await page.locator("button[aria-label='Toggle mobile menu']").first().click();
+      await page.locator(MENU_BUTTON).first().click();
       await page.waitForTimeout(1200);
 
       const panel = page.locator("button[aria-label='关闭菜单']");
@@ -192,7 +212,7 @@ describe('移动端交互', () => {
       assert.equal(await page.locator("button[aria-label='关闭菜单']").count(), 0, '关闭按钮应关掉菜单');
 
       // Esc
-      await page.locator("button[aria-label='Toggle mobile menu']").first().click();
+      await page.locator(MENU_BUTTON).first().click();
       await page.waitForTimeout(800);
       await page.keyboard.press('Escape');
       await page.waitForTimeout(800);
@@ -211,7 +231,7 @@ describe('移动端交互', () => {
       await page.goto(BASE + '/', { waitUntil: 'domcontentloaded' });
       await waitHydrated(page);
       await page.waitForTimeout(2000);
-      await page.locator("button[aria-label='Toggle mobile menu']").first().click();
+      await page.locator(MENU_BUTTON).first().click();
       await page.waitForTimeout(800);
 
       // 限定在抽屉内：桌面侧栏在移动端是 `hidden lg:block`，而它现在也有
@@ -301,6 +321,58 @@ describe('移动端交互', () => {
       } finally {
         await browser.close();
       }
+    }
+  });
+
+  /**
+   * 跨天访问不得触发水合错误（2026-10-19 修复的线上缺陷）。
+   *
+   * 缺陷原样：`/news` 的分组标题用 `dayBucketLabel(key)`，默认参数是
+   * `new Date()`。服务端预渲染在**构建那天**算出「今天 / 昨天 / 2 天前」并写进
+   * HTML，客户端水合在**访问那天**再算一遍 —— 只要跨过北京时间午夜，两者就
+   * 不同，React 报 #418（文本不匹配）并丢弃整棵服务端 DOM 重渲染。
+   *
+   * 为什么这条测试必须**拨时钟**：构建当天标签恰好一致，所以"部署后立刻复验
+   * pageerror=0"永远测不出来 —— 这个 bug 就是这样藏到线上、并且每天更明显
+   * （访问日比构建日晚 N 天，标签整体错 N 天）。把浏览器时钟往后拨 26 小时，
+   * 模拟"部署后第二天"，才能稳定复现。
+   *
+   * 断言两条：① 不该有 #418；② 分组标签必须跟着**访问时刻**走（拨到 +26h 后
+   * 仍显示「今天 / 昨天」这种相对说法，而不是构建那天的旧标签）。
+   */
+  test('跨天访问 /news 不触发水合错误（时钟 +26h）', async (t) => {
+    if (!ready(t)) return;
+    const { browser, page, errors } = await openPage({ width: 1440, height: 900 }, false);
+    try {
+      // Playwright 的时钟控制在页面脚本执行前生效。
+      const target = new Date(Date.now() + 26 * 60 * 60 * 1000);
+      await page.clock.install({ time: target });
+
+      await page.goto(BASE + '/news', { waitUntil: 'domcontentloaded' });
+      // 水合需要时间；固定等一段，避免 networkidle 在慢机器上永久挂住。
+      await page.waitForTimeout(4000);
+
+      const hydrationErrors = errors.filter(
+        (e) => /#418|#423|hydrat|did not match|Text content does not match/i.test(e),
+      );
+      assert.deepEqual(
+        hydrationErrors,
+        [],
+        `跨天访问不应有水合错误，实际：${hydrationErrors.join(' | ')}`,
+      );
+
+      // 分组标题必须在拨过的时钟下给出相对说法，且第一条不可能是「今天」
+      // 之前构建日的数据 —— 这里只断言标签形态，避免依赖具体抓取日期。
+      const labels = await page.$$eval('section h2', (els) =>
+        els.map((e) => e.textContent.trim()).filter(Boolean).slice(0, 3),
+      );
+      assert.ok(labels.length > 0, '应至少有一个日期分组标题');
+      assert.ok(
+        labels.every((l) => /今天|昨天|天前|更早|时间未知/.test(l)),
+        `分组标题应是相对标签，实际：${labels.join(' / ')}`,
+      );
+    } finally {
+      await browser.close();
     }
   });
 });

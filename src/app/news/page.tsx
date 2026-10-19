@@ -7,13 +7,17 @@ import { newsItems } from '@/lib/data';
 import { newsToolLinks } from '@/lib/news-links';
 import { formatDateShort } from '@/lib/news';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical('/news'),
   title: 'AI 资讯',
   description:
     'AI 行业资讯聚合：AIHOT 精选的模型发布、产品更新、行业动态、论文与观点。可按分类、来源、时间筛选，也可切换 AI 日报、周报、月报与热点榜。',
-};
+  },
+  '/news',
+);
 
 /**
  * /news —— 资讯频道首页（资讯流）。
@@ -39,6 +43,16 @@ export default function NewsIndexPage() {
     .filter(Boolean)
     .sort()
     .pop();
+
+  /**
+   * 传给客户端组件的「现在」= 构建时刻。
+   *
+   * 这个值会被烘焙进 HTML，服务端渲染与客户端首次水合都读到它，所以两边的
+   * 相对标签必然一致。若让客户端自己 `new Date()`，跨过午夜后服务端写的
+   * 「今天」与客户端算出的「昨天」不符，React 报 #418 并丢弃整棵 DOM。
+   * `NewsFeed` 挂载后会把它升级成真实当前时间。
+   */
+  const buildTime = new Date().toISOString();
 
   return (
     <div className="pb-16">
@@ -71,7 +85,7 @@ export default function NewsIndexPage() {
             暂时没有资讯。数据由构建前的 <code>scripts/fetch-aihot.mjs</code> 抓取。
           </p>
         ) : (
-          <NewsFeed items={newsItems} toolLinks={newsToolLinks(newsItems)} />
+          <NewsFeed items={newsItems} toolLinks={newsToolLinks(newsItems)} buildTime={buildTime} />
         )}
       </div>
     </div>

@@ -88,6 +88,7 @@ function useUrlState() {
 export function NewsFeed({
   items,
   toolLinks = {},
+  buildTime,
 }: {
   items: NewsItem[];
   /**
@@ -96,6 +97,17 @@ export function NewsFeed({
    * 由 `lib/news-links.ts` 在 server component 里算一次。
    */
   toolLinks?: Record<string, string[]>;
+  /**
+   * 构建时刻的 ISO 字符串 —— 服务端渲染与客户端**首次水合**共用的「现在」。
+   *
+   * 为什么必须由外面传进来：`dayBucketLabel` / `inRange` 的默认参数是
+   * `new Date()`，服务端求值一次、客户端水合再求值一次。跨过北京时间午夜后
+   * 两者给出的分组标签不同（服务端写死「今天」，客户端算出「昨天」），
+   * React 于是报 #418 并丢弃整棵服务端 DOM 重渲染 —— 部署后第 2 天起每次
+   * 访问都会触发。所以第一次渲染固定用构建时刻（服务端与客户端一致），
+   * 挂载完成后再升级成真实当前时间。
+   */
+  buildTime: string;
 }) {
   const initial = useUrlState();
   const [query, setQuery] = useState('');
@@ -108,6 +120,25 @@ export function NewsFeed({
   const searchRef = useRef<HTMLInputElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * 渲染用的「现在」。
+   *
+   * 首帧**必须**等于构建时刻，否则服务端 HTML 与客户端水合结果不一致：
+   * 服务端在构建那天算出「今天」，客户端在访问那天算成「昨天」，React 报
+   * #418 并整棵丢弃重渲染（部署后第 2 天起每次访问 `/news` 都会发生）。
+   *
+   * 挂载后立刻升级成真实当前时间：相对标签与「今天/近 3 天」这类范围筛选
+   * 才对访客的**当下**有意义，而不是对构建那天有意义。
+   *
+   * 用 string 存而不是 Date：Date 对象每次都是新引用，会让下游 useMemo
+   * 失效；ISO 字符串按值比较，稳定。
+   */
+  const [nowIso, setNowIso] = useState(buildTime);
+  useEffect(() => {
+    setNowIso(new Date().toISOString());
+  }, []);
+  const now = useMemo(() => new Date(nowIso), [nowIso]);
 
   /**
    * 组头的 sticky 位置必须贴着筛选条的**下沿**，而筛选条高度不是常数：
@@ -179,7 +210,7 @@ export function NewsFeed({
   const months = useMemo(() => monthList(items), [items]);
 
   const filtered = useMemo(() => {
-    let list = items.filter((it) => inRange(it, range));
+    let list = items.filter((it) => inRange(it, range, now));
     if (cats.length) {
       const set = new Set(cats);
       list = list.filter((it) => (it.category ?? '__none__') && set.has(it.category ?? '__none__'));
@@ -188,9 +219,9 @@ export function NewsFeed({
     if (query.trim()) list = searchNews(list, query);
     // 搜索时按相关度（`searchNews` 已排好），否则保持传进来的时间倒序。
     return list;
-  }, [items, range, cats, source, query]);
+  }, [items, range, cats, source, query, now]);
 
-  const groups = useMemo(() => groupByDay(filtered), [filtered]);
+  const groups = useMemo(() => groupByDay(filtered, now), [filtered, now]);
   const hasFilter = Boolean(query.trim() || cats.length || range !== 'all' || source);
 
   /**
@@ -280,7 +311,7 @@ export function NewsFeed({
                     aria-label="清空搜索"
                     className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
                   >
-                    <X className="h-3.5 w-3.5" />
+                    <X className="h-3.5 w-3.5" aria-hidden="true" />
                   </button>
                 )}
                 <kbd className="hidden rounded border border-foreground/10 bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:block">
@@ -482,7 +513,7 @@ export function NewsFeed({
                   }}
                 >
                   <h2 className="text-sm font-bold text-foreground">
-                    {dayBucketLabel(g.key)}
+                    {g.label}
                   </h2>
                   <span className="text-xs text-muted-foreground">
                     {formatDateShort(g.items[0]?.publishedAt)}

@@ -15,6 +15,7 @@
     "gen:thumbs": "node scripts/gen-thumbs.mjs",
     "gen:pwa-icons": "node scripts/gen-pwa-icons.mjs",
     "verdicts:check": "node scripts/check-verdicts.mjs",
+    "extras:check": "node scripts/check-extras.mjs",
     "verdicts:draft": "node scripts/draft-verdicts.mjs --limit 200",
     "assets:check": "node scripts/sync-assets.mjs --check",
     "assets:push": "node scripts/sync-assets.mjs",
@@ -28,8 +29,8 @@
     "news:fetch": "node scripts/fetch-aihot.mjs",
     "news:refresh": "node scripts/fetch-aihot.mjs --force",
     "llms:full": "node scripts/generate-llms-full.mjs",
-    "test": "node --test \"tests/*.test.mjs\"",
-    "test:unit": "node --test \"tests/news.test.mjs\" \"tests/fetch-aihot.test.mjs\" \"tests/search.test.mjs\" \"tests/favorites.test.mjs\" \"tests/filter-url.test.mjs\"",
+    "test": "node --test --test-concurrency=1 \"tests/*.test.mjs\"",
+    "test:unit": "node --test \"tests/news.test.mjs\" \"tests/news-period.test.mjs\" \"tests/fetch-aihot.test.mjs\" \"tests/search.test.mjs\" \"tests/favorites.test.mjs\" \"tests/filter-url.test.mjs\"",
     "test:interaction": "node --test \"tests/interaction.test.mjs\"",
     "news:daily": "node scripts/fetch-aihot-daily.mjs",
     "news:daily:refresh": "node scripts/fetch-aihot-daily.mjs --force"

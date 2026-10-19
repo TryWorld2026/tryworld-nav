@@ -62,6 +62,24 @@ export function formatDateShort(iso: string | null | undefined): string {
  * 超过 7 天返回空串——资讯卡片不需要「上个月」这种冗余，绝对日期已经给了。
  */
 export function relativeLabel(iso: string | null | undefined, now: Date = new Date()): string {
+  return relativeLabelAt(iso, now);
+}
+
+/**
+ * `relativeLabel` 的显式「现在」版本。
+ *
+ * 为什么要拆出这一层：默认参数 `new Date()` 在**服务端预渲染**与**客户端水合**
+ * 时各求值一次，跨过午夜就会给出不同的字符串，于是 React 报 #418（文本不匹配）
+ * 并丢弃整棵服务端 DOM 重渲染 —— 部署后第 2 天起每次访问 `/news` 都会触发。
+ *
+ * 纯函数本身没错，错的是「谁是 now」由调用时机决定。所以客户端组件一律走这个
+ * 显式版本，由 `NewsFeed` 传入一个**服务端与首次水合都相同**的时间（构建时刻），
+ * 挂载后再升级成真实的当前时间。
+ */
+export function relativeLabelAt(
+  iso: string | null | undefined,
+  now: Date,
+): string {
   const d = parse(iso);
   if (!d) return '';
   const a = shanghaiParts(d);
@@ -210,7 +228,7 @@ export type NewsDayGroup = {
  * `publishedAt` 倒序）；这里只分组不重排，所以「谁在最上面」由上游决定，
  * 纯函数不会悄悄改变顺序。
  */
-export function groupByDay(items: NewsItem[]): NewsDayGroup[] {
+export function groupByDay(items: NewsItem[], now: Date): NewsDayGroup[] {
   const buckets = new Map<string, NewsItem[]>();
   for (const item of items) {
     const key = dayKey(item.publishedAt);
@@ -222,7 +240,7 @@ export function groupByDay(items: NewsItem[]): NewsDayGroup[] {
     .sort((a, b) => (a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0))
     .map(([key, list]) => ({
       key,
-      label: dayBucketLabel(key),
+      label: dayBucketLabel(key, now),
       weekday: weekdayOf(key),
       items: list,
     }));

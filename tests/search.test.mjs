@@ -55,6 +55,25 @@ test('22 个真实意图词全部至少命中 1 条', () => {
   assert.deepEqual(misses, [], `这些意图词仍然 0 命中：${misses.join('、')}`);
 });
 
+/**
+ * 2026-10-19 对抗式审查发现的零命中词。
+ *
+ * 为什么单独列一张表：它们是同一类缺陷的不同形态 —— 用户用「动词+名词」的
+ * 自然说法搜索，而 `INTENTS` 只做**整串**匹配、索引关键词里只有名词本身。
+ * 「剪视频」整串不是任何意图键，「画图」在索引里一个字都没有，于是都 0 结果，
+ * 而站内分别有 152 个剪辑类、12 个绘画类工具。
+ */
+const COLLOQUIAL_QUERIES = ['剪视频', '做表格', '画图', '写小说', '做播客', '写邮件', '爬虫'];
+
+test('口语化的「动词+名词」说法也必须命中（2026-10-19 审查发现）', () => {
+  const misses = [];
+  for (const q of COLLOQUIAL_QUERIES) {
+    const hits = searchIndex(INDEX, q, 30);
+    if (hits.length === 0) misses.push(q);
+  }
+  assert.deepEqual(misses, [], `这些口语说法仍然 0 命中：${misses.join('、')}`);
+});
+
 test('意图词的前 3 条里至少有一条名称/简介/关键词真正相关', () => {
   // 「视频」→ 工具名前 3 应该都是视频类，而不是随便什么
   const hits = searchIndex(INDEX, '视频', 3);

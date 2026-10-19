@@ -16,7 +16,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
-import { readFileSync, writeFileSync, copyFileSync, existsSync, unlinkSync } from 'node:fs';
+import { readFileSync, writeFileSync, copyFileSync, existsSync, unlinkSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -58,6 +58,12 @@ function runFetch(port, extraArgs = []) {
 }
 
 function backup() {
+  // `work/` 在本仓库里被 gitignore（.gitignore:63），所以**干净检出上它不存在**。
+  // 原先这里直接 copyFileSync 到 work/test-news.bak，CI 于是 ENOENT：
+  // `npm test` exit 1 → ci.yml 后面的 Lint / Typecheck / Build 全被跳过。
+  // 2026-10-16 至 10-18 的 9 次 CI 全红都是这一行造成的，而表面上看起来
+  // 像是"抓取测试失败"。目录要先建出来。
+  mkdirSync(join(ROOT, 'work'), { recursive: true });
   if (existsSync(NEWS)) copyFileSync(NEWS, NEWS_BAK);
   if (existsSync(META)) copyFileSync(META, META_BAK);
 }

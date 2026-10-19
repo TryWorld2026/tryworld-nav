@@ -102,17 +102,30 @@ jobs:
         # 内容是否准确只能靠人工，但格式能自动守。
         run: npm run verdicts:check
 
+      - name: Verify raw HTML in tool-extras can be injected safely
+        # `tool-details.tsx` 的 prose 与 `tool-info-panel.tsx` 的 logo/icon 都经
+        # `dangerouslySetInnerHTML` 注入，它们的安全性**是数据的属性，不是代码
+        # 的属性** —— 组件注释里明说。在此之前唯一的保证是"收割时人工扫过、
+        # 0 命中"，而 2026-10-19 的对抗式审查证明了这道保证会漏：
+        # 449 个工具的 <svg> 里带着 `<path d="$58">`（收割截断），浏览器每次
+        # 渲染报错、图标空白，435 个详情页受影响，没有任何检查拦过它。
+        # 这一步把"数据干净"从注释里的断言变成每次 CI 都执行的检查。
+        run: npm run extras:check
+
       - name: Test
         # Node 内置测试运行器，无额外依赖。覆盖两处最容易悄悄出错的地方：
         # src/lib/news.ts 的时区格式化（退回切字符串会让日期差一天，而页面上看不出来）
         # 与 scripts/fetch-aihot.mjs 的字段映射/降级（上游改字段名会静默丢署名或产生死链）。
         # 抓取测试用本地假 API，不联网。
-        # 另有搜索意图词、收藏存储、筛选 URL 三组纯函数用例（用 Node 原生解析 .ts）。
+        # 另有搜索意图词（含口语说法）、收藏存储、筛选 URL 三组纯函数用例。
+        #
+        # 这一条**必须在 build 之前**也没问题：它跑的是 tests/*.test.mjs 全量，
+        # 其中 app-shell 与 interaction 两组在 `out/` 不存在或没有服务器时自己
+        # skip —— 它们会在下面单独的步骤里、于 build 之后真的执行。
         run: npm test
 
       - name: Lint
         run: npm run lint
-
       - name: Typecheck
         run: npx tsc --noEmit
 
@@ -124,3 +137,28 @@ jobs:
         # 这一步在**没有媒体**的检出上跑（CI 就是这样），产物只用于验证、不部署 ——
         # 见文件顶部的说明。跑一次约 5 分钟，比"推到线上才发现构建挂了"便宜得多。
         run: npm run build
+
+      # ⚠️ 顺序很重要：产物断言（app-shell）与交互回归（interaction）都读 `out/`，
+      # 而 2026-10-19 之前它们排在 Build **之前** —— 干净检出上 `out/` 不存在，
+      # 于是 19 条产物断言 + 7 条交互断言在 CI 里 **100% skip**。其中"客户端
+      # layout chunk 不得含目录数据"守的是每页 182 KB 的回归，等于从来没在 CI 跑过。
+      # 现在 build 先行，这些断言才真的执行。
+      - name: Product assertions (reads out/)
+        run: node --test tests/app-shell.test.mjs
+
+      - name: Interaction regression (needs a server)
+        # 交互测试在没有服务器时会自动 skip（本地开发友好），但 CI 里必须真的跑：
+        # 它覆盖移动端汉堡菜单、404 出口、筛选写 URL 后退、收藏链路，以及
+        # 2026-10-19 修的「跨天访问 /news 水合失败」（拨时钟 +26h 复现）。
+        run: |
+          npx serve out -l 3100 &
+          SERVER_PID=$!
+          # 等端口真的能连上，最多 30 秒
+          for i in $(seq 1 30); do
+            if curl -sf -o /dev/null http://localhost:3100/; then break; fi
+            sleep 1
+          done
+          npm run test:interaction
+          STATUS=$?
+          kill $SERVER_PID 2>/dev/null || true
+          exit $STATUS

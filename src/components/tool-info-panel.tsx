@@ -35,6 +35,33 @@ import type { ToolInfoRow, ToolPlatform } from '@/lib/types';
 const PLATFORM_DOT = '#00AF79';
 
 /**
+ * 抓取来的 `<svg>` 里有没有**损坏的 path**。
+ *
+ * 2026-10-19 实测：`data/tool-extras.json` 有 449 个工具的 logo/icon 带着
+ * `<path d="$58">` / `$59` / `$57` —— 收割时 SVG 的路径数据被截断成了一个
+ * 变量引用（原站那个 CDN 早已不服务，抓到的就是残缺 markup）。这些字符串被
+ * 原样注入后，浏览器每次渲染都报一条
+ *
+ *   Error: <path> attribute d: Expected moveto path command ('M' or 'm'), "$58".
+ *
+ * 并且那个图标位置是**空白**的 —— 全站 435 个详情页受影响，占 21%。
+ *
+ * 为什么在渲染层修而不是改数据：`tool-extras.json` 是抓取产物，手改下次
+ * 抓取就丢。所以这里把明显残缺的整段 markup 丢掉，让调用方回退成纯文本
+ * （见 `isRenderableSvg`），空白图标位置至少不再产生控制台报错。
+ *
+ * 判据刻意只认最确定的两种残缺：`d` 属性以 `$` 开头、或 `viewBox` 缺失。
+ * 不做通用 SVG 校验 —— 这里的目标是"别把坏数据画出来"，不是当 HTML 消毒器。
+ */
+function isRenderableSvg(markup: string | undefined): markup is string {
+  if (!markup) return false;
+  if (!/^\s*<svg[\s>]/i.test(markup)) return false;
+  // `d="$58"` —— 抓取截断的典型形态。
+  if (/\sd\s*=\s*["']\s*\$/.test(markup)) return false;
+  return true;
+}
+
+/**
  * The origin's dual-circle dot: a filled circle at r=3.81519 over a 20%-opacity
  * halo at r=7, inside a 14×15 box. The slight y-offset (7 vs 7.07495) and the
  * non-square box are the origin's own numbers and are kept so the two dots line
@@ -93,7 +120,9 @@ export function ToolInfoPanel({
                     whose prose or extras carry a script/style/iframe/object/embed
                     element, an `on*` attribute or a `javascript:` URL (0 of 2081
                     did), and these two fields are the only remaining raw HTML. */}
-                {row.logo && <span dangerouslySetInnerHTML={{ __html: row.logo }} />}
+                {isRenderableSvg(row.logo) && (
+                  <span dangerouslySetInnerHTML={{ __html: row.logo }} />
+                )}
                 <ArrowUpRight className="inline h-4 w-4" aria-hidden="true" />
               </a>
             </div>
@@ -121,7 +150,9 @@ export function ToolInfoPanel({
               className="flex items-center gap-1 rounded-md bg-foreground/5 px-2 py-1 text-sm"
               key={p.name}
             >
-              <span dangerouslySetInnerHTML={{ __html: p.icon }} />
+              {isRenderableSvg(p.icon) && (
+                <span dangerouslySetInnerHTML={{ __html: p.icon }} />
+              )}
               <span>{p.name}</span>
             </div>
           ))}
