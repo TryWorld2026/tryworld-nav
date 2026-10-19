@@ -58,7 +58,14 @@ const MEDIA = ['assets/icons', 'assets/shots', 'assets/tags', 'assets/news'];
 // Hand-written text files that live in `out/` by design. A `**/*.txt` glob
 // catches them by accident, and they are indistinguishable from RSC payloads
 // by extension alone.
-const KEEP_TXT = ['llms.txt', 'llms-full.txt'];
+//
+// `robots.txt` 必须在列：它是 `src/app/robots.txt/route.ts` 产出的路由文件，
+// 扩展名同样是 `.txt`。2026-10-19 第一次真跑 `--lean` 时它被当成 RSC 载荷
+// 删掉了 —— 线上 robots.txt 会直接 404，而 sitemap 声明、爬虫策略、
+// `LLM-Content` 两个非标准指令全在那份文件里，等于把整站对搜索引擎的说明
+// 一起删掉。这个错误在 dry-run 里看不出来（只打印"删了 2337 个"），所以
+// 白名单必须显式覆盖**所有**手写的 `.txt`。
+const KEEP_TXT = ['llms.txt', 'llms-full.txt', 'robots.txt'];
 const isKept = (p) => KEEP_TXT.includes(basename(p));
 
 function dirSize(dir) {

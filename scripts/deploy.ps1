@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
   可靠地部署 tryworld-nav 到 Cloudflare Workers。
 
@@ -95,10 +95,36 @@ if (-not $bid) {
   Write-Warn2 '检查 next.config.mjs 的 contentBuildId() 是否混入了每次都变的输入'
 }
 
-# --- 3. prune（只报数，默认保留媒体） ---
-Write-Step 'prune（默认保留媒体）'
-node scripts/prune-out.mjs
+# --- 3. prune（保留媒体，裁掉 RSC 载荷） ---
+#
+# `--lean` 裁掉每个页面旁边的 `.txt`（RSC flight payload），实测 2339 个文件
+# / 335 MB —— 占部署体量的三分之一。代价是站内导航退化成整页加载（链接仍然
+# 可用、没有控制台错误），换来上传时间与 Cloudflare 文件数配额的双重余量。
+#
+# 为什么必须裁：Workers Static Assets 单 Worker 上限 20,000 个文件，而
+# 2026-10-19 实测 out/ 已经是 15,375 个（77%）。gen-thumbs 的注释里还写着
+# 「补一档 1600w 要给部署再加 2081 个文件」——那一步会推到 19,456，离上限
+# 只剩 544 个。`--lean` 先腾出 2,339 个文件的余量，把这个天花板推远。
+#
+# `--lean` 的白名单保留 llms.txt 与 llms-full.txt（robots.txt 声明了它们，
+# 删了就是 404），见 scripts/prune-out.mjs 的 KEEP_TXT。
+Write-Step 'prune（保留媒体，裁掉 RSC 载荷）'
+node scripts/prune-out.mjs --lean
 if ($LASTEXITCODE -ne 0) { Write-Err 'prune 失败'; exit 1 }
+
+# --- 3b. 部署体量硬闸 ---
+#
+# prune 之后仍要数一遍：Cloudflare 的 20,000 文件上限是**部署级**硬限制，
+# 超了整次部署直接失败（而不是部分成功），而失败时线上还是旧版本 —— 排查
+# 起来像"部署卡住"。留 1,500 个余量给临时文件与后续增长。
+$deployFiles = (Get-ChildItem "$ROOT\out" -Recurse -File | Measure-Object).Count
+$FILE_LIMIT = 18500
+if ($deployFiles -gt $FILE_LIMIT) {
+  Write-Err "out/ 有 $deployFiles 个文件，超过守卫阈值 $FILE_LIMIT（Cloudflare 上限 20000）"
+  Write-Err '先裁体量：node scripts/prune-out.mjs --lean，或把媒体迁到 R2（见 DEPLOY.md）'
+  exit 1
+}
+Write-Ok "部署体量 $deployFiles 个文件（上限 20000，守卫阈值 $FILE_LIMIT）"
 
 # --- 4. 部署（Start-Process + 重定向，带重试） ---
 $attempt = 0
