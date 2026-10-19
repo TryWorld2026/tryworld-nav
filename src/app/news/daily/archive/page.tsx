@@ -6,12 +6,16 @@ import { Reveal } from '@/components/reveal';
 import { dailyArchive } from '@/lib/daily-data';
 import { archiveGroups, formatDateShort, weekdayZh } from '@/lib/news-period';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical('/news/daily/archive'),
   title: 'AI 日报 · 全部往期',
   description: 'AIHOT 每日要闻的完整归档，按月份列出全部 AI 日报，点开任意一期即可在站内阅读。',
-};
+  },
+  '/news/daily/archive',
+);
 
 /**
  * 日报归档总览。`/news/daily` 只展开最近两个月，这个页面把 179 期一次铺完，

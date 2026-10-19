@@ -24,6 +24,7 @@ import {
 import { pricingBadgeClass } from '@/lib/pricing';
 import { buttonPrimary } from '@/lib/styles';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
 export function generateStaticParams() {
   return tools.map((t) => ({ slug: t.slug }));
@@ -54,31 +55,23 @@ export async function generateMetadata({
   const extras = extrasBySlug(slug);
   const description = extras?.description || tool.description;
 
-  return {
-    ...canonical(`/tools/${slug}`),
-    // Absolute, not a bare string — see the note above about `title.template`.
-    title: { absolute: `${tool.name} - ${tool.description} | ${SITE.name}` },
-    description,
-    keywords: [
-      tool.name,
-      `${tool.name}官网`,
-      `${tool.name}官网入口`,
-      `${tool.name}下载`,
-      `${tool.name}网页版`,
-    ],
-    openGraph: {
-      type: 'website',
-      title: `${tool.name} - ${tool.description} | ${SITE.name}`,
+  return withOg(
+    {
+      ...canonical(`/tools/${slug}`),
+      // Absolute, not a bare string — see the note above about `title.template`.
+      title: { absolute: `${tool.name} - ${tool.description} | ${SITE.name}` },
       description,
-      images: tool.image ? [{ url: tool.image }] : undefined,
+      keywords: [
+        tool.name,
+        `${tool.name}官网`,
+        `${tool.name}官网入口`,
+        `${tool.name}下载`,
+        `${tool.name}网页版`,
+      ],
     },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${tool.name} - ${tool.description} | ${SITE.name}`,
-      description,
-      images: tool.image ? [tool.image] : undefined,
-    },
-  };
+    `/tools/${slug}`,
+    { image: tool.image },
+  );
 }
 
 /**

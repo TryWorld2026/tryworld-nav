@@ -249,7 +249,9 @@ export function ToolMiniCard({
               src={tool.icon}
               srcSet={iconSrcSet(tool.icon)}
               sizes="44px"
-              alt={tool.name}
+              // 装饰性：整张卡片是一个 <Link>，工具名已经由下面的 <h3> 承担。
+              // 写成 alt={tool.name} 会让读屏把名字念两遍。
+              alt=""
               width={44}
               height={44}
               loading="lazy"
@@ -301,7 +303,8 @@ export function ToolRowCard({ tool }: { tool: Tool }) {
               src={tool.icon}
               srcSet={iconSrcSet(tool.icon)}
               sizes="24px"
-              alt={tool.name}
+              // 同上：名字就在紧挨着的 <span> 里，图标是装饰性的。
+              alt=""
               width={24}
               height={24}
               loading="lazy"

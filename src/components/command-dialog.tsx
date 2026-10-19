@@ -118,7 +118,10 @@ export function CommandDialog({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
+    // z-[60]：抽屉（mobile-nav）也是 z-50，而它在 DOM 里排在本组件之后，
+    // 同层级时后渲染的抽屉会盖在面板上。这里把搜索面板抬到抽屉之上，
+    // 抽屉本身由 header 保证与面板互斥（见 header.tsx）。
+    <div className="fixed inset-0 z-[60]">
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"
         onClick={() => onOpenChange(false)}
@@ -129,7 +132,11 @@ export function CommandDialog({
         aria-modal="true"
         aria-label="搜索AI工具"
         onKeyDown={onPanelKeyDown}
-        className="fixed left-1/2 top-[12vh] w-[92vw] max-w-2xl -translate-x-1/2 overflow-hidden rounded-xl border border-border bg-popover shadow-2xl animate-fade-in"
+        // `animate-rise-in` 而不是 `animate-fade-in`：后者关键帧里的
+        // `transform: none` 配 `fill-mode: both` 会永久覆盖 `-translate-x-1/2`，
+        // 把面板顶到视口中线右侧 —— 移动端 42% 的面板在屏幕外，关闭按钮点不到。
+        // 详见 tailwind.config.ts 里 `rise-in` 的注释。
+        className="fixed left-1/2 top-[12vh] w-[92vw] max-w-2xl -translate-x-1/2 overflow-hidden rounded-xl border border-border bg-popover shadow-2xl animate-rise-in"
       >
         <Command shouldFilter={false} loop className="w-full">
           <div className="flex items-center gap-2 border-b border-border px-4">
@@ -148,16 +155,35 @@ export function CommandDialog({
               aria-label="关闭"
               className="rounded-md p-1 text-muted-foreground hover:bg-foreground/5 focus-visible:ring-1 focus-visible:ring-ring"
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
 
           <Command.List className="scrollbar-thin max-h-[60vh] overflow-y-auto p-2">
+            {/*
+              空态用**普通 div**，不用 `<Command.Empty>`。
+
+              cmdk 的 `Command.Empty` 只在 `state.filtered.count === 0` 时渲染，
+              而 `filtered.count` 的计算在 cmdk 内部是：
+                if (!search || shouldFilter === false) { filtered.count = 已注册项总数 }
+              本面板传了 `shouldFilter={false}`（筛选是自己在 `searchIndex` 里做的），
+              所以 `filtered.count` 恒等于**已注册的项数**，永远不是 0 ——
+              `<Command.Empty>` 永远不渲染。
+
+              结果就是：搜一个不存在的词，面板里空空如也，一句提示都没有，
+              用户以为面板坏了。2026-10-19 实测 `[cmdk-empty]` 为 null。
+
+              改成普通 div 后由我们自己控制显隐；`role="status"` 让读屏
+              能念出「没有匹配」。
+            */}
             {trimmed !== '' && toolResults.length === 0 && catResults.length === 0 && (
-              <Command.Empty className="px-4 py-10 text-center text-sm text-muted-foreground">
+              <div
+                role="status"
+                className="px-4 py-10 text-center text-sm text-muted-foreground"
+              >
                 <p>没有直接匹配「{trimmed}」的工具。</p>
                 <p className="mt-1 text-xs">换个说法再试，或去分类里逛逛。</p>
-              </Command.Empty>
+              </div>
             )}
 
             {/* 工具组在前：用户是来找工具的，回车应该落在工具上。 */}

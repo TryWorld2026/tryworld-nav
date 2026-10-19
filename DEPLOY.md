@@ -45,6 +45,68 @@ Static Assets 按内容哈希判断是否上传 —— 字节一变就等于全�
 最后两行是关键：稳定 buildId 上线后，**内容没变再部署 = 0 个文件 / 24 秒**。
 改动的只有真正变化的文件，增量上传终于名副其实。
 
+## ⚠️ robots.txt 与 Cloudflare 的托管块（2026-10-19 实测）
+
+线上 `https://nav.tryworld.com.cn/robots.txt` **不是**仓库里那一份。Cloudflare 在边缘
+往响应体**前面**插了一段：
+
+```
+# BEGIN Cloudflare Managed content
+User-agent: *
+Content-Signal: search=yes,ai-train=no,use=reference
+Allow: /
+
+# Training crawlers
+User-agent: Amazonbot
+Disallow: /
+...
+User-agent: Baiduspider
+Disallow: /
+User-agent: ClaudeBot
+Disallow: /
+User-agent: GPTBot
+Disallow: /
+...
+# END Cloudflare Managed Content
+```
+
+这是 zone 上的 **AI Crawl Control / Content Signals** 设置产生的，**不在仓库里**，
+所以 `git diff` 看不出来，CI 也测不到。
+
+### 为什么要紧
+
+`User-agent: Baiduspider` + `Disallow: /` 是一整站封禁。对一个中文站，这一条等于
+「百度不收录本站」—— 这是本站最贵的一个默认值。
+
+### 仓库侧已经做了什么（`src/app/robots.txt/route.ts`）
+
+同名 user-agent 的多个 group 会被**合并**（Google / Bing 的官方实现如此），最宽松的
+一条胜出。所以仓库这份文件现在：
+
+- **显式放行中文与主流搜索引擎**（Baiduspider / Sogou / 360Spider / Bingbot / Yandex /
+  DuckDuckBot / PetalBot），用来顶掉 Cloudflare 那条整站 `Disallow`；
+- **显式放行 AI 爬虫到两份 LLM 文本**（`/llms.txt` 与 `/llms-full.txt`）。
+  原来只放行 `/llms.txt`，可文件末尾的 `LLM-Full-Content:` 恰恰指向 `llms-full.txt`
+  ——广告指向的地址反而不许爬，自己和自己打架；
+- **显式封掉训练型爬虫**（CCBot / Bytespider / Omgili / PerplexityBot 等）整站。
+  原站没写这一段，靠的是上游没有这些爬虫；现在上游有了，把策略写死在仓库里，
+  站点的立场就不再依赖任何面板开关。
+
+### 还需要你在面板上做一步（仓库改不掉）
+
+Cloudflare 的块在**前面**，而部分爬虫（包括 Python 的 `urllib.robotparser`）采取
+「首个匹配的 group 生效」。对这类爬虫，仓库里的 `Allow: /` 永远轮不到。
+所以还要去控制台：
+
+> **Cloudflare Dashboard → 域名 `tryworld.com.cn` → AI Crawl Control / Content Signals**
+> → 关掉托管的 robots.txt 注入（或至少把 `Baiduspider` 从封禁名单里移除）
+
+改完后用下面这条验证（应当**看不到** `# BEGIN Cloudflare Managed content`）：
+
+```powershell
+(Invoke-WebRequest https://nav.tryworld.com.cn/robots.txt -UseBasicParsing).Content
+```
+
 ## ⚠️ 部署的三个坑（2026-10-15 实测）
 
 **1. 不要用管道跑 `wrangler deploy`。** 通过 PowerShell 管道（`npx wrangler deploy 2>&1 | Tee-Object …`）
@@ -190,4 +252,16 @@ npm run assets:push            # 增量不了——wrangler 没有批量列举�
 - **`/tools?q=…` 的筛选在客户端做**。原站的 `/tools` 本身就是客户端组件（它的 SSR 只是一个骨架），所以行为一致，但 URL 参数不再影响首屏 HTML —— 对 SEO 无影响，因为列表页本来就不该被按 query 索引。
 - **图片不做优化**（`images.unoptimized`）。Cloudflare Images 要额外收费，而全站只有新闻封面用了 `next/image`，且已经是 800×450 的小图。
 - **R2 公开桶可被枚举**。如果不想让人列出全部 4188 个文件，用带签名的 URL 或走 Worker 代理；对产品图标来说一般无所谓。
-- **`out/` 里每个页面有 `.html` 和 `.txt` 两份**（后者是 RSC flight payload，供客户端导航用）。这是 Next 静态导出的正常产物，4,552 个文件仍在 Cloudflare 的 20,000 上限内。
+- **`out/` 里每个页面有 `.html` 和 `.txt` 两份**（后者是 RSC flight payload，供客户端导航用）。这是 Next 静态导出的正常产物。
+
+- **Cloudflare 的文件数上限还剩多少余量。** 免费版 **20,000 个文件 / Worker 版本**
+  （付费版 100,000；单文件上限 25 MiB；静态资产**没有总容量上限**）。
+  2026-10-19 实测 `out/` 是 **15,375 个文件 / 1.35 GB**（其中 `out/assets` 10,436 个，
+  HTML 2,337 个），**只剩 4,625 个余量**。每加一个工具就是 1 个图标 + 1 张截图
+  （+ 缩略图的话是 3 个），所以：
+  - `npm run gen:thumbs` 一旦开着跑，文件数会**翻三倍**（图标/截图各出 800/176 两档
+    webp），**会直接撞上限**。跑之前先算一下。
+  - 真要加到 4,000 个工具，媒体必须迁到 R2（见上文「一次性设置」第 1、2 步），
+    否则 Static Assets 这条路走不到头。
+  - 部署脚本 `scripts/deploy.ps1` 的媒体守卫目前盯的是**媒体文件数**（< 4000 即中止），
+    它不检查**总文件数**。真要加这道守卫，阈值要按 20,000 的余量来定。

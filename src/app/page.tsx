@@ -10,6 +10,7 @@ import { TOOL_GRID, ToolMiniCard } from '@/components/tool-card';
 import { friendLinks, hotTools, newestTools, sections, SITE, tools, toolsByCategory } from '@/lib/data';
 import type { Tool } from '@/lib/types';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 import { rgb, rgbAlpha } from '@/lib/utils';
 
 /**
@@ -19,11 +20,14 @@ import { rgb, rgbAlpha } from '@/lib/utils';
  * the layout's inherited values wholesale — omitting them would drop the
  * description and the keywords-adjacent fields from `/` only.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical("/"),
   title: SITE.title,
   description: SITE.description,
-};
+  },
+  '/',
+);
 
 /**
  * 首页 26 个分类区块的四段分组。

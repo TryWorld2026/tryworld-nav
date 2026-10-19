@@ -3,12 +3,16 @@ import Link from 'next/link';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
 import { collections } from '@/lib/data';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical("/collections"),
   title: '精选AI利器集合',
   description: '试界导航精选AI工具集合，AI助力提效，让你事半功倍。',
-};
+  },
+  '/collections',
+);
 
 /**
  * 集合总览。

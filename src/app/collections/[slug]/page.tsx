@@ -6,6 +6,7 @@ import { collectionBySlug, collections, SITE, toolBySlug } from '@/lib/data';
 import { TOOL_GRID, ToolMiniCard } from '@/components/tool-card';
 import type { Tool } from '@/lib/types';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
 export function generateStaticParams() {
   return collections.map((c) => ({ slug: c.slug }));
@@ -25,23 +26,15 @@ export async function generateMetadata({
   if (!collection) return { title: '集合未找到' };
 
   const title = `${collection.title}大全 | ${SITE.name}`;
-  return {
-    ...canonical(`/collections/${slug}`),
-    title: { absolute: title },
-    description: collection.intro,
-    openGraph: {
-      type: 'website',
-      title,
+  return withOg(
+    {
+      ...canonical(`/collections/${slug}`),
+      title: { absolute: title },
       description: collection.intro,
-      images: collection.tagIcon ? [{ url: collection.tagIcon }] : undefined,
     },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description: collection.intro,
-      images: collection.tagIcon ? [collection.tagIcon] : undefined,
-    },
-  };
+    `/collections/${slug}`,
+    { image: collection.tagIcon },
+  );
 }
 
 /**

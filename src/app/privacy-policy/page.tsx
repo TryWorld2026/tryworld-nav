@@ -2,12 +2,16 @@ import type { Metadata } from 'next';
 import { ProsePage } from '@/components/prose-page';
 import { SITE } from '@/lib/data';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical("/privacy-policy"),
   title: '隐私政策',
   description: `${SITE.name} 不收集任何个人身份信息。`,
-};
+  },
+  '/privacy-policy',
+);
 
 export default function PrivacyPage() {
   return (

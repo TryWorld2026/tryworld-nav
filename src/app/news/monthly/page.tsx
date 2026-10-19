@@ -9,13 +9,17 @@ import { Reveal } from '@/components/reveal';
 import { monthlyReports } from '@/lib/daily-data';
 import { formatMonth, formatPeriodRange, periodStats } from '@/lib/news-period';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical('/news/monthly'),
   title: 'AI 月报',
   description:
     'AIHOT 每月回顾：一个月的模型与产品发布、行业变化、论文与观点，按重要度排序，每条附原文。',
-};
+  },
+  '/news/monthly',
+);
 
 /**
  * 月报索引。数量少（目前 5 期），最新一期做成墨色大卡，其余月份铺成一排。

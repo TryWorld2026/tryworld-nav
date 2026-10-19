@@ -15,13 +15,17 @@ import {
   weekdayZh,
 } from '@/lib/news-period';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical('/news/daily'),
   title: 'AI 日报',
   description:
     '每天 08:00（北京时间）出刊的 AI 行业日报，AIHOT 精编：模型发布、产品更新、行业动态、论文与快讯，每条附原文。可在站内阅读全部往期。',
-};
+  },
+  '/news/daily',
+);
 
 /**
  * /news/daily —— 日报首页。

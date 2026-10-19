@@ -7,6 +7,7 @@ import { NewsPeriodPage } from '@/components/news-period-page';
 import { weeklyReports } from '@/lib/daily-data';
 import { formatWeek } from '@/lib/news-period';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
 export function generateStaticParams() {
   return weeklyReports.map((w) => ({ week: w.week }));
@@ -22,11 +23,15 @@ export async function generateMetadata({
   if (!report) return { title: '周报未找到' };
   const title = `AI 周报 · ${formatWeek(week)}`;
   const description = report.headline ?? report.overview?.slice(0, 120) ?? '每周 AI 行业回顾';
-  return {
-    ...canonical(`/news/weekly/${week}`),
-    title: { absolute: `${title} | AIHOT 每周回顾` },
-    description,
-  };
+  return withOg(
+    {
+      ...canonical(`/news/weekly/${week}`),
+      title: { absolute: `${title} | AIHOT 每周回顾` },
+      description,
+    },
+    `/news/weekly/${week}`,
+    { ogType: 'article', publishedTime: report.generatedAt ?? undefined },
+  );
 }
 
 export default async function WeeklyIssuePage({

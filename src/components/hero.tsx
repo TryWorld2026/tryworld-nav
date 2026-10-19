@@ -118,8 +118,14 @@ export function Hero() {
                 `text-balance`：这段话在 1024（左栏 768）和 1440 左栏（544）
                 下都会折成两行，末行只剩「么。」两个字。均衡换行把两行拉平，
                 避免墨底上出现一个孤零零的短行。 */}
+            {/* `text-balance` 只均衡行长，不管标点：390px 下「按「你想做什」
+                /「么」分成」会在引号中间断开，把一个完整的口语短语劈成两半
+                （截图见 work/launch-shots/home-390.png）。中文排版里引号
+                短语应当整体换行，所以这里给「你想做什么」加 nowrap，
+                让断点落在「按」之后。 */}
             <p className="mt-3 text-balance text-[15px] leading-relaxed text-[#F2EEE6]/60">
-              <span className="whitespace-nowrap">{tools.length} 个</span> AI 工具与智能体，按「你想做什么」分成{' '}
+              <span className="whitespace-nowrap">{tools.length} 个</span> AI 工具与智能体，按
+              <span className="whitespace-nowrap">「你想做什么」</span>分成{' '}
               <span className="whitespace-nowrap">{allCategories.length} 个场景</span>；每天还有一期 AIHOT 精选日报，告诉你圈里发生了什么。
             </p>
 

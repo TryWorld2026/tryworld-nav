@@ -6,6 +6,7 @@ import { CategoryIcon } from '@/components/category-icon';
 import { TOOL_GRID, ToolMiniCard } from '@/components/tool-card';
 import { categories, categoryBySlug, categoryCards, SITE, toolsByCategory } from '@/lib/data';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 import { rgb, rgbAlpha } from '@/lib/utils';
 
 export function generateStaticParams() {
@@ -20,13 +21,16 @@ export async function generateMetadata({
   const { slug } = await params;
   const category = categoryBySlug.get(slug);
   if (!category) return { title: '分类未找到' };
-  return {
-    ...canonical(`/categories/${slug}`),
-    // Absolute, not a bare string: `layout.tsx` sets `title.template`, which
-    // would append the site name a second time.
-    title: { absolute: `${category.name} - ${SITE.name}` },
-    description: `浏览 ${category.name} 分类下的 AI 工具与智能体。`,
-  };
+  return withOg(
+    {
+      ...canonical(`/categories/${slug}`),
+      // Absolute, not a bare string: `layout.tsx` sets `title.template`, which
+      // would append the site name a second time.
+      title: { absolute: `${category.name} - ${SITE.name}` },
+      description: `浏览 ${category.name} 分类下的 AI 工具与智能体。`,
+    },
+    `/categories/${slug}`,
+  );
 }
 
 export default async function CategoryDetailPage({

@@ -8,6 +8,7 @@ import { CategoryIcon } from './category-icon';
 import { navFeatured as featured, navHotCategories as hotCategories } from '@/lib/nav';
 import { SITE } from '@/lib/site';
 import { rgb, rgbAlpha } from '@/lib/utils';
+import { useBodyScrollLock } from '@/lib/use-body-scroll-lock';
 
 const LINKS = [
   { href: '/tools', label: '查看全部' },
@@ -76,20 +77,61 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
   /**
    * 抽屉打开时锁住页面滚动。
    *
-   * 不锁的话，手指在抽屉上滑动会先滚页面、抽屉跟着乱动，这是「网页感」最
-   * 明显的一处。用 `overflow: hidden` 而不是 `position: fixed` —— 后者在
-   * iOS 上会让页面跳回顶部。同时记下原来的 `overflow` 值，关闭时原样还原，
-   * 避免和别处（比如搜索弹窗）抢着改 body 样式。
+   * 改用共享的 `useBodyScrollLock`：原先这里是内联的一份
+   * `body.style.overflow` 存/还原，而搜索面板用的是带计数的那份 ——
+   * 两份实现各存各的 `prev`，先关的那个会把后关的锁解开（页面在弹层底下
+   * 滚动）。共享实现用计数器，不会互相踩。
    */
+  useBodyScrollLock(open);
+
+  /**
+   * 焦点管理：打开时把焦点移进抽屉，关闭时还给触发它的按钮。
+   *
+   * 为什么必须做：抽屉声明了 `aria-modal="true"`，等于向辅助技术承诺
+   * 「背景不可交互」。但抽屉里全是链接，**没有一个可聚焦元素**——不手动
+   * 移进去，键盘用户的焦点还留在背后的页面上，Tab 会一路 Tab 到页面底
+   * 部而不是在抽屉里循环。读屏用户则完全不知道抽屉开了。
+   */
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     if (!open) return;
-    const body = document.body;
-    const prev = body.style.overflow;
-    body.style.overflow = 'hidden';
+    const prev = document.activeElement as HTMLElement | null;
+    // 等一帧，确保抽屉已经挂载、里面的链接可聚焦。
+    const id = window.setTimeout(() => closeRef.current?.focus(), 0);
     return () => {
-      body.style.overflow = prev;
+      window.clearTimeout(id);
+      if (prev && document.contains(prev)) prev.focus();
     };
   }, [open]);
+
+  /**
+   * Tab 陷阱：焦点在抽屉末尾时按 Tab 回到开头，Shift+Tab 在开头时跳到末尾。
+   *
+   * 和搜索面板用的是同一套逻辑（见 `command-dialog.tsx` 的 `onPanelKeyDown`）。
+   * 抽屉里有几十个链接，没有陷阱的话 Tab 会走出抽屉、跑到被遮住的背景上，
+   * 用户按十几下 Esc 都不知道自己在哪。
+   */
+  const onPanelKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key !== 'Tab') return;
+    const panel = panelRef.current;
+    if (!panel) return;
+    const focusable = panel.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])',
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+    if (!e.shiftKey && (active === last || !panel.contains(active))) {
+      e.preventDefault();
+      first.focus();
+    } else if (e.shiftKey && (active === first || !panel.contains(active))) {
+      e.preventDefault();
+      last.focus();
+    }
+  };
 
   if (!open) return null;
 
@@ -104,21 +146,24 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
           手机上最像原生 APP 的导航形态（顶部下拉是另一套，底部上滑更顺手）。
           `max-h-[85dvh]` 用动态视口单位，避免 iOS 地址栏伸缩时抽屉被截断。 */}
       <div
+        ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-label="站内导航"
+        onKeyDown={onPanelKeyDown}
         className="fixed inset-x-0 bottom-0 z-50 max-h-[85dvh] animate-[sheet-up_0.28s_cubic-bezier(0.22,1,0.36,1)] overflow-y-auto scrollbar-thin rounded-t-2xl border-t border-border bg-background px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-3 shadow-2xl lg:hidden"
       >
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-foreground/15" aria-hidden />
         <div className="mb-5 flex items-center justify-between lg:hidden">
           <span className="text-base font-bold font-display text-foreground">{SITE.name}</span>
           <button
+            ref={closeRef}
             type="button"
             onClick={onClose}
             aria-label="关闭菜单"
             className="inline-flex h-9 w-9 items-center justify-center rounded-md text-foreground/80 transition-colors hover:bg-foreground/5"
           >
-            <X className="h-4 w-4" />
+            <X className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
 

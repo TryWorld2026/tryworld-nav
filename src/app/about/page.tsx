@@ -2,12 +2,16 @@ import type { Metadata } from 'next';
 import { ProsePage } from '@/components/prose-page';
 import { allCategories, SITE, tools } from '@/lib/data';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical("/about"),
   title: '关于我们',
   description: '试界导航是一个专注于智能体和 AI 工具的门户网站。',
-};
+  },
+  '/about',
+);
 
 export default function AboutPage() {
   return (

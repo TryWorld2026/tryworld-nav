@@ -2,12 +2,16 @@ import type { Metadata } from 'next';
 import { ProsePage } from '@/components/prose-page';
 import { SITE } from '@/lib/data';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical("/terms-conditions"),
   title: '用户协议',
   description: `使用 ${SITE.name} 前请阅读以下条款。`,
-};
+  },
+  '/terms-conditions',
+);
 
 export default function TermsPage() {
   return (

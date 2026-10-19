@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Bookmark, ChevronDown, LayoutList, Layers2, Menu, Newspaper, ScanFace, Search } from 'lucide-react';
 import { CommandDialog } from './command-dialog';
@@ -82,7 +82,38 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
+
+  /**
+   * 搜索面板与移动抽屉**互斥**。
+   *
+   * 原先两者可以同时打开：抽屉是底部弹层，但页眉仍然可见，用户在抽屉开着
+   * 的时候点页眉的搜索键（或按 Ctrl+K）就会叠出第二层弹窗。两层都是
+   * `aria-modal="true"`、都锁 `body` 滚动，而且各自保存/还原
+   * `body.style.overflow` —— 谁后关谁会把另一个的 `hidden` 抹掉，页面开始
+   * 在弹层底下滚。
+   *
+   * 现在开一个就关另一个：底部 Tab 栏的搜索圆钮与页眉搜索键走同一条路径，
+   * 行为一致。
+   */
+  const openPalette = useCallback((v: boolean) => {
+    setOpen(v);
+    if (v) setMenuOpen(false);
+  }, []);
+  const openDrawer = useCallback((v: boolean) => {
+    setMenuOpen(v);
+    if (v) setOpen(false);
+  }, []);
   const [mounted, setMounted] = useState(false);
+  /**
+   * 快捷键提示里的修饰键。默认 `Ctrl`（SSR 与首次渲染都用它），挂载后
+   * 若是 macOS/iPadOS 再换成 `⌘`。
+   *
+   * 为什么要有状态：快捷键本身两个键都认（`e.metaKey || e.ctrlKey`），
+   * 但提示写死 `⌘K` 会让 Windows/Linux 用户按了没反应 —— 而本站读者
+   * 大多数在 Windows 上。服务端不知道客户端平台，所以先渲染 `Ctrl`，
+   * 挂载后再纠正；差异只有一个 kbd 徽章，不会造成可见跳动。
+   */
+  const [modKey, setModKey] = useState('Ctrl');
   /** 滚动方向：向下滚时收起顶栏，向上滚时立刻出现。 */
   const [hidden, setHidden] = useState(false);
   const catRef = useRef<HTMLDivElement>(null);
@@ -90,6 +121,13 @@ export function Header() {
   const lastY = useRef(0);
 
   useEffect(() => setMounted(true), []);
+
+  /** 把快捷键提示的修饰键换成当前平台的那个。 */
+  useEffect(() => {
+    const nav = navigator as Navigator & { userAgentData?: { platform?: string } };
+    const ua = nav.userAgentData?.platform || nav.platform || nav.userAgent;
+    if (/mac|iphone|ipad|ipod/i.test(ua)) setModKey('⌘');
+  }, []);
 
   /**
    * 阅读时让位给内容：向下滚超过一屏的一半才收起，往回滚 8px 就出现。
@@ -117,10 +155,10 @@ export function Header() {
    * 叠在一起，也不会因为两处各自维护 query 而互相覆盖。
    */
   useEffect(() => {
-    const onSearch = () => setOpen(true);
+    const onSearch = () => openPalette(true);
     window.addEventListener('tryworld:search', onSearch as EventListener);
     return () => window.removeEventListener('tryworld:search', onSearch as EventListener);
-  }, []);
+  }, [openPalette]);
 
   /**
    * 把顶栏的**实际高度**写进根元素的 CSS 变量 `--site-header-h`，供
@@ -148,14 +186,14 @@ export function Header() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((v) => !v);
+        openPalette(!open);
         return;
       }
       // "/" is a browser shortcut on its own in places (Firefox's quick-find,
       // macOS's various), so leave modified chords alone.
       if (e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey && !isTyping(e.target)) {
         e.preventDefault();
-        setOpen(true);
+        openPalette(true);
       }
       if (e.key === 'Escape') {
         setCatOpen(false);
@@ -163,7 +201,7 @@ export function Header() {
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, []);
+  }, [open, openPalette]);
 
   // A click anywhere outside the category panel closes it. `mousedown` rather
   // than `click` so a press inside the panel that ends on a link still counts
@@ -301,15 +339,15 @@ export function Header() {
               <div className="flex items-center space-x-3 lg:justify-self-end">
                 <button
                   type="button"
-                  onClick={() => setOpen(true)}
-                  aria-label="Search"
+                  onClick={() => openPalette(true)}
+                  aria-label="搜索AI工具"
                   className="flex shrink-0 items-center space-x-2 rounded-md px-3 py-2 text-gongke-muted transition-colors hover:bg-gongke-gray/10"
                 >
                   <Search className="h-4 w-4" aria-hidden="true" />
                   <span className="hidden text-sm md:inline lg:hidden xl:inline">
                     搜索AI工具
                     <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-                      <span className="text-xs">⌘</span>K
+                      <span className="text-xs">{modKey}</span>K
                     </kbd>
                   </span>
                 </button>
@@ -324,8 +362,8 @@ export function Header() {
 
                 <button
                   type="button"
-                  onClick={() => setMenuOpen(true)}
-                  aria-label="Toggle mobile menu"
+                  onClick={() => openDrawer(true)}
+                  aria-label="打开导航菜单"
                   className="lg:hidden p-2 text-foreground/80"
                 >
                   <Menu className="h-5 w-5" aria-hidden="true" />
@@ -336,8 +374,8 @@ export function Header() {
         </div>
       </header>
 
-      <CommandDialog open={open} onOpenChange={setOpen} />
-      <MobileNav open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <CommandDialog open={open} onOpenChange={openPalette} />
+      <MobileNav open={menuOpen} onClose={() => openDrawer(false)} />
     </>
   );
 }

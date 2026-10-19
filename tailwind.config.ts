@@ -96,9 +96,33 @@ const config: Config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        // 只动 opacity，不动 transform。
+        //
+        // 为什么不用 transform：CSS 层叠里**动画声明优先于普通作者声明**
+        // （CSS Cascading 3 §6.4.4 的来源顺序：animation 在 author normal 之上）。
+        // 而 `animate-fade-in` 带了 `fill-mode: both`，动画结束后 `to` 帧的
+        // `transform: none` 会**一直生效**——于是同元素上的 Tailwind 位移工具类
+        // （`transform: translate(var(--tw-translate-x), …)`）被整个抹掉。
+        // 2026-10-19 实测：命令面板的 `-translate-x-1/2` 就是这样被吃掉的，
+        // 面板左缘停在视口中线（390px 屏上 left=195），右侧 163.8px（42%）
+        // 悬在屏幕外，关闭按钮完全点不到。
         'fade-in': {
-          from: { opacity: '0', transform: 'translateY(4px)' },
-          to: { opacity: '1', transform: 'none' },
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        // 面板用这一条：位移走**独立的 translate 属性**而不是 transform。
+        // translate / rotate / scale 是 CSS 的独立变换属性，在 transform **之前**
+        // 合成，所以和 Tailwind 的 transform 位移互不干扰，动画结束后也不会
+        // 把居中效果抹掉。
+        //
+        // 老浏览器不支持 `translate` 属性时，退化成「只淡入不位移」——
+        // 面板依然居中（transform 没被动过），比现在整块跑出屏幕好得多。
+        //
+        // 注意：这条**不能**用在全屏遮罩上。遮罩是 `fixed inset-0`，再往下
+        // 位移 4px 会在屏幕顶端留一条 4px 的缝，所以遮罩用上面的纯 opacity 版。
+        'rise-in': {
+          from: { opacity: '0', translate: '0 4px' },
+          to: { opacity: '1', translate: '0 0' },
         },
         // The sweep behind the 精选AI利器集合 headline. The origin animates
         // background-position by `--bg-size`, which the element sets inline to
@@ -111,6 +135,7 @@ const config: Config = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'fade-in': 'fade-in 0.25s ease-out both',
+        'rise-in': 'rise-in 0.25s ease-out both',
         gradient: 'gradient 8s linear infinite',
       },
     },

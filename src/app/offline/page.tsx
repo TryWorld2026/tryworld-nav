@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Bookmark, Home, LayoutGrid, WifiOff } from 'lucide-react';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
 /**
  * 断网兜底页。
@@ -19,12 +20,15 @@ import { canonical } from '@/lib/canonical';
  * 搜索结果标题里多一句错误提示。`robots.txt` 里另有 `Disallow: /offline`
  * 作为第二道（`robots` 元数据与 robots.txt 各管一摊，改写规则不同）。
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical('/offline'),
   title: '当前离线',
   description: '网络连接已断开，恢复网络后刷新页面即可继续浏览试界导航。',
   robots: { index: false },
-};
+  },
+  '/offline',
+);
 
 /**
  * 三个出口，按「最可能是你现在想要的」排序：回首页、翻目录、看本机收藏。

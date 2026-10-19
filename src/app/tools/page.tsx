@@ -3,12 +3,16 @@ import { ToolsExplorer } from '@/components/tools-explorer';
 import { PageHeader } from '@/components/page-header';
 import { allCategories, extrasBySlug, tags, tools } from '@/lib/data';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical('/tools'),
   title: '全部工具',
   description: '浏览试界导航收录的所有 AI 工具与智能体，支持按分类、标签和关键词筛选。',
-};
+  },
+  '/tools',
+);
 
 /**
  * Statically exported — the filter state comes from the URL on the client (see

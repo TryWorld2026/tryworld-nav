@@ -9,13 +9,17 @@ import { Reveal } from '@/components/reveal';
 import { weeklyReports } from '@/lib/daily-data';
 import { formatPeriodRange, formatWeek, periodStats } from '@/lib/news-period';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical('/news/weekly'),
   title: 'AI 周报',
   description:
     'AIHOT 每周回顾：一周内最重要的 AI 模型发布、产品更新、行业变化与论文，按重要度排序，每条附原文。',
-};
+  },
+  '/news/weekly',
+);
 
 /**
  * 周报索引。最新一期做成大卡片，往期按周倒序列出。

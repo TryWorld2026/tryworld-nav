@@ -12,6 +12,7 @@ import {
   periodAnchor,
   periodStats,
 } from '@/lib/news-period';
+import { dayKey } from '@/lib/news';
 import type { MonthlyReport, WeeklyReport } from '@/lib/news-period';
 
 /**
@@ -175,7 +176,12 @@ export function NewsPeriodPage({
           </a>
           {report.generatedAt && (
             <span className="ml-1 inline-flex items-center gap-1">
-              · 生成于 {formatDateFull(report.generatedAt.slice(0, 10))}
+              {/* `dayKey` 把 ISO 瞬间折成**北京日历日**；原来的
+                  `generatedAt.slice(0, 10)` 取的是 **UTC 日**，在北京时间
+                  00:00–08:00 生成的报告会显示成前一天。
+                  线上现成实例：`/news/monthly/2026-08` 实际生成于
+                  2026-09-11 04:56（北京），页面却写「2026 年 9 月 10 日」。 */}
+              · 生成于 {formatDateFull(dayKey(report.generatedAt))}
             </span>
           )}
         </p>

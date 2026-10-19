@@ -8,13 +8,17 @@ import { hotTopics, dailyFetchedAt } from '@/lib/daily-data';
 import { dayKey, weekdayOf } from '@/lib/news';
 import { beijingTime, hotBarWidth } from '@/lib/news-period';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical('/news/hot'),
   title: 'AI 热点榜',
   description:
     '此刻 AI 圈最热的十条动态：AIHOT 跨来源统计的信号量、参与来源与最新时间，按热度排序，每条附原文。',
-};
+  },
+  '/news/hot',
+);
 
 /**
  * 热点榜 —— 资讯频道的「此刻」视角。
@@ -33,7 +37,13 @@ export const metadata: Metadata = {
  */
 export default function HotTopicsPage() {
   const updateTime = beijingTime(dailyFetchedAt);
-  const updateDate = dailyFetchedAt ? dailyFetchedAt.slice(0, 10) : '';
+  // 日期必须用 `dayKey`（ISO 瞬间 → 北京日历日），不能 `slice(0,10)`。
+  // `dailyFetchedAt` 是 UTC ISO 串，`slice(0,10)` 取的是 **UTC 日**；
+  // 而 `updateTime` 走 `beijingTime`，是**北京时**——两者混用，同一行里
+  // 日期和时间差一天，而末尾还标着「（北京时间）」。
+  // 抓取落在 UTC 16:00–24:00（北京 00:00–08:00）时就会错；
+  // `npm run build` 的第二步就是抓取，凌晨构建必中。
+  const updateDate = dayKey(dailyFetchedAt);
 
   return (
     <div className="pb-16">

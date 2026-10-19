@@ -7,6 +7,7 @@ import { NewsPeriodPage } from '@/components/news-period-page';
 import { monthlyReports } from '@/lib/daily-data';
 import { formatMonth } from '@/lib/news-period';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
 export function generateStaticParams() {
   return monthlyReports.map((m) => ({ month: m.month }));
@@ -22,11 +23,15 @@ export async function generateMetadata({
   if (!report) return { title: '月报未找到' };
   const title = `AI 月报 · ${formatMonth(month)}`;
   const description = report.headline ?? report.overview?.slice(0, 120) ?? '每月 AI 行业回顾';
-  return {
-    ...canonical(`/news/monthly/${month}`),
-    title: { absolute: `${title} | AIHOT 每月回顾` },
-    description,
-  };
+  return withOg(
+    {
+      ...canonical(`/news/monthly/${month}`),
+      title: { absolute: `${title} | AIHOT 每月回顾` },
+      description,
+    },
+    `/news/monthly/${month}`,
+    { ogType: 'article', publishedTime: report.generatedAt ?? undefined },
+  );
 }
 
 export default async function MonthlyIssuePage({

@@ -4,6 +4,7 @@ import { ArrowLeft, Bookmark } from 'lucide-react';
 import { FavoritesList } from '@/components/favorites-list';
 import { PageHeader } from '@/components/page-header';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
 /**
  * 我的收藏 —— 纯本机，无账号。
@@ -17,12 +18,15 @@ import { canonical } from '@/lib/canonical';
  * SEO：`robots: { index: false }`。这是每个用户各不相同的本机数据，收录它
  * 只会让搜索引擎抓到一个永远为空的页面；也不进 sitemap（见 `sitemap.ts`）。
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg(
+  {
   ...canonical('/favorites'),
   title: '我的收藏',
   description: '你在试界导航收藏的 AI 工具，保存在本机浏览器里，不需要账号。',
   robots: { index: false, follow: false },
-};
+  },
+  '/favorites',
+);
 
 export default function FavoritesPage() {
   return (

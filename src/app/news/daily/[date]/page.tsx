@@ -7,6 +7,7 @@ import { NewsDailyPage } from '@/components/news-daily-page';
 import { dailyArchive, getDaily, latestDailyDate } from '@/lib/daily-data';
 import { dailyStats, formatDateFull } from '@/lib/news-period';
 import { canonical } from '@/lib/canonical';
+import { withOg } from '@/lib/og';
 
 /**
  * 每一期日报一个静态页：`/news/daily/2026-10-17`。
@@ -40,20 +41,17 @@ export async function generateMetadata({
     report.lead?.title ??
     `AIHOT 精编的 ${formatDateFull(date)} AI 行业日报，共 ${stats.items} 条、来自 ${stats.sources} 个来源，每条附原文。`;
 
-  return {
-    ...canonical(`/news/daily/${date}`),
-    // 绝对标题：`layout.tsx` 有 `title.template`，这里已经自带站点语义，
-    // 不再追加一次站名（与工具页、集合页的处理一致）。
-    title: { absolute: `${title} | AIHOT 每日要闻` },
-    description,
-    openGraph: {
-      type: 'article',
-      title,
+  return withOg(
+    {
+      ...canonical(`/news/daily/${date}`),
+      // 绝对标题：`layout.tsx` 有 `title.template`，这里已经自带站点语义，
+      // 不再追加一次站名（与工具页、集合页的处理一致）。
+      title: { absolute: `${title} | AIHOT 每日要闻` },
       description,
-      publishedTime: report.generatedAt ?? undefined,
     },
-    twitter: { card: 'summary', title, description },
-  };
+    `/news/daily/${date}`,
+    { ogType: 'article', publishedTime: report.generatedAt ?? undefined },
+  );
 }
 
 export default async function DailyIssuePage({

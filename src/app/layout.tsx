@@ -116,18 +116,25 @@ export default function RootLayout({
           <div className="min-w-0 flex-1 lg:ml-48 bg-background pb-tabbar">
             <Header />
 
-            {/* 三层结构：min-height 列、flex-grow 的 <main>、以及真正承载页面
-                的 `flex-1` 子元素。`main` 套 `main` 是无效 HTML，但它正是让
-                侧栏那条全高边线对齐的原因——内层 <main> 是唯一被拉伸的。 */}
+            {/* 三层结构：min-height 列、flex-grow 的内容区、以及真正承载页面
+                的 `flex-1` 子元素。
+
+                外层这里原本也是 `<main>`，**`main` 套 `main` 是无效 HTML**：
+                浏览器会把两个都暴露成 `main` 地标，读屏用户每页都会听到两次
+                「main」。改用 `<div>` 之后，页面只剩**一个** `main`
+                （带 `id="main-content"`，跳转锚点照旧）。
+
+                布局不受影响：`main` 与 `div` 在这里都是块级流元素，撑高的
+                仍然是内层那个 `flex-grow`。 */}
             {/* `min-w-0` 逐层传递：`main` 与 `flex-1` 都曾是默认 `auto`，
                 `min-w-0` 只加在最外层时下一层仍会被内容撑宽。 */}
-            <main className="min-w-0">
+            <div className="min-w-0">
               <div className="min-h-screen flex flex-col">
                 <main id="main-content" className="min-w-0 flex-grow flex">
                   <div className="min-w-0 flex-1">{children}</div>
                 </main>
               </div>
-            </main>
+            </div>
 
             <SiteFooter />
           </div>
