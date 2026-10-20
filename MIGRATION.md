@@ -13,13 +13,14 @@
 
 `public/assets/{icons,shots,tags,news}` 是 4188 个文件、336 MB。GitHub 超过 1 GB 会警告、单文件超 100 MB 直接拒绝，而且每次 CI checkout 都要下载整个目录 —— 所以它不进 git。
 
-它目前有三份：
+它目前有四份：
 
 1. **本机** `D:\codingXM\工具平台\public\assets\`
 2. **归档** `D:\tryworld-backups\assets-<日期>.tar.gz`（292 MB）
 3. **线上** https://nav.tryworld.com.cn/assets/... （部署时打包进了 Worker）
+4. **GitHub Release** `assets.tar.gz`（`deploy.yml` 用它恢复；只含四个媒体目录）
 
-任何一份都足够重建整个站。
+任何一份媒体都足够重建媒体目录；站点本身由 git 里的代码 + 数据构建出来。
 
 ## 日常备份
 
@@ -28,14 +29,13 @@ npm run media:backup          # → D:/tryworld-backups/assets-<今天>.tar.gz
 npm run media:backup E:/移动硬盘/tryworld   # 指定目录
 ```
 
-默认写到 `D:/tryworld-backups`（另一块物理盘），丢一块盘不至于两份都没。**这个归档请再复制一份到你平时备份的地方** —— 它是唯一完整的本地副本。
+默认写到 `D:/tryworld-backups`（另一块物理盘），丢一块盘不至于两份都没。归档之外，GitHub Release 的 `assets.tar.gz` 也是一份离机副本；发版后仍建议偶尔抽查归档能否解压。
 
 加了新工具、或者重新抓过图之后跑一次。
 
 ## 换机器 / 重建
 
-仓库是**私有**的：`github.com/TryWorld2026/tryworld-nav`。克隆前先确认本机 git 有那个账号的凭据
-（`git credential fill` 能返回 `username=TryWorld2026` 即可），否则会撞 404。
+仓库是**公开**的：`github.com/TryWorld2026/tryworld-nav`，可以直接 clone。
 
 ```bash
 git clone https://github.com/TryWorld2026/tryworld-nav.git tryworld-nav && cd tryworld-nav

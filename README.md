@@ -79,21 +79,31 @@ assets`）、**媒体守卫**（媒体少于 4000 个文件就中止，否则会
 buildId，内容不变时实测 `No updated asset files to upload.`（0 个文件 / 24 秒）。
 细节见 [DEPLOY.md](DEPLOY.md)。
 
-**CI 自动部署仍是关的**（`.github/workflows/deploy.yml` 只有 `workflow_dispatch`）：
-媒体不进 git，从 CI 部署会因 Workers Static Assets 的整体替换清单把线上产品图删光。
-要打通必须先开 R2（账号当前报 10042，未开通）并把 `NEXT_PUBLIC_ASSET_BASE` 接上——
-`src/lib/assets.ts` 已支持这个开关。
+**CI 自动部署方案已接入**（`.github/workflows/deploy.yml` 每天 02:30 UTC 运行；
+需先完成一次媒体 Release 与变量/Secrets 设置，见 [DEPLOY.md](DEPLOY.md)）：
+媒体不进 git，但 `npm run media:backup` 生成的包会作为 GitHub Release 资产
+（`assets.tar.gz`）保存；workflow 用 `actions/cache` 缓存解包后的
+`public/assets/{icons,shots,tags,news}`，cache miss 时才从 Release 下载。
+仓库变量 `MEDIA_VERSION` 指向当前媒体 release；媒体变化时发一个新 release
+并更新该变量。`npm run media:check` 会在部署前校验 data 引用的每个文件都存在，
+避免旧的媒体快照静默产生 404 图片。首次部署仍要上传约 1.1 GB；之后媒体不变，
+只传变化的 HTML/JS/CSS。
 
-**但新闻数据已经自动化了**：`.github/workflows/news-refresh.yml` 每天 00:30 UTC
-（北京时间 08:30，在 AIHOT 日报之后）跑 `npm run news:refresh`，有变更就提交回仓库。
-它只碰 `data/`，不需要媒体，所以在 CI 里安全。下次部署就会带上最新资讯。
+R2 仍然是可选升级（账号当前未开通）；开启后把 `NEXT_PUBLIC_ASSET_BASE`
+指过去即可把媒体移出部署包，`src/lib/assets.ts` 已支持这个开关。
+
+**新闻数据仍由 news-refresh 保持新鲜**：`.github/workflows/news-refresh.yml`
+每天 01:17 UTC 跑 `npm run news:refresh`，有变更就提交回仓库。它只碰 `data/`，
+不需要媒体。部署由 deploy.yml 的 schedule 负责，且 build 自己也会抓一次
+AIHOT，所以即使这次提交没有触发部署，站点仍会拿到最新资讯。
 
 `.github/workflows/ci.yml` 跑 assets:check / news 数据校验 / census / test /
 lint / tsc / **build**。其中 build 这一步是**检查而非部署源**：CI 检出没有媒体
-（`public/assets/{icons,shots,tags,news}` 被 gitignore），产出的 `out/` 直接丢弃，
-部署仍从有媒体的机器上进行。实测它在 0 个媒体文件下 exit 0（约 5 分钟），而注入
-一个预渲染错误后会 exit 1 并点名出错路由——所以它抓代码与渲染回归，**不抓媒体缺失**；
-那个缺口由 `deploy.ps1` 的媒体守卫覆盖。
+（`public/assets/{icons,shots,tags,news}` 被 gitignore），产出的 `out/` 直接丢弃；
+deploy.yml 是独立的部署 workflow，会在构建前从 Release 快照恢复媒体。CI 实测在
+0 个媒体文件下 exit 0（约 5 分钟），而注入一个预渲染错误后会 exit 1 并点名出错
+路由——所以它抓代码与渲染回归，**不抓媒体缺失**；那个缺口由 deploy.yml 的
+媒体数量检查与 `media:check` 覆盖。
 
 部署细节与回滚见 [DEPLOY.md](DEPLOY.md)，媒体备份还原见 [MIGRATION.md](MIGRATION.md)。
 
@@ -197,7 +207,7 @@ node scripts/fetch-aihot-daily.mjs  # 日报/周报/月报/热点 → data/aihot
 
 ## 已知问题
 
-- **媒体只有一份本地副本** + `D:\tryworld-backups\` 的 tar.gz。git 里没有，机器坏了就没了。定期跑 `npm run media:backup`。（2026-10-15 核对：备份包 4183 个文件与磁盘**逐文件一致**，抽样解压 SHA256 相符。）
+- **媒体不在 git**：本机一份 + `D:\tryworld-backups\` 归档 + GitHub Release 的 `assets.tar.gz`（deploy.yml 用它恢复）。定期跑 `npm run media:backup`；媒体变化后要发新 release 并更新 `MEDIA_VERSION`，否则部署会因 `media:check` 失败而中止。（2026-10-15 核对：备份包 4183 个文件与磁盘**逐文件一致**，抽样解压 SHA256 相符。）
 - **`llms.txt` / `llms-full.txt` 的域名已改写**：`data/llms.txt` 是原站索引，47 个绝对链接都指向 `tryworld.com.cn`，生成时统一改成本站，否则等于给原站导流。`llms-full.txt`（8.3 MB）由 `scripts/generate-llms-full.mjs` 生成并挂进 `npm run build`，不会再出现 robots 声明了却 404 的情况。
 - **首页 HTML 5.86 MB 是磁盘大小，不是访客下载量。** 2026-10-16 实测（Chromium，线上）：
   首页 Brotli 传输 **167 KB**、整页首次加载 **364 KB / 14 个请求**；1496 张图**全部

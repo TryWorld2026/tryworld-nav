@@ -188,22 +188,28 @@ next build (output: 'export')  ──►  out/
 
 ---
 
-## ⚠️ CI 自动部署目前是关闭的
+## ✅ CI 自动部署：GitHub Release + Actions cache
 
-`.github/workflows/deploy.yml` 只有 `workflow_dispatch`，没有 `on: push`。原因：
+R2 未开通，所以媒体不进 git、也不放 R2。当前方案：
 
-**Workers Static Assets 的部署会整体替换资产清单**，而 CI 的 checkout 里没有 `public/assets`（被 gitignore）。所以从 CI 部署会把线上所有产品图删掉。
+1. 本地 `npm run media:backup` 生成 `assets-<日期>.tar.gz`（只含 icons/shots/tags/news）。
+2. 改名为 `assets.tar.gz`，用 `gh release create media-v1 assets.tar.gz` 上传（网页上传也行）。
+3. 仓库变量 `MEDIA_VERSION=media-v1`；Secrets 配 `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`。Token 用 Cloudflare 的 "Edit Cloudflare Workers" 模板即可（Workers Scripts:Edit + Zone:Workers Routes:Edit），不需要银行卡。
+4. `.github/workflows/deploy.yml` 每天 02:30 UTC（北京时间 10:30）构建并部署；也可手动 `workflow_dispatch`。
 
-两种打开方式，推荐第一种：
+workflow 会先用 `actions/cache` 恢复 `public/assets/{icons,shots,tags,news}`，cache miss 时才从 Release 下载约 292 MB（解压后 327 MB）；解包后跑 `npm run media:check` 校验 data 引用的每个文件都存在，再 build、`prune --lean`、部署。媒体变化时发 `media-v2` 并把 `MEDIA_VERSION` 改过去；旧 release 可以删，保留最近一两个即可。
 
-1. **开 R2**（见下），然后 `ASSET_BASE_URL` 指过去 —— 部署不再带媒体，CI 就安全了
-2. 把 `public/assets` 从 gitignore 里放出来，接受 364 MB 的仓库
+为什么不是 `on: push`：news-refresh 用 `GITHUB_TOKEN` 提交，不会触发新的 workflow；普通 push 直接部署又会绕过 CI。日常内容靠 schedule，代码发布用 workflow_dispatch。
 
-在解决之前，从有媒体的机器上手动部署：`npm run deploy`。workflow 里也加了守卫步骤，万一开了 push 触发，缺媒体会直接报错而不是静默上线坏站。
+首次 CI 部署仍要上传约 1.1 GB / 1 万个文件；之后媒体不变，只传变化的 HTML/JS/CSS。
+
+从有媒体的机器手动部署依然可用（也是 Release 快照的恢复路径）：`npm run deploy`。
 
 ---
 
 ## 一次性设置（已完成的部分标注 ✅）
+
+> R2 尚未启用；当前自动部署走上面的 GitHub Release + Actions cache，下面的 R2 步骤保留为未来可选升级。
 
 ### 1. 建 R2 桶并开公开访问 ⬜ 未做（账号未启用 R2）
 

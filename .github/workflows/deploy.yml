@@ -1,53 +1,139 @@
 name: deploy
 
+# 自动部署（2026-10-20 起启用）。
+#
+# 媒体（icons/shots/tags/news，约 336 MB）不在 git 里，R2 当前也不可用。
+# 方案：把 `npm run media:backup` 生成的包作为 GitHub Release 资产保存，本
+# workflow 用 actions/cache 缓存解包后的目录；cache miss 时才从 Release 下载。
+# 这样仓库保持轻量，日常构建也不需要每天重新下载 336 MB，同时部署包里仍有
+# 完整媒体，现有的缩略图生成与媒体守卫都照常工作。
+#
+# 一次性设置：
+#   1. 本地 `npm run media:backup`，把生成的 assets-<日期>.tar.gz 改名为
+#      assets.tar.gz
+#   2. `gh release create media-v1 assets.tar.gz`（或在 GitHub 网页上传）
+#   3. 仓库 Settings → Secrets and variables → Actions → Variables 新建
+#      MEDIA_VERSION=media-v1
+#   4. Secrets 配 CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID
+#      （My Profile → API Tokens，用 "Edit Cloudflare Workers" 模板；不需要 R2/银行卡）
+#   5. 媒体变化时发 media-v2，并把 MEDIA_VERSION 改成 media-v2
+#
+# 为什么没有 `on: push`：
+#   news-refresh 用 GITHUB_TOKEN 提交，GitHub 不会因这种提交触发新的 workflow；
+#   而普通 push 直接部署又会绕过 CI 的构建检查。日常内容靠 schedule，代码发布用
+#   workflow_dispatch。以后需要 push 部署，建议用 workflow_run 等 CI 成功后再触发。
+#
+# 首次部署仍要上传约 1.1 GB；之后媒体不变，只传变化的 HTML/JS/CSS。
+
 on:
-  # Auto-deploy on push is deliberately OFF until the media problem is solved.
-  #
-  # The 336 MB of product icons and screenshots is gitignored, so a fresh CI
-  # checkout has no `public/assets/{icons,shots,tags,news}`. A Workers Static
-  # Assets deploy REPLACES the asset manifest, which means deploying from CI
-  # would silently delete every product image from the live site.
-  #
-  # Two ways to switch it on, in order of preference:
-  #   1. Enable R2, run `npm run assets:push`, set ASSET_BASE_URL — then the
-  #      build references the R2 host and the deploy carries no media at all.
-  #   2. Un-ignore public/assets and accept a 364 MB repo.
-  #
-  # Until then, deploy from a machine that has the media: `npm run deploy`.
   workflow_dispatch:
+  schedule:
+    # 02:30 UTC = 北京时间 10:30，晚于 news-refresh（01:17 UTC）与 AIHOT 日报。
+    # build 自己也会抓一次 AIHOT，所以即使 news-refresh 失败，站点仍能拿到最新数据。
+    - cron: '30 2 * * *'
 
 permissions:
   contents: read
 
+# 定时任务与手动触发撞在一起时排队，而不是取消正在进行的部署。
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      MEDIA_VERSION: ${{ vars.MEDIA_VERSION }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
 
-      - run: npm ci
-
-      # Guard: a media-less checkout would deploy a site with no images.
-      - name: Verify media is present
+      - name: Validate configuration
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           missing=0
-          for d in icons shots tags news; do
-            if [ ! -d "public/assets/$d" ]; then
-              echo "::error::public/assets/$d is absent — this deploy would strip every product image. See DEPLOY.md."
+          for name in MEDIA_VERSION CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
+            if [ -z "${!name}" ]; then
+              echo "::error::$name is not set. See the header of .github/workflows/deploy.yml."
               missing=1
             fi
           done
           [ "$missing" = 0 ] || exit 1
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Restore media cache
+        id: media-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            public/assets/icons
+            public/assets/shots
+            public/assets/tags
+            public/assets/news
+          key: ${{ vars.MEDIA_VERSION }}
+
+      - name: Download media snapshot
+        if: steps.media-cache.outputs.cache-hit != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p public/assets
+          gh release download "$MEDIA_VERSION" --pattern assets.tar.gz --dir "$RUNNER_TEMP"
+          # media:backup 生成的包，根目录就是 icons/shots/tags/news。
+          tar -xzf "$RUNNER_TEMP/assets.tar.gz" -C public/assets
+
+      - name: Restore thumbnail cache
+        id: thumbs-cache
+        uses: actions/cache@v4
+        with:
+          path: public/assets/thumbs
+          key: thumbs-${{ vars.MEDIA_VERSION }}-${{ hashFiles('scripts/gen-thumbs.mjs') }}
+
+      # Guard: a media-less or stale snapshot would deploy a site with missing images.
+      - name: Verify media is present
+        run: |
+          for d in icons shots tags news; do
+            if [ ! -d "public/assets/$d" ]; then
+              echo "::error::public/assets/$d is absent — refusing to deploy a media-less site."
+              exit 1
+            fi
+          done
+          total=$(find public/assets/icons public/assets/shots public/assets/tags public/assets/news -type f | wc -l | tr -d ' ')
+          echo "media files: $total"
+          if [ "$total" -lt 4000 ]; then
+            echo "::error::only $total media files; expected at least 4000. Check MEDIA_VERSION."
+            exit 1
+          fi
+
+      # A stale snapshot still builds; it only renders 404 images. Fail before that.
+      - name: Verify every referenced asset exists
+        run: npm run media:check
+
+      - run: npm ci
+
       - name: Build
         run: npm run build
 
       - name: Prune
-        run: npm run prune
+        # 与 deploy.ps1 一致：--lean 裁掉 RSC payload，保留 robots/llms/sitemap。
+        run: npm run prune -- --lean
+
+      - name: Check deploy file count
+        # Cloudflare Workers Static Assets 的硬上限是 20,000 文件。
+        run: |
+          count=$(find out -type f | wc -l | tr -d ' ')
+          echo "deploy files: $count"
+          if [ "$count" -gt 19900 ]; then
+            echo "::error::$count files exceeds the 19,900 safety limit (20,000 hard limit)."
+            exit 1
+          fi
 
       - name: Deploy to Cloudflare Workers
         env:

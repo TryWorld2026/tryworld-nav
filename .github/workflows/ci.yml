@@ -16,15 +16,16 @@
 #   tsc           full type check, no emit
 #   build         next build — catches prerender errors that lint/tsc miss
 #
-# `deploy.yml` stays workflow_dispatch-only on purpose: a Workers Static Assets
-# deploy REPLACES the whole asset manifest, so deploying from a checkout with no
-# media would silently strip every product image from the live site. See the
-# comment block at the top of that file.
+# `deploy.yml` is separate: it restores a media snapshot from a GitHub Release
+# (`actions/cache` + `assets.tar.gz`) before building, so Workers Static Assets
+# receives the full media manifest. CI itself still does not deploy; its build
+# output is discarded.
 #
 # THE BUILD STEP IS A CHECK, NOT A DEPLOY SOURCE. It runs with no media and
-# its `out/` is thrown away — deployment still happens from a machine that has
-# `public/assets/`. That is safe precisely because the two are separate: this
-# step only answers "does the code still build?".
+# its `out/` is thrown away — deployment happens in deploy.yml, which restores
+# `public/assets/` from the release snapshot first. That is safe precisely
+# because the two are separate: this step only answers "does the code still
+# build?".
 #
 # Verified 2026-10-16 in a media-less git worktree (exactly what CI checks out):
 #   - `npm run build` exits 0 in 4.8 min with 0 media files present

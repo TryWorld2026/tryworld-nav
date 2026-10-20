@@ -169,12 +169,13 @@ Cloudflare 按内容哈希判定就得全量重传（实测 51 分钟）。内�
 - 改 `contentBuildId()` 的输入清单要同时考虑：**进页面的必须算，每次构建都变的必须排除**
   （`data/aihot-meta.json` 的 `fetchedAt` 已被显式排除，`aihot-daily.json` 里的
   `fetchedAt` 用字符串替换剥掉）。
-- 部署用 `scripts/deploy.ps1`，**不要手敲 `npx wrangler deploy`**：脚本固化了「不用管道
-  （会静默卡死在 Building list of assets）」「媒体守卫（<4000 文件即中止）」「buildId
-  稳定性检查」「失败重试」四件事。详见 `DEPLOY.md`。
+- **本地部署**用 `scripts/deploy.ps1`，**不要手敲 `npx wrangler deploy`**：脚本固化了
+  「不用管道（会静默卡死在 Building list of assets）」「媒体守卫（<4000 文件即中止）」
+  「buildId 稳定性检查」「失败重试」四件事。详见 `DEPLOY.md`。
 - 媒体（`public/assets/{icons,shots,tags,news}`，约 4000 文件）**不在 git**。
-  Workers Static Assets 每次部署整体替换清单，所以从 CI 部署会把线上图片全打成 404——
-  `.github/workflows/deploy.yml` 因此只有 `workflow_dispatch`。
+  Workers Static Assets 每次部署整体替换清单，所以 CI 部署前必须先恢复完整媒体：
+  `.github/workflows/deploy.yml` 用 GitHub Release 的 `assets.tar.gz` + `actions/cache`
+  恢复，并跑 `npm run media:check` 防止旧快照把新工具的图片打成 404。
 
 ### AIHOT 数据管线
 
