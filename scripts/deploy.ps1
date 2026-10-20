@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   可靠地部署 tryworld-nav 到 Cloudflare Workers。
 
