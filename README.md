@@ -85,9 +85,11 @@ buildId，内容不变时实测 `No updated asset files to upload.`（0 个文�
 （`assets.tar.gz`）保存；workflow 用 `actions/cache` 缓存解包后的
 `public/assets/{icons,shots,tags,news}`，cache miss 时才从 Release 下载。
 仓库变量 `MEDIA_VERSION` 指向当前媒体 release；媒体变化时发一个新 release
-并更新该变量。`npm run media:check` 会在部署前校验 data 引用的每个文件都存在，
-避免旧的媒体快照静默产生 404 图片。首次部署仍要上传约 1.1 GB；之后媒体不变，
-只传变化的 HTML/JS/CSS。
+并更新该变量。部署凭据用 wrangler 的 OAuth 登录态（Secret
+`CLOUDFLARE_WRANGLER_OAUTH`），凭据过期时 wrangler 会自己续期，不需要绑卡、
+也不需要去 dashboard 手工创建 API Token。`npm run media:check` 会在部署前
+校验 data 引用的每个文件都存在，避免旧的媒体快照静默产生 404 图片。
+首次部署仍要上传约 1.1 GB；之后媒体不变，只传变化的 HTML/JS/CSS。
 
 R2 仍然是可选升级（账号当前未开通）；开启后把 `NEXT_PUBLIC_ASSET_BASE`
 指过去即可把媒体移出部署包，`src/lib/assets.ts` 已支持这个开关。

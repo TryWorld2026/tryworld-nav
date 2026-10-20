@@ -194,10 +194,23 @@ R2 未开通，所以媒体不进 git、也不放 R2。当前方案：
 
 1. 本地 `npm run media:backup` 生成 `assets-<日期>.tar.gz`（只含 icons/shots/tags/news）。
 2. 改名为 `assets.tar.gz`，用 `gh release create media-v1 assets.tar.gz` 上传（网页上传也行）。
-3. 仓库变量 `MEDIA_VERSION=media-v1`；Secrets 配 `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`。Token 用 Cloudflare 的 "Edit Cloudflare Workers" 模板即可（Workers Scripts:Edit + Zone:Workers Routes:Edit），不需要银行卡。
-4. `.github/workflows/deploy.yml` 每天 02:30 UTC（北京时间 10:30）构建并部署；也可手动 `workflow_dispatch`。
+3. 仓库变量 `MEDIA_VERSION=media-v1`。
+4. 仓库 Secret `CLOUDFLARE_WRANGLER_OAUTH` = 本机 wrangler 的登录凭据文件
+   （`%APPDATA%/xdg.config/.wrangler/config/default.toml` 全文）。**不需要绑卡**，
+   也不需要去 dashboard 手工创建 API Token。
+5. `.github/workflows/deploy.yml` 每天 02:30 UTC（北京时间 10:30）构建并部署；也可手动 `workflow_dispatch`。
 
 workflow 会先用 `actions/cache` 恢复 `public/assets/{icons,shots,tags,news}`，cache miss 时才从 Release 下载约 292 MB（解压后 327 MB）；解包后跑 `npm run media:check` 校验 data 引用的每个文件都存在，再 build、`prune --lean`、部署。媒体变化时发 `media-v2` 并把 `MEDIA_VERSION` 改过去；旧 release 可以删，保留最近一两个即可。
+
+### 为什么用 wrangler 的 OAuth 凭据而不是 API Token
+
+账号开不了 R2（要绑支付方式），而 API Token 同样只能在 dashboard 手工创建 —— 实测 wrangler 的 OAuth 凭据里**没有「API Tokens: Edit」权限**，调 `/user/tokens/permission_groups` 返回 403，所以没法自动签发一条 token 出来。
+
+但 OAuth 凭据本身就能部署：它的 scope 含 `workers:write` / `workers_scripts:write` / `workers_routes:write`，与 `wrangler deploy` 需要的权限一致；而且**带 refresh_token，过期时 wrangler 会自己续期**。实测把 `expiration_time` 改到过去后跑 `wrangler whoami`，wrangler 刷新并写回配置，同一个 refresh_token 被消费过后仍能再次刷新，所以 CI 与本机可以共用同一份凭据。
+
+**代价要知道**：OAuth 凭据的权限远大于一条只含 Workers 的 API Token（还带 `workers_kv:write`、`d1:write`、`pages:write`、`ssl_certs:write` 等），泄露等于账号相当一部分能力失守。它只存在 GitHub Actions Secrets（公开仓库的 secret 只有写权限者能读，也不会下发给 PR），在 runner 上临时落盘、用完随 runner 销毁。**更严格的做法**是去 dashboard 手工建一条仅含 Workers 权限的 API Token，替换掉这个 secret —— 但那需要绑卡才能自助完成，是当前约束下的一处妥协。
+
+CI 上的凭据路径是 `$XDG_CONFIG_HOME/.wrangler/config/default.toml`（实测只有这个路径 wrangler 认；`$HOME/.wrangler` 与 `$XDG_CONFIG_HOME/wrangler` 都不行）。
 
 为什么不是 `on: push`：news-refresh 用 `GITHUB_TOKEN` 提交，不会触发新的 workflow；普通 push 直接部署又会绕过 CI。日常内容靠 schedule，代码发布用 workflow_dispatch。
 

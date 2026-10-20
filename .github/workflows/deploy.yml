@@ -14,9 +14,27 @@ name: deploy
 #   2. `gh release create media-v1 assets.tar.gz`（或在 GitHub 网页上传）
 #   3. 仓库 Settings → Secrets and variables → Actions → Variables 新建
 #      MEDIA_VERSION=media-v1
-#   4. Secrets 配 CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID
-#      （My Profile → API Tokens，用 "Edit Cloudflare Workers" 模板；不需要 R2/银行卡）
+#   4. Secrets 配 CLOUDFLARE_WRANGLER_OAUTH —— 内容是本机 wrangler 的登录
+#      凭据文件（见下方「为什么用 OAuth 而不是 API Token」）
 #   5. 媒体变化时发 media-v2，并把 MEDIA_VERSION 改成 media-v2
+#
+# 为什么用 OAuth 而不是 API Token：
+#   账号当前无法开通 R2（需要绑支付方式），而 Cloudflare 的 API Token 同样
+#   要在 dashboard 里手工创建、并且 API Token 管理接口需要「API Tokens: Edit」
+#   权限，wrangler 的 OAuth 凭据没有这个权限，拿不到 token。
+#   但 OAuth 凭据本身就能部署：它的 scope 里含 workers:write /
+#   workers_scripts:write / workers_routes:write，与 `wrangler deploy` 需要
+#   的权限一致，而且**带 refresh_token，会在过期时自动续期**。
+#   实测：把 expiration_time 改到过去后跑 `wrangler whoami`，wrangler 自己
+#   刷新并写回配置；同一个 refresh_token 被消费过一次后仍能再次刷新，所以
+#   CI 与本机可以共用同一份凭据，互不踢掉对方。
+#
+#   代价要说清楚：OAuth 凭据的权限比一条只含 Workers 的 API Token 大得多
+#   （还带 workers_kv:write、d1:write、pages:write、ssl_certs:write 等），
+#   泄露等于账号相当一部分能力失守。它只存在 GitHub Actions Secrets 里
+#   （公开仓库的 secret 只有写权限者能读，且不会下发给 PR），且只在 runner
+#   上临时落盘、用完即随 runner 销毁。若要更严格，应改用 dashboard 手工
+#   创建一条仅含 Workers 权限的 API Token，替换掉这个 secret。
 #
 # 为什么没有 `on: push`：
 #   news-refresh 用 GITHUB_TOKEN 提交，GitHub 不会因这种提交触发新的 workflow；
@@ -51,17 +69,30 @@ jobs:
 
       - name: Validate configuration
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_WRANGLER_OAUTH: ${{ secrets.CLOUDFLARE_WRANGLER_OAUTH }}
         run: |
           missing=0
-          for name in MEDIA_VERSION CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
+          for name in MEDIA_VERSION CLOUDFLARE_WRANGLER_OAUTH; do
             if [ -z "${!name}" ]; then
               echo "::error::$name is not set. See the header of .github/workflows/deploy.yml."
               missing=1
             fi
           done
           [ "$missing" = 0 ] || exit 1
+
+      # 把 wrangler 的 OAuth 凭据放回它认得的位置。Linux runner 上 wrangler
+      # 读的是 $XDG_CONFIG_HOME/.wrangler/config/default.toml（实测：只有这个
+      # 路径能被认到，$HOME/.wrangler 与 $XDG_CONFIG_HOME/wrangler 都不行）。
+      # 凭据过期时 wrangler 会自己用其中的 refresh_token 续期并写回该文件，
+      # 所以 CI 不需要人工换 token。
+      - name: Restore wrangler credentials
+        env:
+          CLOUDFLARE_WRANGLER_OAUTH: ${{ secrets.CLOUDFLARE_WRANGLER_OAUTH }}
+        run: |
+          mkdir -p "$XDG_CONFIG_HOME/.wrangler/config"
+          printf '%s' "$CLOUDFLARE_WRANGLER_OAUTH" > "$XDG_CONFIG_HOME/.wrangler/config/default.toml"
+          chmod 600 "$XDG_CONFIG_HOME/.wrangler/config/default.toml"
+          npx wrangler whoami 2>&1 | sed -n '1,12p'
 
       - uses: actions/setup-node@v4
         with:
@@ -136,7 +167,4 @@ jobs:
           fi
 
       - name: Deploy to Cloudflare Workers
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler deploy
