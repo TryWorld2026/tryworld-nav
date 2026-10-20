@@ -1,5 +1,18 @@
 [
   {
+    "id": "tdcasw4dwhyzne3hxo3dmizmz",
+    "title": "黑客用 AI 智能体入侵 John Deere、SharkNinja 等超 100 家网站",
+    "originalTitle": "A hacker broke into John Deere and SharkNinja with an army of AI agents",
+    "summary": "AI 安全公司 Norforge 发现一名黑客用开源 AI 平台 Cairn 编排的智能体入侵了超过 100 个网站，据 Reuters 报道受害者包括 John Deere、SharkNinja 和 Cummins。",
+    "source": "The Verge：AI（RSS）",
+    "originalUrl": "https://www.theverge.com/ai-artificial-intelligence/1013643/ai-agents-hack-john-deere-shark-ninja-cummins",
+    "aihotUrl": "https://aihot.news/items/tdcasw4dwhyzne3hxo3dmizmz",
+    "publishedAt": "2026-10-19T13:58:41.000Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": "原文梳理了 Norforge 发现的暴露 Cairn 实例和受害企业回应，读者可以了解 AI 智能体大规模攻击的实际形态。"
+  },
+  {
     "id": "ezjbo6ic6xfvpyxyghjekaude",
     "title": "n8n 教程：在 NVIDIA DGX Spark 上离线运行全套 AI 工作流",
     "originalTitle": "Run your n8n AI workflows on NVIDIA DGX Spark, with no cloud API",
@@ -29,14 +42,14 @@
     "id": "szf3v3re4888fzekwoohhu8b4",
     "title": "AWS 发布 TorchNeuron：Trainium 的原生 PyTorch 后端",
     "originalTitle": "Introducing TorchNeuron: Native PyTorch backend for AWS Trainium",
-    "summary": "AWS 宣布 TorchNeuron，一个面向 Trainium 芯片的开源原生 PyTorch 后端，10 月 20 日起以 Apache 2.0 协议公开 Beta，代码位于 github.com/aws-neuron/torch-neuronx。",
+    "summary": "AWS 宣布 TorchNeuron，一个面向 Trainium 的开源原生 PyTorch 后端，10 月 20 日起以 Apache 2.0 公开 Beta 发布于 github.com/aws-neuron/torch-neuronx。",
     "source": "PyTorch：Blog（RSS）",
     "originalUrl": "https://pytorch.org/blog/introducing-torchneuron-native-pytorch-backend-for-aws-trainium/",
     "aihotUrl": "https://aihot.news/items/szf3v3re4888fzekwoohhu8b4",
     "publishedAt": "2026-10-19T12:45:23.000Z",
     "category": "ai-products",
     "categoryLabel": "AI 产品",
-    "reason": "原文给出执行模式、分布式 API 和 100k 模型兼容性测试等细节，开发者可据此评估现有 PyTorch 代码迁移到 Trainium 的改动成本。"
+    "reason": "原文给出了 TorchNeuron 的执行模式、分布式支持与实测覆盖情况，读者可以据此评估现有 PyTorch 工作流迁移到 Trainium 的成本。"
   },
   {
     "id": "bm95oliei5mcgy2tau7e22d59",
