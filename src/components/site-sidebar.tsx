@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Bookmark, ChevronRight, Layers2, Newspaper, Sparkles } from 'lucide-react';
+import { Bookmark, ChevronRight, Layers2, Newspaper, Scale, Sparkles } from 'lucide-react';
 import { CategoryIcon } from './category-icon';
 import { SiteLogo } from './site-logo';
 import { navFeatured as featured, navHotCategories as hotCategories } from '@/lib/nav';
@@ -240,6 +240,16 @@ export function SiteSidebar() {
                 <Layers2 className="w-4 h-4 text-gongke-accent" aria-hidden="true" />
               </div>
               <span className={LABEL_CLASS}>9 个工具清单</span>
+            </Link>
+            {/* 二选一对比：站内唯一直接回答「这两个该选哪个」的入口。
+                详情页的「怎么选」回答的是「这一个适合我吗」，读者真正卡住的
+                是「在两者之间选」—— 没有入口的话那 298 个页面只能从 sitemap
+                到达，等于没做。 */}
+            <Link href="/compare" className={NAV_CLASS} data-testid="sidebar-compare">
+              <div className="w-5 h-5 relative mr-3 flex-shrink-0 flex items-center justify-center">
+                <Scale className="w-4 h-4 text-gongke-accent" aria-hidden="true" />
+              </div>
+              <span className={LABEL_CLASS}>二选一对比</span>
             </Link>
             <Link href="/favorites" className={NAV_CLASS}>
               <div className="w-5 h-5 relative mr-3 flex-shrink-0 flex items-center justify-center">

@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { collectionBySlug, collections, SITE, toolBySlug } from '@/lib/data';
-import { TOOL_GRID, ToolMiniCard } from '@/components/tool-card';
+import { ToolMiniCard } from '@/components/tool-card';
+import { CategoryGrid } from '@/components/category-grid';
 import { cardFromTool } from '@/lib/card-server';
 import type { Tool } from '@/lib/types';
 import { canonical } from '@/lib/canonical';
@@ -132,46 +133,25 @@ export default async function CollectionDetailPage({
 
       <div className="py-8">
         <div className="content-container">
-          {/* 与全站其它工具网格同一条轨道规则（280px 最小轨道）。原先这里
-              从 `lg` 就开三列、`4xl` 才五列，1440 下比首页窄一档。 */}
-          <div className={TOOL_GRID}>
-            {members.map(({ member, tool }) => (
-              <ToolMiniCard
-                key={tool.slug}
-                // 必须过 `cardFromTool()`：裸 `Tool` 没有价格/平台/更新时间，
-                // 卡片底部那一行「可比较的事实」会整块不渲染。见
-                // `lib/card-server.ts` 与首页 `Grid` 的同一处说明。
-                tool={cardFromTool(tool)}
-                emphasis
-                // Always the tag-chip row, wrapper included — even when a member
-                // carries no tags. The origin renders the empty flex row rather
-                // than falling back to category chips, and `chips` is what
-                // suppresses the card's default category row.
-                chips={
-                  <div className="flex flex-wrap gap-1.5">
-                    {member.tags.map((g) => (
-                      <span
-                        key={g.slug}
-                        className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-[11px] text-foreground/70"
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={g.icon}
-                          alt=""
-                          width={14}
-                          height={14}
-                          loading="lazy"
-                          decoding="async"
-                          className="h-3.5 w-3.5 shrink-0 rounded-[3px]"
-                        />
-                        <span className="truncate">{g.name}</span>
-                      </span>
-                    ))}
-                  </div>
-                }
-              />
-            ))}
-          </div>
+          {/* 2026-10-22：网格换成客户端组件 `CategoryGrid`，与分类页共用同一套
+              排序 + 加载更多。集合页原先 20 条一次全铺、无排序无分页 ——
+              而「在这里挑工具」正需要排序。
+
+              卡片用自己的 `chips`（集合的标签 chip），所以传 `chipsBySlug`
+              数据而不是渲染函数（客户端组件不能收函数 prop）。`cardFromTool()`
+              仍必须在服务端先过一遍，否则裸 `Tool` 没有价格/平台/更新时间，
+              卡片底部那条「可比较的事实」会整块不渲染。 */}
+          <CategoryGrid
+            cards={members.map(({ tool }) => cardFromTool(tool))}
+            chipsBySlug={
+              new Map(
+                members.map(({ member }) => [
+                  member.slug,
+                  member.tags.map((g) => ({ slug: g.slug, name: g.name, icon: g.icon })),
+                ]),
+              )
+            }
+          />
         </div>
       </div>
 

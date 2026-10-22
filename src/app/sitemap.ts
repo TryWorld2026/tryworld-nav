@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { SITE, categories, collections, tools } from '@/lib/data';
 import { dailyArchive, monthlyReports, weeklyReports } from '@/lib/daily-data';
+import { allComparePairs } from '@/lib/compare-server';
 
 // Required by `output: 'export'`: without it Next treats the sitemap as a
 // request-time route and refuses to emit it as a file.
@@ -11,6 +12,7 @@ const STATIC_ROUTES = [
   '/tools',
   '/categories',
   '/collections',
+  '/compare',
   '/news',
   '/news/daily',
   '/news/daily/archive',
@@ -88,6 +90,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...tools.map((t) => ({
       url: `${SITE.url}/tools/${t.slug}`,
+      lastModified: CATALOG_UPDATED,
+      changeFrequency: 'weekly' as const,
+      priority: 0.6,
+    })),
+    // 二选一对比页。**只收预置清单**（由 `lib/compare.ts` 按读者关心度算出来
+    // 的那几十对），不枚举 2081² 的排列 —— 那会让 sitemap 爆炸，而且绝大多数
+    // 组合没有人工判断、做成页面只剩两张卡并排。
+    ...allComparePairs().map((p) => ({
+      url: `${SITE.url}/compare/${p.slug}`,
       lastModified: CATALOG_UPDATED,
       changeFrequency: 'weekly' as const,
       priority: 0.6,

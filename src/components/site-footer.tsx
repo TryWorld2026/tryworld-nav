@@ -88,6 +88,14 @@ export function SiteFooter() {
                 <li>
                   <Link
                     className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
+                    href="/compare"
+                  >
+                    二选一对比
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
                     href="/privacy-policy"
                   >
                     隐私政策
