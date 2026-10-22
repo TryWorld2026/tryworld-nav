@@ -1,5 +1,44 @@
 [
   {
+    "id": "uc21c65s4trz2ums8g8fgtb0v",
+    "title": "Kling 4.0 上线 OpenArt，支持首中尾帧引导与最多 10 张参考图",
+    "originalTitle": "Hold on to your hat. #KlingAI #Kling4",
+    "summary": "OpenArt 宣布 Kling 4.0 上线，可用首、中、尾帧引导视频，最多使用 10 张参考图，并支持文本或帧生成与视频编辑，All-in-One Reference 用一个模型完成生成和编辑。11 月 20 日前 Pro 和 Wonder 套餐享 50% 折扣。",
+    "source": "X：可灵 Kling AI (@Kling_ai)",
+    "originalUrl": "https://x.com/Kling_ai/status/2113156632134005040",
+    "aihotUrl": "https://aihot.news/items/uc21c65s4trz2ums8g8fgtb0v",
+    "publishedAt": "2026-10-22T06:32:56.000Z",
+    "category": "ai-products",
+    "categoryLabel": "AI 产品",
+    "reason": "引用内容给出了 OpenArt 上 Kling 4.0 的帧控制、参考图上限和折扣信息，读者可据此评估视频生成玩法。"
+  },
+  {
+    "id": "rin0ab4vdu46hjoiyjcj5vih5",
+    "title": "Kling 4.0 现已上线 OnSolo",
+    "originalTitle": "Kling 4.0 is now live on OnSolo. #Kling4 #KlingAI",
+    "summary": "可灵（Kling）宣布 Kling 4.0 已在 OnSolo 上线。该模型支持单次生成 30 秒原生视频，快速动作和大运镜下保持稳定，立体声配更准的口型同步，并提供 21:9 宽屏，单个任务可叠加最多 15 个参考图和 10 个关键帧以保持角色、镜头与剧情一致。",
+    "source": "X：可灵 Kling AI (@Kling_ai)",
+    "originalUrl": "https://x.com/Kling_ai/status/2113142473145078041",
+    "aihotUrl": "https://aihot.news/items/rin0ab4vdu46hjoiyjcj5vih5",
+    "publishedAt": "2026-10-22T05:36:40.000Z",
+    "category": "ai-products",
+    "categoryLabel": "AI 产品",
+    "reason": "原文列出了 Kling 4.0 在 OnSolo 上的具体能力变化，创作者可据此评估其对视频创作流程的适用性。"
+  },
+  {
+    "id": "eme8i9igoadxb3beb902byfz0",
+    "title": "NSA 就 AI 发现的 PHP2Shell 关键漏洞发布修复警告",
+    "originalTitle": "National Security Agency (NSA) and world leaders warn of security flaws found in PHP programming language",
+    "summary": "NSA 警告两个由 Calif 研究人员用 GPT-5.6 Sol 发现的 PHP 关键漏洞（PHP2Shell），敦促组织打补丁或将未修补服务器下线。两个漏洞位于 PHP 核心，在 Apache mod_php 上演示的利用可在应用代码运行前触发。",
+    "source": "X：Rohan Paul (@rohanpaul_ai)",
+    "originalUrl": "https://x.com/rohanpaul_ai/status/2113136583985766442",
+    "aihotUrl": "https://aihot.news/items/eme8i9igoadxb3beb902byfz0",
+    "publishedAt": "2026-10-22T05:13:16.000Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": "原文把 AI 发现的 PHP 漏洞与实际攻击、补丁版本和暴露面数字放在一起，读者可以据此评估这一事件的真实影响范围。"
+  },
+  {
     "id": "nag5wgod0havrmodeo75pwnge",
     "title": "WSJ：马斯克希望以 AI 为核心推动 SpaceX 与 Tesla 合并",
     "originalTitle": "WSJ: Musk wants to combine a $2T rocket company with a $1.5T carmaker around AI.",
@@ -65,19 +104,6 @@
     "reason": "作者完整梳理了 PHP2Shell 漏洞从泄露到全球应急的技术链条，并提出 AI 让漏洞发现加速而修复人手不足的核心矛盾。"
   },
   {
-    "id": "hhfrsh3lfmud3u56r6ozp64oa",
-    "title": "OpenAI 与 Google Wiz 用 AI 发现潜伏 20 年的 PHP 严重漏洞，NSA 建议无法立即修复的网站先下线",
-    "originalTitle": "PHP Armageddon: OpenAI, Google’s Wiz find ancient holes, panicking the internet",
-    "summary": "NSA 发出警告称 PHP 中发现两个严重漏洞，PHP Foundation 已发布补丁；漏洞自 2004 年的 PHP 5 起就存在，影响约 70% 网站。",
-    "source": "TechCrunch：AI（RSS）",
-    "originalUrl": "https://techcrunch.com/2026/10/21/php-armageddon-openai-googles-wiz-find-ancient-holes-panicking-the-internet/",
-    "aihotUrl": "https://aihot.news/items/hhfrsh3lfmud3u56r6ozp64oa",
-    "publishedAt": "2026-10-21T17:59:12.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "文章梳理了 AI 发现 PHP 二十年老漏洞的全过程，并解释了为何这些漏洞因 AI 被发现、也因 AI 变得高风险。"
-  },
-  {
     "id": "heuaxyy5ixq9x5wtoobw5wq7e",
     "title": "研究人员用 GPT-5.6 Sol 发现 PHP 两个 CVSS 9.2 严重漏洞",
     "originalTitle": "Researchers using GPT-5.6 Sol found massively critical flaw in PHP, which runs about 70% of websites, knocked major sites offline as oper...",
@@ -102,6 +128,19 @@
     "category": "ai-products",
     "categoryLabel": "AI 产品",
     "reason": "原文提供官方 Codex 技能和检测仓库，网站运营者可以据此自查 PHP 漏洞影响。"
+  },
+  {
+    "id": "paq5nfs7jxno8qghh27ho05be",
+    "title": "MiniMax Code 桌面端推出 Mini App 长运行应用功能",
+    "originalTitle": "Introducing MiniMax Code Mini App",
+    "summary": "MiniMax 在 MiniMax Code 桌面应用（macOS / Windows）本地会话中推出 Mini App，一种带前端和后端的长运行应用，以插件形式安装并与 Agent 双向调用，让 Agent 的工作停留在常驻页面而非散落各对话中。",
+    "source": "MiniMax：Blog（网页）",
+    "originalUrl": "https://www.minimax.io/blog/minimax-code-mini-app-1792650729",
+    "aihotUrl": "https://aihot.news/items/paq5nfs7jxno8qghh27ho05be",
+    "publishedAt": "2026-10-21T16:00:00.000Z",
+    "category": "ai-products",
+    "categoryLabel": "AI 产品",
+    "reason": "官方详细说明了 Mini App 的架构、安全边界和社区生态，开发者可以据此判断如何在 MiniMax Code 上构建长运行应用。"
   },
   {
     "id": "y1fd2c0s3ydociygdah7apvme",
@@ -1493,32 +1532,6 @@
     "category": "industry",
     "categoryLabel": "行业动态",
     "reason": "记者实测并联合黑客演示了 Eiliko 机器人的数据暴露范围，读者可据此评估把 AI 玩具接入家庭的风险。"
-  },
-  {
-    "id": "allv4n9g9lhfy72m1pg725apv",
-    "title": "Anthropic Q3营收达168亿美元但增速放缓，11月IPO前估值预期或下调",
-    "originalTitle": "Anthropic's Q3 revenue hits $16.8B but growth slows ahead of planned November IPO",
-    "summary": "Anthropic在面向潜在投资者的会议上公布Q3营收168亿美元，环比增长约45%，但明显低于Q2超140%的增速。据The Information和Financial Times报道，公司年内调整后营业利润率为11%，且现金流为正，每1美元算力支出产生1.70美元收入。部分投资者对其营收数字失望，预计IPO估值可能降至1.5万亿美元以下，低于此前讨论的2万亿美元。",
-    "source": "The Decoder：AI News（RSS）",
-    "originalUrl": "https://the-decoder.com/anthropics-q3-revenue-hits-16-8b-but-growth-slows-ahead-of-planned-november-ipo/",
-    "aihotUrl": "https://aihot.news/items/allv4n9g9lhfy72m1pg725apv",
-    "publishedAt": "2026-10-15T09:50:43.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "财报细节与IPO估值预期变化并置，读者可据此理解增长放缓与盈利信号之间的张力。"
-  },
-  {
-    "id": "f9mfexmd1udr4ehzn5t6pawi5",
-    "title": "Payload 集成 Figma Make，支持在 Figma 内构建、托管和管理数据驱动网站",
-    "originalTitle": "Create, ship, and manage data-backed websites with Payload in Figma",
-    "summary": "Figma 宣布开源内容框架 Payload 集成到 Figma Make，用提示词创建应用时自动配套数据库、文件存储、用户登录和管理面板。Payload 加入 Figma 一年内下载量增长 6x，成为 NPM 上增长最快的开源 CMS；面向所有计划开放，托管基础设施目前处于 beta 且免费，定价将在生效前公布。",
-    "source": "Figma AI / Agent / Make",
-    "originalUrl": "https://www.figma.com/blog/websites-with-payload-in-figma/",
-    "aihotUrl": "https://aihot.news/items/f9mfexmd1udr4ehzn5t6pawi5",
-    "publishedAt": "2026-10-15T04:50:00.000Z",
-    "category": "ai-products",
-    "categoryLabel": "AI 产品",
-    "reason": "原文交代了 Payload 集成到 Figma Make 后的后端能力、托管现状和开放计划，读者可据此判断对建站工作流的改变。"
   },
   {
     "id": "ro5zfihp4w9597vt5vz4ihdv2",

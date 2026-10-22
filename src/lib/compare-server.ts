@@ -21,6 +21,13 @@ function buildCategories(): Map<string, string[]> {
   return m;
 }
 
+/** slug → 显示名。用来挡「同一个产品的两个收录条目」。 */
+function buildNames(): Map<string, string> {
+  const m = new Map<string, string>();
+  for (const t of tools) m.set(t.slug, t.name);
+  return m;
+}
+
 /** slug → 被多少个编辑集合收录（`comparePairs` 内部会封顶）。 */
 function buildCollectionCount(): Map<string, number> {
   const m = new Map<string, number>();
@@ -56,6 +63,7 @@ export function allComparePairs(): ComparePair[] {
   const ctx: CompareContext = {
     order: new Map(tools.map((t, i) => [t.slug, i])),
     categories: buildCategories(),
+    names: buildNames(),
     featured: new Set(featured.map((f) => f.slug)),
     collectionCount: buildCollectionCount(),
     related: buildRelated(),

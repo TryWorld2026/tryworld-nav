@@ -62,12 +62,39 @@ export type ComparePair = {
 /** 判断数据的最小形状。`VERDICTS` 结构上满足它。 */
 export type VerdictIndex = Record<string, { vs?: string } | undefined>;
 
+/**
+ * 归一化工具名，用于挡住「同一个产品的两个收录条目」。
+ *
+ * 实测（2026-10-22）有 4 组 `vs` 是同一产品的不同收录条目，不是二选一：
+ * `AIPPT ↔ 360 AI PPT`、`AIPPT ↔ WPS AI PPT`、`iSlide AIPPT ↔ AIPPT`、
+ * `豆包 ↔ 豆包手机助手`。读者搜「AIPPT」看到「AIPPT 还是 360 AI PPT？」，
+ * 点进去发现是同一类东西 —— 那不是「帮他在两者间选」，是**让他怀疑我们
+ * 收录重复了**。
+ *
+ * 判据：两个名字归一化后**存在包含关系**就不是二选一。
+ * 去掉空格/连字符/下划线、转小写，中文不做分词（「豆包」⊂「豆包手机助手」
+ * 正好被这条抓住）。
+ */
+function normalizeName(name: string): string {
+  return name.toLowerCase().replace(/[\s\-_·.]+/g, '');
+}
+
+/** 这两个名字看起来是不是同一个产品（互相包含）。 */
+export function namesOverlap(a: string, b: string): boolean {
+  const na = normalizeName(a);
+  const nb = normalizeName(b);
+  if (!na || !nb) return false;
+  return na.includes(nb) || nb.includes(na);
+}
+
 /** 排序与评分需要的目录信息。由调用方传入（目录序在 `lib/data.ts` 里）。 */
 export type CompareContext = {
   /** slug → 目录序号。 */
   order: Map<string, number>;
   /** slug → 分类 slug 数组（同分类是门槛）。 */
   categories: Map<string, string[]>;
+  /** slug → 显示名。用来挡「同一个产品的两个收录条目」（见 `namesOverlap`）。 */
+  names?: Map<string, string>;
   /** 首页常用推荐的 slug（重加权）。 */
   featured?: Set<string>;
   /** slug → 被多少个编辑集合收录（中加权，封顶 3）。 */
@@ -147,6 +174,11 @@ export function comparePairs(
       // （「用 Notion 还是用 Midjourney」不是问题）。
       const cx = new Set(catsOf(x));
       if (!catsOf(y).some((c) => cx.has(c))) continue;
+
+      // **硬门槛 3**：不是同一个产品的两个收录条目（见 `namesOverlap`）。
+      const nx = ctx.names?.get(x);
+      const ny = ctx.names?.get(y);
+      if (nx && ny && namesOverlap(nx, ny)) continue;
 
       let score = W.bothJudged;
       if (ctx.featured?.has(x)) score += W.featured;
