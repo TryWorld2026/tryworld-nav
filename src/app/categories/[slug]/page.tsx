@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { CategoryIcon } from '@/components/category-icon';
-import { TOOL_GRID, ToolMiniCard } from '@/components/tool-card';
+import { CategoryGrid } from '@/components/category-grid';
 import { cardFromTool } from '@/lib/card-server';
 import { categories, categoryBySlug, categoryCards, SITE, toolsByCategory } from '@/lib/data';
 import { canonical } from '@/lib/canonical';
@@ -133,16 +133,21 @@ export default async function CategoryDetailPage({
              home page and /tools — counted 241 mini cards and zero large ones on
              /categories/ai-agents.
 
-             与首页 / /tools 共用 `TOOL_GRID`：全站卡片宽度由 280px 最小轨道
-             决定，从首页点进分类页时字号与密度不会突然变一档。 */
-          <div className={TOOL_GRID}>
-            {list.map((t) => (
-              // 必须过 `cardFromTool()`：裸 `Tool` 没有价格/平台/更新时间，
-              // 卡片底部那一行「可比较的事实」会整块不渲染。见
-              // `lib/card-server.ts` 与首页 `Grid` 的同一处说明。
-              <ToolMiniCard key={t.id} tool={cardFromTool(t)} hideCategorySlug={slug} />
-            ))}
-          </div>
+             2026-10-22：网格换成了客户端组件 `CategoryGrid`，加排序与
+             「加载更多」。原先一次铺 173 张卡（`/categories/ai-writing`），
+             DOM 1724 节点、移动端页高 33,663px，无排序无分页 —— 读者选定
+             场景之后只能在里面从头读到尾。
+
+             **刻意不加筛选器**（价格/平台/搜索框），继续筛走页头那条
+             「在工具目录中筛选」链接：否则这一页会变成 `/tools?cat=` 的第二个
+             实现，两边永远漂移。
+
+             卡片数据在服务端过 `cardFromTool()` 再传下去 —— 裸 `Tool` 没有
+             价格/平台/更新时间，卡片底部那条「可比较的事实」会整块不渲染。 */
+          <CategoryGrid
+            cards={list.map((t) => cardFromTool(t))}
+            categorySlug={slug}
+          />
         )}
 
         <section className="border-t border-foreground/10 pt-10">

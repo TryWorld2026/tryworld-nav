@@ -23,6 +23,10 @@ import { asset } from './assets';
 import { navCategories } from './nav';
 import type { PriceCode, SearchRecord } from './search';
 
+// 排序与新鲜度文案住在 `card-sort.ts`（零 import，可被 node 测试直接 import）。
+// 这里 re-export，让调用方继续只认 `@/lib/card` 一个入口。
+export { freshLabel, sortCards, FRESH_DAYS, type SortableCard } from './card-sort';
+
 /**
  * 卡片真正读到的那几个字段。
  *
@@ -56,32 +60,6 @@ export type CardTool = {
 };
 
 const navCategoryBySlug = new Map(navCategories.map((c) => [c.slug, c]));
-
-/** 距今（数据快照）多少天以内算「近期更新」。超过就不再提，避免把陈旧当卖点。 */
-const FRESH_DAYS = 90;
-
-/**
- * 卡片上的新鲜度短语。**只在真的新鲜时**返回非空。
- *
- * `epoch` 是全站新鲜度的参照点，由调用方传入（见 `DATA_EPOCH`）——
- * 不在这里读 `Date.now()`，理由见 `DATA_EPOCH` 的注释：渲染期读墙钟会让
- * 「3 天前更新」每天变一次，等于每天全量重传一次站点。
- *
- * 阈值 90 天是刻意的：2081 条里 `updated` 中位 371 天、88.75% 超一年、
- * 只有个位数在 30 天内。把「更新于 2025-10-11」印在每一张卡上，等于用一句
- * 陈旧信息占据卡片最贵的一行，读者会以为整站都在维护 —— 而事实相反。
- * 所以这里**有则说、陈旧则不说**，由详情页用完整正文承担「它还能不能用」。
- */
-export function freshLabel(day: number | undefined, epoch: number | undefined): string {
-  if (typeof day !== 'number' || typeof epoch !== 'number') return '';
-  const ago = epoch - day;
-  if (ago > FRESH_DAYS) return '';
-  if (ago <= 0) return '近期更新';
-  if (ago <= 7) return `${ago} 天前更新`;
-  if (ago <= 30) return `${Math.floor(ago / 7)} 周前更新`;
-  return `${Math.floor(ago / 30)} 个月前更新`;
-}
-
 
 /** `SearchRecord` → 卡片数据。分类名称与色值从 `nav.json` 补齐（索引里只存 slug）。 */
 export function cardFromRecord(r: SearchRecord): CardTool {
