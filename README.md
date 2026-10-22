@@ -259,12 +259,32 @@ pricing 徽章分布、`more/related/latest` 的死引用数、prose 总字符�
 
 ## 已验证
 
-`npm run build` 通过（2130 页静态生成，产物 2125 个 `.html`），
+`npm run build` 通过（2632 页静态生成，产物 2632 个 `.html`），
 `npm run lint` exit 0、`npx tsc --noEmit` exit 0。每个路由都带上了
 `<link rel="canonical" href="https://nav.tryworld.com.cn/...">`，
 `npm run prune --lean` 保留 `llms.txt` 与 `llms-full.txt`。
 
-2026-10-17 夜间验收（资讯频道 + APP 壳，本轮）：
+2026-10-22 线上验收（部署 Version `37fa2cdb`，本轮）：
+
+- **构建与测试**：`npm run lint` 0 错 / `npx tsc --noEmit` 0 错 /
+  `npm test` **114/114** / `npm run build` 成功 / 2632 个静态页。
+- **部署**：`Uploaded 2636 files (10701 already uploaded)`，487 秒。
+  内容派生的 buildId 生效 —— 只传变更部分，不是全量 13389 个。
+- **路由**：15 条关键路由全部 200（含 `/compare` 与 `/compare/cursor-vs-otty`）；
+  sitemap 抽样 30 条 **30/30 返回 200**；媒体抽样 30 个 **30/30 返回 200**。
+- **渲染**：15 个页面 × 2 视口（390×844 / 1440×900）= **30 次加载，零问题** ——
+  `h1` 恰好 1 个、`scrollWidth == clientWidth`（零横向溢出）、
+  canonical 齐全、**零 4xx、零 pageerror**。
+- **预取 404 已消除**：修复前首页加载 24 个 `.txt?_rsc=` 404、每次导航再 +22；
+  修复后**全新上下文 4 次页面加载 0 个 4xx**（`work/prefetch-cost.mjs`、
+  `work/fresh404.mjs`）。原因与取舍见 `next.config.mjs` 里那段说明。
+- **内容抽查**：首页首屏搜索入口在、卡片新鲜度 56 处、
+  详情页降级块（「目录事实」）与人工条目（「编辑判断」）都在。
+- 备注：本机部署线路有约 40% 连接超时率，**三次里成一次是常态**
+  （本轮第 1 次卡在清单读取、第 2 次成功）。判据是 CPU 与 TCP 连接，
+  不是日志有无输出 —— 详见 [DEPLOY.md](DEPLOY.md)。
+
+2026-10-17 夜间验收（资讯频道 + APP 壳）：
 
 - **构建**：`npm run build` exit 0，静态页 **2340** 个（上一轮 2135）。
 - **测试**：`npm test` **46/46 通过**；`tests/interaction.test.mjs` 新增的
