@@ -343,6 +343,11 @@ export type NewsSourceFacet = { name: string; count: number };
 /**
  * Top 来源，按条数倒序、同数按名称字典序。`limit` 默认 8 —— 右栏放得下，
  * 也够读者判断「这期的信息浓度集中在哪里」。
+ *
+ * **它返回的是「前 N 个」，不是「一共几个」。** 要报总数用
+ * `sourceCount()` —— 2026-10-22 的实测缺陷正是把这两件事混用了：`/news`
+ * 页脚写「覆盖 10 个来源」，而同一个页面顶部写「70 个来源」，因为页脚
+ * 直接打印了 `sourceList(items, 10).length`。
  */
 export function sourceList(items: NewsItem[], limit = 8): NewsSourceFacet[] {
   const map = new Map<string, number>();
@@ -354,6 +359,19 @@ export function sourceList(items: NewsItem[], limit = 8): NewsSourceFacet[] {
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'zh-CN'))
     .slice(0, limit);
+}
+
+/**
+ * 去重后的来源总数。
+ *
+ * 与 `sourceList()` 分开是刻意的：一个是「列出前几个」（会被 `limit` 截断），
+ * 一个是「一共几个」（不能截断）。合成一个函数就必然有人拿错的用 ——
+ * `/news` 页脚曾经因此写着「覆盖 10 个来源」，与顶部「70 个来源」自相矛盾。
+ */
+export function sourceCount(items: NewsItem[]): number {
+  const set = new Set<string>();
+  for (const item of items) set.add(item.source || '未知来源');
+  return set.size;
 }
 
 /** 一个月份归档 facet，`2026-10` 这种键。 */

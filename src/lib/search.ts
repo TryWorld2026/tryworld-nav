@@ -224,6 +224,30 @@ const SCORE = {
 /** 别名命中的折扣：比直接用原词弱一档，避免「做视频」把所有「视频」都顶到最前。 */
 const ALIAS_FACTOR = 0.9;
 
+/**
+ * **用户原话**命中的加权（`terms[0]`，即用户自己打的那几个字）。
+ *
+ * 为什么必须 >1：`ALIAS_FACTOR` 只把别名降到 0.9，但别名可能命中**更强的
+ * 字段**。实测（2026-10-22）搜「小红书」，`小红书` 出现在关键词里是 45 分，
+ * 而「笔记」这个别名出现在简介里是 60×0.9 = 54 分 —— 于是前 4 条全是笔记
+ * 工具，真正写小红书的工具被同义表淹掉。这不是「意图展开错了」，而是
+ * 「我们猜的词」压过了「用户说的词」。
+ *
+ * 取 1.5 是量过的：45×1.5 = 67.5 > 54（简介里命中一个别名），而
+ * 名称前缀 80 仍高于它（用户原话不该翻过「名字就叫这个」）。
+ */
+const PRIMARY_FACTOR = 1.5;
+
+/**
+ * 同一组里多命中一个检索词的加成。
+ *
+ * 取 20 是量过的：它必须**大于**「简介命中 30 与关键词命中 45 之间的差」（15），
+ * 才能让「同时命中公众号 + 排版」压过「只命中公众号且字段更强」；又必须
+ * **小于**「名称前缀 80 与关键词 45 的差」（35），否则部件覆盖率会翻过名称
+ * 命中的量级，把名字就叫「排版助手」的工具排到后面去。
+ */
+const COVERAGE_BONUS = 20;
+
 /** 价格档位。顺序固定，wire 里存的就是这个下标（0–4）。 */
 export const PRICE_CODES = ['fully-free', 'open-source', 'freemium', 'paid', 'unrated'] as const;
 export type PriceCode = (typeof PRICE_CODES)[number];
@@ -505,7 +529,33 @@ export type QueryGroup = {
   id: string;
   /** 组内用户原话代表词，用于说明「哪一组没满足」。 */
   label: string;
+  /** 全部可检索词（原词 + 部件词 + 意图别名）。 */
   terms: string[];
+  /**
+   * 享受加权的那一个词。
+   *
+   * 文本组里是**用户自己打的整串**（配 `PRIMARY_FACTOR` 1.5）；
+   * 概念组里是 `terms[0]` —— 概念词表本身按重要性排序（`剪辑` 在 `视频`
+   * 前面），排第一的就是这个意图最强的说法，配 `primaryFactor: 1`（不打折，
+   * 也不加成）。
+   *
+   * 拆过部件的组**没有**这一项：那时 `terms` 里全是部件，没有任何一个词
+   * 配得上「用户原话」的位置，而且整串留着会通过 `matchOne` 的反向包含
+   * （`term.includes(k)`）虚假命中只写了其中一个部件的工具。
+   */
+  primary?: string;
+  /** `primary` 的权重。文本组 1.5，概念组 1。 */
+  primaryFactor?: number;
+  /**
+   * 其中的「核心词」：用户原话与它的**复合部件**。
+   *
+   * 只有命中这里的词才算覆盖率。意图别名（`文案`/`笔记`/`种草` 之于
+   * `小红书`）**不算** —— 它们是「换个说法也算命中」的放行条件，不是
+   * 「这条更贴题」的证据。2026-10-22 实测：把别名算进覆盖率时，
+   * 搜「小红书」会让同时命中 文案+笔记+种草 的工具以 85 分压过真正写
+   * 小红书的工具。
+   */
+  core: string[];
   notice?: string;
 };
 
@@ -555,6 +605,78 @@ function tokenize(text: string): string[] {
     .split(/[\s,，、;；。|/()（）【】\[\]！!？?：:]+/)
     .map((s) => s.trim())
     .filter(Boolean);
+}
+
+/**
+ * 中文复合词切分用的「部件词表」。
+ *
+ * 为什么需要它：中文查询没有空格，`tokenize()` 只能切出**整串**一个片段。
+ * 于是「公众号排版」变成单个检索词，`matchOne()` 要求这个完整子串出现在
+ * 名称/关键词/简介里 —— 而站内根本没有哪个字段写着「公众号排版」这四个字
+ * 连在一起，只有「公众号」和「排版」分别出现在不同工具里。
+ *
+ * 实测（2026-10-22）：「公众号排版」59 条结果**全部同分**（score=45，
+ * 命中字段全是 keyword），而简介原文就是「公众号智能文案与排版助手」的
+ * `135editor-ai` **一条都不在里面**。这不是排序差，是召回断了。
+ *
+ * 做法：查询串里若包含两个及以上的部件词，就额外产出「部件词的组合」作为
+ * 检索词（见 `compoundParts`）。**不改用户原词**，原词永远排第一。
+ *
+ * 维护约定：只收**站内数据里真实出现过**的领域词，且长度 ≥2（单字切分
+ * 会把「图」「文」这类碎片放进检索，噪音大于收益）。
+ */
+export const COMPOUND_PARTS: string[] = [
+  '公众号', '小红书', '抖音', '视频号', 'B站', '知乎', '微博', '快手', '推特',
+  '排版', '文案', '图文', '长文', '短文', '标题', '摘要', '润色', '改写', '续写', '翻译',
+  '抠图', '修图', '换脸', '扩图', '去水印', '商品图', '主图', '详情页', '海报', '封面',
+  '插画', '漫画', '表情包', 'logo', '标志', '品牌', '设计稿', '原型',
+  '剪辑', '字幕', '配音', '口播', '数字人', '虚拟人', '动画', '短片', '分镜',
+  '代码', '编程', '补全', '审查', '重构', '调试', '测试',
+  '表格', '报表', '图表', '数据', '分析', '财务', '发票',
+  '论文', '文献', '学术', '综述', '引用', '查重', '降重',
+  '简历', '求职', '面试', '招聘', '合同', '法律', '律师', '合规',
+  '客服', '工单', '知识库', '获客', '投放', '营销',
+  '会议', '纪要', '记录', '转写', '笔记', '脑图', '思维导图', '白板', '流程图',
+  '网站', '建站', '落地页', '网页', '表单', '小程序',
+  '提示词', '智能体', '工作流', '自动化', '插件', '浏览器',
+  '音乐', '作曲', '编曲', '音效', '人声分离', '语音',
+  '建模', '渲染', '三维',
+  '识别', '标注', '检测', '审核', 'ocr',
+  'PPT', '幻灯片', '演示', '文档', '办公', '写作', '邮件', '搜索', '翻译',
+];
+
+/**
+ * 把一个中文复合词拆成词表里的部件（最长匹配优先，保序，去重）。
+ *
+ *   compoundParts('公众号排版') → ['公众号', '排版']
+ *   compoundParts('小红书图文') → ['小红书', '图文']
+ *   compoundParts('视频剪辑')   → ['剪辑']        // 词表里没有「视频」，只剩「剪辑」
+ *
+ * 只返回**真正在词表里**的部件，且要求 ≥2 个才值得用（一个部件等于没拆）。
+ * 拆不出来就返回空数组，调用方据此跳过。
+ */
+export function compoundParts(text: string): string[] {
+  const q = text.trim().toLowerCase();
+  if (q.length < 4) return [];
+
+  // 按长度降序排一次，保证「去水印」优先于「水印」、「思维导图」优先于「导图」。
+  const sorted = [...COMPOUND_PARTS].sort((a, b) => b.length - a.length);
+
+  const parts: string[] = [];
+  let rest = q;
+  while (rest.length > 0) {
+    const hit = sorted.find((p) => rest.startsWith(p.toLowerCase()));
+    if (hit) {
+      const low = hit.toLowerCase();
+      if (!parts.includes(low)) parts.push(low);
+      rest = rest.slice(low.length);
+      continue;
+    }
+    // 词表里没有以当前位置开头的词：前进一个字，继续找。
+    rest = rest.slice(1);
+  }
+
+  return parts.length >= 2 ? parts : [];
 }
 
 /** 泛词与中文单字：只在还有别的组可依据时才剥掉。 */
@@ -623,6 +745,12 @@ export function analyzeQuery(raw: string): AnalyzedQuery {
       id: concept.id,
       label: trigger,
       terms: concept.terms.map((t) => t.toLowerCase()),
+      // 概念词表按重要性排序，`terms[0]` 是这个意图最强的说法 —— 不打折。
+      primary: concept.terms[0]?.toLowerCase(),
+      primaryFactor: 1,
+      // 概念组的全部 `terms` 都是「同一件事的不同说法」，没有主次之分，
+      // 所以核心词只放触发词本身 —— 不奖励「命中了更多近义词」。
+      core: [trigger.toLowerCase()],
       ...(concept.notice ? { notice: concept.notice } : {}),
     });
     if (concept.notice && !notices.includes(concept.notice)) notices.push(concept.notice);
@@ -631,15 +759,45 @@ export function analyzeQuery(raw: string): AnalyzedQuery {
   }
 
   // 3. 剩余片段成组。
+  //
+  // 中文片段先尝试**拆成部件词**：`tokenize()` 只能按空格与标点切，中文查询
+  // 于是整串进一个组，「公众号排版」这种词在站内没有任何字段连着写，直接
+  // 零召回（实测 59 条结果全同分、简介原文就写着「公众号智能排版」的工具
+  // 反而不在结果里）。拆出部件后产出一个**组内 OR** 的组：命中「公众号」
+  // 或「排版」任一即放行，再由下面的评分与同分规则把两者都命中的排前面。
   const tokens = tokenize(leftover);
   const meaningful = tokens.filter((t) => !isNoise(t));
   const usable = meaningful.length > 0 ? meaningful : tokens;
   for (const token of usable) {
     if (groups.some((g) => g.id === `text:${token}`)) continue;
+
+    // 部件拆分：只在整串本身召回不足时才值得展开，但那需要先跑一次检索，
+    // 纯函数层做不到。这里的取舍是**总是拆**（部件命中只是组内 OR，不会
+    // 排除掉整串命中的条目），整串仍作为 `terms[0]` 保留并优先计分。
+    const parts = compoundParts(token);
+    if (parts.length >= 2) {
+      groups.push({
+        id: `text:${token}`,
+        label: token,
+        // **只有部件词**，整串不放进 terms：`matchOne` 的反向包含
+        // （`term.includes(k)`）会让整串虚假命中只写了其中一个部件的工具。
+        terms: [...new Set(parts)],
+        // 拆过部件的组没有 primary —— 没有哪个词配得上「用户原话加权」，
+        // 否则只命中一个部件的工具会靠加权翻过命中两个部件的真目标。
+        core: [...new Set(parts)],
+      });
+      continue;
+    }
+
     groups.push({
       id: `text:${token}`,
       label: token,
       terms: expandQuery(token),
+      // 意图展开出来的别名只是「换个说法也算命中」的放行条件，不是贴题证据
+      // —— 覆盖率只认用户原话本身，加权也只给它。
+      primary: token.toLowerCase(),
+      primaryFactor: PRIMARY_FACTOR,
+      core: [token.toLowerCase()],
     });
   }
 
@@ -662,20 +820,46 @@ function rankFields(fields: Iterable<SearchField>): SearchField[] {
   return FIELD_PRIORITY.filter((f) => set.has(f));
 }
 
-type GroupMatch = { score: number; term: string; field: SearchField } | null;
+type GroupMatch = {
+  score: number;
+  term: string;
+  field: SearchField;
+  /** 这一组里**不同检索词**命中了几个（部件拆分的覆盖率）。 */
+  coverage: number;
+} | null;
 
-/** 一组检索词对一条记录的最强命中（组内 OR）。 */
+/**
+ * 一组检索词对一条记录的最强命中（组内 OR）。
+ *
+ * `coverage` 是 2026-10-22 新增的：一个组里可能同时有原词与部件词
+ * （`['公众号排版', '公众号', '排版']`）。只命中「公众号」与同时命中
+ * 「公众号」+「排版」**必须**分开 —— 否则两者同分，排序只能靠名字长度，
+ * 于是「语构」「美洽」这类两字名排在真正做排版的工具前面。
+ *
+ * 覆盖率用**额外命中数**表达（命中 2 个 → 额外 1），由调用方乘权重加进总分。
+ * 它不参与 `matchOne` 的字段强度，所以不会把「简介命中两个词」抬到
+ * 「名称精确命中一个词」之上 —— 那两件事的量级差在 `SCORE` 里已经定死。
+ */
 function matchGroup(p: Prepared, group: QueryGroup): GroupMatch {
-  let best: GroupMatch = null;
+  let best: { score: number; term: string; field: SearchField } | null = null;
+  const coreSet = new Set(group.core);
+  const hitCore = new Set<string>();
   for (let i = 0; i < group.terms.length; i++) {
     const term = group.terms[i];
     const hit = matchOne(p, term);
     if (!hit) continue;
-    // 组内第一个词是用户原话/触发词，不打折；意图别名打九折。
-    const score = i === 0 ? hit.score : hit.score * ALIAS_FACTOR;
+    // 只有核心词（原词 / 复合部件）计入覆盖率，意图别名不计。
+    if (coreSet.has(term)) hitCore.add(term);
+    // 用户原话加权（`PRIMARY_FACTOR`）；概念组用 1（不打折也不加成）；
+    // 其余词是「我们猜的说法」，打九折。
+    const factor =
+      group.primary !== undefined && term === group.primary
+        ? (group.primaryFactor ?? 1)
+        : ALIAS_FACTOR;
+    const score = hit.score * factor;
     if (!best || score > best.score) best = { score, term, field: hit.field };
   }
-  return best;
+  return best ? { ...best, coverage: hitCore.size } : null;
 }
 
 /**
@@ -699,7 +883,7 @@ export function searchIndex(
   if (groups.length === 0) return [];
 
   const prepared = prepareIndex(records);
-  const scored: { hit: SearchHit; name: string }[] = [];
+  const scored: { hit: SearchHit; name: string; order: number }[] = [];
 
   for (const p of prepared) {
     const hits = groups.map((g) => matchGroup(p, g));
@@ -716,11 +900,16 @@ export function searchIndex(
         return;
       }
       score += h.score;
+      // 部件覆盖率加成：命中同一组里 2 个不同检索词，额外加一档
+      // `COVERAGE_BONUS`。这是「公众号排版」不再让「美洽」排第一的关键 ——
+      // 只命中「公众号」的工具与同时命中「公众号」「排版」的工具必须不同分。
+      if (h.coverage > 1) score += (h.coverage - 1) * COVERAGE_BONUS;
       fields.add(h.field);
       if (!terms.includes(h.term)) terms.push(h.term);
     });
     scored.push({
       name: p.name,
+      order: p.rec.o,
       hit: {
         slug: p.rec.s,
         score,
@@ -741,10 +930,25 @@ export function searchIndex(
   return pool
     .sort((a, b) => {
       if (b.hit.score !== a.hit.score) return b.hit.score - a.hit.score;
-      // 同分时短名优先（「Kimi」应该排在「Kimi PPT助手」前面）。
-      const la = a.name.length;
-      const lb = b.name.length;
-      if (la !== lb) return la - lb;
+      /*
+       * 同分时**不再「短名优先」**。
+       *
+       * 原规则是「Kimi 应该排在 Kimi PPT助手 前面」，但它在真实的同分洪流里
+       * 变成了一个错误信号：实测「公众号排版」59 条结果**全部同分 45**，
+       * 排序完全由名字长度决定 —— 两字名「语构」「美洽」排前面，七字名
+       * 「01Agent」排第 41，而简介原文写着「公众号智能文案与排版助手」的
+       * 135editor-ai 一条都不在结果里。名字短成了排序信号，而不是相关性。
+       *
+       * 现在按「目录序号」稳定排序 —— 那是原站的手调顺序，本身带一点
+       * 「这个工具更被认可」的意味，而且**与名字长度无关**。
+       *
+       * 真正的区分度交给上面两处：部件覆盖率加成（命中更多查询部件）与
+       * `matchedFields` 的强度分。同分只说明「两者在字段强度与覆盖率上都
+       * 一样」，这时候用目录序比用名字长度更诚实。
+       */
+      const oa = a.order;
+      const ob = b.order;
+      if (oa !== ob) return oa - ob;
       return a.hit.slug < b.hit.slug ? -1 : a.hit.slug > b.hit.slug ? 1 : 0;
     })
     .map((s) => s.hit)

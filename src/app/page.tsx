@@ -7,6 +7,8 @@ import { HomeCollections } from '@/components/home-collections';
 import { CategoryIcon } from '@/components/category-icon';
 import { SectionHeader } from '@/components/section-header';
 import { TOOL_GRID, ToolMiniCard } from '@/components/tool-card';
+import { cardFromTool } from '@/lib/card-server';
+import { InlineStats } from '@/components/home-stats';
 import { friendLinks, hotTools, newestTools, sections, SITE, tools, toolsByCategory } from '@/lib/data';
 import type { Tool } from '@/lib/types';
 import { canonical } from '@/lib/canonical';
@@ -122,10 +124,20 @@ function Grid({ items, emphasis = false }: { items: Tool[]; emphasis?: boolean }
   // 条数与列数：热门 10 条在 4 列下是 4+4+2、5 列下是 2×5；最新 24 条在
   // 4 列下整整 6 行、3 列下 8 行、5 列下 4 行 + 4 —— 任何宽度都不会只落
   // 单张卡在末行。原先取 25 条时，1440 与 1280 的末行都只剩一张。
+  //
+  // **必须过 `cardFromTool()`**：裸 `Tool` 里没有价格档位、平台、更新时间
+  // （它们都在 14 MB 的 `tool-extras.json` 里），直接传给卡片会让底部那一行
+  // 「可比较的事实」整块不渲染。2026-10-22 之前只有详情页的 rail 做了转换，
+  // 首页 / 26 个分类页 / 9 个集合页 / 详情页「更多AI工具」全都漏了 ——
+  // 同一张 Lovart 卡在 `/tools` 有「Web · iOS +1 · 1 个月前更新」，
+  // 在首页、分类页、集合页没有，读者会以为是自己看错了。
+  //
+  // 成本为零：`cardFromTool` 是 server-only，这些页面本来就是 server component
+  // 且已在读 `@/lib/data`，不新增客户端 bundle。
   return (
     <div className={TOOL_GRID}>
       {items.map((t) => (
-        <ToolMiniCard key={t.id} tool={t} emphasis={emphasis} />
+        <ToolMiniCard key={t.id} tool={cardFromTool(t)} emphasis={emphasis} />
       ))}
     </div>
   );
@@ -153,6 +165,13 @@ export default function HomePage() {
               linkLabel="查看全部"
               icon={<Rocket className="h-4 w-4" />}
             />
+            {/* 移动端：体量数字从 hero 搬到这里（`md:hidden`）。
+                读者此时已经看到工具卡了，数字变成「证明这站很大」而不是
+                「挡住我看工具」—— hero 里它在 390×844 下把第一张卡推到
+                top 773（屏高 844，只露 71px）。见 `home-stats.tsx`。 */}
+            <div className="mb-3 mt-2 md:hidden">
+              <InlineStats />
+            </div>
             <Grid items={hotTools} />
           </div>
 

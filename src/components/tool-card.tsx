@@ -267,30 +267,45 @@ export function ToolMiniCard({
   );
   const hasMeta = Boolean(price) || shownPlatforms.length > 0 || Boolean(fresh);
 
-  const bottom =
+  /*
+   * 底部分两行：**可比信息行（meta）永远在**，chip 行可被 `chips` 覆盖。
+   *
+   * 2026-10-22 修：原来是 `chips ?? (tagChips || cats.length || hasMeta ? …)` ——
+   * `??` 一旦命中 `chips` 就整体短路，于是集合页传了 `chips`（它要渲染集合
+   * 自己的标签 chip）的卡片**连价格/平台/新鲜度一起丢了**。实测
+   * `/collections/ai-digital-human-tools` 的 6 个成员都有 platforms 数据，
+   * 页面上一处都不显示，而同一批工具在分类页显示「Web · iOS」。
+   *
+   * 两行职责不同：meta 说的是「这个工具要不要花钱、能不能在我的设备上跑、
+   * 还新不新」；chips 说的是「它属于什么」。前者不该被后者替换掉。
+   */
+  const chipRow =
     chips ??
-    (tagChips || cats.length > 0 || hasMeta ? (
-      <>
-        {hasMeta && <div className={tagChips || cats.length > 0 ? 'mb-1.5' : ''}>{meta}</div>}
-        {tagChips ??
-          (cats.length > 0 ? (
-            <div className="flex flex-wrap gap-1.5">
-              {cats.map((c) => (
-                <span
-                  key={c.slug}
-                  className="inline-flex max-w-full items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-[12px] text-foreground/70"
-                >
-                  <span
-                    className="h-1.5 w-1.5 shrink-0 rounded-full"
-                    style={{ backgroundColor: rgb(c.color) }}
-                  />
-                  <span className="truncate">{c.name}</span>
-                </span>
-              ))}
-            </div>
-          ) : null)}
-      </>
+    tagChips ??
+    (cats.length > 0 ? (
+      <div className="flex flex-wrap gap-1.5">
+        {cats.map((c) => (
+          <span
+            key={c.slug}
+            className="inline-flex max-w-full items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-[12px] text-foreground/70"
+          >
+            <span
+              className="h-1.5 w-1.5 shrink-0 rounded-full"
+              style={{ backgroundColor: rgb(c.color) }}
+            />
+            <span className="truncate">{c.name}</span>
+          </span>
+        ))}
+      </div>
     ) : null);
+
+  const bottom =
+    hasMeta || chipRow ? (
+      <>
+        {hasMeta && <div className={chipRow ? 'mb-1.5' : ''}>{meta}</div>}
+        {chipRow}
+      </>
+    ) : null;
 
 
   /*

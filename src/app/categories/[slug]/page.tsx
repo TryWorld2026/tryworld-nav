@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { CategoryIcon } from '@/components/category-icon';
 import { TOOL_GRID, ToolMiniCard } from '@/components/tool-card';
+import { cardFromTool } from '@/lib/card-server';
 import { categories, categoryBySlug, categoryCards, SITE, toolsByCategory } from '@/lib/data';
 import { canonical } from '@/lib/canonical';
 import { withOg } from '@/lib/og';
@@ -136,7 +137,10 @@ export default async function CategoryDetailPage({
              决定，从首页点进分类页时字号与密度不会突然变一档。 */
           <div className={TOOL_GRID}>
             {list.map((t) => (
-              <ToolMiniCard key={t.id} tool={t} hideCategorySlug={slug} />
+              // 必须过 `cardFromTool()`：裸 `Tool` 没有价格/平台/更新时间，
+              // 卡片底部那一行「可比较的事实」会整块不渲染。见
+              // `lib/card-server.ts` 与首页 `Grid` 的同一处说明。
+              <ToolMiniCard key={t.id} tool={cardFromTool(t)} hideCategorySlug={slug} />
             ))}
           </div>
         )}

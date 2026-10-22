@@ -14,6 +14,7 @@ import { dailyArchive, hotTopics, latestDaily } from '@/lib/daily-data';
 import { dailyStats, formatDateFull, issueNumber, weekdayZh } from '@/lib/news-period';
 import { SiteLogo } from './site-logo';
 import { HeroSearch } from './hero-search';
+import { HeroStats } from './home-stats';
 
 /**
  * 首页 hero。
@@ -52,7 +53,6 @@ const BRIEF_CARD =
 export function Hero() {
   const daily = latestDaily();
   const hot = hotTopics[0];
-  const hotCount = hotTopics.length;
   // 宽屏主卡的补充条目。日报的 lead 同时是第一个栏目里的第一条，
   // 不过滤就会在标题正下方重复同一句话。
   const leadTitle = daily?.lead?.title?.trim();
@@ -63,12 +63,6 @@ export function Hero() {
         .slice(0, 4)
     : [];
   const dailyTotal = daily ? dailyStats(daily).items : 0;
-  const stats = [
-    { value: tools.length, label: '收录工具', unit: '个' },
-    { value: allCategories.length, label: '分类', unit: '个' },
-    { value: dailyArchive.length, label: '日报', unit: '期' },
-    { value: hotCount, label: '此刻热点', unit: '条' },
-  ];
 
   return (
     <section className="ink-band" aria-labelledby="hero-heading">
@@ -258,19 +252,15 @@ export function Hero() {
 
         {/* ── 底：体量数据带 ─────────────────────────────────────── */}
         {/* 原先把 stats 放在左栏内、`max-w-lg` 封顶 —— 宽屏下它把整栏钉在
-            512px，右栏于是空出一大片。现在它横跨两栏，成为 hero 的落地基线：
-            四个数字均匀分布在全宽上，左缘仍与站名对齐。 */}
-        <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-white/10 pt-6 sm:grid-cols-4 lg:mt-12">
-          {stats.map((s) => (
-            <div key={s.label}>
-              <dt className="text-[11px] tracking-wide text-[#F2EEE6]/60">{s.label}</dt>
-              <dd className="mt-0.5 font-display text-2xl tabular-nums text-[#F2EEE6]">
-                {s.value}
-                <span className="ml-1 text-sm text-[#F2EEE6]/55">{s.unit}</span>
-              </dd>
-            </div>
-          ))}
-        </dl>
+            512px，右栏于是空出一大片。后来它横跨两栏，成为 hero 的落地基线。
+
+            2026-10-22：**移动端搬走了**（见 `home-stats.tsx` 的说明）。
+            实测 390×844 下 hero 内 6 个纵向块把第一张工具卡推到 top 773，
+            屏高 844 只露 71px —— 手机用户打开首页一张卡都看不全。stats 回答
+            的是「这站大不大」，不是「我下一步做什么」，它挡在了唯一该做的
+            事前面。`HeroStats` 内部 `hidden md:grid`，纸面版 `InlineStats`
+            在「热门工具」标题行里、`md:hidden`。 */}
+        <HeroStats />
       </div>
     </section>
   );

@@ -25,6 +25,7 @@ import {
   inRange,
   monthList,
   searchNews,
+  sourceCount,
   sourceList,
 } from '@/lib/news';
 import type { NewsItem } from '@/lib/types';
@@ -205,7 +206,10 @@ export function NewsFeed({
   }, []);
 
   const facets = useMemo(() => categoryList(items), [items]);
+  // `sources` 是筛选 chip 的前 10 个（会被 `limit` 截断），**不能**当总数用；
+  // 页脚那句「覆盖 N 个来源」要的是去重后的全量，见 `sourceTotal`。
   const sources = useMemo(() => sourceList(items, 10), [items]);
+  const sourceTotal = useMemo(() => sourceCount(items), [items]);
   const months = useMemo(() => monthList(items), [items]);
 
   const filtered = useMemo(() => {
@@ -584,7 +588,7 @@ export function NewsFeed({
           ，版权归各来源与原作者所有；本站仅作聚合展示，点击标题可阅读原文。
           {filtered.length > 0 && (
             <span className="ml-1">
-              当前 {filtered.length} 条，覆盖 {sources.length} 个来源。
+              当前 {filtered.length} 条，覆盖 {sourceTotal} 个来源。
             </span>
           )}
         </p>

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { collectionBySlug, collections, SITE, toolBySlug } from '@/lib/data';
 import { TOOL_GRID, ToolMiniCard } from '@/components/tool-card';
+import { cardFromTool } from '@/lib/card-server';
 import type { Tool } from '@/lib/types';
 import { canonical } from '@/lib/canonical';
 import { withOg } from '@/lib/og';
@@ -137,7 +138,10 @@ export default async function CollectionDetailPage({
             {members.map(({ member, tool }) => (
               <ToolMiniCard
                 key={tool.slug}
-                tool={tool}
+                // 必须过 `cardFromTool()`：裸 `Tool` 没有价格/平台/更新时间，
+                // 卡片底部那一行「可比较的事实」会整块不渲染。见
+                // `lib/card-server.ts` 与首页 `Grid` 的同一处说明。
+                tool={cardFromTool(tool)}
                 emphasis
                 // Always the tag-chip row, wrapper included — even when a member
                 // carries no tags. The origin renders the empty flex row rather

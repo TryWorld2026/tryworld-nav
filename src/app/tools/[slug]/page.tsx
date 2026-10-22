@@ -11,7 +11,7 @@ import { TOOL_GRID, ToolMiniCard, ToolRowCard, shotSrcSet } from '@/components/t
 import { ToolProse } from '@/components/tool-details';
 import { ToolVerdict } from '@/components/tool-verdict';
 import { ToolNewsPanel } from '@/components/tool-news-panel';
-import { verdictBySlug } from '@/lib/tool-verdicts';
+
 import {
   SITE,
   extrasBySlug,
@@ -256,14 +256,18 @@ export default async function ToolDetailPage({
           <div className="md:col-span-2 md:row-start-1">
             {/* 「怎么选」面板放在截图与正文之前。
                 用户读完一句话定位，第一个问题是「适合我吗、和同类比怎么样」，
-                而不是「它有哪些功能」。没有判断数据的工具整块不渲染（这里用
-                `verdictBySlug` 判断，而不是让组件返回 null 再藏空盒），
-                所以 2081 页里没写到的那些零回归。 */}
-            {verdictBySlug(tool.slug) && (
-              <div className="mb-8">
-                <ToolVerdict slug={tool.slug} />
-              </div>
-            )}
+                而不是「它有哪些功能」。
+
+                2026-10-22 起这**不再**是「有判断数据才渲染」：没有人工条目的
+                页面由组件内部降级成「目录事实」版（同类规模 + 免费占比 +
+                同类里已有人工判断的工具 + 收录快照过期提示），徽章如实写成
+                「目录事实」而不是「编辑判断」。原先是这里用 `verdictBySlug`
+                挡一道、没条目整块消失，结果 1884 个页面的首屏直接掉进厂商
+                自述的 prose —— 块消失不是「少一块看不出来」，而是页面退化成
+                厂商文案页。组件内部在没有任何可陈述事实时仍返回 null。 */}
+            <div className="mb-8">
+              <ToolVerdict slug={tool.slug} />
+            </div>
 
             {tool.image && (
               <div className="mb-8 overflow-hidden rounded-lg border border-muted">
@@ -377,7 +381,9 @@ export default async function ToolDetailPage({
                 1760 下每张卡 370px，比全站任何一处都宽一档。 */}
             <div className={TOOL_GRID}>
               {moreTools(tool.slug, 18).map((t) => (
-                <ToolMiniCard tool={t} key={t.slug} />
+                // 同首页 `Grid` 的说明：裸 `Tool` 会让卡片底部的价格/平台/
+                // 新鲜度整块不渲染，必须过 `cardFromTool()`。
+                <ToolMiniCard tool={cardFromTool(t)} key={t.slug} />
               ))}
             </div>
           </div>

@@ -24,6 +24,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import {
+  compoundParts,
   decodeSearchIndex,
   expandQuery,
   filterRecords,
@@ -190,6 +191,93 @@ test('sortRecords：最近更新把没采集时间的稳定置后', () => {
       '没采集更新时间的条目必须全部排在后面',
     );
   }
+});
+
+/**
+ * 2026-10-22 实测的「任务型长词」缺陷（product-auditor 走查发现）。
+ *
+ * 守的是什么：首页定义句写着「按『你想做什么』分成 26 个场景」，搜索框
+ * placeholder 写着「或直接说你想做什么…」—— 这是站点自己邀请用户做的事。
+ * 而实测「公众号排版」59 条结果**全部同分 45**，排序完全由名字长度决定，
+ * 简介原文写着「公众号智能文案与排版助手」的 `135editor-ai` **一条都不在
+ * 结果里**。用户被明确邀请去做的事，做了拿到错误答案 —— 这比「还能更好」
+ * 严重一档。
+ *
+ * 三个根因，每个都有独立用例守着：
+ *   1. 中文复合词不拆 → `compoundParts` 拆成部件词，组内 OR
+ *   2. 只命中部分部件与全部部件同分 → 部件覆盖率加成（`COVERAGE_BONUS`）
+ *   3. 意图别名（文案/笔记/种草）压过用户原话 → 原词加权（`PRIMARY_FACTOR`）
+ */
+test('中文复合词被拆成部件词（compoundParts）', () => {
+  assert.deepEqual(compoundParts('公众号排版'), ['公众号', '排版']);
+  assert.deepEqual(compoundParts('小红书图文'), ['小红书', '图文']);
+  // 单字/双字、拆不出两个部件的都不拆。
+  assert.deepEqual(compoundParts('写作'), []);
+  assert.deepEqual(compoundParts('视频剪辑'), []);
+});
+
+test('「公众号排版」的第一条必须是真正做公众号排版的工具', () => {
+  // 这条用例的钉法很直接：135editor-ai 的简介原文就是「公众号智能文案与
+  // 排版助手」，它必须排第一 —— 修复前它**根本不在 59 条结果里**。
+  const hits = searchIndex(INDEX, '公众号排版', 200);
+  assert.ok(hits.length > 0, '应有结果');
+  assert.equal(
+    hits[0].slug,
+    '135editor-ai',
+    `第一条应是 135 AI排版助手，实际是「${hits[0].slug}」`,
+  );
+});
+
+test('「小红书图文」的第一条是图文创作工具，不是笔记工具', () => {
+  const hits = searchIndex(INDEX, '小红书图文', 200);
+  const top = INDEX.find((r) => r.s === hits[0]?.slug);
+  assert.ok(top, '应有结果');
+  // 01Agent 的简介是「专为内容创作者打造的AI图文创作智能体」。
+  assert.ok(
+    /图文|小红书|创作/.test(top.n + top.d),
+    `第一条应贴图文创作，实际是「${top.n}」：${top.d}`,
+  );
+});
+
+test('用户原话压过同义表别名（搜「小红书」不再被笔记工具淹没）', () => {
+  // 修复前：别名「笔记」在简介里命中是 60×0.9=54，而原词「小红书」在关键词
+  // 里只有 45 —— 前 4 条全是笔记工具。原词必须加权到别名之上。
+  const hits = searchIndex(INDEX, '小红书', 200);
+  const top = INDEX.find((r) => r.s === hits[0]?.slug);
+  assert.ok(top, '应有结果');
+  assert.ok(
+    (top.k ?? []).includes('小红书') || top.d.includes('小红书'),
+    `第一条自己应当提到小红书，实际是「${top.n}」：${top.d} / kw=${(top.k ?? []).join(',')}`,
+  );
+});
+
+test('同分不再按名字长度排序（短名不是相关性信号）', () => {
+  // 修复前「公众号排版」59 条全部同分，排序 = 名字长度 → 两字名「语构」
+  // 「美洽」排前面。现在同分按目录序号稳定排序，与名字长度无关。
+  const hits = searchIndex(INDEX, '公众号排版', 200);
+  const names = hits.slice(0, 10).map((h) => INDEX.find((r) => r.s === h.slug)?.n ?? '');
+  // 前 10 条里至少要有 3 条名字超过 4 个字 —— 若仍按名字长度排序，
+  // 前 10 条会被两三个字的短名占满。
+  const long = names.filter((n) => n.length > 4).length;
+  assert.ok(long >= 3, `前 10 条里长名工具太少（${long} 条），排序可能又回到名字长度：${names.join(' / ')}`);
+});
+
+test('同时命中全部部件的结果，分数必须明显高于只命中一个部件的', () => {
+  // 「公众号排版」拆成 ['公众号','排版']。135editor-ai 的简介同时出现这两个词
+  // （覆盖率 2），而「蛙蛙写作」这类只提到「公众号」的工具覆盖率是 1。
+  //
+  // 断言的是**分差**而不只是名次：覆盖率加成若被调成 0，两者的名次可能
+  // 因为目录序碰巧还对，但分数会只差 13.5（简介 30 × 0.9 vs 关键词 45 × 0.9），
+  // 任何一条新数据都能翻盘。加成到位时差距 ≥ 30，这才是稳定的。
+  const hits = searchIndex(INDEX, '公众号排版', 200);
+  const full = hits.find((h) => h.slug === '135editor-ai');
+  assert.ok(full, '135editor-ai 必须在结果里');
+  const partial = hits.find((h) => h.score < full.score && h.score > 0);
+  assert.ok(partial, '应有只命中部分部件的对照结果');
+  assert.ok(
+    full.score - partial.score >= 30,
+    `命中全部部件的分差只有 ${(full.score - partial.score).toFixed(1)}，覆盖率加成可能失效了`,
+  );
 });
 
 test('sortRecords：按名称用中文 collator（不是裸字符串比较）', () => {
