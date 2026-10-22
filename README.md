@@ -14,8 +14,9 @@ Next.js 15.5.27（`output: 'export'`）+ React 19 + Tailwind 3.4 的纯静态站
 |---|---|
 | 工具 | 2081 个（`data/tools.json`） |
 | 分类 | 26 个 |
-| 页面 | 2340 个（`out/*.html`，含日报 179 期 × 2 种变体） |
-| 新闻 | 10 篇（2026-10-15 起改为 AIHOT 精选卡片流，条数随抓取变化） |
+| 页面 | 2642 个（`out/*.html`；含日报 180 期 × 2 种变体、298 个二选一对比页） |
+| 新闻 | AIHOT 精选卡片流，条数随抓取变化（2026-10-15 起） |
+| 「怎么选」判断 | 363 条（17.4%），覆盖 26/26 分类的 rank 1–12 |
 | 配套数据 | `data/tool-extras.json` 2081 条，与 `tools.json` 一一对应，0 缺失 |
 | 构建产物 | `out/` 8706 个文件 / 1040 MB |
 
@@ -28,7 +29,7 @@ npm install       # node_modules 不在 git 里
 npm run dev       # http://localhost:3000
 npm run build     # 约 8–11 分钟，产出 out/
 npm run lint      # eslint，当前 exit 0
-npm test          # 91 项；产物断言需要先 build
+npm test          # 114 项；产物断言需要先 build（交互 8 条需先 npm run preview）
 ```
 
 **新检出会没有媒体文件。** `public/assets/{icons,shots,tags,news}`（约 4200 个
@@ -131,11 +132,16 @@ deploy.yml 是独立的部署 workflow，会在构建前从 Release 快照恢复
 | 13 | 搜索从「纯小写子串」改成**意图展开 + 关键词索引**：22 个真实意图词里原先有 6 个零命中（写代码/做视频/论文润色/小红书文案/做网站/电商详情页），现在全部有结果 | `src/lib/search.ts`、`scripts/generate-search-index.mjs` |
 | 14 | 新增 `/collections` 的站内入口（首页「编辑精选」条、侧栏、页脚、页眉下拉）——9 个集合原先**全站 0 内链**，只有 sitemap 能到 | `src/components/home-collections.tsx` 等 |
 | 15 | 资讯卡片新增「站内收录 · X」chip、工具详情页新增「相关资讯」——原先资讯与工具目录**零互链** | `src/lib/news-links.ts`、`src/components/tool-news-panel.tsx` |
-| 16 | 详情页新增「怎么选」面板（适合/不适合/与同类差异/起价），数据来自**人工维护**的 `src/lib/tool-verdicts.ts`，没有条目的工具整块不渲染 | `src/components/tool-verdict.tsx` |
+| 16 | 详情页新增「怎么选」面板（适合/不适合/与同类差异/起价），数据来自**人工维护**的 `src/lib/tool-verdicts.ts`；**没有人工条目时降级成「目录事实」版**（同类规模 + 免费占比 + 同类里已有人工判断的 3 个 + 收录快照过期提示），徽章如实区分 | `src/components/tool-verdict.tsx` |
 | 17 | 新增 `/offline` 离线页 + Service Worker + 可安装的三档图标（原 manifest 只有 2 个图标、无 192/512/maskable，Chrome 判定不满足安装条件） | `scripts/generate-sw.mjs`、`src/app/manifest.ts` |
 | 18 | 缩略图：`/assets/thumbs/` 由 `scripts/gen-thumbs.mjs` 预生成 webp，页面用 `srcSet` 指过去（首页 33 个可见图标 880 KB → 92 KB） | `scripts/gen-thumbs.mjs`、`src/components/tool-card.tsx` |
 | 19 | 字体 CSS 从 `globals.css` 的 `@import` 改为 `layout.tsx` 直接 import（去掉一级串行 RTT），删除 12 条全站未使用的 Fraunces `@font-face` | `src/app/fonts.css`、`src/app/layout.tsx` |
 | 20 | 列表卡片关闭 Next 的视口内 RSC 预取（2000+ 链接）；长列表加 `content-visibility`；「加载更多」步长 120→60、累计上限 1200 | `src/components/tool-card.tsx`、`src/components/tools-explorer.tsx` |
+| 21 | **卡片可比较化**：每张网格卡底部加一行「价格胶囊 / 平台 / 新鲜度」。价格只挂会改变决定的三档（免费/开源/付费）——免费增值 1737 条是多数派不构成区分；新鲜度只在 90 天内说话（88.75% 的条目超一年，把「更新于 2025-10-11」印在每张卡上等于把陈旧包装成卖点） | `src/lib/card.ts`、`src/lib/card-server.ts`、`src/components/tool-card.tsx` |
+| 22 | **搜索能接住中文任务语**：新增 `compoundParts()` 拆中文复合词（「公众号排版」→ 公众号+排版）、`COVERAGE_BONUS` 奖励命中更多部件、`PRIMARY_FACTOR` 让用户原话压过同义表别名、同分改按目录序（原先按名字长度，两字名排前面）。实测「公众号排版」的 `135 AI排版助手` 从**不在结果里**变成第 1 | `src/lib/search.ts` |
+| 23 | **`/tools` 与分类页/集合页的筛选分层**：`/tools` 有全套筛选（搜索/分类/标签/价格/平台/排序/页码，全写进 URL）；分类页与集合页**只加排序 + 加载更多，刻意不加筛选器**（否则会变成 `/tools?cat=` 的第二个实现，永远漂移） | `src/components/tools-explorer.tsx`、`src/components/category-grid.tsx` |
+| 24 | **新增 `/compare` 二选一对比（298 页）**：站内第一个直接回答「这两个该选哪个」的页面。清单由人工 `vs` 字段做语义闸门 + 读者关心度排序算出来，不手挑；三层结构「事实对照表 → 差异高亮 → 编辑判断并排」（事实 100% 有数据、判断 17.4%），所以任何一对都能渲染 | `src/lib/compare.ts`、`src/app/compare/` |
+| 25 | **首页首屏加搜索入口**，并把体量数字在移动端搬出 hero：390×844 下第一张工具卡从 top 773 提到 617、露出从 71px 变成完整一张卡 | `src/components/hero-search.tsx`、`src/components/home-stats.tsx` |
 
 `data/tool-extras.json` 里的 `more` / `related` / `latest` 三个字段同样
 不参与渲染，只作溯源保留——原因见 `src/lib/types.ts` 的类型注释。
@@ -219,12 +225,15 @@ node scripts/fetch-aihot-daily.mjs  # 日报/周报/月报/热点 → data/aihot
   真要优化就从 `srcset` + 预生成缩略图入手，不是"首屏"问题。（本节早先写"移动端首屏是
   明确风险"，那是只看未压缩字节得出的错误结论，已按实测更正。）
 - **`.txt`（RSC flight）2135 个占 240 MB**：`npm run prune` 的 `--lean` 可裁掉，但会保留 `llms.txt` / `llms-full.txt`（两者由 robots.txt 声明，删了就是 404）。
-- **测试**：91 个（2026-10-18）。单元 84 条（`npm run test:unit`：时区格式化、AIHOT
-  字段映射与降级、22 个搜索意图词、收藏存储 v1→v2、筛选 URL 往返），产物断言 19 条
+- **测试**：114 个（2026-10-22）。单元 87 条（`npm run test:unit`：时区格式化、AIHOT
+  字段映射与降级、22 个搜索意图词 + 中文复合词拆分 + 覆盖率排序、收藏存储 v1→v2、
+  筛选 URL 往返、卡片排序与新鲜度），产物断言 19 条
   （`tests/app-shell.test.mjs`，读 `out/*.html`，含「layout chunk 不得含目录数据」的体积守卫），
-  交互 7 条（`npm run test:interaction`，需先 `npm run preview`）。
-  仍无测试的：`lib/data.ts` 的确定性抽样、`lib/pricing.ts`、`lib/news-links.ts` 的匹配规则。
+  交互 8 条（`npm run test:interaction`，需先 `npm run preview`）。
+  仍无测试的：`lib/data.ts` 的确定性抽样、`lib/news-links.ts` 的匹配规则。
   CI 已跑 lint / tsc / test / census / assets:check / **gen:check** / **verdicts:check** / build。
+  两条「两份实现不许漂移」的守卫：`sortCards()` 与 `sortRecords()` 在真实数据上前 60 条的
+  顺序必须逐项相同（`tests/card.test.mjs`）——不是靠注释提醒，是靠测试拦住。
 - `package.json` 的 `name` 是 `tryworld-portal`，与仓库名、Worker 名不一致。
 - eslint 9 仍用 `FlatCompat` 桥接 `next/core-web-vitals`（官方已弃用的接法）。
 - **首屏仍有一半是字体**：实测首页桌面 2104 KB 里 Font 999 KB（47.5%），18 个 woff2
@@ -233,8 +242,11 @@ node scripts/fetch-aihot-daily.mjs  # 日报/周报/月报/热点 → data/aihot
 - **RSC 预取仍是第二开销**：首屏 669 KB（31.8%）来自视口内链接的 `.txt?_rsc=` 预取
   （`/tools.txt` 单条 117 KB）。工具卡已关预取，剩下的是侧栏、分类索引、导航这些
   真正在首屏的链接 —— 关掉会让点击变慢，属于取舍不是 bug。
-- **「怎么选」数据只覆盖 5 个工具**（0.2%）。渲染层对缺失条目整块不渲染，所以没有
-  回归；填充需要人工核对（见 `npm run verdicts:draft`），不能自动生成。
+- **「怎么选」覆盖 363/2081（17.4%）**，26/26 分类的 rank 1–12 全覆盖。
+  没有人工条目的 1718 个页面**不再整块消失** —— 渲染层降级成「目录事实」版
+  （同类规模 + 免费占比 + 同类里已有人工判断的 3 个 + 收录快照过期提示），
+  徽章如实写「目录事实」而不是「编辑判断」。降级块**不写任何适合/不适合推断**
+  （那需要人工判断，编造一条比不写更伤信任）。继续填充见 `npm run verdicts:draft`。
 
 ## 数据可信度
 

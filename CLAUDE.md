@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目
 
-「试界导航」(tryworld-nav)：AI 工具导航站，2081 个工具 / 26 个分类 / 2340 个预渲染页面。
+「试界导航」(tryworld-nav)：AI 工具导航站，2081 个工具 / 26 个分类 / 2642 个预渲染页面。
 Next.js 15.5 App Router + React 19 + Tailwind 3.4，**纯静态导出**，部署到 Cloudflare Workers
 Static Assets。<https://nav.tryworld.com.cn>
 
@@ -49,13 +49,18 @@ node --test --test-name-pattern="汉堡菜单" tests/interaction.test.mjs   # �
 | 文件 | 生成脚本 | 内容 | 体积 | 谁用 |
 |---|---|---|---|---|
 | `data/nav.json` | `scripts/generate-nav.mjs` | 26 分类 / 5 推荐（href 构建期解析好）/ 9 标签 | 5 KB（br 1.4 KB） | 页眉、移动抽屉、侧栏、搜索面板、页脚 |
-| `data/search-index.json` | `scripts/generate-search-index.mjs` | 2081 条 `{slug,name,desc,icon,cats,tags,keywords}` | 398 KB（br 68 KB） | 命令面板、`/tools` 筛选、资讯的「站内收录」chip |
+| `data/search-index.json` | `scripts/generate-search-index.mjs` | 2081 条 v2 紧凑 wire（分类/标签/关键词/平台都是共享字典 ID，平台用 bitmask，价格 0–4，更新时间 Unix 日序） | 221 KB（br 58.5 KB） | 命令面板、`/tools` 筛选、`/tools` 与分类页/集合页的卡片、资讯的「站内收录」chip |
 
 - 两者都**进 `contentBuildId()` 的输入清单**（`next.config.mjs`），否则「只改了索引」
   不会换 buildId，浏览器缓存会命中旧 chunk。
 - `data/search-index.json` 的 `keywords` 由 `src/lib/search.ts` 里的 `LEXICON` 扫 prose 得到，
   生成脚本还有一道 `MAX_DF=300` 的文档频次上限——出现超过 300 次的词（营销、报告、识别）
   对排序是噪音、对体积是灾难，会被整体剔除。
+- **索引是 v2 wire，不能直接当 `SearchRecord[]` 用**。行是定长位置元组
+  `[slug, name, desc, iconExt, [catId], [tagId], [kwId], priceCode, platformMask, unixDay?, hasExt?]`，
+  `as unknown as` 也能编过但全站会读到数字（`c`/`t` 是字典下标、`pl` 是 bitmask 整数）。
+  必须走 `decodeSearchIndex()`（`src/lib/catalog-index.ts` 已封好 `CATALOG_INDEX` / `CATALOG_BY_SLUG` / `DATA_EPOCH`）。
+- **`u` 是 Unix 日序不是毫秒**（`new Date(r.u)` 会得到 1970），且**可选**（`pokecut` 缺）。
 - **改完 `data/tools.json` / `featured.json` / `tags.json` / `categories.json` 一定要跑
   `npm run gen:all`**，否则页面上的分类名与搜索结果是旧的。CI 的 `gen:check` 会拦。
 
@@ -73,8 +78,16 @@ node --test --test-name-pattern="汉堡菜单" tests/interaction.test.mjs   # �
 ### 「怎么选」判断数据（`src/lib/tool-verdicts.ts`）
 
 - **人工维护，不是抓取产物**。字段：`bestFor / notFor / diff / vs / price / confidence`。
-- 详情页的 `<ToolVerdict>` 在该工具没有条目时**整块不渲染**，所以 2081 页里没写到的
-  那些零回归。
+- 当前 **363 条 / 2081（17.4%）**，覆盖 26/26 分类的 rank 1–12。
+- 详情页的 `<ToolVerdict>` **不再「没有条目就整块不渲染」**（2026-10-22 改）：
+  没有人工条目的页面降级成**「目录事实」版** —— 同类规模 + 免费占比 +
+  同类里已有人工判断的 3 个（按 slug 哈希错开起点，否则 336 个图像类页面会
+  推荐同样三个）+ 收录快照超过一年时的明示。徽章如实写「目录事实」而不是
+  「编辑判断」。**降级块不写任何「适合/不适合」推断句** —— 那需要人工判断，
+  编造一条比不写更伤信任。
+- **`vs` 字段是 `/compare` 的语义闸门**：只有编辑亲手写下 `vs` 的组合才会生成
+  对比页。共享分类标签是必要条件、远不是充分条件（按「同分类 + 两边都有判断」
+  排出来的第一名是「Lovart vs Seko AI」—— 设计工具 vs 视频工具，没人会二选一）。
 - 为什么必须人工：这里写的是缺点、同类对比、起价，编造一条比不写更伤信任。
   `scripts/draft-verdicts.mjs` 只把候选写到 `work/`，**绝不写 data/**。
 - 新增条目跑 `npm run verdicts:check`：它会校验 slug 存在、日期不是未来、长度上限等。
@@ -123,6 +136,34 @@ data/*.json  →  src/lib/data.ts  →  页面 / 组件
 - `data/tool-extras.json`（14 MB prose）只被 `extrasBySlug()` 读取，烘焙进各页 HTML。
 - 所有 `/assets/…` 路径走 `src/lib/assets.ts` 的 `asset()`，它按 `NEXT_PUBLIC_ASSET_BASE`
   拼接媒体主机（为将来迁到 R2 留的开关，当前未启用）。
+
+### 卡片数据：`card.ts` / `card-server.ts` / `card-sort.ts`
+
+同一张 `ToolMiniCard` 有两种数据来源，收敛到 `CardTool` 这个**结构子集**：
+
+| 文件 | 职责 | 谁能 import |
+|---|---|---|
+| `src/lib/card.ts` | `CardTool` 类型 + `cardFromRecord()`（从索引转换，补 `asset()`） | 客户端安全 |
+| `src/lib/card-server.ts` | `cardFromTool()`（从 `tool-extras` 补价格/平台/更新时间） | **server-only** |
+| `src/lib/card-sort.ts` | `sortCards()` + `freshLabel()`，**零 import** | 两端 + node 测试 |
+
+**五个 `ToolMiniCard` 调用点必须全部过转换函数**（首页 / 分类页 / 集合页 /
+详情页「更多AI工具」走 `cardFromTool`，`/tools` 走 `cardFromRecord`）。
+裸 `Tool` 没有 `price` / `platforms` / `updated`，卡片底部那条「可比较的事实」
+会**整块不渲染且不报错** —— 2026-10-22 的实测缺陷就是四个调用点漏了转换，
+同一张 Lovart 卡在 `/tools` 有「Web · iOS +1 · 1 个月前更新」，在其他 37 个页面没有。
+
+`sortCards()` 与 `search.ts` 的 `sortRecords()` 是**两份实现**（`CardTool` 只有
+五六个字段，而 `sortRecords` 要九个 —— 为了借它伪造九个字段的假记录，一旦被
+`filterRecords` 读到就会以「看起来像真数据」的方式出错）。两份必须同步，
+`tests/card.test.mjs` 把两者在真实数据前 60 条上的顺序**逐项比对**，漂移了测试先红。
+
+### 零 import 的三个文件（Node 原生 TS 解析的硬约束）
+
+`src/lib/search.ts` / `src/lib/card-sort.ts` / `src/lib/compare.ts` 刻意保持**零 import**：
+它们被 `node --test` 直接 import，而 Node 的原生 TS 解析**要求相对 import 带扩展名**，
+TSC 的 `moduleResolution: bundler` 又不接受 `.ts` 后缀。两边都要成立，唯一做法是
+让被测试的文件零依赖 —— 需要的数据由调用方传入（见 `comparePairs(verdicts, ctx)`）。
 
 ### 内容容器：`.content-container`
 
@@ -238,3 +279,7 @@ lint / tsc / **build**——其中 build 是**检查而非部署源**，它在�
 | 构建 exit 1，报 `Failed to build /page` | 单页导出超过 60s，通常是本机负载问题，**重试即可**，不是代码错误 |
 | 部署要传 700 MB / 50 分钟 | `contentBuildId()` 的输入混进了每次都变的东西 |
 | 日期差一天 | 用了 `slice(0,10)` 或 `new Date('YYYY-MM-DD')`，没走 `Asia/Shanghai` 格式化 |
+| **`next build` 报 `Invariant: no direct app page entry found for /icon.svg`** | **本机同时跑着 `next dev`**：dev 会覆盖 `.next/server/app-paths-manifest.json`（只剩几条），build 拿这份残缺清单去解析就崩。报错文本完全误导。**跑 build 前先确认没有 dev 在跑**（`netstat -ano \| grep :300`），或 `rm -rf .next` 后重试 |
+| **`Functions cannot be passed directly to Client Components`** | 把函数当 prop 传给 `'use client'` 组件。**这是构建期错误**（`Generating static pages` 阶段），不是运行时警告；且只在「有数据的那一页」炸，本地 `next dev` 可能看不出来。传数据（`Map<slug, T>`）而不是渲染函数 |
+| **卡片底部那行价格/平台/新鲜度不显示也不报错** | `ToolMiniCard` 收到裸 `Tool`（没有 `price`/`platforms`/`updated`）。必须过 `cardFromTool()` 或 `cardFromRecord()` |
+| **`node --test` 报 `Cannot find module './xxx'`** | 被测试的 `src/lib/*.ts` 里写了无扩展名的相对 import。Node 原生 TS 解析要求带扩展名，而 TSC 的 bundler 解析不接受 `.ts` 后缀 —— 被测试的文件必须**零 import** |
