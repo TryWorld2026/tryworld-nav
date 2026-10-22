@@ -124,7 +124,7 @@ export function NewsMasthead({
               }`}
             >
               {daily && (
-                <Link
+                <Link prefetch={false}
                   href={`/news/daily/${daily.date}`}
                   className="group flex items-start gap-2.5 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07] active:translate-y-0"
                 >
@@ -143,7 +143,7 @@ export function NewsMasthead({
                 </Link>
               )}
               {hot && (
-                <Link
+                <Link prefetch={false}
                   href="/news/hot"
                   className="group flex items-start gap-2.5 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07] active:translate-y-0"
                 >
@@ -184,7 +184,7 @@ export function MastheadMeta({ children }: { children: React.ReactNode }) {
 /** 报头底部的出口链接（日报页的「看此刻热点」这类）。 */
 export function MastheadLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link
+    <Link prefetch={false}
       href={href}
       className="group inline-flex min-h-6 items-center gap-1 font-medium text-[#F2EEE6]/80 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60"
     >

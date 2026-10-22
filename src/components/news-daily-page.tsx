@@ -127,7 +127,7 @@ export function NewsDailyPage({
             className="scrollbar-none -mx-1 mb-5 flex items-center gap-1.5 overflow-x-auto px-1"
           >
             {pager.map((p) => (
-              <Link
+              <Link prefetch={false}
                 key={p.label + (p.date ?? 'archive')}
                 // `date: null` 是「更早」且已经翻到归档末尾，去总归档页。
                 href={p.date ? `/news/daily/${p.date}` : '/news/daily/archive'}
@@ -147,7 +147,7 @@ export function NewsDailyPage({
                 有同一个入口，这里只在 sm 起显示。
                 高度同样从 py-1（24px）提到 py-1.5（32px）—— 和左边日期 chip
                 对齐，点起来也不再是一条缝。 */}
-            <Link
+            <Link prefetch={false}
               href="/news/daily/archive"
               className="ml-auto hidden shrink-0 rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground sm:inline-flex"
             >
@@ -524,7 +524,7 @@ export function NewsDailyPage({
                 { href: '/news/monthly', label: '月报 · 一月回顾' },
                 { href: '/news/hot', label: '热点榜 · 此刻最热' },
               ].map((l) => (
-                <Link
+                <Link prefetch={false}
                   key={l.href}
                   href={l.href}
                   className="flex items-center justify-between rounded-md px-2 py-1.5 text-xs text-foreground/70 transition-colors hover:bg-foreground/5 hover:text-foreground"

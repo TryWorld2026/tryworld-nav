@@ -208,7 +208,7 @@ export default function HomePage() {
           在标题旁与结尾按钮各出现一次，读者不会以为目录变小了。
 
           四段分组原样保留，且仍严格沿用 `sections.json` 的顺序（组内按它
-          过滤，不重排）；`<Link id={slug}>` 保证 `#ai-agents` 这类既有锚点
+          过滤，不重排）；`<Link prefetch={false} id={slug}>` 保证 `#ai-agents` 这类既有锚点
           依然落在首页上（`tests/app-shell.test.mjs` 守着这一点）。 */}
       <section className="border-t border-foreground/[0.07] bg-foreground/[0.02] pb-14 pt-12 md:pt-14">
         <div className="content-container">
@@ -226,7 +226,7 @@ export default function HomePage() {
                 点进任意一类看到该场景下收录的全部工具。
               </p>
             </div>
-            <Link
+            <Link prefetch={false}
               href="/categories"
               className="group inline-flex shrink-0 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3.5 py-2 text-[13px] font-medium text-foreground/80 transition-all duration-200 hover:-translate-y-px hover:border-foreground/25 hover:text-foreground"
             >
@@ -265,7 +265,7 @@ export default function HomePage() {
                     手机上仍然是整行一条（`w-full`）。 */}
                 <div className="flex flex-wrap justify-center gap-2">
                   {items.map((s) => (
-                    <Link
+                    <Link prefetch={false}
                       key={s.slug}
                       id={s.slug}
                       href={`/categories/${s.slug}`}
@@ -300,10 +300,10 @@ export default function HomePage() {
           })}
 
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/tools" className={BROWSE_ALL_CLASS}>
+            <Link prefetch={false} href="/tools" className={BROWSE_ALL_CLASS}>
               浏览全部 {tools.length} 个工具
             </Link>
-            <Link
+            <Link prefetch={false}
               href="/categories"
               className="inline-flex items-center justify-center gap-2 rounded-md border border-foreground/15 px-4 py-2 text-sm font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground md:hidden"
             >

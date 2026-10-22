@@ -674,7 +674,7 @@ function NewsCard({
         {linkedTools.length > 0 && (
           <div className="relative z-10 mt-2.5 flex flex-wrap gap-1.5">
             {linkedTools.map((t) => (
-              <Link
+              <Link prefetch={false}
                 key={t.slug}
                 href={`/tools/${t.slug}`}
                 className="inline-flex items-center gap-1 rounded-md border border-foreground/10 bg-foreground/[0.02] px-1.5 py-0.5 text-[11px] text-foreground/70 transition-colors hover:border-gongke-accent/30 hover:text-gongke-accent"

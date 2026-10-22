@@ -162,7 +162,7 @@ function ManualVerdict({ verdict }: { verdict: ToolVerdictData }) {
             {vsTool && (
               <>
                 {' '}
-                <Link
+                <Link prefetch={false}
                   href={`/tools/${vsTool.slug}`}
                   className="text-gongke-accent underline decoration-gongke-accent/30 underline-offset-2 hover:decoration-gongke-accent"
                 >
@@ -284,7 +284,7 @@ function DerivedVerdict({ slug }: { slug: string }) {
               '，都不提供免费版本'
             )}
             。{' '}
-            <Link
+            <Link prefetch={false}
               href={`/tools?cat=${primary.slug}`}
               className="text-gongke-accent underline decoration-gongke-accent/30 underline-offset-2 hover:decoration-gongke-accent"
             >
@@ -293,7 +293,7 @@ function DerivedVerdict({ slug }: { slug: string }) {
             {freePeers > 0 && (
               <>
                 {' '}
-                <Link
+                <Link prefetch={false}
                   href={`/tools?cat=${primary.slug}&price=free`}
                   className="text-gongke-accent underline decoration-gongke-accent/30 underline-offset-2 hover:decoration-gongke-accent"
                 >
@@ -321,7 +321,7 @@ function DerivedVerdict({ slug }: { slug: string }) {
                 <li key={s} className="flex gap-2 text-[13.5px] leading-relaxed">
                   <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-gongke-accent" />
                   <span className="min-w-0">
-                    <Link
+                    <Link prefetch={false}
                       href={`/tools/${s}`}
                       className="font-medium text-foreground hover:text-gongke-accent hover:underline"
                     >

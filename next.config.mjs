@@ -149,6 +149,27 @@ function contentBuildId() {
  *     `cookies()`, `headers()` or Node built-ins at request time. `/tools` used
  *     to read `searchParams` server-side; it now reads the URL on the client
  *     (see components/tools-explorer.tsx), which is also what the origin does.
+ *
+ * ## 为什么全站每个 `<Link>` 都写着 `prefetch={false}`
+ *
+ * **这不是遗留物，不要删。** 2026-10-22 线上实测（`work/prefetch-cost.mjs`）：
+ *
+ *   首页加载 → 24 个 `404`；点一次导航 → 再加 22 个，全部是
+ *   `/xxx.txt?_rsc=…` 的 RSC 预取请求。
+ *
+ * 原因是 `output: 'export'` 的产物形态：`out/` 里**只有 `.html`，没有任何
+ * `.txt` / `.rsc`**（Next 15.5.27 静态导出把 RSC payload 内联进了 HTML），
+ * 而 App Router 的 `<Link>` 仍按「旁边有 `.txt`」的老模型去预取 —— 于是每次
+ * 导航都白跑一批必然 404 的请求：浪费带宽、污染控制台，且**没有**任何
+ * 预取收益（payload 根本不存在）。
+ *
+ * 导航本身不受影响：整页加载照旧（实测点分类链接能正确到达，`h1` 正确）。
+ * Next 没有全局关闭预取的配置项（`prefetch` 默认 `null`，只能逐 `<Link>` 传
+ * `false`），所以只能每个标签都写。新增 `<Link>` 时**必须**跟着写。
+ *
+ * 更早的历史：`scripts/prune-out.mjs --lean` 也曾删掉 RSC payload（省 240 MB /
+ * 2339 个文件），但当前构建根本不产出它们 —— 那一层现在是无操作，保留它是
+ * 为了 Cloudflare 20,000 文件上限的余量策略。
  */
 const nextConfig = {
   reactStrictMode: true,

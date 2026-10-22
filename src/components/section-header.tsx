@@ -58,7 +58,7 @@ export function SectionHeader({
       <span className="h-px min-w-4 flex-1 bg-foreground/10" aria-hidden="true" />
 
       {href && (
-        <Link
+        <Link prefetch={false}
           href={href}
           className="group inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[13px] font-medium text-muted-foreground transition-colors hover:text-gongke-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >

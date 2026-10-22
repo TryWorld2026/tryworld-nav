@@ -56,7 +56,7 @@ export function DailyArchive({
               const num = String(Number(d.date.slice(8, 10)));
               return (
                 <li key={d.date}>
-                  <Link
+                  <Link prefetch={false}
                     href={`/news/daily/${d.date}`}
                     aria-current={on ? 'page' : undefined}
                     className={`flex items-start gap-2 rounded-lg px-2 py-1.5 transition-colors ${
@@ -178,7 +178,7 @@ export function DailyMiniCalendar({
             );
           }
           return (
-            <Link
+            <Link prefetch={false}
               key={c.date}
               href={`/news/daily/${c.date}`}
               aria-current={on ? 'page' : undefined}

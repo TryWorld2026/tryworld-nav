@@ -32,7 +32,7 @@ export default function DailyArchivePage() {
       <NewsTabs active="daily" width="content" />
 
       <div className="content-container">
-        <Link
+        <Link prefetch={false}
           href="/news/daily"
           className="mb-4 inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
         >
@@ -72,7 +72,7 @@ export default function DailyArchivePage() {
                 <ul className="space-y-0.5">
                   {g.days.map((d) => (
                     <li key={d.date}>
-                      <Link
+                      <Link prefetch={false}
                         href={`/news/daily/${d.date}`}
                         className="group flex items-baseline gap-2 rounded-md px-1.5 py-1.5 transition-colors hover:bg-foreground/5"
                       >

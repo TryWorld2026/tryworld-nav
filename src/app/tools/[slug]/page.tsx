@@ -210,7 +210,7 @@ export default async function ToolDetailPage({
             {/* One pill only — the origin renders the primary category, not
                 every category the entry carries. */}
             {primary && (
-              <Link href={`/categories/${primary.slug}`}>
+              <Link prefetch={false} href={`/categories/${primary.slug}`}>
                 <div className="flex items-center gap-1 rounded-full bg-foreground/5 px-3 py-1 text-sm text-gray-500 transition-colors hover:bg-foreground/10">
                   <CategoryIcon name={primary.icon} className="h-4 w-4" />
                   {primary.name}

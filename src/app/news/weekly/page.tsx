@@ -61,7 +61,7 @@ export default function WeeklyIndexPage() {
         ) : (
           <>
             <Reveal as="section" className="mt-8">
-              <Link
+              <Link prefetch={false}
                 href={`/news/weekly/${latest.week}`}
                 className="ink-band group relative block overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#1B2523]/25 active:translate-y-0 md:p-8"
               >
@@ -145,7 +145,7 @@ export default function WeeklyIndexPage() {
                     return (
                       <li key={w.week} className="min-w-0">
                         <Reveal delay={Math.min(i, 6)}>
-                          <Link
+                          <Link prefetch={false}
                             href={`/news/weekly/${w.week}`}
                             className="group flex items-baseline gap-3 rounded-md px-2 py-2.5 transition-colors hover:bg-foreground/[0.04]"
                           >

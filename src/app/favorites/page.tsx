@@ -37,7 +37,7 @@ export default function FavoritesPage() {
         description="收藏保存在这台设备的浏览器里，不上传、不需要登录。换设备或清除浏览器数据会丢失。"
       >
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          <Link
+          <Link prefetch={false}
             href="/tools"
             className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3.5 py-2 text-[13px] font-medium text-foreground/80 transition-all hover:-translate-y-px hover:border-foreground/25 hover:text-foreground"
           >

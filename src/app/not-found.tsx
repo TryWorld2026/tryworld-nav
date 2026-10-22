@@ -39,7 +39,7 @@ export default function NotFound() {
       </p>
 
       <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-        <Link
+        <Link prefetch={false}
           href="/tools"
           className="inline-flex h-10 items-center gap-2 rounded-md bg-gongke-dark px-4 text-sm font-medium text-[#F2EEE6] transition-colors hover:bg-[#253230]"
         >
@@ -47,7 +47,7 @@ export default function NotFound() {
           搜索全部工具
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/"
           className="inline-flex h-10 items-center gap-2 rounded-md border border-foreground/15 px-4 text-sm font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
         >
@@ -63,7 +63,7 @@ export default function NotFound() {
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           {topCategories.map((c) => (
-            <Link
+            <Link prefetch={false}
               key={c.slug}
               href={`/categories/${c.slug}`}
               className="inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-card px-3 py-1.5 text-[13px] text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
@@ -71,7 +71,7 @@ export default function NotFound() {
               {c.name}
             </Link>
           ))}
-          <Link
+          <Link prefetch={false}
             href="/categories"
             className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-foreground/20 px-3 py-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
           >

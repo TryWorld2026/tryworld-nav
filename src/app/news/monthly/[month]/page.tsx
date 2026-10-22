@@ -50,7 +50,7 @@ export default async function MonthlyIssuePage({
     <div className="pb-16">
       <NewsTabs active="monthly" width="period" />
       <div className="period-container mb-4">
-        <Link
+        <Link prefetch={false}
           href="/news/monthly"
           className="inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
         >

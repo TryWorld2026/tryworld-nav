@@ -85,7 +85,7 @@ export default function OfflinePage() {
         <ul className="mt-10 space-y-2.5">
           {LINKS.map(({ href, label, hint, icon: Icon }) => (
             <li key={href}>
-              <Link
+              <Link prefetch={false}
                 href={href}
                 className="group flex items-center gap-3.5 rounded-xl border border-foreground/10 bg-card px-4 py-3.5 transition-all duration-200 hover:-translate-y-px hover:border-foreground/20 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >

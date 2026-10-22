@@ -133,9 +133,9 @@ export function SiteSidebar() {
       <div className="fixed top-0 left-0 w-[calc(14rem-56px)] bg-card p-4 z-10">
         {/* This points at the site root; the replica's home is
             its own root, which is the same destination within this app. The
-            origin writes a bare <a>; a <Link> renders identical markup but lets
+            origin writes a bare <a>; a <Link prefetch={false}> renders identical markup but lets
             Next prefetch and keeps the build's link rule satisfied. */}
-        <Link className="flex items-center" href="/">
+        <Link prefetch={false} className="flex items-center" href="/">
           {/* 主标是宽幅的（192×116），给宽度 + `h-auto` 保持比例；塞进方形盒
               子会被压扁。`mr-2` 代替原来的方框留出规范要求的「一笔宽度」空白。 */}
           <SiteLogo className="w-8 h-auto text-gongke-dark mr-2" />
@@ -145,7 +145,7 @@ export function SiteSidebar() {
 
       <div className="mt-16">
         {/* 见 NEWS_BLOCK_CLASS 处的说明：对原站复刻的有意偏离。 */}
-        <Link href="/news" className={NEWS_BLOCK_CLASS} data-testid="news-sidebar-link">
+        <Link prefetch={false} href="/news" className={NEWS_BLOCK_CLASS} data-testid="news-sidebar-link">
           <Newspaper
             className="mr-2.5 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:-rotate-6"
             aria-hidden="true"
@@ -164,7 +164,7 @@ export function SiteSidebar() {
           </h2>
           <nav className="space-y-1">
             {featured.map((t) => (
-              <Link
+              <Link prefetch={false}
                 key={t.name}
                 href={t.href}
                 // The origin sends these to affiliate redirects in a new tab
@@ -202,7 +202,7 @@ export function SiteSidebar() {
           </h2>
           <nav className="space-y-1">
             {rows.map((c) => (
-              <Link key={c.slug} href={`/categories/${c.slug}`} className={NAV_CLASS}>
+              <Link prefetch={false} key={c.slug} href={`/categories/${c.slug}`} className={NAV_CLASS}>
                 <div className="w-5 h-5 relative mr-3 flex-shrink-0">
                   <CategoryIcon name={c.icon} className={`w-5 h-5 ${c.tailwind}`} />
                 </div>
@@ -214,7 +214,7 @@ export function SiteSidebar() {
                 金融投资、客服系统）在桌面端只能从页眉下拉进。补一个出口，
                 并把标题从「热门分类」改成「常用分类」—— 它是写死的清单，
                 不是按热度算的，原来的名字在说谎。 */}
-            <Link
+            <Link prefetch={false}
               href="/categories"
               className={`${NAV_CLASS} text-gongke-accent`}
               data-testid="sidebar-all-categories"
@@ -235,7 +235,7 @@ export function SiteSidebar() {
           <nav className="space-y-1">
             {/* 9 个编辑集合原先全站 0 内链（只在 sitemap 里），是最接近
                 「第一次来不知道选哪个」的内容，却没有任何入口。 */}
-            <Link href="/collections" className={NAV_CLASS} data-testid="sidebar-collections">
+            <Link prefetch={false} href="/collections" className={NAV_CLASS} data-testid="sidebar-collections">
               <div className="w-5 h-5 relative mr-3 flex-shrink-0 flex items-center justify-center">
                 <Layers2 className="w-4 h-4 text-gongke-accent" aria-hidden="true" />
               </div>
@@ -245,13 +245,13 @@ export function SiteSidebar() {
                 详情页的「怎么选」回答的是「这一个适合我吗」，读者真正卡住的
                 是「在两者之间选」—— 没有入口的话那 298 个页面只能从 sitemap
                 到达，等于没做。 */}
-            <Link href="/compare" className={NAV_CLASS} data-testid="sidebar-compare">
+            <Link prefetch={false} href="/compare" className={NAV_CLASS} data-testid="sidebar-compare">
               <div className="w-5 h-5 relative mr-3 flex-shrink-0 flex items-center justify-center">
                 <Scale className="w-4 h-4 text-gongke-accent" aria-hidden="true" />
               </div>
               <span className={LABEL_CLASS}>二选一对比</span>
             </Link>
-            <Link href="/favorites" className={NAV_CLASS}>
+            <Link prefetch={false} href="/favorites" className={NAV_CLASS}>
               <div className="w-5 h-5 relative mr-3 flex-shrink-0 flex items-center justify-center">
                 <Bookmark className="w-4 h-4 text-gongke-accent" aria-hidden="true" />
               </div>

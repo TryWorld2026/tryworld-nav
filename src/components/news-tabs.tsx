@@ -118,7 +118,7 @@ export function NewsTabs({
             const on = t.key === active;
             const Icon = t.icon;
             return (
-              <Link
+              <Link prefetch={false}
                 key={t.key}
                 href={t.href}
                 data-active={on ? 'true' : 'false'}
@@ -224,7 +224,7 @@ function PagerSide({
   }
 
   return (
-    <Link
+    <Link prefetch={false}
       href={href}
       className={`${base} border-foreground/10 bg-card hover:-translate-y-0.5 hover:border-gongke-accent/30 hover:shadow-md active:translate-y-0 active:scale-[0.99] ${
         dir === 'next' ? 'text-right' : ''

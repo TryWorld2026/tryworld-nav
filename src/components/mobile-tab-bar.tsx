@@ -81,7 +81,7 @@ export function MobileTabBar() {
           const Icon = tab.icon;
           return (
             <li key={tab.href}>
-              <Link
+              <Link prefetch={false}
                 href={tab.href}
                 aria-current={active ? 'page' : undefined}
                 className={`group flex flex-col items-center gap-0.5 rounded-xl py-2 text-[11px] transition-colors duration-150 active:scale-95 ${

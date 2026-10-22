@@ -29,14 +29,14 @@ export function SiteFooter() {
       <div className="content-container">
         <div className="md:flex md:justify-between">
           <div className="md:w-1/3 mb-6 md:mb-0">
-            <Link href="/" className="flex items-center mb-2">
+            <Link prefetch={false} href="/" className="flex items-center mb-2">
               {/* 主标是宽幅的（192×116），宽度 + `h-auto` 保持比例。 */}
               <SiteLogo className="w-8 h-auto text-gongke-dark mr-2" />
               <div className="text-xl text-foreground font-bold font-display">{SITE.name}</div>
             </Link>
             <p className="text-sm text-gongke-muted">
               © 2026{' '}
-              <Link href="/" className="inline-flex min-h-6 items-center hover:text-accent">
+              <Link prefetch={false} href="/" className="inline-flex min-h-6 items-center hover:text-accent">
                 {SITE.name}
               </Link>{' '}
               版权所有
@@ -50,7 +50,7 @@ export function SiteFooter() {
             <div className="md:w-1/2 mb-6 md:mb-0">
               <ul className="space-y-2 md:space-y-0 md:grid md:grid-cols-2 md:gap-2">
                 <li>
-                  <Link
+                  <Link prefetch={false}
                     className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
                     href="/about"
                   >
@@ -58,7 +58,7 @@ export function SiteFooter() {
                   </Link>
                 </li>
                 <li>
-                  <Link
+                  <Link prefetch={false}
                     className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
                     href="/terms-conditions"
                   >
@@ -70,7 +70,7 @@ export function SiteFooter() {
                       入口，换牌时去掉。现在这一格改成真实可用的「我的收藏」+
                       「精选集合」—— 页脚原先只有 4 个链接，却挂着一条「即将开放」
                       的死文案，是导航站最不该有的兜底空洞。 */}
-                  <Link
+                  <Link prefetch={false}
                     className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
                     href="/favorites"
                   >
@@ -78,7 +78,7 @@ export function SiteFooter() {
                   </Link>
                 </li>
                 <li>
-                  <Link
+                  <Link prefetch={false}
                     className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
                     href="/collections"
                   >
@@ -86,7 +86,7 @@ export function SiteFooter() {
                   </Link>
                 </li>
                 <li>
-                  <Link
+                  <Link prefetch={false}
                     className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
                     href="/compare"
                   >
@@ -94,7 +94,7 @@ export function SiteFooter() {
                   </Link>
                 </li>
                 <li>
-                  <Link
+                  <Link prefetch={false}
                     className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
                     href="/privacy-policy"
                   >
@@ -106,7 +106,7 @@ export function SiteFooter() {
             {/* 原站这里是空 div（见文件顶部说明）。现在承载 AI 资讯入口，
                 保留同样的 `md:w-1/2` 宽度职责，让左边那列仍然只占一半。 */}
             <div className="md:w-1/2 mb-6 md:mb-0">
-              <Link
+              <Link prefetch={false}
                 href="/news"
                 className="group inline-flex items-center gap-2 rounded-lg border border-foreground/10 bg-card px-3 py-2 text-sm font-medium text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-md active:translate-y-0 active:scale-[0.98]"
                 data-testid="news-footer-link"

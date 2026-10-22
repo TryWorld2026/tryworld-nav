@@ -208,7 +208,7 @@ export default async function ComparePage({
   return (
     <div className="content-container py-8 md:py-10">
       <div className="mb-6">
-        <Link
+        <Link prefetch={false}
           href="/compare"
           className="inline-flex items-center gap-1.5 rounded-md text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
@@ -357,7 +357,7 @@ export default async function ComparePage({
               const y = toolBySlug.get(p.b);
               if (!x || !y) return null;
               return (
-                <Link
+                <Link prefetch={false}
                   key={p.slug}
                   href={`/compare/${p.slug}`}
                   className="group flex items-center gap-2 rounded-lg border border-foreground/10 bg-card px-3 py-2 text-[13px] transition-all duration-150 hover:-translate-y-px hover:border-foreground/20 hover:shadow-sm"
@@ -438,7 +438,7 @@ function VerdictColumn({
         </span>
         <div className="min-w-0">
           <h3 id={`col-${tool.slug}`} className="text-[17px] font-semibold text-foreground">
-            <Link href={`/tools/${tool.slug}`} className="hover:text-gongke-accent hover:underline">
+            <Link prefetch={false} href={`/tools/${tool.slug}`} className="hover:text-gongke-accent hover:underline">
               {tool.name}
             </Link>
           </h3>
@@ -451,7 +451,7 @@ function VerdictColumn({
       {!verdict ? (
         <p className="mt-4 text-[13px] leading-relaxed text-muted-foreground">
           这一侧还没有编辑判断。上面的事实对照表与
-          <Link
+          <Link prefetch={false}
             href={`/tools/${tool.slug}`}
             className="mx-1 text-gongke-accent hover:underline"
           >
@@ -526,7 +526,7 @@ function VerdictColumn({
 
       <div className="mt-auto flex flex-wrap items-center gap-2 pt-4">
         {primary && (
-          <Link
+          <Link prefetch={false}
             href={`/categories/${primary.slug}`}
             className="inline-flex items-center gap-1 rounded-full bg-foreground/5 px-2.5 py-1 text-[12px] text-muted-foreground transition-colors hover:bg-foreground/10"
           >
@@ -534,7 +534,7 @@ function VerdictColumn({
             {primary.name}
           </Link>
         )}
-        <Link
+        <Link prefetch={false}
           href={`/tools/${tool.slug}`}
           className="ml-auto inline-flex items-center gap-1 text-[12.5px] font-medium text-gongke-accent hover:underline"
         >

@@ -49,7 +49,7 @@ export function ToolNewsPanel({ slug, name }: { slug: string; name: string }) {
           工具名「Kimi PPT助手」能命中标题，而 slug `kimi-ppt-zhushou`
           在任何标题里都不存在 —— 用 slug 搜会得到一个空结果页，
           明明上面刚列出三条相关资讯。 */}
-      <Link
+      <Link prefetch={false}
         href={`/news?q=${encodeURIComponent(name)}`}
         className="mt-3 inline-flex items-center gap-1 text-[11.5px] text-gongke-accent hover:underline"
       >

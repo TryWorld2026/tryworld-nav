@@ -52,7 +52,7 @@ export function HomeNews() {
             </span>
           </h2>
           <span className="h-px min-w-4 flex-1 bg-foreground/10" aria-hidden="true" />
-          <Link
+          <Link prefetch={false}
             href="/news"
             className="group hidden shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[13px] font-medium text-muted-foreground transition-colors hover:text-gongke-accent md:inline-flex"
           >
@@ -69,7 +69,7 @@ export function HomeNews() {
               会和站内所有按钮抢同级；墨色是「阅读面」，与首页 hero 的墨块
               呼应，读者一眼知道「这块是今天的内容」。 */}
           {daily && (
-            <Link
+            <Link prefetch={false}
               href={`/news/daily/${daily.date}`}
               className="ink-band group relative flex flex-col justify-between overflow-hidden rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#1B2523]/25 active:translate-y-0 active:scale-[0.995]"
             >
@@ -147,7 +147,7 @@ export function HomeNews() {
 
         {/* 底栏：更多入口 */}
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <Link
+          <Link prefetch={false}
             href="/news/hot"
             className="group inline-flex max-w-full items-center gap-1.5 rounded-full border border-foreground/10 bg-card px-3 py-1.5 text-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-gongke-accent/30 hover:shadow-sm active:translate-y-0"
           >
@@ -155,19 +155,19 @@ export function HomeNews() {
             <span className="font-medium text-[#B54826]">此刻最热</span>
             {hot && <span className="min-w-0 truncate text-foreground/70">{hot.title}</span>}
           </Link>
-          <Link
+          <Link prefetch={false}
             href="/news/weekly"
             className="rounded-full border border-foreground/10 bg-card px-3 py-1.5 text-xs text-foreground/65 transition-all duration-200 hover:-translate-y-0.5 hover:border-gongke-accent/30 hover:shadow-sm active:translate-y-0"
           >
             本周回顾
           </Link>
-          <Link
+          <Link prefetch={false}
             href="/news/daily/archive"
             className="rounded-full border border-foreground/10 bg-card px-3 py-1.5 text-xs text-foreground/65 transition-all duration-200 hover:-translate-y-0.5 hover:border-gongke-accent/30 hover:shadow-sm active:translate-y-0"
           >
             全部往期
           </Link>
-          <Link
+          <Link prefetch={false}
             href="/news"
             className="ml-auto inline-flex items-center gap-1 rounded-full px-2 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground md:hidden"
           >

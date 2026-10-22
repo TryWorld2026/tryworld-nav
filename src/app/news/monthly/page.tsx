@@ -58,7 +58,7 @@ export default function MonthlyIndexPage() {
         ) : (
           <>
             <Reveal as="section" className="mt-8">
-              <Link
+              <Link prefetch={false}
                 href={`/news/monthly/${latest.month}`}
                 className="ink-band group relative block overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#1B2523]/25 active:translate-y-0 md:p-8"
               >
@@ -136,7 +136,7 @@ export default function MonthlyIndexPage() {
                     const stats = periodStats(m);
                     return (
                       <Reveal key={m.month} delay={Math.min(i, 6)} as="section" className="min-w-0">
-                        <Link
+                        <Link prefetch={false}
                           href={`/news/monthly/${m.month}`}
                           className="group flex h-full flex-col rounded-xl border border-foreground/10 bg-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-gongke-accent/30 hover:shadow-md active:translate-y-0"
                         >

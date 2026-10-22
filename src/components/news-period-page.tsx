@@ -190,14 +190,14 @@ export function NewsPeriodPage({
         <nav aria-label="其他期次" className="mt-6">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs text-muted-foreground">其他期次</span>
-            <Link
+            <Link prefetch={false}
               href={kind === 'weekly' ? '/news/weekly' : '/news/monthly'}
               className="inline-flex items-center gap-1 rounded-full border border-foreground/10 px-2.5 py-1 text-xs text-foreground/70 transition-colors hover:border-gongke-accent/30 hover:text-gongke-accent"
             >
               全部{kind === 'weekly' ? '周报' : '月报'}
               <ExternalLink className="h-3 w-3" aria-hidden="true" />
             </Link>
-            <Link
+            <Link prefetch={false}
               href="/news/daily"
               className="inline-flex items-center gap-1 rounded-full border border-foreground/10 px-2.5 py-1 text-xs text-foreground/70 transition-colors hover:border-gongke-accent/30 hover:text-gongke-accent"
             >

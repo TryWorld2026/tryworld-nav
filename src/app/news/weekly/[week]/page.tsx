@@ -51,7 +51,7 @@ export default async function WeeklyIssuePage({
     <div className="pb-16">
       <NewsTabs active="weekly" width="period" />
       <div className="period-container mb-4">
-        <Link
+        <Link prefetch={false}
           href="/news/weekly"
           className="inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
         >

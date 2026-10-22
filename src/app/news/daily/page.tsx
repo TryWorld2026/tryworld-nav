@@ -85,7 +85,7 @@ export default function DailyIndexPage() {
             墨色 + 左文右数的两栏：左栏是头条，右栏是这一期的体量统计。 */}
         {latest && (
           <Reveal as="section" className="mt-8">
-            <Link
+            <Link prefetch={false}
               href={`/news/daily/${latest.date}`}
               className="ink-band group relative block overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#1B2523]/25 active:translate-y-0 md:p-8"
             >
@@ -172,7 +172,7 @@ export default function DailyIndexPage() {
                   delay={i}
                   className="w-[82%] shrink-0 snap-start md:w-auto"
                 >
-                  <Link
+                  <Link prefetch={false}
                     href={`/news/daily/${d.date}`}
                     className="group flex h-full flex-col rounded-xl border border-foreground/10 bg-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-md active:translate-y-0"
                   >
@@ -211,7 +211,7 @@ export default function DailyIndexPage() {
                 <ul className="mt-2 grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
                   {g.days.map((d) => (
                     <li key={d.date}>
-                      <Link
+                      <Link prefetch={false}
                         href={`/news/daily/${d.date}`}
                         className="flex min-w-0 items-baseline gap-2 rounded-md px-2 py-1.5 text-sm text-foreground/70 transition-colors hover:bg-foreground/5 hover:text-foreground"
                       >

@@ -138,7 +138,7 @@ export function Hero() {
                 现在主按钮 = 浏览全部工具，资讯降为次按钮（仍保留 testid，
                 既有测试与埋点不用改）。 */}
             <div className="mt-3 flex flex-wrap items-center gap-3">
-              <Link href="/tools" className={CTA_PRIMARY}>
+              <Link prefetch={false} href="/tools" className={CTA_PRIMARY}>
                 <LayoutGrid className="h-4 w-4 shrink-0" aria-hidden="true" />
                 浏览全部工具
                 <ArrowRight
@@ -146,7 +146,7 @@ export function Hero() {
                   aria-hidden="true"
                 />
               </Link>
-              <Link href="/news" className={CTA_SECONDARY} data-testid="news-hero-cta">
+              <Link prefetch={false} href="/news" className={CTA_SECONDARY} data-testid="news-hero-cta">
                 <Newspaper className="h-4 w-4 shrink-0" aria-hidden="true" />
                 看今天的 AI 资讯
               </Link>
@@ -183,7 +183,7 @@ export function Hero() {
 
             <div className="flex min-h-0 flex-1 flex-col gap-2.5 4xl:contents">
               {daily && (
-                <Link
+                <Link prefetch={false}
                   href={`/news/daily/${daily.date}`}
                   className={`${BRIEF_CARD} min-h-0 flex-1 4xl:col-start-1 4xl:row-start-2`}
                 >
@@ -219,7 +219,7 @@ export function Hero() {
 
               <div className="grid shrink-0 grid-cols-2 gap-2.5 4xl:col-start-2 4xl:row-start-2 4xl:grid-cols-1 4xl:grid-rows-2">
                 {hot && (
-                  <Link href="/news/hot" className={BRIEF_CARD}>
+                  <Link prefetch={false} href="/news/hot" className={BRIEF_CARD}>
                     <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#F2A07F]">
                       <Flame className="h-3 w-3" aria-hidden="true" />
                       此刻最热
@@ -232,7 +232,7 @@ export function Hero() {
                     </span>
                   </Link>
                 )}
-                <Link href="/categories" className={BRIEF_CARD}>
+                <Link prefetch={false} href="/categories" className={BRIEF_CARD}>
                   <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#F2A07F]">
                     <Layers2 className="h-3 w-3" aria-hidden="true" />
                     按场景找

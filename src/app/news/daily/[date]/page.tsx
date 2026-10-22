@@ -73,7 +73,7 @@ export default async function DailyIssuePage({
           在语义上绑在一起 —— 将来日报若单独改成窄栏，链接跟着走，不会
           在左缘分叉。 */}
       <div className="rail-container mb-4">
-        <Link
+        <Link prefetch={false}
           href="/news/daily"
           className="inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
         >

@@ -235,7 +235,7 @@ export function Header() {
               <div className="flex min-w-0 items-center space-x-6">
                 {/* Mobile-only lockup: this is where the sidebar's brand block
                     would be, but the sidebar is `hidden lg:block`. */}
-                <Link href="/" className="flex min-w-0 items-center lg:hidden">
+                <Link prefetch={false} href="/" className="flex min-w-0 items-center lg:hidden">
                   {/* 主标是宽幅的（192×116），宽度 + `h-auto` 保持比例。 */}
                   <SiteLogo className="mr-2 h-auto w-8 shrink-0 text-gongke-dark" />
                   <div className="truncate text-xl font-bold font-display text-foreground">
@@ -248,7 +248,7 @@ export function Header() {
                   `grid-cols-[1fr_auto_1fr]` 的直接子元素才能居中；放在左侧
                   那个 `1fr` 格子里时它只会贴左。 */}
               <nav className="hidden items-center space-x-6 text-sm lg:flex">
-                <Link href="/tools" className={NAV_ITEM_CLASS}>
+                <Link prefetch={false} href="/tools" className={NAV_ITEM_CLASS}>
                   <LayoutList className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
                   查看全部
                 </Link>
@@ -276,7 +276,7 @@ export function Header() {
                       <ul className="grid grid-cols-3 gap-0.5">
                         {allCategories.map((c) => (
                           <li key={c.slug}>
-                            <Link
+                            <Link prefetch={false}
                               href={`/categories/${c.slug}`}
                               onClick={() => setCatOpen(false)}
                               className="flex items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-foreground/70 transition-colors hover:bg-foreground/5 hover:text-foreground"
@@ -291,7 +291,7 @@ export function Header() {
                           「精选集合」的路 —— 桌面端去 /categories 的唯一入口
                           埋在首页下半屏。两个出口放到底部一条细线之后。 */}
                       <div className="mt-1.5 flex items-center gap-3 border-t border-foreground/[0.07] px-2 pt-2 text-[12.5px]">
-                        <Link
+                        <Link prefetch={false}
                           href="/categories"
                           onClick={() => setCatOpen(false)}
                           className="inline-flex items-center gap-1 font-medium text-gongke-accent hover:underline"
@@ -299,7 +299,7 @@ export function Header() {
                           分类总览
                           <ArrowRight className="h-3 w-3" aria-hidden="true" />
                         </Link>
-                        <Link
+                        <Link prefetch={false}
                           href="/collections"
                           onClick={() => setCatOpen(false)}
                           className="inline-flex items-center gap-1 font-medium text-gongke-accent hover:underline"
@@ -307,7 +307,7 @@ export function Header() {
                           精选集合
                           <ArrowRight className="h-3 w-3" aria-hidden="true" />
                         </Link>
-                        <Link
+                        <Link prefetch={false}
                           href="/favorites"
                           onClick={() => setCatOpen(false)}
                           className="ml-auto inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
@@ -319,14 +319,14 @@ export function Header() {
                   )}
                 </div>
 
-                <Link href="/about" className={NAV_ITEM_CLASS}>
+                <Link prefetch={false} href="/about" className={NAV_ITEM_CLASS}>
                   <ScanFace className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
                   关于我们
                 </Link>
 
                 {/* 见文件顶部 NEWS_NAV_CLASS 处的说明。插在「关于我们」之前，
                     与右侧搜索按钮相邻，扫读顺序是「目录 -> 资讯 -> 关于」。 */}
-                <Link href="/news" className={NEWS_NAV_CLASS} data-testid="news-nav-link">
+                <Link prefetch={false} href="/news" className={NEWS_NAV_CLASS} data-testid="news-nav-link">
                   <Newspaper className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
                   AI 资讯
                 </Link>
@@ -350,7 +350,7 @@ export function Header() {
 
                 <div className="hidden lg:block">
                   {/* 指向真实的 /favorites，不再弹「未包含账号系统」的说明框。 */}
-                  <Link href="/favorites" className={FAVORITES_BUTTON_CLASS}>
+                  <Link prefetch={false} href="/favorites" className={FAVORITES_BUTTON_CLASS}>
                     <Bookmark className="h-4 w-4" aria-hidden="true" />
                     我的收藏
                   </Link>

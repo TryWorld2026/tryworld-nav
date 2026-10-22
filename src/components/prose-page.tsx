@@ -25,7 +25,7 @@ export function ProsePage({
   return (
     <div className="content-container py-10 md:py-12">
       <div className="mx-auto max-w-[45rem]">
-        <Link
+        <Link prefetch={false}
           href="/"
           className="mb-6 inline-flex items-center gap-1.5 rounded-md text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
@@ -53,13 +53,13 @@ export function ProsePage({
         </article>
 
         <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-foreground/10 pt-6">
-          <Link
+          <Link prefetch={false}
             href="/tools"
             className="inline-flex items-center gap-1.5 rounded-full bg-gongke-accent px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-gongke-accent/90 hover:shadow-md active:translate-y-0 active:scale-[0.98]"
           >
             浏览全部工具
           </Link>
-          <Link
+          <Link prefetch={false}
             href="/news"
             className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-4 py-2 text-sm font-medium text-foreground/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/25 hover:text-foreground hover:shadow-sm active:translate-y-0 active:scale-[0.98]"
           >

@@ -57,7 +57,7 @@ export default async function CategoryDetailPage({
       <div className="border-b border-foreground/10 py-9 md:py-11">
         <div className="content-container">
           <div className="mb-6">
-            <Link
+            <Link prefetch={false}
               href="/categories"
               className="inline-flex items-center gap-1.5 rounded-md text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
@@ -108,7 +108,7 @@ export default async function CategoryDetailPage({
                   （实测移动端页高 33,663px，桌面 10,767px）。这个入口把
                   「在该分类内继续筛」交给 /tools —— 那里有搜索、标签与价格
                   筛选，还能把条件写进 URL 分享出去。 */}
-              <Link
+              <Link prefetch={false}
                 href={`/tools?cat=${category.slug}`}
                 className="inline-flex items-center gap-1 rounded-full border border-foreground/15 px-3 py-1 text-[12px] font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
               >
@@ -159,7 +159,7 @@ export default async function CategoryDetailPage({
             {categories
               .filter((c) => c.slug !== slug)
               .map((c) => (
-                <Link
+                <Link prefetch={false}
                   key={c.id}
                   href={`/categories/${c.slug}`}
                   className="inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-card px-2.5 py-1.5 text-xs text-muted-foreground transition-all duration-150 hover:-translate-y-px hover:border-foreground/20 hover:text-foreground"

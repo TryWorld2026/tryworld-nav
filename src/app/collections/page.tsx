@@ -72,7 +72,7 @@ export default function CollectionsPage() {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 4xl:grid-cols-5">
         {collections.map((c) => (
-          <Link
+          <Link prefetch={false}
             key={c.slug}
             href={`/collections/${c.slug}`}
             className="group relative flex flex-col overflow-hidden rounded-2xl border border-foreground/10 bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-lg hover:shadow-foreground/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-0 active:scale-[0.995]"

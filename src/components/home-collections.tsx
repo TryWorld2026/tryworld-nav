@@ -40,7 +40,7 @@ export function HomeCollections() {
             </span>
           </h2>
           <span className="h-px min-w-4 flex-1 bg-foreground/10" aria-hidden="true" />
-          <Link
+          <Link prefetch={false}
             href="/collections"
             className="group hidden shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[13px] font-medium text-muted-foreground transition-colors hover:text-gongke-accent md:inline-flex"
           >
@@ -58,7 +58,7 @@ export function HomeCollections() {
             3+3、1280 以上 5 列 5 张。 */}
         <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-1 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 xl:grid-cols-5">
           {collections.slice(0, 6).map((c, i) => (
-            <Link
+            <Link prefetch={false}
               key={c.slug}
               href={`/collections/${c.slug}`}
               className={`group flex w-[240px] shrink-0 flex-col rounded-xl border border-foreground/10 bg-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-md md:w-auto${

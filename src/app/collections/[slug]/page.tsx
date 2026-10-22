@@ -82,7 +82,7 @@ export default async function CollectionDetailPage({
               正文末尾那个按钮，读完一屏才够得着；两页都是「列表 → 详情」，
               出口应该在同一处。样式与 `categories/[slug]` 保持一致。 */}
           <div className="mb-6">
-            <Link
+            <Link prefetch={false}
               href="/collections"
               className="inline-flex items-center gap-1.5 rounded-md text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
@@ -168,7 +168,7 @@ export default async function CollectionDetailPage({
                 宽松，不必为了更密而缩到 4 列。 */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {others.map((o) => (
-                <Link
+                <Link prefetch={false}
                   key={o.slug}
                   href={`/collections/${o.slug}`}
                   className="group flex items-start gap-3 rounded-xl border border-foreground/10 bg-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-md active:translate-y-0"
@@ -197,7 +197,7 @@ export default async function CollectionDetailPage({
               ))}
             </div>
             <div className="mt-8 text-center">
-              <Link
+              <Link prefetch={false}
                 href="/collections"
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-gongke-dark px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-gongke-dark/90 hover:shadow-md active:translate-y-0 active:scale-[0.98]"
               >

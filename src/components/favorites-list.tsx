@@ -89,13 +89,13 @@ export function FavoritesList() {
           在工具详情页点「添加收藏」，收藏会保存在这台设备上，不需要登录。
         </p>
         <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-          <Link
+          <Link prefetch={false}
             href="/tools"
             className="inline-flex h-10 items-center rounded-md bg-gongke-accent px-4 text-sm font-medium text-white transition-colors hover:bg-gongke-accent/90"
           >
             去逛逛全部工具
           </Link>
-          <Link
+          <Link prefetch={false}
             href="/categories"
             className="inline-flex h-10 items-center rounded-md border border-foreground/15 px-4 text-sm font-medium text-foreground/80 transition-colors hover:border-foreground/25"
           >
@@ -159,7 +159,7 @@ export function FavoritesList() {
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <Link
+                <Link prefetch={false}
                   href={`/tools/${it.slug}`}
                   className="line-clamp-1 text-[15px] font-semibold text-foreground hover:text-gongke-accent"
                 >

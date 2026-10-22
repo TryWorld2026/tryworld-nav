@@ -180,7 +180,7 @@ export default function HotTopicsPage() {
         )}
 
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
-          <Link
+          <Link prefetch={false}
             href="/news/daily"
             className="group flex items-center justify-between rounded-xl border border-foreground/10 bg-card px-4 py-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-gongke-accent/25 hover:shadow-sm active:translate-y-0"
           >
@@ -193,7 +193,7 @@ export default function HotTopicsPage() {
               aria-hidden="true"
             />
           </Link>
-          <Link
+          <Link prefetch={false}
             href="/news"
             className="group flex items-center justify-between rounded-xl border border-foreground/10 bg-card px-4 py-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-gongke-accent/25 hover:shadow-sm active:translate-y-0"
           >

@@ -109,7 +109,7 @@ export default function CategoriesPage() {
           6px / 14px。现在的阶梯最窄一档是 5 列的 302px（内宽 262px）。 */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 4xl:grid-cols-5">
         {categoryCards.map((c) => (
-          // ⚠ 这里**不能**用「整卡一个 <Link>、成员头像再套 <Link>」的写法：
+          // ⚠ 这里**不能**用「整卡一个 <Link prefetch={false}>、成员头像再套 <Link prefetch={false}>」的写法：
           // 锚点嵌套锚点是无效 HTML，浏览器解析时会把外层 <a> 提前闭合，
           // 于是 SSR 的 DOM 与 React 的虚拟树对不上，水合直接报
           // `Minified React error #418`（2026-10-17 用 Playwright 在
@@ -161,7 +161,7 @@ export default function CategoriesPage() {
                   {/* 整卡可点：`after` 铺满最近的定位祖先（卡片本体），这是
                       嵌套锚点之外唯一合法的「整卡链接」。头像链接各自抬到
                       z-20 才能拿到点击。 */}
-                  <Link
+                  <Link prefetch={false}
                     href={`/categories/${c.slug}`}
                     className="transition-colors after:absolute after:inset-0 after:z-10 after:content-[''] group-hover:text-gongke-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
@@ -191,7 +191,7 @@ export default function CategoriesPage() {
                   字体一有差异就会顶出去。露不下的由「+N」接着数。 */}
               <div className="flex -space-x-2">
                 {c.members.slice(0, 5).map((m) => (
-                  <Link
+                  <Link prefetch={false}
                     key={m.slug}
                     href={`/tools/${m.slug}`}
                     target="_blank"
@@ -233,7 +233,7 @@ export default function CategoriesPage() {
             不想按分类找的人可以直接看全量。
             占 2 格及以上时横排，只占 1 格（3 列那一档）时竖排，否则文字会被
             挤成两行窄条。 */}
-        <Link
+        <Link prefetch={false}
           href="/tools"
           className="group flex flex-col gap-4 rounded-2xl border border-dashed border-foreground/15 p-5 transition-colors duration-200 hover:border-gongke-accent/40 hover:bg-card md:col-span-2 md:flex-row md:items-center md:justify-between md:gap-6 xl:col-span-1 xl:flex-col xl:items-start xl:justify-between xl:gap-4 2xl:col-span-2 2xl:flex-row 2xl:items-center 2xl:justify-between 2xl:gap-6 4xl:col-span-4"
         >

@@ -169,7 +169,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
 
         <nav className={LINKS_GRID_CLASS}>
           {LINKS.map((l) => (
-            <Link
+            <Link prefetch={false}
               key={l.href}
               href={l.href}
               className="rounded-md border border-border px-3 py-2 text-center text-sm text-foreground/80 transition-colors hover:bg-foreground/5"
@@ -182,7 +182,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
         <h2 className="mb-3 px-1 text-sm font-semibold text-foreground">常用推荐</h2>
         <nav className="mb-7 space-y-1">
           {featured.map((t) => (
-            <Link
+            <Link prefetch={false}
               key={t.name}
               href={t.href}
               className="flex items-center rounded-md px-2 py-2 text-sm text-foreground/80 transition-colors hover:bg-foreground/5"
@@ -203,7 +203,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
         <h2 className="mb-3 px-1 text-sm font-semibold text-foreground">热门分类</h2>
         <nav className="grid grid-cols-2 gap-1">
           {hotCategories.map((c) => (
-            <Link
+            <Link prefetch={false}
               key={c.slug}
               href={`/categories/${c.slug}`}
               className="flex items-center rounded-md px-2 py-2 text-sm text-foreground/80 transition-colors hover:bg-foreground/5"
