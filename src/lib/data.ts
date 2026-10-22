@@ -20,7 +20,7 @@ import type {
 } from './types';
 import { asset, assetList } from './assets';
 import rawSearchIndex from '../../data/search-index.json';
-import { searchIndex, type SearchRecord } from './search';
+import { decodeSearchIndex, searchIndex, type SearchRecord } from './search';
 
 export const tools = (rawTools as Tool[]).map((t) => ({
   ...t,
@@ -44,10 +44,13 @@ export const categoryBySlug = new Map(categories.map((c) => [c.slug, c]));
  *
  * 它**只交给客户端**（命令面板与 `/tools` 的筛选器），服务端不需要它 ——
  * 服务端的搜索只在 `searchTools()` 里用到，而那个函数本身就是给 `/tools`
- * 预渲染时算初始列表用的。这份数据 329 KB raw / 59 KB br，是「搜索能接住
- * 任务语」的代价，比原先被打进 layout chunk 的 1.4 MB 目录 JSON 便宜得多。
+ * 预渲染时算初始列表用的。v2 的 wire 是紧凑字典编码（分类/标签/关键词/平台都
+ * 换成共享字符串 ID、平台用 bitmask、价格用 0–4、更新时间用 Unix 日序），
+ * 实测 raw 221 KB / br 58.5 KB，比原先被打进 layout chunk 的 1.4 MB 目录
+ * JSON 便宜一个数量级。这里统一解码一次，`decodeSearchIndex()` 内部按对象
+ * 身份缓存，所以服务端与客户端拿到的是同一份水化结果。
  */
-export const searchIndexRecords = rawSearchIndex as SearchRecord[];
+export const searchIndexRecords: SearchRecord[] = decodeSearchIndex(rawSearchIndex);
 
 // Re-exported so server components keep their single `@/lib/data` import; the
 // client-side consumer (`ToolMiniCard`) imports `@/lib/tags` directly instead,
@@ -66,14 +69,17 @@ const toolExtras = rawExtras as Record<string, ToolExtras>;
  * Harvested extras for one tool, or `null` when the origin published none. Every
  * one of the 2081 catalogued slugs has an entry today, but the accessor stays
  * defensive: the JSON is crawler output, and a half-written entry should degrade
- * one page rather than throw during prerender and take the build down. Note
- * that a missing `prose` also reads as `null` here — `pokecut` is the one
- * slug whose origin page ships an empty body, and `ToolProse` renders nothing
- * for it.
+ * one page rather than throw during prerender and take the build down.
+ *
+ * The `prose` check used to live here, and it was wrong: `prose` is only one of
+ * nine fields, so a slug whose origin body is empty (`pokecut`) lost its whole
+ * entry — pricing badge, updated date, SEO copy and the hero description all
+ * disappeared from a page that does have those facts. Callers that care about
+ * the body must check `extras.prose` themselves.
  */
 export function extrasBySlug(slug: string): ToolExtras | null {
   const extras = toolExtras[slug];
-  if (!extras || typeof extras.prose !== 'string') return null;
+  if (!extras || typeof extras !== 'object') return null;
   return extras;
 }
 

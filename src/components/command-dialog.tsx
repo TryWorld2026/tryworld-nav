@@ -5,15 +5,14 @@ import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
 import { ArrowRight, Search, X } from 'lucide-react';
 import { CategoryIcon } from './category-icon';
+// 索引只在 `lib/catalog-index.ts` 里解码一次：面板与 `/tools` 筛选共用同一份
+// `SearchRecord[]`，别再自己 `as SearchRecord[]` 强转 v2 wire（那是裸数组时代的写法）。
+import { CATALOG_BY_SLUG, CATALOG_INDEX } from '@/lib/catalog-index';
 import { navCategories, navFeatured, navHotCategories } from '@/lib/nav';
-import { searchIndex, type SearchRecord } from '@/lib/search';
+import { searchIndex } from '@/lib/search';
 import { useBodyScrollLock } from '@/lib/use-body-scroll-lock';
 import { rgb, rgbAlpha } from '@/lib/utils';
-import rawSearchIndex from '../../data/search-index.json';
-
-const INDEX = rawSearchIndex as SearchRecord[];
-/** slug → 记录，避免每次渲染都在 2081 条里线性 find。 */
-const BY_SLUG = new Map(INDEX.map((r) => [r.s, r]));
+import { asset } from '@/lib/assets';
 
 /**
  * 全站唯一的搜索面板（页眉按钮、⌘K / Ctrl+K、`/`、移动端底部中央圆钮共用）。
@@ -106,7 +105,7 @@ export function CommandDialog({
   );
 
   const trimmed = query.trim();
-  const toolResults = useMemo(() => searchIndex(INDEX, query, 30), [query]);
+  const toolResults = useMemo(() => searchIndex(CATALOG_INDEX, query, 30), [query]);
   const catResults = useMemo(() => {
     const q = trimmed.toLowerCase();
     if (!q) return navHotCategories.slice(0, 8);
@@ -193,7 +192,9 @@ export function CommandDialog({
                 className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground"
               >
                 {toolResults.map((h) => {
-                  const t = BY_SLUG.get(h.slug);
+                  // 命中只带 slug，其余展示字段走 Map 查（避免每次渲染都在
+                  // 2081 条里线性 find）。查不到就跳过，不让一条脏数据炸整组。
+                  const t = CATALOG_BY_SLUG.get(h.slug);
                   if (!t) return null;
                   return (
                     <Command.Item
@@ -204,7 +205,7 @@ export function CommandDialog({
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={t.i}
+                        src={asset(t.i)}
                         alt=""
                         width={28}
                         height={28}
@@ -289,7 +290,7 @@ export function CommandDialog({
                 <ArrowRight className="h-3 w-3" aria-hidden="true" />
               </Command.Item>
             ) : (
-              <span className="ml-auto">共 {INDEX.length} 个工具</span>
+              <span className="ml-auto">共 {CATALOG_INDEX.length} 个工具</span>
             )}
           </div>
         </Command>

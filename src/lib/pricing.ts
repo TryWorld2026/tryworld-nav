@@ -20,6 +20,7 @@
  * being dropped — an unrecognised value should still read as a pricing badge, not
  * silently vanish from the row.
  */
+import type { PriceCode } from './search';
 
 /** The origin's class list for every tone, minus the tone-specific colours. */
 export const PRICING_PREFIX =
@@ -92,3 +93,50 @@ export function pricingBadgeClass(label: string | undefined): string | null {
   const tone = TONES[pricingTone(label)];
   return `${PRICING_PREFIX} ${tone.className}`;
 }
+
+/**
+ * 采集到的中文价格标签 → 索引里的 `PriceCode`。
+ *
+ * 与 `scripts/generate-search-index.mjs` 的 `LABEL_TO_CODE` **必须一致**：
+ * 那个脚本在构建期把 2081 条工具的价格写进 `data/search-index.json`，这里是
+ * 服务端页面（首页 / 分类 / 详情页）从 `tool-extras.json` 直接读的路径。
+ * 两处口径一旦分叉，同一条工具在 `/tools` 与详情页会显示不同的价格胶囊 ——
+ * 那是最难被发现、也最伤信任的一类不一致。
+ *
+ * 五档之外的标签（含 `未知` 与空）一律 `unrated`，不推测。
+ */
+export function priceCodeFromLabel(label: unknown): PriceCode {
+  if (typeof label !== 'string') return 'unrated';
+  return LABEL_TO_CODE[label] ?? 'unrated';
+}
+
+const LABEL_TO_CODE: Record<string, PriceCode> = {
+  免费: 'fully-free',
+  免费开源: 'open-source',
+  免费增值: 'freemium',
+  付费: 'paid',
+};
+
+/**
+ * 价格胶囊的**短标签**（卡片上用）。
+ *
+ * 详情页 hero 上的那枚胶囊用的是原站四档原文（`pricingBadgeClass(label)`，
+ * 免费 / 免费增值 / 付费 / 免费开源）；卡片比 hero 窄得多，四个字以内才能
+ * 与「更新于 …」并排放进一行，所以这里换成两字短名。`unrated` 返回 `''`，
+ * 调用方据此整枚不渲染 —— 缺采集数据的 55 条工具不该挂一枚灰胶囊假装有数据。
+ */
+export function priceShortLabel(code: PriceCode | undefined): string {
+  switch (code) {
+    case 'fully-free':
+      return '免费';
+    case 'open-source':
+      return '开源';
+    case 'freemium':
+      return '免费额度';
+    case 'paid':
+      return '付费';
+    default:
+      return '';
+  }
+}
+

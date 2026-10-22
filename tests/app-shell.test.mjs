@@ -293,9 +293,19 @@ test('搜索索引与导航数据都在产物里，且索引不含 prose', (t) =
   if (skipIfNoBuild(t)) return;
   const nav = page('index.html');
   // 搜索索引会随某个 chunk 下发；这里只验证它没把正文带进来。
+  //
+  // 2026-10-22：索引换成了 v2 的紧凑 wire 格式 —— 顶层是
+  // `{v:2, cats, tags, kw, pl, rows}` 而不是裸数组。行是定长位置元组
+  // （分类/标签/关键词存字典下标、平台存 bitmask、icon 只存扩展名字母），
+  // 所以这里只能按 wire 的形状断言；解码成 `SearchRecord[]` 是
+  // `decodeSearchIndex()` 的事，`tests/search.test.mjs` 负责那一层。
   const idx = JSON.parse(readFileSync(join(process.cwd(), 'data', 'search-index.json'), 'utf8'));
-  assert.ok(Array.isArray(idx) && idx.length === 2081, `索引应有 2081 条，实际 ${idx?.length}`);
-  assert.ok(idx.every((r) => !('prose' in r)), '索引不应包含 prose 字段');
+  assert.equal(idx.v, 2, '索引必须是 v2 wire 格式（跑 npm run gen:search-index）');
+  assert.ok(Array.isArray(idx.rows), '索引应有 rows 数组');
+  assert.equal(idx.rows.length, 2081, `索引应有 2081 条，实际 ${idx.rows?.length}`);
+  assert.ok(idx.rows.every((r) => Array.isArray(r) && r.length >= 8), '每行应是定长位置元组');
+  // 正文（prose，14 MB）绝不能进索引 —— 它是详情页才需要的东西。
+  assert.ok(!JSON.stringify(idx).includes('prose'), '索引不应包含 prose 字段');
   // 命令面板的「在全部工具中搜索」出口要能在首页找到（空查询时不显示，
   // 所以这里只断言面板代码进了 bundle）。
   assert.match(nav, /_next\/static/, '首页应引用静态资源');

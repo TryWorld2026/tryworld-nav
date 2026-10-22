@@ -29,11 +29,10 @@ import {
 } from '@/lib/news';
 import type { NewsItem } from '@/lib/types';
 import type { NewsRange } from '@/lib/news';
-import type { SearchRecord } from '@/lib/search';
-import rawSearchIndex from '../../data/search-index.json';
-
-/** 站内条目的名称与图标从搜索索引里取（2081 条，br 59 KB）。 */
-const SEARCH_INDEX = rawSearchIndex as SearchRecord[];
+// slug → SearchRecord 的 Map 由 `lib/catalog-index.ts` 统一解码一次，
+// 资讯卡片的「站内收录」chip 只查表，不再自己强转 v2 wire。
+import { CATALOG_BY_SLUG } from '@/lib/catalog-index';
+import { asset } from '@/lib/assets';
 
 /**
  * 资讯流 —— `/news` 的主体。
@@ -226,18 +225,21 @@ export function NewsFeed({
 
   /**
    * `toolLinks`（slug 数组）→ 渲染需要的 `{slug,name,icon}`。
-   * 这里用 `navCategories` 之外的轻量数据源：`search-index.json` 里已有
-   * 全部 2081 条的名称与图标，59 KB br，比拖进整个目录便宜。
+   * 这里用 `navCategories` 之外的轻量数据源：`CATALOG_BY_SLUG` 里已有
+   * 全部 2081 条的名称与图标（搜索索引 59 KB br），比拖进整个目录便宜。
+   * 索引本身在 `lib/catalog-index.ts` 里解码一次，全站共用，这里只查表。
    */
   const linkedToolMap = useMemo(() => {
     const out = new Map<string, { slug: string; name: string; icon: string }[]>();
     if (!toolLinks || Object.keys(toolLinks).length === 0) return out;
-    const bySlug = new Map(SEARCH_INDEX.map((r) => [r.s, r]));
     for (const [newsId, slugs] of Object.entries(toolLinks)) {
-      const list = slugs
-        .map((s) => bySlug.get(s))
-        .filter((r): r is SearchRecord => Boolean(r))
-        .map((r) => ({ slug: r.s, name: r.n, icon: r.i }));
+      const list = slugs.flatMap((s) => {
+        const r = CATALOG_BY_SLUG.get(s);
+        // 没收录的 slug 直接跳过 —— 资讯里提到的工具站内常常还没有。
+        // `r.i` 是索引里的站内相对路径，媒体主机前缀必须在这里补
+        // （索引本身不能预拼，理由见 `lib/catalog-index.ts`）。
+        return r ? [{ slug: r.s, name: r.n, icon: asset(r.i) }] : [];
+      });
       if (list.length) out.set(newsId, list);
     }
     return out;

@@ -9,6 +9,13 @@
  * 这组用例把「22 个意图词都必须有条目」钉死：将来有人把 `INTENTS` 或
  * `LEXICON` 改坏、或者把索引生成脚本的净化规则调过头，这里会先红。
  *
+ * 2026-10-22：`data/search-index.json` 改成了 v2 的**紧凑 wire 格式**
+ * （`{v:2, cats, tags, kw, pl, rows}`，行是定长位置元组，398 KB → 221 KB raw）。
+ * 所以这里不能把 JSON 直接当 `SearchRecord[]` 用 —— 必须先过
+ * `decodeSearchIndex()`，它会把字典下标、bitmask、扩展名字母还原成
+ * 读者能用的字段。少这一步测试就会拿到一堆数字（`c`/`t` 是下标、`p` 是
+ * 价格码数字、`pl` 是平台 bitmask），断言会以非常难读的方式失败。
+ *
  *   node --test tests/search.test.mjs
  */
 import { test } from 'node:test';
@@ -16,9 +23,19 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { expandQuery, searchIndex, filterRecords, INTENTS, LEXICON } from '../src/lib/search.ts';
+import {
+  decodeSearchIndex,
+  expandQuery,
+  filterRecords,
+  searchIndex,
+  sortRecords,
+  INTENTS,
+  LEXICON,
+  PRICE_CODES,
+} from '../src/lib/search.ts';
 
-const INDEX = JSON.parse(readFileSync(join(process.cwd(), 'data', 'search-index.json'), 'utf8'));
+const WIRE = JSON.parse(readFileSync(join(process.cwd(), 'data', 'search-index.json'), 'utf8'));
+const INDEX = decodeSearchIndex(WIRE);
 
 /** 审计报告里跑过的 22 个真实意图词。 */
 const INTENT_QUERIES = [
@@ -45,6 +62,11 @@ const INTENT_QUERIES = [
   '漫画',
   '电商详情页',
 ];
+
+test('wire 是 v2 紧凑格式，且能解码成 2081 条记录', () => {
+  assert.equal(WIRE.v, 2, '索引必须是 v2 wire 格式');
+  assert.equal(INDEX.length, 2081, '解码后的条目数应与工具总数一致');
+});
 
 test('22 个真实意图词全部至少命中 1 条', () => {
   const misses = [];
@@ -125,26 +147,57 @@ test('limit 生效', () => {
   assert.equal(searchIndex(INDEX, '视频', Number.POSITIVE_INFINITY).length > 5, true);
 });
 
+test('命中带可解释字段（读者能看懂「为什么这条排前面」）', () => {
+  const [hit] = searchIndex(INDEX, '视频', 1);
+  assert.ok(hit, '应有结果');
+  assert.ok(Array.isArray(hit.matchedFields) && hit.matchedFields.length > 0, '应说明命中在哪些字段');
+  assert.ok(hit.score > 0, '分数应为正数');
+});
+
 test('filterRecords：分类多选是并集，标签是精确匹配', () => {
-  const onlyCoding = filterRecords(INDEX, { categories: ['ai-coding'] });
+  const onlyCoding = filterRecords(INDEX, { cats: ['ai-coding'] });
   assert.ok(onlyCoding.length > 0);
   assert.ok(onlyCoding.every((r) => r.c.includes('ai-coding')));
 
-  const twoCats = filterRecords(INDEX, { categories: ['ai-coding', 'ai-writing'] });
-  assert.ok(
-    twoCats.length > onlyCoding.length,
-    '两个分类应比一个分类宽（并集）',
-  );
+  const twoCats = filterRecords(INDEX, { cats: ['ai-coding', 'ai-writing'] });
+  assert.ok(twoCats.length > onlyCoding.length, '两个分类应比一个分类宽（并集）');
 
-  const tagged = filterRecords(INDEX, { tag: '编辑推荐' });
+  const tagged = filterRecords(INDEX, { tags: ['编辑推荐'] });
   assert.ok(tagged.every((r) => r.t.includes('编辑推荐')));
 });
 
-test('filterRecords：price=free 只留白名单里的 slug', () => {
-  const free = new Set(INDEX.slice(0, 5).map((r) => r.s));
-  const got = filterRecords(INDEX, { price: 'free', freeSlugs: free });
-  assert.equal(got.length, 5);
-  assert.ok(got.every((r) => free.has(r.s)));
+test('filterRecords：price=free 展开成「完全免费 + 开源」共 238 条', () => {
+  // 历史口径：站内「免费」筛选一直是 免费(183) + 免费开源(55) = 238 条。
+  // 价格现在进了索引（wire 第 8 槽），不再需要服务端传 freeSlugs 白名单。
+  const free = filterRecords(INDEX, { price: 'free' });
+  assert.equal(free.length, 238, '「免费」应展开为 fully-free + open-source');
+  assert.ok(free.every((r) => r.p === 'fully-free' || r.p === 'open-source'));
+});
+
+test('filterRecords：平台筛选按 bitmask 解码后的名匹配', () => {
+  const ios = filterRecords(INDEX, { platforms: ['iOS'] });
+  assert.ok(ios.length > 0, '应有 iOS 工具');
+  assert.ok(ios.every((r) => r.pl.includes('iOS')));
+});
+
+test('sortRecords：最近更新把没采集时间的稳定置后', () => {
+  const sorted = sortRecords(INDEX, 'updated');
+  assert.equal(sorted.length, INDEX.length);
+  const firstMissing = sorted.findIndex((r) => typeof r.u !== 'number');
+  if (firstMissing !== -1) {
+    assert.ok(
+      sorted.slice(firstMissing).every((r) => typeof r.u !== 'number'),
+      '没采集更新时间的条目必须全部排在后面',
+    );
+  }
+});
+
+test('sortRecords：按名称用中文 collator（不是裸字符串比较）', () => {
+  const sorted = sortRecords(INDEX.slice(0, 40), 'name');
+  const collator = new Intl.Collator('zh-CN', { numeric: true });
+  for (let i = 1; i < sorted.length; i += 1) {
+    assert.ok(collator.compare(sorted[i - 1].n, sorted[i].n) <= 0, '名称排序应单调不减');
+  }
 });
 
 test('索引条目形状：每条都有 slug/name/icon，且 slug 唯一', () => {
@@ -157,7 +210,21 @@ test('索引条目形状：每条都有 slug/name/icon，且 slug 唯一', () =>
     assert.ok(r.n && r.n.length > 0, `${r.s} 缺名称`);
     assert.ok(r.i && r.i.startsWith('/assets/'), `${r.s} 的 icon 路径异常：${r.i}`);
     assert.ok(Array.isArray(r.c), `${r.s} 的分类不是数组`);
+    assert.ok(Array.isArray(r.t), `${r.s} 的标签不是数组`);
+    assert.ok(Array.isArray(r.pl), `${r.s} 的平台不是数组`);
+    assert.ok(PRICE_CODES.includes(r.p), `${r.s} 的价格码非法：${r.p}`);
+    assert.equal(typeof r.w, 'boolean', `${r.s} 的 hasExternal 必须是布尔`);
+    assert.equal(typeof r.o, 'number', `${r.s} 的目录序号必须是数字`);
   }
+});
+
+test('解码后的价格分布与数据源一致（免费增值是多数派）', () => {
+  const counts = new Map();
+  for (const r of INDEX) counts.set(r.p, (counts.get(r.p) ?? 0) + 1);
+  assert.equal(counts.get('freemium'), 1737, '免费增值应为 1737 条');
+  assert.equal(counts.get('fully-free'), 183, '完全免费应为 183 条');
+  assert.equal(counts.get('open-source'), 55, '免费开源应为 55 条');
+  assert.equal(counts.get('paid'), 51, '付费应为 51 条');
 });
 
 test('索引里的关键词全部来自词表，没有脏数据', () => {

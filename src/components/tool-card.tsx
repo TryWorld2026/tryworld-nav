@@ -2,6 +2,9 @@ import Link from 'next/link';
 import { tagByName } from '@/lib/tags';
 import { asset } from '@/lib/assets';
 import { rgb, rgbAlpha } from '@/lib/utils';
+import { freshLabel, type CardTool } from '@/lib/card';
+import { DATA_EPOCH } from '@/lib/catalog-index';
+import { priceShortLabel } from '@/lib/pricing';
 import type { Tool } from '@/lib/types';
 import thumbs from '@/thumbs.json';
 
@@ -140,7 +143,11 @@ export function ToolMiniCard({
   chips,
   hideCategorySlug,
 }: {
-  tool: Tool;
+  /**
+   * `CardTool` 是 `Tool` 的**结构子集**，所以服务端页面照旧直接传完整 `Tool`；
+   * `/tools` 与命令面板传 `cardFromRecord(record)`。见 `lib/card.ts`。
+   */
+  tool: CardTool;
   emphasis?: boolean;
   /**
    * A replacement for the chip row this card derives itself. The 精选AI利器集合
@@ -156,6 +163,42 @@ export function ToolMiniCard({
   hideCategorySlug?: string;
 }) {
   const cats = (tool.categories ?? []).filter((c) => c.slug !== hideCategorySlug);
+
+  /*
+   * 卡片上的价格胶囊 —— 只挂**会改变决定**的那三档。
+   *
+   * 2081 条的分布是：免费增值 1737（83%）、免费 183、免费开源 55、付费 51、
+   * 无采集 53。把四档都挂上去，等于在每一屏 60 张卡上重复 50 次「免费额度」，
+   * 那不是信息，是墙纸；而真正需要被看见的两件事 ——「这个真的不要钱」和
+   * 「这个要付钱」—— 会被那 50 次重复淹掉。
+   *
+   * 所以规则是：
+   *   免费 / 开源 → 挂（读者会因此点进去）
+   *   付费       → 挂（读者会因此先看价格页）
+   *   免费额度   → 不挂（多数派，不构成区分）
+   *   未采集     → 不挂（不假装有数据）
+   *
+   * 想看「只看免费额度」的人走 `/tools?price=freemium` 筛选，那里有完整口径。
+   */
+  const price =
+    tool.price === 'fully-free' || tool.price === 'open-source' || tool.price === 'paid'
+      ? priceShortLabel(tool.price)
+      : '';
+
+  /*
+   * 平台：卡片上只露前两个，多的折成 `+N`。
+   *
+   * 这是「我能不能用」的前置问题 —— 一个只有 iOS 的工具对一个 Windows 用户
+   * 是零，而现在的卡片完全不区分，读者必须点进详情页才知道。但平台名长度
+   * 差异很大（`Web` 3 字符、`微信小程序` 5 个汉字），所以只给两个位置，
+   * 其余折成计数，剩下的交给 `/tools?platform=…` 与详情页。
+   *
+   * **没有平台数据就不渲染这一行**（2081 条里有相当一部分没采到），
+   * 不要写「未知」。
+   */
+  const platforms = tool.platforms ?? [];
+  const shownPlatforms = platforms.slice(0, 2);
+  const morePlatforms = platforms.length - shownPlatforms.length;
 
   // Which chip row a card carries is a property of the tool, not of the page:
   // counted across all 109 harvested origin pages, every card whose tool has
@@ -189,25 +232,67 @@ export function ToolMiniCard({
       </div>
     ) : null;
 
+  const fresh = freshLabel(tool.updated, DATA_EPOCH);
+
+  /*
+   * 底部那一行 —— 卡片上唯一「可比较」的地方。
+   *
+   * 审计的核心结论是「能找到工具，但选不出工具」：2081 张卡的底部以前只有
+   * 标签/分类 chip，那描述的是「它是什么」，不是「它和我有什么关系」。
+   * 价格与平台才是决定要不要点进去的两条事实，而它们以前完全不在卡片上。
+   *
+   * 排版顺序按「读者最想先知道的」排：价格 → 平台 → 新鲜度。
+   * 三者都没有时这一行整块不渲染（不是渲染一个空 div）。
+   */
+  const meta = (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] leading-none text-gongke-muted">
+      {price && (
+        <span
+          className={
+            price === '付费'
+              ? 'inline-flex items-center rounded border border-[#B54826]/25 bg-[#F2693C]/[0.07] px-1.5 py-0.5 font-medium text-[#B54826]'
+              : 'inline-flex items-center rounded border border-gongke-accent/25 bg-gongke-accent/[0.07] px-1.5 py-0.5 font-medium text-gongke-accent'
+          }
+        >
+          {price}
+        </span>
+      )}
+      {shownPlatforms.length > 0 && (
+        <span className="truncate">
+          {shownPlatforms.join(' · ')}
+          {morePlatforms > 0 && ` +${morePlatforms}`}
+        </span>
+      )}
+      {fresh && <span className="truncate">{fresh}</span>}
+    </div>
+  );
+  const hasMeta = Boolean(price) || shownPlatforms.length > 0 || Boolean(fresh);
+
   const bottom =
     chips ??
-    tagChips ??
-    (cats.length > 0 ? (
-      <div className="flex flex-wrap gap-1.5">
-        {cats.map((c) => (
-          <span
-            key={c.id}
-            className="inline-flex max-w-full items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-[12px] text-foreground/70"
-          >
-            <span
-              className="h-1.5 w-1.5 shrink-0 rounded-full"
-              style={{ backgroundColor: rgb(c.color) }}
-            />
-            <span className="truncate">{c.name}</span>
-          </span>
-        ))}
-      </div>
+    (tagChips || cats.length > 0 || hasMeta ? (
+      <>
+        {hasMeta && <div className={tagChips || cats.length > 0 ? 'mb-1.5' : ''}>{meta}</div>}
+        {tagChips ??
+          (cats.length > 0 ? (
+            <div className="flex flex-wrap gap-1.5">
+              {cats.map((c) => (
+                <span
+                  key={c.slug}
+                  className="inline-flex max-w-full items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-[12px] text-foreground/70"
+                >
+                  <span
+                    className="h-1.5 w-1.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: rgb(c.color) }}
+                  />
+                  <span className="truncate">{c.name}</span>
+                </span>
+              ))}
+            </div>
+          ) : null)}
+      </>
     ) : null);
+
 
   /*
    * 2026-10-17 重做。原来的卡片是照抄原站的「魔法边框」：8px 内边距、圆角 8px、

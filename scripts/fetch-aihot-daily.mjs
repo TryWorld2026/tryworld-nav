@@ -5,8 +5,8 @@
  * 和 `fetch-aihot.mjs`（抓资讯卡片流）分开，因为两者更新节奏不同：资讯条目
  * 一天里持续流入，日报每天 08:00 出刊一次、周报每周一、月报每月 1 日。这个
  * 脚本是**增量**的 —— 已经落盘的某一天/某一期不会重复请求，所以日常构建只
- * 花 4 个请求（归档列表 + 周报列表 + 月报列表 + 热点榜），首次构建才会把
- * 179 期日报全部取回。
+ * 花基础请求（归档列表 + 周报列表 + 月报列表 + 热点榜），再为热点 Top 10
+ * 最多补 10 个事件详情请求；首次构建才会把 179 期日报全部取回。
  *
  * 接口：`https://aihot.news/api/v1`
  *   GET /dailies?limit=180        归档列表（只有标题与导语）
@@ -16,6 +16,7 @@
  *   GET /monthlies?limit=…        月报列表
  *   GET /monthlies/{month}        某一期月报正文
  *   GET /hot-topics               当前热点 Top 10
+ *   GET /stories/{publicId}       当前热点的事件详情与多来源时间线
  *
  * 合规：AIHOT《公开使用规则》要求保留来源与 canonical 信息。原始响应的
  * `links.original`（原文）与 `links.aihot`（AIHOT 条目页）全部原样保留，页面
@@ -30,13 +31,15 @@
  *   node scripts/fetch-aihot-daily.mjs --force    # 全部重抓（约 200 个请求）
  *   AIHOT_API_BASE=… node scripts/fetch-aihot-daily.mjs   # 测试降级路径
  */
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, mkdirSync } from 'node:fs';
 import { writeAtomicSync } from './atomic-write.mjs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { mapStory, slimLinks, storyIdFromUrl } from './aihot-story.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT_PATH = join(ROOT, 'data', 'aihot-daily.json');
+const STORIES_OUT_PATH = join(ROOT, 'data', 'aihot-stories.json');
 
 const API_BASE = (process.env.AIHOT_API_BASE ?? 'https://aihot.news/api/v1').replace(/\/+$/, '');
 const UA = 'aihot-api/2.0.0 aihot-actor/tryworld-nav';
@@ -95,24 +98,6 @@ function readJson(path, fallback) {
   } catch {
     return fallback;
   }
-}
-
-const count = (v) => (Array.isArray(v) ? v.length : 0);
-
-/**
- * 只保留渲染需要的字段。
- *
- * 原始响应里每条 item 都带一个 `attribution` 对象（`{name:'AIHOT', url}`），
- * 179 期 × 每条一份会把文件吹到十几 MB。署名并没有丢：条目保留 `links.aihot`
- * （指向 AIHOT 条目页），页面把它渲染成「AIHOT 出处」，来源站名单独展示 ——
- * 这满足规则里「保留来源与 canonical」的要求。顶层仍保留 `attribution`。
- */
-function slimLinks(links) {
-  if (!links || typeof links !== 'object') return null;
-  const out = {};
-  if (links.original) out.original = String(links.original);
-  if (links.aihot) out.aihot = String(links.aihot);
-  return out.original || out.aihot ? out : null;
 }
 
 /** 日报正文 → 落盘形状。字段缺失时降级为空数组而不是抛错。 */
@@ -216,6 +201,15 @@ async function main() {
   const prevDays = prev.days && typeof prev.days === 'object' ? prev.days : {};
   const prevWeeks = prev.weeks && typeof prev.weeks === 'object' ? prev.weeks : {};
   const prevMonths = prev.months && typeof prev.months === 'object' ? prev.months : {};
+  const prevStoriesData = readJson(STORIES_OUT_PATH, null);
+  const prevStories = new Map();
+  if (prevStoriesData?.stories && typeof prevStoriesData.stories === 'object') {
+    for (const [key, value] of Object.entries(prevStoriesData.stories)) {
+      if (!value || typeof value !== 'object') continue;
+      const id = storyIdFromUrl(key) ?? storyIdFromUrl(value.publicId);
+      if (id) prevStories.set(id, value);
+    }
+  }
 
   console.log(`AIHOT 日报抓取：${API_BASE}`);
 
@@ -314,28 +308,80 @@ async function main() {
 
   // ---- 5. 热点榜（每次都刷，10 条，很便宜） ----
   let hot = Array.isArray(prev.hot) ? prev.hot : [];
+  let hotListAvailable = false;
+  let storyIds = [];
   try {
     const res = await getJson('/hot-topics');
-    const list = (Array.isArray(res.items) ? res.items : []).map((it) => {
-      const links = slimLinks(it?.links);
-      if (!it?.title || !links) return null;
-      return {
-        rank: Number(it.rank) || 0,
-        id: String(it.id ?? ''),
-        title: String(it.title),
-        source: String(it?.source?.name ?? '未知来源'),
-        sourceCount: Number(it.sourceCount) || 0,
-        signalCount: Number(it.signalCount) || 0,
-        participantCount: Number(it.participantCount) || 0,
-        sourceNames: Array.isArray(it.sourceNames) ? it.sourceNames.map(String).slice(0, 12) : [],
-        latestAt: it.latestAt ?? null,
-        links,
-      };
-    }).filter(Boolean);
-    if (list.length > 0) hot = list;
-    console.log(`  热点 ${hot.length} 条`);
+    const list = (Array.isArray(res.items) ? res.items : [])
+      .slice(0, 10)
+      .map((it) => {
+        const links = slimLinks(it?.links);
+        if (!it?.title || !links) return null;
+        return {
+          rank: Number(it.rank) || 0,
+          id: String(it.id ?? ''),
+          title: String(it.title),
+          source: String(it?.source?.name ?? '未知来源'),
+          sourceCount: Number(it.sourceCount) || 0,
+          signalCount: Number(it.signalCount) || 0,
+          participantCount: Number(it.participantCount) || 0,
+          sourceNames: Array.isArray(it.sourceNames) ? it.sourceNames.map(String).slice(0, 12) : [],
+          latestAt: it.latestAt ?? null,
+          links,
+        };
+      })
+      .filter(Boolean);
+    hotListAvailable = list.length > 0;
+    if (hotListAvailable) {
+      hot = list;
+      storyIds = [
+        ...new Set(
+          list
+            .map((item) => storyIdFromUrl(item.links?.story))
+            .filter(Boolean),
+        ),
+      ].slice(0, 10);
+    }
+    console.log(`  热点 ${list.length} 条`);
   } catch (err) {
     console.warn(`  热点榜抓取失败（${err.message}），沿用上一版 ${hot.length} 条`);
+  }
+
+  // ---- 6. 当前热点对应的事件详情（只保留本轮 Top 10，不落历史） ----
+  let storiesFetched = false;
+  if (hotListAvailable) {
+    const stories = {};
+    for (const id of storyIds) {
+      try {
+        const payload = await getJson(`/stories/${encodeURIComponent(id)}`);
+        const story = mapStory(payload);
+        if (!story || story.publicId !== id) {
+          throw new Error('响应缺少有效的事件 publicId 或标题');
+        }
+        stories[id] = story;
+      } catch (err) {
+        const previous = prevStories.get(id);
+        if (previous) {
+          stories[id] = previous;
+          console.warn(`  事件 ${id} 抓取失败（${err.message}），复用旧数据`);
+        } else {
+          console.warn(`  事件 ${id} 抓取失败（${err.message}），本轮跳过`);
+        }
+      }
+      await sleep(120);
+    }
+    const storyPayload = {
+      source: 'AIHOT',
+      api: 'https://aihot.news/api/v1',
+      fetchedAt: new Date().toISOString(),
+      stories,
+    };
+    mkdirSync(dirname(STORIES_OUT_PATH), { recursive: true });
+    writeAtomicSync(STORIES_OUT_PATH, `${JSON.stringify(storyPayload)}\n`);
+    storiesFetched = true;
+    console.log(`  事件详情：${storyIds.length} 个 ID，写入 ${Object.keys(stories).length} 个事件`);
+  } else {
+    console.warn('  热点榜不可用（请求失败或为空），保留现有事件详情数据');
   }
 
   const dayCount = Object.keys(days).length;
@@ -362,6 +408,7 @@ async function main() {
   const size = (JSON.stringify(payload).length / 1024 / 1024).toFixed(1);
   console.log(`  写入 ${OUT_PATH}（${size} MB）`);
   console.log(`  日报 ${dayCount} 期 / 周报 ${Object.keys(weeks).length} 期 / 月报 ${Object.keys(months).length} 期 / 热点 ${hot.length} 条`);
+  if (storiesFetched) console.log(`  事件详情 ${Object.keys(readJson(STORIES_OUT_PATH, {}).stories ?? {}).length} 个`);
   return 0;
 }
 
