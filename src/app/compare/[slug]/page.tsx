@@ -178,6 +178,28 @@ export default async function ComparePage({
    */
   const diffs = facts.filter((r) => r.differs && r.a !== '—' && r.b !== '—');
 
+  /*
+   * 开头那句说明必须跟着 `diffs` 走 —— **不能无条件承诺「先看事实差异」**。
+   *
+   * 2026-10-22 实测：294 页里约 20 页两个工具在价格、平台、分类、更新上
+   * **真的没有任何可数差异**（`a0-dev-vs-orchids`、`chatgpt-vs-claude-ai`、
+   * `baigua-mianshi-vs-interview-coder` …）。那些页面的「差在哪」整节不渲染，
+   * 而开头仍然写着「先看事实差异」—— 读者往下找不到那一节，会以为页面没
+   * 加载完，或者以为我们漏了。
+   *
+   * 这与 `/news` 的「顶部 70 个来源、页脚 10 个来源」、集合页的「每个集合
+   * 六个代表工具」是**同一族缺陷**：页面上说了，但实际没有。而这一族最容易
+   * 漏，因为它不在数据里、在文案里 —— `npm test` 能测 `diffs` 算得对不对，
+   * 测不到「开头那句话还对不对」。
+   *
+   * 修法是**两个方向都做**：
+   *   1. 开头说明按 `diffs.length` 切换措辞（不再无条件承诺）；
+   *   2. `diffs.length === 0` 时仍渲染那一节，内容是「没有可数的差异」——
+   *      把「无差异」变成一个**明确的事实陈述**，而不是一片空白。
+   *      因为「这两个几乎一样」本身就是有价值的信息。
+   */
+  const hasDiffs = diffs.length > 0;
+
   // 其他对比：优先给「同分类里其它预置对比」，给「这组不够、我还想看别的」出口。
   const siblings = allComparePairs()
     .filter((p) => p.slug !== slug)
@@ -198,7 +220,11 @@ export default async function ComparePage({
       <PageHeader
         eyebrow="二选一"
         title={`${toolA.name} 还是 ${toolB.name}？`}
-        description="先看事实差异，再看编辑判断 —— 事实表任何一对都有，判断只在我们写过的地方出现。"
+        description={
+          hasDiffs
+            ? '先看事实差异，再看编辑判断 —— 事实表任何一对都有，判断只在我们写过的地方出现。'
+            : '这两个在价格、平台、分类、更新上没有可数的差异。事实表照旧列出全部字段，差别要靠下面的编辑判断。'
+        }
       />
 
       {/* ── 第 1 层：事实对照表（骨架，任何一对都能渲染） ─────────── */}
@@ -268,11 +294,17 @@ export default async function ComparePage({
       </section>
 
       {/* ── 第 2 层：差异高亮（compare 页真正的价值） ─────────────── */}
-      {diffs.length > 0 && (
-        <section className="mt-6" aria-labelledby="diff-heading">
-          <h2 id="diff-heading" className="mb-2.5 text-[13px] font-semibold text-foreground">
-            差在哪
-          </h2>
+      {/* 这一节**永远渲染**，包括没有差异的时候。
+          2026-10-22 之前是 `diffs.length > 0 &&`，于是约 20 个「两个工具处处
+          相同」的页面上这一节整块消失，而页面开头仍在承诺「先看事实差异」——
+          读者会以为没加载完。现在无差异时给一句明确的事实陈述：
+          「没有可数的差异」本身是有价值的信息（说明这两个几乎一样），
+          不该表现为一片空白。见 `hasDiffs` 处的说明。 */}
+      <section className="mt-6" aria-labelledby="diff-heading">
+        <h2 id="diff-heading" className="mb-2.5 text-[13px] font-semibold text-foreground">
+          差在哪
+        </h2>
+        {hasDiffs ? (
           <ul className="space-y-1.5">
             {diffs.map((r) => (
               <li
@@ -288,8 +320,14 @@ export default async function ComparePage({
               </li>
             ))}
           </ul>
-        </section>
-      )}
+        ) : (
+          <p className="rounded-lg border border-foreground/[0.07] bg-foreground/[0.02] px-3 py-2.5 text-[13px] leading-relaxed text-foreground/80">
+            这两个在价格档、支持平台、所属分类、收录更新上
+            <span className="font-medium text-foreground">没有可数的差异</span>
+            {' '}—— 它们几乎是同一类东西。真正的区别要靠下面的编辑判断，或者点进各自页面看完整介绍。
+          </p>
+        )}
+      </section>
 
       {/* ── 第 3 层：编辑判断并排（有则并排，缺则如实说没有） ──────── */}
       <section className="mt-8" aria-labelledby="verdict-heading">
