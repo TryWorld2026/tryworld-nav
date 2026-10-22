@@ -1,18 +1,5 @@
 [
   {
-    "id": "uc21c65s4trz2ums8g8fgtb0v",
-    "title": "Kling 4.0 上线 OpenArt，支持首中尾帧引导与最多 10 张参考图",
-    "originalTitle": "Hold on to your hat. #KlingAI #Kling4",
-    "summary": "OpenArt 宣布 Kling 4.0 上线，可用首、中、尾帧引导视频，最多使用 10 张参考图，并支持文本或帧生成与视频编辑，All-in-One Reference 用一个模型完成生成和编辑。11 月 20 日前 Pro 和 Wonder 套餐享 50% 折扣。",
-    "source": "X：可灵 Kling AI (@Kling_ai)",
-    "originalUrl": "https://x.com/Kling_ai/status/2113156632134005040",
-    "aihotUrl": "https://aihot.news/items/uc21c65s4trz2ums8g8fgtb0v",
-    "publishedAt": "2026-10-22T06:32:56.000Z",
-    "category": "ai-products",
-    "categoryLabel": "AI 产品",
-    "reason": "引用内容给出了 OpenArt 上 Kling 4.0 的帧控制、参考图上限和折扣信息，读者可据此评估视频生成玩法。"
-  },
-  {
     "id": "rin0ab4vdu46hjoiyjcj5vih5",
     "title": "Kling 4.0 现已上线 OnSolo",
     "originalTitle": "Kling 4.0 is now live on OnSolo. #Kling4 #KlingAI",
@@ -128,19 +115,6 @@
     "category": "ai-products",
     "categoryLabel": "AI 产品",
     "reason": "原文提供官方 Codex 技能和检测仓库，网站运营者可以据此自查 PHP 漏洞影响。"
-  },
-  {
-    "id": "paq5nfs7jxno8qghh27ho05be",
-    "title": "MiniMax Code 桌面端推出 Mini App 长运行应用功能",
-    "originalTitle": "Introducing MiniMax Code Mini App",
-    "summary": "MiniMax 在 MiniMax Code 桌面应用（macOS / Windows）本地会话中推出 Mini App，一种带前端和后端的长运行应用，以插件形式安装并与 Agent 双向调用，让 Agent 的工作停留在常驻页面而非散落各对话中。",
-    "source": "MiniMax：Blog（网页）",
-    "originalUrl": "https://www.minimax.io/blog/minimax-code-mini-app-1792650729",
-    "aihotUrl": "https://aihot.news/items/paq5nfs7jxno8qghh27ho05be",
-    "publishedAt": "2026-10-21T16:00:00.000Z",
-    "category": "ai-products",
-    "categoryLabel": "AI 产品",
-    "reason": "官方详细说明了 Mini App 的架构、安全边界和社区生态，开发者可以据此判断如何在 MiniMax Code 上构建长运行应用。"
   },
   {
     "id": "y1fd2c0s3ydociygdah7apvme",
