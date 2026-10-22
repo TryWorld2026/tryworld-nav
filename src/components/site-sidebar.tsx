@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Bookmark, ChevronRight, Layers2, Newspaper, Scale, Sparkles } from 'lucide-react';
 import { CategoryIcon } from './category-icon';
-import { SiteLogo } from './site-logo';
+import { NavMark } from './nav-mark';
 import { navFeatured as featured, navHotCategories as hotCategories } from '@/lib/nav';
 import { SITE } from '@/lib/site';
 import { cn } from '@/lib/utils';
@@ -136,9 +136,10 @@ export function SiteSidebar() {
             origin writes a bare <a>; a <Link prefetch={false}> renders identical markup but lets
             Next prefetch and keeps the build's link rule satisfied. */}
         <Link prefetch={false} className="flex items-center" href="/">
-          {/* 主标是宽幅的（192×116），给宽度 + `h-auto` 保持比例；塞进方形盒
-              子会被压扁。`mr-2` 代替原来的方框留出规范要求的「一笔宽度」空白。 */}
-          <SiteLogo className="w-8 h-auto text-gongke-dark mr-2" />
+          {/* 导航站子品牌标志（罗盘）—— 母品牌 tw 主标已用在作者个人网站，
+              这里按品牌规范《标志与子品牌》另立独立图形。方形 viewBox，
+              不再需要 `h-auto`；`mr-2` 是规范要求的「一笔宽度」空白。 */}
+          <NavMark className="mr-2 h-8 w-8 text-gongke-dark" />
           <div className="text-xl text-foreground font-bold font-display">{SITE.name}</div>
         </Link>
       </div>

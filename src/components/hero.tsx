@@ -12,7 +12,7 @@ import {
 import { SITE, allCategories, tools } from '@/lib/data';
 import { dailyArchive, hotTopics, latestDaily } from '@/lib/daily-data';
 import { dailyStats, formatDateFull, issueNumber, weekdayZh } from '@/lib/news-period';
-import { SiteLogo } from './site-logo';
+import { NavMark } from './nav-mark';
 import { HeroSearch } from './hero-search';
 import { HeroStats } from './home-stats';
 
@@ -99,7 +99,15 @@ export function Hero() {
               id="hero-heading"
               className="mt-5 flex items-center gap-3 font-display text-4xl leading-none text-[#F2EEE6] sm:text-5xl lg:text-[56px] 4xl:text-[64px] 5xl:text-[72px]"
             >
-              <SiteLogo className="h-auto w-10 shrink-0 text-[#F2EEE6] sm:w-12 5xl:w-14" />
+              {/* 导航站子品牌标志（罗盘）—— 母品牌 tw 主标已用在作者个人网站。
+                  方形 viewBox（48×48），不再需要 `h-auto`。
+
+                  尺寸跟**字号**成固定比例（约 0.75×），不再按 40→48→56 单独跳档：
+                  第一版在 390 下是「40px 图形 + 36px 字」，图形比站名还高，视觉
+                  重心倒向图标；1440 下却是「48 对 56」，比例反而正常。同一个
+                  数字在两档字号下含义不同，所以这里按每个字号档位各算一次：
+                  36→28 / 48→36 / 56→42 / 64→48 / 72→54。 */}
+              <NavMark className="h-7 w-7 shrink-0 text-[#F2EEE6] sm:h-9 sm:w-9 lg:h-[42px] lg:w-[42px] 4xl:h-12 4xl:w-12 5xl:h-[54px] 5xl:w-[54px]" />
               <span>{SITE.name}</span>
             </h1>
 

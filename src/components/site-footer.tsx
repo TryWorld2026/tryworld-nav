@@ -1,6 +1,6 @@
 import { ArrowUpRight, Newspaper } from 'lucide-react';
 import Link from 'next/link';
-import { SiteLogo } from './site-logo';
+import { NavMark } from './nav-mark';
 import { SITE } from '@/lib/site';
 
 /**
@@ -30,8 +30,8 @@ export function SiteFooter() {
         <div className="md:flex md:justify-between">
           <div className="md:w-1/3 mb-6 md:mb-0">
             <Link prefetch={false} href="/" className="flex items-center mb-2">
-              {/* 主标是宽幅的（192×116），宽度 + `h-auto` 保持比例。 */}
-              <SiteLogo className="w-8 h-auto text-gongke-dark mr-2" />
+              {/* 导航站子品牌标志（罗盘）—— 母品牌 tw 主标已用在作者个人网站。 */}
+              <NavMark className="mr-2 h-8 w-8 text-gongke-dark" />
               <div className="text-xl text-foreground font-bold font-display">{SITE.name}</div>
             </Link>
             <p className="text-sm text-gongke-muted">

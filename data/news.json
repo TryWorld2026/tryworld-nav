@@ -1,5 +1,31 @@
 [
   {
+    "id": "r557iovkk5v7ddt8py86ejctv",
+    "title": "Symantec 披露“Skynet 模式”AI 智能体劫持无防护大语言模型发起自持续网络攻击",
+    "originalTitle": "An AI agent in \"Skynet mode\" hijacks unprotected language models to launch self-sustaining cyberattacks",
+    "summary": "Symantec 研究人员通过蜜罐截获一个把大语言模型嵌入核心的攻击智能体，它会劫持互联网上无防护的模型端点，自主扫描目标、利用服务器漏洞、窃取数据库凭据并安装挖矿程序，最多连续执行 100,000 步，算力费用由被劫持模型的主人承担。",
+    "source": "The Decoder：AI News（RSS）",
+    "originalUrl": "https://the-decoder.com/an-ai-agent-in-skynet-mode-hijacks-unprotected-language-models-to-launch-self-sustaining-cyberattacks/",
+    "aihotUrl": "https://aihot.news/items/r557iovkk5v7ddt8py86ejctv",
+    "publishedAt": "2026-10-22T11:30:56.000Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": "报道给出 Symantec 蜜罐截获的完整攻击提示与五层越狱结构，读者可以据此了解暴露模型端点面临的真实风险。"
+  },
+  {
+    "id": "uc21c65s4trz2ums8g8fgtb0v",
+    "title": "Kling 4.0 上线 OpenArt，支持首中尾帧引导与最多 10 张参考图",
+    "originalTitle": "Hold on to your hat. #KlingAI #Kling4",
+    "summary": "OpenArt 宣布 Kling 4.0 上线，可用首、中、尾帧引导视频，最多使用 10 张参考图，并支持文本或帧生成与视频编辑，All-in-One Reference 用一个模型完成生成和编辑。11 月 20 日前 Pro 和 Wonder 套餐享 50% 折扣。",
+    "source": "X：可灵 Kling AI (@Kling_ai)",
+    "originalUrl": "https://x.com/Kling_ai/status/2113156632134005040",
+    "aihotUrl": "https://aihot.news/items/uc21c65s4trz2ums8g8fgtb0v",
+    "publishedAt": "2026-10-22T06:32:56.000Z",
+    "category": "ai-products",
+    "categoryLabel": "AI 产品",
+    "reason": "引用内容给出了 OpenArt 上 Kling 4.0 的帧控制、参考图上限和折扣信息，读者可据此评估视频生成玩法。"
+  },
+  {
     "id": "rin0ab4vdu46hjoiyjcj5vih5",
     "title": "Kling 4.0 现已上线 OnSolo",
     "originalTitle": "Kling 4.0 is now live on OnSolo. #Kling4 #KlingAI",
@@ -115,6 +141,19 @@
     "category": "ai-products",
     "categoryLabel": "AI 产品",
     "reason": "原文提供官方 Codex 技能和检测仓库，网站运营者可以据此自查 PHP 漏洞影响。"
+  },
+  {
+    "id": "paq5nfs7jxno8qghh27ho05be",
+    "title": "MiniMax Code 桌面端推出 Mini App 长运行应用功能",
+    "originalTitle": "Introducing MiniMax Code Mini App",
+    "summary": "MiniMax 在 MiniMax Code 桌面应用（macOS / Windows）本地会话中推出 Mini App，一种带前端和后端的长运行应用，以插件形式安装并与 Agent 双向调用，让 Agent 的工作停留在常驻页面而非散落各对话中。",
+    "source": "MiniMax：Blog（网页）",
+    "originalUrl": "https://www.minimax.io/blog/minimax-code-mini-app-1792650729",
+    "aihotUrl": "https://aihot.news/items/paq5nfs7jxno8qghh27ho05be",
+    "publishedAt": "2026-10-21T16:00:00.000Z",
+    "category": "ai-products",
+    "categoryLabel": "AI 产品",
+    "reason": "官方详细说明了 Mini App 的架构、安全边界和社区生态，开发者可以据此判断如何在 MiniMax Code 上构建长运行应用。"
   },
   {
     "id": "y1fd2c0s3ydociygdah7apvme",
@@ -1495,19 +1534,6 @@
     "reason": "Anthropic 自家团队复盘 Claude 代码审查流程，给出分层检查、风险分级审批等可直接迁移的落地做法和真实收敛数据。"
   },
   {
-    "id": "pd501xipe38ooxo1t7jn7hphn",
-    "title": "The Verge 实测 Eiliko 机器人玩具：68000 台设备数据可被任意访问并可远程劫持",
-    "originalTitle": "Your secrets aren’t safe with this cute robot toy — they’re on Chinese servers ready to be hacked",
-    "summary": "The Verge 记者与黑客 Sammy Azdoufal 实测发现，Energize Lab 的 Eiliko 机器人玩具将用户对话、用户画像、儿童照片和音频存放在无防护的服务器上，可访问约 68000 台设备、1300 万条对话，其中超 31000 份儿童档案来自美国。",
-    "source": "The Verge：AI（RSS）",
-    "originalUrl": "https://www.theverge.com/tech/1010727/eiliko-robot-hack-energize-lab",
-    "aihotUrl": "https://aihot.news/items/pd501xipe38ooxo1t7jn7hphn",
-    "publishedAt": "2026-10-15T11:00:00.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "记者实测并联合黑客演示了 Eiliko 机器人的数据暴露范围，读者可据此评估把 AI 玩具接入家庭的风险。"
-  },
-  {
     "id": "ro5zfihp4w9597vt5vz4ihdv2",
     "title": "Black Forest Labs FLUX.3 Image Klein 登陆 Diffusers，支持边界框布局控制",
     "originalTitle": "Welcome FLUX.3 Image Klein in Diffusers",
@@ -1688,18 +1714,5 @@
     "category": "industry",
     "categoryLabel": "行业动态",
     "reason": "原文由 Anthropic 亲自说明独立评估机制的具体安排，读者可以了解第三方如何获得接近员工的访问权限和发布权。"
-  },
-  {
-    "id": "virsb1x13670yw25mr9fyxqtt",
-    "title": "Tessl Verifiers 正式发布，用仓库内纯文本规则检查每次 Agent 代码变更",
-    "originalTitle": "Verifiers: enforce your repo's rules on every agent change",
-    "summary": "Tessl 发布 Verifiers，规则以 JSON 文件形式存放在仓库中，每次代码变更时由 LLM judge 逐条给出 pass 或 fail，可像 lint 或测试一样在本地、pre-commit 或 CI 中使用。",
-    "source": "Tessl：产品与工程博客",
-    "originalUrl": "https://tessl.io/blog/verifiers-enforce-your-repos-rules-on-every-agent-change",
-    "aihotUrl": "https://aihot.news/items/virsb1x13670yw25mr9fyxqtt",
-    "publishedAt": "2026-10-14T16:00:00.000Z",
-    "category": "ai-products",
-    "categoryLabel": "AI 产品",
-    "reason": "官方详细介绍 Verifiers 的机制、配置与接入方式，读者可据此把它当作 lint 或测试之外的确定性检查接入现有工作流。"
   }
 ]

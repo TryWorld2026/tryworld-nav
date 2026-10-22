@@ -51,18 +51,23 @@ export function HeroStats() {
  * 纸面版本（「热门工具」标题行右侧，仅移动端）。
  *
  * 单行横排、字号压到 12px、用「·」分隔 —— 它现在是一个**旁注**而不是看板。
- * 用 `<dl>` 保持语义（读屏用户仍能听到「收录工具 2081 个」）。
+ *
+ * **标签必须可见**（2026-10-22 修）：第一版把 `<dt>` 写成 `sr-only`，理由写着
+ * 「读屏用户仍能听到『收录工具 2081 个』」—— 但那是把**视觉用户**排除在外了。
+ * 390×844 实测页面上只剩「2081 个 26 个 180 期 10 条」，四个数字各自指什么
+ * 完全读不出来，比不显示更糟：数字本身没有信息量，标签才是信息。
+ * 现在用短标签（工具 / 分类 / 日报 / 热点）压在数字后面，一行仍然放得下。
  */
 export function InlineStats() {
   return (
-    <dl className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-muted-foreground md:hidden">
+    <dl className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[12px] text-muted-foreground md:hidden">
       {homeStats().map((s) => (
-        <div key={s.label} className="flex items-baseline gap-1">
-          <dt className="sr-only">{s.label}</dt>
-          <dd className="tabular-nums">
-            <span className="font-medium text-foreground/80">{s.value}</span>
-            <span className="ml-0.5 text-[11px]">{s.unit}</span>
-          </dd>
+        <div key={s.label} className="flex items-baseline gap-0.5">
+          <dd className="tabular-nums font-medium text-foreground/80">{s.value}</dd>
+          <dt className="text-[11px]">
+            {s.unit}
+            {s.label.replace(/^(收录|此刻)/, '')}
+          </dt>
         </div>
       ))}
     </dl>

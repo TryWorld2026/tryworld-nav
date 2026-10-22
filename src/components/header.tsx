@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Bookmark, ChevronDown, LayoutList, Layers2, Menu, Newspaper, ScanFace, Search } from 'lucide-react';
 import { CommandDialog } from './command-dialog';
 import { MobileNav } from './mobile-nav';
-import { SiteLogo } from './site-logo';
+import { NavMark } from './nav-mark';
 import { CategoryIcon } from './category-icon';
 import { navCategories as allCategories } from '@/lib/nav';
 import { SITE } from '@/lib/site';
@@ -236,8 +236,10 @@ export function Header() {
                 {/* Mobile-only lockup: this is where the sidebar's brand block
                     would be, but the sidebar is `hidden lg:block`. */}
                 <Link prefetch={false} href="/" className="flex min-w-0 items-center lg:hidden">
-                  {/* 主标是宽幅的（192×116），宽度 + `h-auto` 保持比例。 */}
-                  <SiteLogo className="mr-2 h-auto w-8 shrink-0 text-gongke-dark" />
+                  {/* 导航站子品牌标志（罗盘）—— 母品牌 tw 主标已用在作者个人
+                      网站，这里按品牌规范《标志与子品牌》另立独立图形。
+                      方形 viewBox（48×48），所以不再需要 `h-auto`。 */}
+                  <NavMark className="mr-2 h-8 w-8 shrink-0 text-gongke-dark" />
                   <div className="truncate text-xl font-bold font-display text-foreground">
                     {SITE.name}
                   </div>
