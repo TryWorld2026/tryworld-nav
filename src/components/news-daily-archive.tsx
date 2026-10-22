@@ -168,8 +168,11 @@ export function DailyMiniCalendar({
           if (!c) return <span key={`x${i}`} aria-hidden="true" />;
           const on = c.date === current;
           if (!c.hasIssue) {
+            // `/35` 在纸底上的对比度只有 1.58:1 —— 等于「看不见但还在读屏树
+            // 里」，比不渲染更糟。升到 `/70`（2.74:1）保住「这月没有日报」的
+            // 层级差别，同时真的能读出来。
             return (
-              <span key={c.date} className="rounded-md py-1 text-muted-foreground/35 tabular-nums">
+              <span key={c.date} className="rounded-md py-1 text-muted-foreground/70 tabular-nums">
                 {c.day}
               </span>
             );

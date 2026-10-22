@@ -304,7 +304,11 @@ export function NewsFeed({
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="搜索标题、来源、摘要…"
                 aria-label="搜索资讯"
-                className="h-11 w-full rounded-full border border-foreground/10 bg-card pl-10 pr-20 text-sm outline-none transition-all duration-200 placeholder:text-muted-foreground focus:border-gongke-accent/40 focus:ring-2 focus:ring-gongke-accent/15"
+                // `text-base sm:text-sm` 而不是写死 `text-sm`：iOS Safari 在
+                // 聚焦 font-size < 16px 的输入框时会强制放大整个页面，用户
+                // 一按搜索框页面就跳一下、退出时还停在放大状态。16px 是那条
+                // 阈值，桌面端再用回 14px。`/tools` 的搜索框同一条规则。
+                className="h-11 w-full rounded-full border border-foreground/10 bg-card pl-10 pr-20 text-base outline-none transition-all duration-200 placeholder:text-muted-foreground focus:border-gongke-accent/40 focus:ring-2 focus:ring-gongke-accent/15 sm:text-sm"
               />
               <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-1">
                 {query && (

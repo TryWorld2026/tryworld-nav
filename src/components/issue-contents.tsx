@@ -41,7 +41,9 @@ export function IssueContents({
       <ol className="mt-3 space-y-2">
         {sections.map((s, i) => (
           <li key={s.label} className="flex items-baseline gap-2.5 text-[13px]">
-            <span className="w-4 shrink-0 tabular-nums text-[11px] text-[#F2EEE6]/45">
+            {/* 序号是正文，不是装饰：`/45` 在墨底上 3.90:1，低于 AA 的 4.5。
+                升到 `/60`（5.80:1）仍然比栏目名（`/75`）淡一档，层级不变。 */}
+            <span className="w-4 shrink-0 tabular-nums text-[11px] text-[#F2EEE6]/60">
               {String(i + 1).padStart(2, '0')}
             </span>
             <span className="min-w-0 flex-1 truncate text-[#F2EEE6]/75">{s.label}</span>
@@ -95,7 +97,10 @@ export function IssueCoverlines({
       <ul className="mt-2.5 grid grid-cols-1 gap-x-8 gap-y-2 md:grid-cols-2">
         {list.map((it, i) => (
           <li key={i} className="flex min-w-0 items-baseline gap-2 text-[13px]">
-            <span aria-hidden="true" className="shrink-0 text-[#F2EEE6]/35">
+            {/* 这个破折号是纯装饰（`aria-hidden`），但 `/35` 在墨底上只有
+                2.92:1，读起来是一条断掉的灰点。升到 `/50`（4.48:1）仍然
+                比正文淡一档，却不再像是渲染失败。 */}
+            <span aria-hidden="true" className="shrink-0 text-[#F2EEE6]/50">
               —
             </span>
             <span className="min-w-0 flex-1 truncate text-[#F2EEE6]/65">{it.title}</span>

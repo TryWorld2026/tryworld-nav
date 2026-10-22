@@ -39,7 +39,7 @@ export function HeroSearch() {
       <span className="min-w-0 flex-1 truncate text-[14px] text-[#F2EEE6]/60 transition-colors group-hover:text-[#F2EEE6]/80">
         搜工具名、简介，或直接说你想做什么…
       </span>
-      <kbd className="hidden shrink-0 items-center gap-0.5 rounded border border-white/15 bg-white/[0.06] px-1.5 py-0.5 font-mono text-[10px] font-medium text-[#F2EEE6]/50 sm:inline-flex">
+      <kbd className="hidden shrink-0 items-center gap-0.5 rounded border border-white/15 bg-white/[0.06] px-1.5 py-0.5 font-mono text-[10px] font-medium text-[#F2EEE6]/60 sm:inline-flex">
         {modKey}K
       </kbd>
     </button>
