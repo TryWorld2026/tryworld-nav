@@ -5,7 +5,6 @@ import { rgb, rgbAlpha } from '@/lib/utils';
 import { freshLabel, type CardTool } from '@/lib/card';
 import { DATA_EPOCH } from '@/lib/catalog-index';
 import { priceShortLabel } from '@/lib/pricing';
-import type { Tool } from '@/lib/types';
 import thumbs from '@/thumbs.json';
 
 /**
@@ -372,8 +371,21 @@ export function ToolMiniCard({
  * The dense row used by the 类似工具 and 最新收录 rails. One line, 24×24 icon,
  * dashed rule underneath. `min-w-0` on the label keeps `line-clamp-1` honest
  * inside a flex row.
+ *
+ * 2026-10-22：右侧补一个价格胶囊。这两条 rail 是详情页里**唯一**把人带去
+ * 别的工具的入口，而原先它们只有名字 —— 一个在「免费 + Windows」筛选下
+ * 挑中某工具的人，滚到「类似工具」看到 10 个名字，其中混着付费的、只有
+ * iOS 的，看不出差别，等于把刚建立的筛选条件丢了。补上价格档位之后，
+ * 至少「这一列里哪些还要付钱」是扫一眼能看出来的。
+ *
+ * 为什么只补价格、不补平台与新鲜度：这条 rail 在 md–lg 下栏宽只有
+ * 224–298px（1/3 容器减列距），名字本来就常被截断。价格是最短且最影响
+ * 决定的一条事实（3 个汉字），平台名（"Windows"、"macOS"）一加就把名字挤没。
+ * 卡片网格里的 `ToolMiniCard` 三者都有，那里宽度足够。
  */
-export function ToolRowCard({ tool }: { tool: Tool }) {
+export function ToolRowCard({ tool }: { tool: CardTool }) {
+  const price = priceShortLabel(tool.price);
+
   return (
     // 这个行卡在工具页右栏出现 **两处 × 10 行**（类似工具 / 最新收录），
     // 所以一个工具详情页一打开就有 20 条视口内的链接在请求 RSC payload ——
@@ -402,9 +414,20 @@ export function ToolRowCard({ tool }: { tool: Tool }) {
             </span>
           )}
         </div>
-        <span className="group-hover:text-gongke-accent transition-colors text-sm text-neutral-600 line-clamp-1">
+        <span className="min-w-0 flex-1 group-hover:text-gongke-accent transition-colors text-sm text-neutral-600 line-clamp-1">
           {tool.name}
         </span>
+        {price && (
+          <span
+            className={`ml-1.5 shrink-0 rounded border px-1 py-px text-[10px] font-medium ${
+              price === '付费'
+                ? 'border-[#B54826]/25 bg-[#F2693C]/[0.07] text-[#B54826]'
+                : 'border-gongke-accent/25 bg-gongke-accent/[0.07] text-gongke-accent'
+            }`}
+          >
+            {price}
+          </span>
+        )}
       </div>
     </Link>
   );

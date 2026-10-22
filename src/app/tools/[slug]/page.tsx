@@ -22,6 +22,7 @@ import {
   tools,
 } from '@/lib/data';
 import { pricingBadgeClass } from '@/lib/pricing';
+import { cardFromTool } from '@/lib/card-server';
 import { buttonPrimary } from '@/lib/styles';
 import { canonical } from '@/lib/canonical';
 import { withOg } from '@/lib/og';
@@ -350,7 +351,7 @@ export default async function ToolDetailPage({
                   堆叠，两列反而正好。 */}
               <div className="grid grid-cols-1 gap-x-4 gap-y-0 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
                 {relatedTools(tool.slug, 10).map((t) => (
-                  <ToolRowCard tool={t} key={t.slug} />
+                  <ToolRowCard tool={cardFromTool(t)} key={t.slug} />
                 ))}
               </div>
             </div>
@@ -359,7 +360,7 @@ export default async function ToolDetailPage({
               <h2 className="mb-3 text-sm font-semibold text-foreground">最新收录</h2>
               <div className="grid grid-cols-1 gap-x-4 gap-y-0 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
                 {latestAdditions.map((t) => (
-                  <ToolRowCard tool={t} key={t.slug} />
+                  <ToolRowCard tool={cardFromTool(t)} key={t.slug} />
                 ))}
               </div>
             </div>

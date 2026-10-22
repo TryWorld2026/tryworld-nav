@@ -9,6 +9,7 @@ import { SiteLogo } from './site-logo';
 import { CategoryIcon } from './category-icon';
 import { navCategories as allCategories } from '@/lib/nav';
 import { SITE } from '@/lib/site';
+import { useModKey } from '@/lib/use-mod-key';
 
 /**
  * The origin's header, transcribed from its markup.
@@ -105,15 +106,17 @@ export function Header() {
   }, []);
   const [mounted, setMounted] = useState(false);
   /**
-   * 快捷键提示里的修饰键。默认 `Ctrl`（SSR 与首次渲染都用它），挂载后
-   * 若是 macOS/iPadOS 再换成 `⌘`。
+   * 当前平台的主修饰键 —— macOS / iOS 是 `⌘`，其余是 `Ctrl`。抽到
+   * `lib/use-mod-key.ts` 是因为首页 hero 的搜索入口也要显示同一个提示，
+   * 两处各写一遍就会有一天只改了一处。
    *
-   * 为什么要有状态：快捷键本身两个键都认（`e.metaKey || e.ctrlKey`），
-   * 但提示写死 `⌘K` 会让 Windows/Linux 用户按了没反应 —— 而本站读者
-   * 大多数在 Windows 上。服务端不知道客户端平台，所以先渲染 `Ctrl`，
-   * 挂载后再纠正；差异只有一个 kbd 徽章，不会造成可见跳动。
+   * 默认 `Ctrl`（SSR 与首次渲染都用它），挂载后若是 macOS/iPadOS 再换成 `⌘`。
+   * 快捷键本身两个键都认（`e.metaKey || e.ctrlKey`），但提示写死 `⌘K` 会让
+   * Windows/Linux 用户按了没反应 —— 而本站读者大多数在 Windows 上。服务端
+   * 不知道客户端平台，所以先渲染 `Ctrl`；差异只有一个 kbd 徽章，不会造成
+   * 可见跳动。
    */
-  const [modKey, setModKey] = useState('Ctrl');
+  const modKey = useModKey();
   /** 滚动方向：向下滚时收起顶栏，向上滚时立刻出现。 */
   const [hidden, setHidden] = useState(false);
   const catRef = useRef<HTMLDivElement>(null);
@@ -121,13 +124,6 @@ export function Header() {
   const lastY = useRef(0);
 
   useEffect(() => setMounted(true), []);
-
-  /** 把快捷键提示的修饰键换成当前平台的那个。 */
-  useEffect(() => {
-    const nav = navigator as Navigator & { userAgentData?: { platform?: string } };
-    const ua = nav.userAgentData?.platform || nav.platform || nav.userAgent;
-    if (/mac|iphone|ipad|ipod/i.test(ua)) setModKey('⌘');
-  }, []);
 
   /**
    * 阅读时让位给内容：向下滚超过一屏的一半才收起，往回滚 8px 就出现。

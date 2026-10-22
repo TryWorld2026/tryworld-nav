@@ -13,6 +13,7 @@ import { SITE, allCategories, tools } from '@/lib/data';
 import { dailyArchive, hotTopics, latestDaily } from '@/lib/daily-data';
 import { dailyStats, formatDateFull, issueNumber, weekdayZh } from '@/lib/news-period';
 import { SiteLogo } from './site-logo';
+import { HeroSearch } from './hero-search';
 
 /**
  * 首页 hero。
@@ -129,13 +130,20 @@ export function Hero() {
               <span className="whitespace-nowrap">{allCategories.length} 个场景</span>；每天还有一期 AIHOT 精选日报，告诉你圈里发生了什么。
             </p>
 
+            {/* 搜索框放在定义句之后、CTA 之前：读者读完「2081 个工具、26 个
+                场景」的第一反应是「那我那个需求有没有」，这里是全站最该给出
+                输入口的位置。原先首屏没有任何搜索入口（页眉按钮在 lg 断点上
+                连文字都是隐藏的），首屏唯一能做的事只有「浏览全部」。
+                它不是真输入框，见 `hero-search.tsx` 的说明。 */}
+            <HeroSearch />
+
             {/* CTA 主次在 2026-10-18 对调。
                 原文是「看今天的 AI 资讯」占实心白（主），「浏览全部工具」描边（次）——
                 一个 AI 工具导航站，把首屏唯一的主按钮给了另一个产品（资讯），
                 访客读完 hero 的第一反应应该是「去哪找工具」，而不是「去看新闻」。
                 现在主按钮 = 浏览全部工具，资讯降为次按钮（仍保留 testid，
                 既有测试与埋点不用改）。 */}
-            <div className="mt-7 flex flex-wrap items-center gap-3">
+            <div className="mt-3 flex flex-wrap items-center gap-3">
               <Link href="/tools" className={CTA_PRIMARY}>
                 <LayoutGrid className="h-4 w-4 shrink-0" aria-hidden="true" />
                 浏览全部工具
