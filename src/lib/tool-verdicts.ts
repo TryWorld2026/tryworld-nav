@@ -1074,7 +1074,7 @@ export const VERDICTS: Record<string, ToolVerdict> = {
     notFor: ['全文精读与问答', '需要自动写作的辅助'],
     diff: '与 Bohrium 相比强在学者与趋势数据，弱在文献精读与算力。',
     vs: 'bohrium',
-    price: { freeTier: '免费', currency: 'CNY', checkedAt: '2026-10-22' },
+    price: { freeTier: '有免费额度', currency: 'CNY', checkedAt: '2026-10-22' },
     confidence: 'editor',
   },
   xueshucha: {
