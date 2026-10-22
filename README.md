@@ -142,6 +142,7 @@ deploy.yml 是独立的部署 workflow，会在构建前从 Release 快照恢复
 | 23 | **`/tools` 与分类页/集合页的筛选分层**：`/tools` 有全套筛选（搜索/分类/标签/价格/平台/排序/页码，全写进 URL）；分类页与集合页**只加排序 + 加载更多，刻意不加筛选器**（否则会变成 `/tools?cat=` 的第二个实现，永远漂移） | `src/components/tools-explorer.tsx`、`src/components/category-grid.tsx` |
 | 24 | **新增 `/compare` 二选一对比（298 页）**：站内第一个直接回答「这两个该选哪个」的页面。清单由人工 `vs` 字段做语义闸门 + 读者关心度排序算出来，不手挑；三层结构「事实对照表 → 差异高亮 → 编辑判断并排」（事实 100% 有数据、判断 17.4%），所以任何一对都能渲染 | `src/lib/compare.ts`、`src/app/compare/` |
 | 25 | **首页首屏加搜索入口**，并把体量数字在移动端搬出 hero：390×844 下第一张工具卡从 top 773 提到 617、露出从 71px 变成完整一张卡 | `src/components/hero-search.tsx`、`src/components/home-stats.tsx` |
+| 26 | **标志换成导航站自己的子品牌图形（罗盘）**，不再用试界 tw 连写主标 —— 母标已用在作者个人网站。品牌规范允许子品牌独立图形（「不强迫所有产品都变成 tw 字母变体」）；旧 `site-logo.tsx` 已删。纵向长菱形针是刻意选择：斜向会读成「禁止」、单向朝上会读成「播放」 | `src/components/nav-mark.tsx`、`src/app/icon.svg` |
 
 `data/tool-extras.json` 里的 `more` / `related` / `latest` 三个字段同样
 不参与渲染，只作溯源保留——原因见 `src/lib/types.ts` 的类型注释。
@@ -264,7 +265,25 @@ pricing 徽章分布、`more/related/latest` 的死引用数、prose 总字符�
 `<link rel="canonical" href="https://nav.tryworld.com.cn/...">`，
 `npm run prune --lean` 保留 `llms.txt` 与 `llms-full.txt`。
 
-2026-10-22 线上验收（部署 Version `37fa2cdb`，本轮）：
+2026-10-23 线上验收（部署 Version `05b748d9`，换新标志）：
+
+- **标志**：全站换成导航站自己的**罗盘**子品牌图形（`src/components/nav-mark.tsx`），
+  母品牌 tw 主标不再使用（它已用在作者个人网站）。理由与排除掉的六个方案见
+  `CLAUDE.md` 的「标志」一节。
+- **线上核对**：首页 `viewBox="0 0 48 48"` 出现 **4 次**（页眉 / hero / 侧栏 / 页脚），
+  旧母标 `192 116` **0 次**；图标文件全部换成新尺寸
+  （`icon.svg` 445→255 B、`favicon.ico` 8127→5412 B、`og.png` 65949→193968 B）。
+- **浏览器复验**：桌面 1440 / 手机 390 两档，可见罗盘 3 个（另一档被 `lg:hidden`
+  或 `lg:block` 隐藏），统计行标签可读，**零横向溢出、零 4xx、零 pageerror**。
+- **部署过程**：本次连试 **8 次**才成功 —— 两次卡在清单读取、一次 API 超时、
+  两次上传到一半失败、**一次资产传完但 OAuth token 中途过期导致版本未发布**、
+  一次因 token 过期连清单都没读。最后一次在 `whoami` 重试恢复鉴权后，
+  `No updated asset files to upload` + **32 秒**发布完成。
+  **关键观察：每次尝试都在真实推进**（待传资产 2642 → 2045 → 1889 → 0，
+  Cloudflare 按内容哈希去重），所以不要因为「又失败了」重置工作。
+  完整时间账与判据见 [DEPLOY.md](DEPLOY.md) 的「OAuth token 过期」一节。
+
+2026-10-22 线上验收（部署 Version `37fa2cdb`）：
 
 - **构建与测试**：`npm run lint` 0 错 / `npx tsc --noEmit` 0 错 /
   `npm test` **114/114** / `npm run build` 成功 / 2632 个静态页。

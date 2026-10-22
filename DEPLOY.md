@@ -153,6 +153,45 @@ Start-Process -FilePath "node" `
   之外的那个目录名就是 buildId。连续两次构建后它若变了，说明有"每次都变"的输入混进了
   `contentBuildId()`，先修那个再部署，否则必然全量重传。
 
+### 2026-10-23 新增：OAuth token 过期（最容易误判成「部署坏了」）
+
+线上换 logo 那次连试 8 次，其中两次失败长得像「网络抖动」，实际是**凭据过期**：
+
+```
+X [ERROR] Your auth token has expired and could not be refreshed because the
+  Cloudflare auth server could not be reached. ... your stored credentials were
+  left unchanged. Check your connection and try again.
+```
+
+**症状与网络故障完全相同**（`Asset upload failed`、`The request to Cloudflare's API
+timed out`、甚至上传完成后进程静默退出）。判据只有一条：
+
+```powershell
+npx wrangler whoami     # 出现 Account Name 才算真登录
+```
+
+若不是，**重试几次** —— token 刷新走的是 Cloudflare auth 服务，线路慢时第一次会失败，
+隔 10 秒再来往往就成功（本次第 2 次 whoami 就恢复了）。恢复后再跑 `wrangler deploy`，
+如果资产已经传完，它会打印 `No updated asset files to upload` 并在 30 秒内发布版本。
+
+**一个特别隐蔽的中间态**：资产上传成功（`Success! Uploaded N files`）但**没有**
+`Uploaded tryworld-nav` 与 `Current Version ID` 两行 —— 那时远端已有新资产，**但没有
+任何版本引用它们**，线上仍是旧内容。所以这两行是唯一的「版本已发布」凭证，缺一行就还没成。
+
+**实测的时间账**（这次换 logo，总共 8 次尝试）：
+| 次数 | 结果 |
+|---|---|
+| 1、3 | 卡在 `Read 13389 files` 后无输出（25–32 分钟、零连接），手动 kill |
+| 2 | `The request to Cloudflare's API timed out` |
+| 4、5 | 上传到 398/2642、156/2045 后 `Asset upload failed`（5 次重试耗尽） |
+| 6 | **传完 1889 个资产**，但 token 中途过期，没发布版本 |
+| 7 | token 过期，连 `Read` 都没开始 |
+| 8 | `whoami` 重试后恢复 → `No updated asset files to upload` → **32 秒发布成功** |
+
+**关键观察：每次尝试都在真实推进。** 待传资产数一路收敛
+`2642 → 2045 → 1889 → 0`（Cloudflare 按内容哈希去重，已传的重试时会复用）。
+所以不要因为「又失败了」就重置工作 —— 继续重试即可，代价只是时间。
+
 ## ⚠️ 部署前必读：媒体不能删
 
 媒体**不能**在上传前从 `out/` 删掉。`public/assets/**` 被 gitignore，本地是唯一副本，而
