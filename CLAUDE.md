@@ -283,3 +283,5 @@ lint / tsc / **build**——其中 build 是**检查而非部署源**，它在�
 | **`Functions cannot be passed directly to Client Components`** | 把函数当 prop 传给 `'use client'` 组件。**这是构建期错误**（`Generating static pages` 阶段），不是运行时警告；且只在「有数据的那一页」炸，本地 `next dev` 可能看不出来。传数据（`Map<slug, T>`）而不是渲染函数 |
 | **卡片底部那行价格/平台/新鲜度不显示也不报错** | `ToolMiniCard` 收到裸 `Tool`（没有 `price`/`platforms`/`updated`）。必须过 `cardFromTool()` 或 `cardFromRecord()` |
 | **`node --test` 报 `Cannot find module './xxx'`** | 被测试的 `src/lib/*.ts` 里写了无扩展名的相对 import。Node 原生 TS 解析要求带扩展名，而 TSC 的 bundler 解析不接受 `.ts` 后缀 —— 被测试的文件必须**零 import** |
+| **「验收」报出一个实际不存在的缺陷** | 读了**旧的 `out/`**。这个仓库的产物会被反复重建，拿旧构建下结论会浪费一整轮修复。**验收结论必须标明基于哪次构建** —— 判据是 `ls -la out/index.html` 的 mtime 与 `git log -1` 的时刻对比 |
+| **页面上写了条件性承诺但对应结构不存在** | 文案与条件渲染脱钩。凡是页面上写了「先看 X」「下面有 Y」「每张卡上是 Z」这类**描述页面结构**的话，旁边必须有对应的条件渲染或数据断言。`npm test` 测不到它 —— 唯一可行的防线是**承诺与渲染写在同一个文件里**（所以这类文案**不要**抽进 `data/`，一抽走两者就再也不同屏了） |
