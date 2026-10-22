@@ -107,20 +107,58 @@ export default async function ComparePage({
   const exB = extrasBySlug(pair.b);
   const priceA = priceShortLabel(priceCodeFromLabel(exA?.pricing));
   const priceB = priceShortLabel(priceCodeFromLabel(exB?.pricing));
-  const platA = (exA?.platforms ?? []).map((p) => p.name).join('、') || '—';
-  const platB = (exB?.platforms ?? []).map((p) => p.name).join('、') || '—';
-  const catA = toolA.categories.map((c) => c.name).join('、') || '—';
-  const catB = toolB.categories.map((c) => c.name).join('、') || '—';
+  const platNamesA = (exA?.platforms ?? []).map((p) => p.name);
+  const platNamesB = (exB?.platforms ?? []).map((p) => p.name);
+  const catNamesA = toolA.categories.map((c) => c.name);
+  const catNamesB = toolB.categories.map((c) => c.name);
   const updA = exA?.updated ? updatedLabel(dayOf(exA.updated)) || '—' : '—';
   const updB = exB?.updated ? updatedLabel(dayOf(exB.updated)) || '—' : '—';
 
-  const raw: Omit<FactRow, 'differs'>[] = [
-    { label: '价格档', a: priceA || '—', b: priceB || '—' },
-    { label: '支持平台', a: platA, b: platB },
-    { label: '所属分类', a: catA, b: catB },
-    { label: '收录更新', a: updA, b: updB },
+  /*
+   * 多值字段的「是否不同」必须按**集合**比，不能按有序数组比。
+   *
+   * 2026-10-22 实测：`Cherry Studio` 的分类是「AI聊天助手、AI智能体」，
+   * `Flowith` 是「AI智能体、AI聊天助手」—— **集合完全相同，只是主分类
+   * （数组第一位）不同**。按有序数组比会被标成「所属分类不同」，而读者
+   * 读到的意思是「这两个不属于同一类」，实际是「同一组分类、主归属不同」。
+   *
+   * 这与「一边有值一边是 —」是同一类错误：**把「表述不同」渲染成「事实
+   * 不同」**。多值字段（分类、平台）的顺序不承载语义，所以比较前先排序。
+   */
+  const sameSet = (a: string[], b: string[]) => {
+    if (a.length !== b.length) return false;
+    const sa = [...a].sort();
+    const sb = [...b].sort();
+    return sa.every((v, i) => v === sb[i]);
+  };
+
+  const facts: FactRow[] = [
+    {
+      label: '价格档',
+      a: priceA || '—',
+      b: priceB || '—',
+      differs: (priceA || '—') !== (priceB || '—'),
+    },
+    {
+      label: '支持平台',
+      a: platNamesA.join('、') || '—',
+      b: platNamesB.join('、') || '—',
+      // 平台同理：顺序不承载语义，按集合比。
+      differs: !sameSet(platNamesA, platNamesB),
+    },
+    {
+      label: '所属分类',
+      a: catNamesA.join('、') || '—',
+      b: catNamesB.join('、') || '—',
+      differs: !sameSet(catNamesA, catNamesB),
+    },
+    {
+      label: '收录更新',
+      a: updA,
+      b: updB,
+      differs: updA !== updB,
+    },
   ];
-  const facts: FactRow[] = raw.map((r) => ({ ...r, differs: r.a !== r.b }));
   /*
    * 「差异高亮」只收**两边都有值且真的不同**的行。
    *
