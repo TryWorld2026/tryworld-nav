@@ -20,8 +20,9 @@ npm run test:unit           # news / fetch-aihot / search / favorites / filter-u
 npm run test:interaction    # Playwright 交互回归，需先起服务器，否则自动 skip
 npm run preview             # npx serve out -l 3100（interaction 测试默认连这个地址）
 npm run census              # 重算数据口径（覆盖率、pricing 分布、死引用、媒体文件数）
-npm run gen:all             # 重算客户端用的 nav.json 与 search-index.json（改了数据就跑）
-npm run gen:check           # 校验上面两份生成物是否与数据源一致（CI 用）
+npm run gen:all             # 重算客户端用的 nav.json / search-index.json / verdict-index.json（改了数据就跑）
+npm run gen:check           # 校验上面三份生成物是否与数据源一致（CI 用）
+npm run gen:verdicts        # 只重算 verdict-index.json（改了「怎么选」判断后）
 npm run gen:thumbs          # 生成缩略图（可选，未生成时页面回退原图）
 npm run gen:pwa-icons       # 从 icon.svg 重新生成 192/512/maskable 图标
 npm run verdicts:check      # 校验「怎么选」判断数据的 schema
@@ -50,6 +51,12 @@ node --test --test-name-pattern="汉堡菜单" tests/interaction.test.mjs   # �
 |---|---|---|---|---|
 | `data/nav.json` | `scripts/generate-nav.mjs` | 26 分类 / 5 推荐（href 构建期解析好）/ 9 标签 | 5 KB（br 1.4 KB） | 页眉、移动抽屉、侧栏、搜索面板、页脚 |
 | `data/search-index.json` | `scripts/generate-search-index.mjs` | 2081 条 v2 紧凑 wire（分类/标签/关键词/平台都是共享字典 ID，平台用 bitmask，价格 0–4，更新时间 Unix 日序） | 221 KB（br 58.5 KB） | 命令面板、`/tools` 筛选、`/tools` 与分类页/集合页的卡片、资讯的「站内收录」chip |
+| `data/verdict-index.json` | `scripts/gen-verdict-index.mjs` | **363 条人工判断**的客户端版本：判断原文 + 名称/图标/分类/标签/价格档/平台/更新时间/目录序号 | 214 KB（br 约 55 KB） | 只有 `/decide` 与 `/favorites` 两条路由加载 |
+
+> 第三份是 2026-10-23 加的。判断原文住在 `src/lib/tool-verdicts.ts`（3000 行 TS 常量），
+> 客户端不能 import 它，也不能 import `@/lib/data`，所以只能生成一份 JSON。
+> **改判断后必须跑 `npm run gen:verdicts`**（已并入 `gen:all` / `gen:check`）。
+> `generatedAt` 取「条目里最大的 `checkedAt`」，不读墙钟 —— 否则构建产物每天都不一样。
 
 - 两者都**进 `contentBuildId()` 的输入清单**（`next.config.mjs`），否则「只改了索引」
   不会换 buildId，浏览器缓存会命中旧 chunk。
@@ -74,6 +81,35 @@ node --test --test-name-pattern="汉堡菜单" tests/interaction.test.mjs   # �
   详情页的「添加收藏」通过 `tryworld:favorites-changed` 自定义事件与收藏页联动
   （`storage` 事件只在跨标签页触发，同 tab 内不生效）。
 - 数据不上传、不需要账号，隐私政策里如实写明。
+- **2026-10-23 起它是「我的工具栈」**，不只是列表：勾选 2–4 个 → 九行固定顺序的
+  对比表（`lib/stack-export.ts` 的 `buildStackCompareRows`）→ 导出 Markdown / 纯文本。
+  三条纪律：
+  1. 对比表**只摆事实与判断原文**，不写「谁更好」、不排序；
+  2. 缺数据写 `—` / 「未写判断」，不留空、不推测；
+  3. 新鲜度以 `DATA_EPOCH` 为参照点，**不读 `Date.now()`**（否则产物每天变）。
+  导出是纯函数（零 import），`tests/stack-export.test.mjs` 守着格式与 v1 兼容。
+- **分享回路（`/stack?ids=…`）**：`/favorites` 的「分享链接」复制一条
+  `/stack?ids=slug1,slug2`，收件人打开由浏览器用 `catalog-index` + `verdict-index`
+  现场还原清单，并能一键收进自己的收藏（`lib/favorites.ts` 的 `mergeFavorites`）。
+  三条不能改错的约束：
+  1. **没有服务端，也没有短链**。链接里就是明文 slug 列表（`lib/stack-share.ts`
+     零 import，`normalizeSlugs` 是编码与解码**共用**的清洗路径：小写 kebab-case、
+     去重、上限 40 —— 外部链接被截断/被改过时只会少卡片，不会渲染脏地址）。
+  2. **`/stack` 必须 `robots: noindex`**，且不进 `sitemap.ts` —— 内容全由查询参数
+     决定，收录只会抓到一个空壳。
+  3. `mergeFavorites` **只加不删**：对方链接里有一半是你已有的工具时，点保存
+     不该把已有收藏清掉（`toggleFavorite` 的语义是「切换」，这里不能用它）。
+- **对比表只有一处实现**（`src/components/stack-compare-table.tsx`）：`/favorites` 与
+  `/stack` 共用。九行固定顺序来自 `lib/stack-export.ts` 的 `STACK_COMPARE_ROWS`，
+  **只摆事实与判断原文**，缺数据写 `—` / 「未写判断」。
+  - **≥1024** 是三列表格；**<1024 改成「每个工具一节」的纵向对照**，不要用横向滚动：
+    390px 下三列表格的第二列（对手）会被整块切出屏幕，而并排对比的价值就是同时
+    看到两列 —— 这个坑 `/compare` 在 2026-10-22 已经踩过一次。
+  - **2–4 个工具时才出表**：`/stack` 里这时也**不再重复铺一遍同样的卡片**，
+    只留一行「逐个看详情」的链接；1 个或 >4 个才回落到卡片清单。
+- **条件本身也要能分享**：`/decide` 结果头有「复制这组条件」（复制当前 `location.href`，
+  条件已经在 URL 里）。这一站最自然的传播单位是**一组条件**，不是单个工具页。
+
 
 ### 「怎么选」判断数据（`src/lib/tool-verdicts.ts`）
 
@@ -91,6 +127,26 @@ node --test --test-name-pattern="汉堡菜单" tests/interaction.test.mjs   # �
 - 为什么必须人工：这里写的是缺点、同类对比、起价，编造一条比不写更伤信任。
   `scripts/draft-verdicts.mjs` 只把候选写到 `work/`，**绝不写 data/**。
 - 新增条目跑 `npm run verdicts:check`：它会校验 slug 存在、日期不是未来、长度上限等。
+
+### `/decide`（帮我选）—— 全站唯一的决策页
+
+> 2026-10-23 新增。它是这一站「为什么值得用」的落点，改动前先读
+> `work/product-thesis-2026-10-23.md` 与 `src/lib/decide.ts` 顶部注释。
+
+- **候选池只有 363 条有判断的工具**，页面上明说「2081 个里我们写了 363 个」。
+  不要把 1718 个没有判断的工具混进来 —— 那等于用目录顺序冒充判断。
+- 16 个任务（`DECIDE_TASKS`）各自映射到一个**真实分类 slug**，
+  `tests/decide.test.mjs` 会校验 slug 存在。
+- 硬筛三维：预算（`完全免费` 不含 freemium）、平台（**网页版算可用**，见
+  `PLATFORM_MATCH`）、任务。偏好只加分。
+- 排序：**主分类命中优先**（`cats[0] === task.category`）→ 打分 → 目录排位 → slug。
+  主分类优先这一条是 2026-10-23 的实测修复：只按分数排时，「做视频」的第三名
+  会是一个主做聊天、顺带挂了视频标签的工具。
+- **页面上不出现分数**，只出现依据；底部 `<details>` 把规则逐条写明。
+- 反推荐（「我们没选它」）的原因必须由硬筛结果反推，不许臆断。
+- 条件是 URL 态（`?task=&budget=&plat=&taste=`），`replaceState` 写入、`popstate` 回填，
+  首屏必须是默认态（否则 hydration 报错）。
+- 空的 `/favorites` 与首页决策条都指向这里；导航五处入口（页眉/侧栏/移动 Tab/抽屉/页脚）。
 
 ### PWA 与离线
 
@@ -315,3 +371,5 @@ lint / tsc / **build**——其中 build 是**检查而非部署源**，它在�
 | **`node --test` 报 `Cannot find module './xxx'`** | 被测试的 `src/lib/*.ts` 里写了无扩展名的相对 import。Node 原生 TS 解析要求带扩展名，而 TSC 的 bundler 解析不接受 `.ts` 后缀 —— 被测试的文件必须**零 import** |
 | **「验收」报出一个实际不存在的缺陷** | 读了**旧的 `out/`**。这个仓库的产物会被反复重建，拿旧构建下结论会浪费一整轮修复。**验收结论必须标明基于哪次构建** —— 判据是 `ls -la out/index.html` 的 mtime 与 `git log -1` 的时刻对比 |
 | **页面上写了条件性承诺但对应结构不存在** | 文案与条件渲染脱钩（实测三处：`/news` 来源数、`/collections`「六个代表工具」、`/compare`「先看事实差异」）。**判据是「这句话是否描述页面上有什么」，不是「它是不是文案」** —— 凡是「先看 X」「下面有 Y」「每张卡上是 Z」这类描述页面结构的话，旁边必须有对应的条件渲染或数据断言。`npm test` 测不到它，唯一可行的防线是**承诺与渲染写在同一个文件里**（所以这类文案**不要**抽进 `data/`）。反例：`tool-verdicts.ts` 的 `bestFor`/`notFor` 抽在数据里是**安全**的，因为它们描述工具本身、不描述页面结构 |
+| **`/tools` 右栏只剩搜索框，工具网格被推到整条左栏之后** | 右栏的 `</div>` 提前闭合，结果头与网格落到了两栏 grid 外面。**TSC、eslint、build 全都不报错** —— JSX 标签是配平的，只是层级错了。2026-10-23 实测：1440 首屏一张卡都看不到，`grid.getBoundingClientRect().y` 从 466 变成 1128。判据是**测量**而不是肉眼：卡片的 y 坐标必须小于左栏高度 |
+| **对比表里一个价格被渲染成两条列表**（`$20 / 月` → `$20`、`月`） | 用「字符串里有没有 `LIST_SEP`」决定要不要拆多行。判据必须是**字段语义**（只有 平台/适合/不适合 是多值），不是字符巧合 |

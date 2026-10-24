@@ -14,13 +14,20 @@ Next.js 15.5.27（`output: 'export'`）+ React 19 + Tailwind 3.4 的纯静态站
 |---|---|
 | 工具 | 2081 个（`data/tools.json`） |
 | 分类 | 26 个 |
-| 页面 | 2642 个（`out/*.html`；含日报 180 期 × 2 种变体、298 个二选一对比页） |
+| 页面 | 2600+ 个（`out/**/*.html`，随日报期数增长；其中工具详情 2081、二选一对比 298） |
 | 新闻 | AIHOT 精选卡片流，条数随抓取变化（2026-10-15 起） |
-| 「怎么选」判断 | 363 条（17.4%），覆盖 26/26 分类的 rank 1–12 |
+| 「怎么选」判断 | 363 条（17.4%），覆盖 26/26 分类的 rank 1–12；`/decide`、`/favorites`、`/stack` 用它的客户端版本 `data/verdict-index.json` |
 | 配套数据 | `data/tool-extras.json` 2081 条，与 `tools.json` 一一对应，0 缺失 |
 | 构建产物 | `out/` 8706 个文件 / 1040 MB |
 
 数字会随重新抓取变化，用 `node scripts/census.mjs` 重算，不要手抄。
+
+> **2026-10-23 起，站内多了一个一级对象：决定。** `/decide`（帮我选）用三个可验证的
+> 条件从 363 条人工判断里筛出 3 个候选，并写明「为什么不推荐另外几个」；`/favorites`
+> 升级成「我的工具栈」（并排对比 + 导出 Markdown），并可用一条 `/stack?ids=…` 链接
+> 分享给同事 —— 对方打开后能一键收进自己的收藏（静态站没有服务端，链接里只有明文 slug）。
+> 为什么这么改、取舍是什么、UI/UX 的诚实判定，都写在
+> [`work/product-thesis-2026-10-23.md`](work/product-thesis-2026-10-23.md)。
 
 ## 快速开始
 
@@ -29,7 +36,7 @@ npm install       # node_modules 不在 git 里
 npm run dev       # http://localhost:3000
 npm run build     # 约 8–11 分钟，产出 out/
 npm run lint      # eslint，当前 exit 0
-npm test          # 114 项；产物断言需要先 build（交互 8 条需先 npm run preview）
+npm test          # 160 项；产物断言需要先 build（交互 11 条需先 npm run preview）
 ```
 
 **新检出会没有媒体文件。** `public/assets/{icons,shots,tags,news}`（约 4200 个
@@ -143,6 +150,10 @@ deploy.yml 是独立的部署 workflow，会在构建前从 Release 快照恢复
 | 24 | **新增 `/compare` 二选一对比（298 页）**：站内第一个直接回答「这两个该选哪个」的页面。清单由人工 `vs` 字段做语义闸门 + 读者关心度排序算出来，不手挑；三层结构「事实对照表 → 差异高亮 → 编辑判断并排」（事实 100% 有数据、判断 17.4%），所以任何一对都能渲染 | `src/lib/compare.ts`、`src/app/compare/` |
 | 25 | **首页首屏加搜索入口**，并把体量数字在移动端搬出 hero：390×844 下第一张工具卡从 top 773 提到 617、露出从 71px 变成完整一张卡 | `src/components/hero-search.tsx`、`src/components/home-stats.tsx` |
 | 26 | **标志换成导航站自己的子品牌图形（罗盘）**，不再用试界 tw 连写主标 —— 母标已用在作者个人网站。品牌规范允许子品牌独立图形（「不强迫所有产品都变成 tw 字母变体」）；旧 `site-logo.tsx` 已删。纵向长菱形针是刻意选择：斜向会读成「禁止」、单向朝上会读成「播放」 | `src/components/nav-mark.tsx`、`src/app/icon.svg` |
+| 27 | **新增 `/decide` 决策页**：16 个场景 × 预算 × 平台 × 偏好 → 硬筛 + 可解释排序（主分类命中 / editor 优先 / 标签 / 新鲜度 / 目录排位）→ 3 个候选 + 「我们没选它」反推荐。候选池**只有 363 条有判断的工具**，页面上明写这个数；不出现分数、不出现「AI 推荐」 | `src/app/decide/`、`src/lib/decide.ts`、`src/components/decide-flow.tsx` |
+| 28 | **`/favorites` 升级成「我的工具栈」**：勾选 2–4 个 → 九行固定顺序对比表（价格档/免费额度/起价/平台/收录更新/适合/不适合/差异），导出 Markdown/纯文本，并给「同类里编辑写过判断、你还没收的」补充 | `src/components/favorites-list.tsx`、`src/lib/stack-export.ts` |
+| 29 | **新增分享回路 `/stack?ids=…`**：静态站没有服务端，链接里只放明文 slug；收件人打开由浏览器用目录索引 + 判断数据现场还原，一键收进自己的收藏（`mergeFavorites` 只加不删）。`/stack` 与 `/favorites` 一样 `noindex`、不进 sitemap | `src/app/stack/`、`src/lib/stack-share.ts`、`src/components/shared-stack.tsx` |
+| 30 | **`/tools` 筛选重做成面板**：桌面 248px 粘性左栏（分类/标签/价格/平台四组 + facet 计数 + 清除全部），移动端改为筛选抽屉；结果头带可移除的生效 chips。计数按「其余条件不变」算，不是全库静态数 | `src/components/tools-explorer.tsx`、`src/components/facet-rail.tsx`、`src/components/filter-sheet.tsx` |
 
 `data/tool-extras.json` 里的 `more` / `related` / `latest` 三个字段同样
 不参与渲染，只作溯源保留——原因见 `src/lib/types.ts` 的类型注释。
