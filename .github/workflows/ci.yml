@@ -9,7 +9,7 @@
 #   assets:check  counts and hashes what is there; it only uploads on `--push`
 #   news shape    checks data/news.json has the fields the cards need
 #   census        reads data/*.json and reports dead cross-references
-#   gen:check     re-derives data/{nav,search-index}.json and byte-compares
+#   gen:check     re-derives data/{nav,search-index,verdict-index}.json and byte-compares
 #   verdicts      schema check for the hand-written 「怎么选」 data
 #   test          node --test (timezone, AIHOT mapping, search, favorites, filter URL)
 #   lint          eslint . (next/core-web-vitals)

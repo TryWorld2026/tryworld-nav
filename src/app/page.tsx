@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ArrowUpRight, ConciergeBell, LayoutGrid, Link2, Rocket } from 'lucide-react';
 import { Hero } from '@/components/hero';
+import { HomeDecideStrip } from '@/components/home-decide-strip';
 import { HomeNews } from '@/components/home-news';
 import { HomeCollections } from '@/components/home-collections';
 import { CategoryIcon } from '@/components/category-icon';
@@ -153,6 +154,12 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+
+      {/* 决策条：hero 之下、热门工具之上的一条细带（2026-10-23）。
+          首页原来的两个 CTA 都指向「浏览」（全部工具 / AI 资讯），
+          `/decide` 只有导航里一个入口 —— 一个能把「翻目录」转成「做决定」的
+          入口，值得在首屏之后立刻出现一次。它刻意做得很薄，不是第二个 hero。 */}
+      <HomeDecideStrip />
 
       {/* hero 与第一段内容之间不留 4px 的缝：墨块结束就是纸面，工具网格直接
           接上，中间的 48px 由网格自己的 `pt-10` 给。 */}

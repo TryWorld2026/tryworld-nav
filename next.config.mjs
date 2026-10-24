@@ -84,6 +84,11 @@ function contentBuildId() {
     // 浏览器缓存命中旧 chunk，线上还是旧结果。
     'data/nav.json',
     'data/search-index.json',
+    // 2026-10-23：363 条人工判断的客户端版本（`/decide` 与 `/favorites` 用），
+    // 由 `scripts/gen-verdict-index.mjs` 从 `src/lib/tool-verdicts.ts` 生成。
+    // 只改判断正文却没重新生成时 `gen:check` 会先拦；这里再兜一层缓存失效，
+    // 否则浏览器会命中旧的判断 chunk。
+    'data/verdict-index.json',
   ]) {
     try {
       h.update(rel);

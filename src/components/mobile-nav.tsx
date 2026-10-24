@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { X } from 'lucide-react';
+import { ChevronRight, Compass, X } from 'lucide-react';
 import { CategoryIcon } from './category-icon';
 import { navFeatured as featured, navHotCategories as hotCategories } from '@/lib/nav';
 import { SITE } from '@/lib/site';
@@ -166,6 +166,26 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
+
+        {/* 决策入口：抽屉里唯一的高对比块。
+            手机上没有左侧栏、页眉导航也是隐藏的，`/decide` 若只藏在「查看全部」
+            的次级页面里等于没有入口 —— 而它正是这站最该被用起来的能力。 */}
+        <Link
+          prefetch={false}
+          href="/decide"
+          onClick={onClose}
+          data-testid="decide-drawer-link"
+          className="mb-3 flex items-center gap-3 rounded-xl bg-gongke-dark px-4 py-3 text-white shadow-sm transition-colors hover:bg-gongke-dark/90"
+        >
+          <Compass className="h-5 w-5 shrink-0" aria-hidden="true" />
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-semibold">帮我选</span>
+            <span className="mt-0.5 block text-[12px] leading-snug text-white/70">
+              三个问题，从 363 条人工判断里缩到 3 个
+            </span>
+          </span>
+          <ChevronRight className="h-4 w-4 shrink-0 text-white/60" aria-hidden="true" />
+        </Link>
 
         <nav className={LINKS_GRID_CLASS}>
           {LINKS.map((l) => (

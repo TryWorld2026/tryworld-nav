@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Bookmark, ChevronDown, LayoutList, Layers2, Menu, Newspaper, ScanFace, Search } from 'lucide-react';
+import { ArrowRight, Bookmark, ChevronDown, Compass, LayoutList, Layers2, Menu, Newspaper, ScanFace, Search } from 'lucide-react';
 import { CommandDialog } from './command-dialog';
 import { MobileNav } from './mobile-nav';
 import { NavMark } from './nav-mark';
@@ -78,6 +78,23 @@ const NAV_ITEM_CLASS =
  * 所以四个项的高度与视觉重量保持一致，不会出现某一项特别突出。
  */
 const NEWS_NAV_CLASS = `${NAV_ITEM_CLASS} relative`;
+
+/**
+ * 「帮我选」—— 2026-10-23 新增的第五个导航项，也是全站唯一被**视觉强调**的
+ * 导航项（其余四项都是幽灵行）。
+ *
+ * 为什么它值得一块底色：这个站的 2081 条目录本身没有壁垒（任何站都能扒同一份
+ * 名单），真正独有、且别人抄不走的是 363 条人工判断 + 「不适合谁」那一行。
+ * 但在此之前，这些判断只能从「某个工具详情页」偶遇，用户没有一条「我现在就要
+ * 做决定」的入口。`/decide` 就是那条入口；导航里把它和「查看全部」并列而不是
+ * 塞进下拉，等于在页眉上写清楚这站卖的是**决定**，不是**名单**。
+ *
+ * 尺寸沿用其余项的 h-9（不破坏页眉一行的节奏），只加一层极淡的绿底与描边，
+ * 用色相而不是体量来区分主次 —— 页眉右上已经有一个深墨实心按钮（我的收藏），
+ * 再来一个实心块会让右边重量翻倍。
+ */
+const DECIDE_NAV_CLASS =
+  'inline-flex h-9 items-center gap-1.5 rounded-full border border-gongke-accent/30 bg-gongke-accent/[0.06] px-3 text-[13px] font-medium text-gongke-accent transition-colors hover:border-gongke-accent/45 hover:bg-gongke-accent/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -250,6 +267,13 @@ export function Header() {
                   `grid-cols-[1fr_auto_1fr]` 的直接子元素才能居中；放在左侧
                   那个 `1fr` 格子里时它只会贴左。 */}
               <nav className="hidden items-center space-x-6 text-sm lg:flex">
+                {/* 决策入口放在第一位：读者的第一问题永远是「我该用哪个」，
+                    而不是「你们收了哪些」。见上面 DECIDE_NAV_CLASS 的说明。 */}
+                <Link prefetch={false} href="/decide" className={DECIDE_NAV_CLASS} data-testid="decide-nav-link">
+                  <Compass className="h-3.5 w-3.5" aria-hidden="true" />
+                  帮我选
+                </Link>
+
                 <Link prefetch={false} href="/tools" className={NAV_ITEM_CLASS}>
                   <LayoutList className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
                   查看全部

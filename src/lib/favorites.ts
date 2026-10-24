@@ -132,6 +132,33 @@ export function isFavorite(store: FavoriteStore, slug: string): boolean {
 }
 
 /**
+ * 批量收藏 —— `/stack`（别人分享的工具栈）一键「保存到我的收藏」用。
+ *
+ * 与 `toggleFavorite` 的区别：**已存在的条目原样保留**，不会被顺手删掉
+ * （分享里有一半是对方已有的工具时，点一下保存不该把它们清空）。新增的
+ * 按传入顺序插到最前面，所以收件人看到的第一张卡就是链接里的第一个。
+ */
+export function mergeFavorites(
+  store: FavoriteStore,
+  items: readonly FavoriteItem[],
+  now: string = new Date().toISOString(),
+): { store: FavoriteStore; added: number } {
+  const seen = new Set(store.items.map((it) => it.slug));
+  const added: FavoriteItem[] = [];
+  for (const item of items) {
+    const slug = String(item?.slug ?? '').trim();
+    if (!slug || seen.has(slug)) continue;
+    seen.add(slug);
+    added.push({ ...item, slug, addedAt: item.addedAt ?? now });
+  }
+  if (added.length === 0) return { store, added: 0 };
+  return {
+    store: { version: 2, items: [...added, ...store.items].slice(0, MAX_ITEMS) },
+    added: added.length,
+  };
+}
+
+/**
  * 同 tab 内「收藏变了」的广播事件名。
  *
  * 为什么需要它：详情页的按钮与 `/favorites` 是两棵独立的 React 树，没有共同的

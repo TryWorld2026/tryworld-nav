@@ -52,6 +52,14 @@ export function SiteFooter() {
                 <li>
                   <Link prefetch={false}
                     className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
+                    href="/decide"
+                  >
+                    帮我选
+                  </Link>
+                </li>
+                <li>
+                  <Link prefetch={false}
+                    className="inline-flex min-h-6 items-center text-sm text-foreground hover:text-gongke-accent"
                     href="/about"
                   >
                     关于我们

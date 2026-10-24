@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, LayoutGrid, Layers, Newspaper, Search } from 'lucide-react';
+import { Compass, Home, LayoutGrid, Newspaper, Search } from 'lucide-react';
 
 /**
  * 移动端底部 Tab 栏 —— 这个站「APP 感」的主要来源。
@@ -29,21 +29,25 @@ const TABS = [
     href: '/tools',
     label: '工具',
     icon: LayoutGrid,
-    match: (p: string) => p.startsWith('/tools'),
+    // 分类与集合同属「目录」这条动线，合并到一个槽位后，`/categories` 与
+    // `/collections` 仍然有可见的选中态（否则用户在分类页会觉得「没在任何一个
+    // 栏目里」）。腾出来的槽位给了 `/decide`。
+    match: (p: string) =>
+      p.startsWith('/tools') || p.startsWith('/categories') || p.startsWith('/collections'),
   },
   // 中间的搜索按钮占位，实际按钮在下面单独渲染。
   { href: '', label: '', icon: Search, match: () => false },
+  {
+    href: '/decide',
+    label: '帮我选',
+    icon: Compass,
+    match: (p: string) => p.startsWith('/decide'),
+  },
   {
     href: '/news',
     label: '资讯',
     icon: Newspaper,
     match: (p: string) => p.startsWith('/news'),
-  },
-  {
-    href: '/categories',
-    label: '分类',
-    icon: Layers,
-    match: (p: string) => p.startsWith('/categories') || p.startsWith('/collections'),
   },
 ] as const;
 

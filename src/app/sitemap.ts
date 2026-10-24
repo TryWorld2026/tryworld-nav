@@ -9,6 +9,9 @@ export const dynamic = 'force-static';
 
 const STATIC_ROUTES = [
   '/',
+  // 2026-10-23 新增：任务 → 三选一的决策页，是本站唯一「替用户做决定」的入口，
+  // 值得被搜索引擎当作落地页（它的长尾词就是「XX 用什么 AI 工具」）。
+  '/decide',
   '/tools',
   '/categories',
   '/collections',

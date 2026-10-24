@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Bookmark, ChevronRight, Layers2, Newspaper, Scale, Sparkles } from 'lucide-react';
+import { Bookmark, ChevronRight, Compass, Layers2, Newspaper, Scale, Sparkles } from 'lucide-react';
 import { CategoryIcon } from './category-icon';
 import { NavMark } from './nav-mark';
 import { navFeatured as featured, navHotCategories as hotCategories } from '@/lib/nav';
@@ -152,6 +152,29 @@ export function SiteSidebar() {
             aria-hidden="true"
           />
           <span className="text-sm font-medium">AI 资讯</span>
+          <ChevronRight
+            className="ml-auto h-3.5 w-3.5 shrink-0 opacity-50 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:opacity-90"
+            aria-hidden="true"
+          />
+        </Link>
+
+        {/* 2026-10-23：「帮我选」紧跟 AI 资讯。
+            侧栏是桌面端唯一常驻的导航面，而 `/decide` 是本站唯一「替你做决定」
+            的入口 —— 这两个事实放在一起，它就不该被埋在「编辑精选」那一组里
+            和收藏并列。视觉上刻意比 AI 资讯轻一档：一块淡绿描边而不是实心绿底，
+            避免两个等重的实心块把侧栏上半截压死（AI 资讯是内容栏目，决策入口
+            是动作，动作不该比栏目还重）。 */}
+        <Link
+          prefetch={false}
+          href="/decide"
+          data-testid="decide-sidebar-link"
+          className="group mb-3 flex items-center rounded-lg border border-gongke-accent/25 bg-gongke-accent/[0.06] px-3 py-2.5 text-gongke-accent transition-colors duration-200 hover:border-gongke-accent/45 hover:bg-gongke-accent/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gongke-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+        >
+          <Compass
+            className="mr-2.5 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:rotate-12"
+            aria-hidden="true"
+          />
+          <span className="text-sm font-medium">帮我选</span>
           <ChevronRight
             className="ml-auto h-3.5 w-3.5 shrink-0 opacity-50 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:opacity-90"
             aria-hidden="true"
