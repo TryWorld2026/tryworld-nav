@@ -192,6 +192,29 @@ npx wrangler whoami     # 出现 Account Name 才算真登录
 `2642 → 2045 → 1889 → 0`（Cloudflare 按内容哈希去重，已传的重试时会复用）。
 所以不要因为「又失败了」就重置工作 —— 继续重试即可，代价只是时间。
 
+### 2026-10-24 新增：两种「token 过期」，只有一种能靠重试解决
+
+上面那条说「隔 10 秒再来往往就成功」，但那是**线路性**失败。本机今天遇到的是另一种，
+照那句话重试了 3 次，全是白费：
+
+| | 报错文本 | refresh_token | 该怎么办 |
+|---|---|---|---|
+| **A 线路** | `could not be refreshed because the Cloudflare auth server could not be reached` | 还活着 | 重试 `wrangler whoami`，实测第 2 次就恢复 |
+| **B 凭据失效** | `could not be refreshed, and the environment is non-interactive` | **已失效** | 重试无用；必须在**交互式终端**跑 `wrangler login`（要开浏览器点授权） |
+
+`scripts/deploy.ps1` 现在第 0 步就查 `wrangler whoami`（在构建**之前**，坏凭据下 6 秒
+就 `exit 2`，不会先白烧 9 分钟构建），并对两种情况分别措辞。
+
+**B 类还会连带影响 CI**：`deploy.yml` 的 secret `CLOUDFLARE_WRANGLER_OAUTH` 是本机这份
+登录文件的历史快照。本机 refresh_token 一旦失效，每天 10:30（北京）的定时部署很可能
+撞同一个错——**重新登录之后记得同步更新那个 secret**，否则本机好了、CI 还是坏的。
+
+写匹配判据时的一个坑（同样实测过）：wrangler 的错误输出带 ANSI 颜色码，还会被控制台
+宽度**在单词中间**折断，实测断成 `could not be r` + 换行 + `efreshed`。所以守卫里是
+先剥 ANSI、再删掉所有空白、然后用无空格关键词（`non-interactive` / `authservercouldnotbereached`）
+匹配。按完整短语匹配会永远不成立——第一版就这样「加了守卫但形同不存在」，直接跑过去
+做了 3 次部署尝试才回头查。
+
 ## ⚠️ 部署前必读：媒体不能删
 
 媒体**不能**在上传前从 `out/` 删掉。`public/assets/**` 被 gitignore，本地是唯一副本，而

@@ -4,7 +4,7 @@
 
 .DESCRIPTION
   这个脚本把 2026-10-15 一晚上踩出来的部署经验固化下来，因为手工跑
-  `npx wrangler deploy` 反复失败（三次里成一次）。它处理四件事：
+  `npx wrangler deploy` 反复失败（三次里成一次）。它处理五件事：
 
     1. **不用管道**：PowerShell 管道调用 wrangler 会静默卡死在
        `Building list of assets`，所以一律用 Start-Process + 文件重定向。
@@ -54,7 +54,58 @@ function Write-Ok($msg)   { Write-Host "  [OK] $msg" -ForegroundColor Green }
 function Write-Warn2($msg){ Write-Host "  [!] $msg" -ForegroundColor Yellow }
 function Write-Err($msg)  { Write-Host "  [X] $msg" -ForegroundColor Red }
 
-# --- 0. 构建 ---
+# --- 0. 凭据（放在构建之前）---
+#
+# 为什么要有这一步：凭据坏了，原本要等约 9 分钟构建跑完、再到 wrangler 那一步
+# 才报错 —— 那次构建是白做的。先花十几秒问一次 whoami 就能挡住。
+#
+# 更要紧的是**两种「token 过期」不是一回事**（2026-10-24 本机实测）：
+#
+#   A. auth server 连不上：`could not be refreshed because the Cloudflare auth
+#      server could not be reached`。refresh_token 还活着，**重试有用** ——
+#      DEPLOY.md 记的那次是第 2 次 whoami 恢复的。
+#   B. 无法刷新 + 非交互：`could not be refreshed, and the environment is
+#      non-interactive`。refresh_token 本身失效，**重试没有用**，必须有人在
+#      交互式终端里跑一次 `wrangler login`（要开浏览器点授权，脚本代办不了）。
+#
+# 当时按 DEPLOY.md「隔 10 秒重试往往就成功」重试了 3 次，全是白费 —— 那次是
+# B 类。所以这里把两者分开判，B 类直接 exit 2 并说清该谁动手。
+Write-Step '凭据（wrangler whoami）'
+$who = ""
+$whoRaw = ""
+try {
+  $whoRaw = (npx wrangler whoami 2>&1 | Out-String)
+} catch {
+  $whoRaw = ($_ | Out-String)
+}
+# **必须先剥 ANSI 颜色码再去掉所有空白，再用「无空格」的关键词匹配。**
+# 两个原因，都是 2026-10-24 实测踩到的：
+#   1. wrangler 的输出带 ANSI 转义序列，PowerShell 捕获后混在文本里；
+#   2. 它还会被控制台宽度**在单词中间**硬折断 —— 实测得到
+#      `could not be r` + 换行 + `efreshed`。所以「折叠空白」也不够
+#      （折出来是 `r efreshed`，中间多一个空格），必须把空白全去掉。
+# 因此下面的关键词一律写成无空格形式。
+$who = (($whoRaw -replace '\[[0-9;]*[A-Za-z]', '') -replace '\s+', '')
+if ($who -match 'AccountName') {
+  Write-Ok 'wrangler 已登录'
+} elseif ($who -match 'non-interactive') {
+  Write-Err '凭据已失效且无法自动刷新（refresh_token 本身过期）—— 重试没有用'
+  Write-Err '请在交互式终端跑一次 wrangler login（要开浏览器授权），再重跑本脚本'
+  Write-Err '另：CI 的 secret CLOUDFLARE_WRANGLER_OAUTH 是本机这份凭据的历史快照，'
+  Write-Err '定时部署很可能撞上同一个错 —— 重新登录后记得同步更新那个 secret'
+  exit 2
+} elseif ($who -match 'authservercouldnotbereached') {
+  Write-Warn2 'auth server 连不上（线路问题）：先继续，若稍后部署失败，隔 10 秒再试 whoami'
+} else {
+  Write-Warn2 'whoami 没返回 Account Name，原因如下 —— 继续部署，由 wrangler 自己判'
+  # 展示用原始文本（$who 已被压成无空白，不能拿来打印）
+  foreach ($line in ($whoRaw -split "?
+")) {
+    if ($line -match 'ERROR') { Write-Host ("    " + $line.Trim()); break }
+  }
+}
+
+# --- 1. 构建 ---
 if (-not $SkipBuild) {
   Write-Step '构建（会先抓 AIHOT 资讯，再生成 llms-full.txt）'
   npm run build
@@ -62,7 +113,7 @@ if (-not $SkipBuild) {
   Write-Ok '构建完成'
 }
 
-# --- 1. 媒体守卫 ---
+# --- 2. 媒体守卫 ---
 Write-Step '媒体守卫'
 $mediaDirs = @('icons', 'shots', 'tags', 'news')
 $mediaCount = 0
@@ -81,7 +132,7 @@ if ($mediaCount -lt 4000) {
 }
 Write-Ok "媒体 $mediaCount 个文件，完整"
 
-# --- 2. buildId 稳定性 ---
+# --- 3. buildId 稳定性 ---
 Write-Step 'buildId 稳定性'
 $bid = (Get-ChildItem "$ROOT\out\_next\static" -Directory |
         Where-Object { $_.Name -notin @('chunks', 'css') } |
@@ -95,7 +146,7 @@ if (-not $bid) {
   Write-Warn2 '检查 next.config.mjs 的 contentBuildId() 是否混入了每次都变的输入'
 }
 
-# --- 3. prune（保留媒体，裁掉 RSC 载荷） ---
+# --- 4. prune（保留媒体，裁掉 RSC 载荷） ---
 #
 # `--lean` 裁掉每个页面旁边的 `.txt`（RSC flight payload），实测 2339 个文件
 # / 335 MB —— 占部署体量的三分之一。代价是站内导航退化成整页加载（链接仍然
@@ -112,7 +163,7 @@ Write-Step 'prune（保留媒体，裁掉 RSC 载荷）'
 node scripts/prune-out.mjs --lean
 if ($LASTEXITCODE -ne 0) { Write-Err 'prune 失败'; exit 1 }
 
-# --- 3b. 部署体量硬闸 ---
+# --- 4b. 部署体量硬闸 ---
 #
 # prune 之后仍要数一遍：Cloudflare 的 20,000 文件上限是**部署级**硬限制，
 # 超了整次部署直接失败（而不是部分成功），而失败时线上还是旧版本 —— 排查
@@ -126,7 +177,7 @@ if ($deployFiles -gt $FILE_LIMIT) {
 }
 Write-Ok "部署体量 $deployFiles 个文件（上限 20000，守卫阈值 $FILE_LIMIT）"
 
-# --- 4. 部署（Start-Process + 重定向，带重试） ---
+# --- 5. 部署（Start-Process + 重定向，带重试） ---
 $attempt = 0
 while ($attempt -lt $MaxAttempts) {
   $attempt++
