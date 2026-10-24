@@ -32,9 +32,9 @@ export default function FavoritesPage() {
   return (
     <div className="content-container py-8 md:py-10">
       <PageHeader
-        eyebrow="本机收藏"
+        eyebrow="本机收藏 · 我的工具栈"
         title="我的收藏"
-        description="收藏保存在这台设备的浏览器里，不上传、不需要登录。换设备或清除浏览器数据会丢失。"
+        description="这里不只是清单：勾选 2–4 个就能并排对比价格、平台与编辑判断；整份工具栈可以导出成 Markdown 带走，也可以复制一条链接发给同事 —— 对方打开就能一键收进他自己的收藏。全部保存在这台设备上，不上传、不需要登录。"
       >
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <Link prefetch={false}
