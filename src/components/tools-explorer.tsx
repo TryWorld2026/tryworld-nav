@@ -1,11 +1,13 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { TOOL_GRID, ToolMiniCard } from './tool-card';
 import { CategoryIcon } from './category-icon';
+import { FacetPanel, FacetRail } from './facet-rail';
+import { FilterSheet } from './filter-sheet';
 import { Button } from './ui/button';
-import { rgb, rgbAlpha } from '@/lib/utils';
+import { rgb } from '@/lib/utils';
 import {
   buildFilter,
   clampPage,
@@ -16,7 +18,7 @@ import {
 } from '@/lib/filter-url';
 import { CATALOG_INDEX } from '@/lib/catalog-index';
 import { cardFromRecord } from '@/lib/card';
-import { filterRecords, searchIndex, sortRecords } from '@/lib/search';
+import { filterRecords, priceValuesFor, searchIndex, sortRecords } from '@/lib/search';
 import type { Category, Tag } from '@/lib/types';
 
 const PAGE = 60;
@@ -29,6 +31,20 @@ const PRICE_FILTERS = [
   { value: 'freemium', label: '免费增值' },
   { value: 'paid', label: '付费' },
 ] as const;
+
+/**
+ * 生效 chip 上显示的价格文案。必须是六档全集：URL 里可能留着
+ * `fully-free` / `open-source` / `unrated` 这些不在三档筛选里的历史别名，
+ * 只查 `PRICE_FILTERS` 会把它们显示成英文 slug。
+ */
+const PRICE_LABEL: Record<string, string> = {
+  free: '免费',
+  'fully-free': '免费',
+  'open-source': '免费开源',
+  freemium: '免费增值',
+  paid: '付费',
+  unrated: '未标注',
+};
 
 const SORTS = [
   { value: '', label: '默认' },
@@ -71,14 +87,28 @@ const SORTS = [
  *     以前完全不在筛选器里。
  *   - **价格档位**。原来只有一个「只看免费」布尔开关，把「免费增值」
  *     （1737 条，83%）这一档整个藏起来了。
+ * 2026-10-23：**四排 chip 墙重做成筛选面板**。
+ *
+ * 原状：搜索框下面连铺四排同一种灰胶囊（9 标签 / 26 分类 / 3 价格 / 18 平台），
+ * 没有分组标题、没有计数、选中态只靠一层淡色底；结果统计与排序挤在右下一行。
+ * 手机 390×844 上更糟 —— 26 个分类折成 8 个后还要再点一次「全部分类（26）」，
+ * 首屏一张工具卡都露不出来。
+ *
+ * 现在：≥1024px 是两栏（248px 粘性左栏 + 结果区），<1024px 把同一份筛选装进
+ * 底部抽屉（`filter-sheet.tsx`）。结构在 `facet-rail.tsx`，这里只负责状态、
+ * 计数、URL 与结果区。
+ *
+ * **计数必须保持 facet 口径**：某个选项的数字 = 「其余筛选条件不变、只加上
+ * 这一项」的命中数（每一维排除自己）。它不是全库静态数 —— 换成静态数之后
+ * 读者会点进一个写着「297」却只剩 0 条的分类，而这正是旧版最误导的一处。
  */
 export function ToolsExplorer({ categories, tags }: { categories: Category[]; tags: Tag[] }) {
   const [filter, setFilter] = useState<FilterState>(emptyFilter);
-  // 手机上的分类墙折叠。26 个分类 chip 铺开是 404px，390 宽的首屏里一张工具
-  // 卡都露不出来；折叠到 8 个之后第一张卡落在 540px 左右，844 高的手机上完整
-  // 可见。折叠只发生在手机上（`max-md:!hidden`），桌面仍然一次列全。
-  const [expanded, setExpanded] = useState(false);
-  const MOBILE_CATEGORY_LIMIT = 8;
+  /** 移动端底部抽屉。桌面左栏常驻，不读这个状态。 */
+  const [sheetOpen, setSheetOpen] = useState(false);
+  // 稳定的关闭回调：`FilterSheet` 的 Esc / matchMedia 两个 effect 依赖它，
+  // 每次渲染都换新函数会让监听器反复解绑重绑（切一次视口就重挂一次焦点逻辑）。
+  const closeSheet = useCallback(() => setSheetOpen(false), []);
 
   // URL → state：挂载时一次，之后每次 popstate（浏览器前进/后退）一次。
   const applyUrl = useCallback((search: string) => {
@@ -139,53 +169,110 @@ export function ToolsExplorer({ categories, tags }: { categories: Category[]; ta
     [scheduleUrl],
   );
 
-  // 价格 / 平台的档位与计数（从索引算一次，2081 × 2 次遍历可以忽略）。
-  const priceOptions = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const r of CATALOG_INDEX) counts.set(r.p, (counts.get(r.p) ?? 0) + 1);
-    const free = (counts.get('fully-free') ?? 0) + (counts.get('open-source') ?? 0);
-    return PRICE_FILTERS.map((o) => ({
-      ...o,
-      count: o.value === 'free' ? free : (counts.get(o.value) ?? 0),
-    })).filter((o) => o.count > 0);
-  }, []);
+  /**
+   * 有查询词时先跑一次搜索，保留**有序**的命中列表。
+   *
+   * 两个用途，顺序都要：默认排序用它的相关度顺序；facet 计数用它的成员集合
+   * —— 计数若只看分类/标签/价格/平台，搜「视频」时分类旁边会写着 500、点进
+   * 去只剩 30，比不给计数更误导。
+   */
+  const searchHits = useMemo(
+    () =>
+      filter.q.trim() ? searchIndex(CATALOG_INDEX, filter.q, Number.POSITIVE_INFINITY) : null,
+    [filter.q],
+  );
 
-  const platformOptions = useMemo(() => {
+  const hitOrder = useMemo(() => {
+    if (!searchHits) return null;
+    const m = new Map<string, number>();
+    searchHits.forEach((h, i) => m.set(h.slug, i));
+    return m;
+  }, [searchHits]);
+
+  /** 只含四个非文本维度：查询词在 `results` 与 facet 各自做交集。 */
+  const base = useMemo(
+    () =>
+      filterRecords(CATALOG_INDEX, {
+        cats: filter.cats,
+        tags: filter.tags,
+        price: filter.price,
+        platforms: filter.platforms,
+      }),
+    [filter.cats, filter.tags, filter.price, filter.platforms],
+  );
+
+  const results = useMemo(() => {
+    if (!hitOrder) return sortRecords(base, filter.sort);
+    const matched = base.filter((r) => hitOrder.has(r.s));
+    // 有查询词时默认排序是**相关度**（`searchIndex` 的返回顺序）；读者显式
+    // 选了排序才覆盖它 —— 「最近更新」在搜索语境下仍然有意义（我要最新的那个）。
+    if (filter.sort) return sortRecords(matched, filter.sort);
+    return matched.sort((a, b) => (hitOrder.get(a.s) ?? 0) - (hitOrder.get(b.s) ?? 0));
+  }, [base, hitOrder, filter.sort]);
+
+  /**
+   * facet 计数：**每一维排除自己**、其余条件（含查询词）不变。
+   *
+   *   count(分类 c) = 在「标签/价格/平台/查询词」不变的前提下，再加 cat=c 的命中数
+   *
+   * 一次遍历算完四维（2081 × 4 个布尔判断），所以打字时它也跟得上。四维各自
+   * 检查的条件互不相同，无法合并成一个 `ok`，这是这段代码唯一啰嗦的地方。
+   */
+  const facet = useMemo(() => {
+    const catSel = new Set(filter.cats);
+    const tagSel = new Set(filter.tags);
+    const platSel = new Set(filter.platforms.map((p) => p.toLowerCase()));
+    const priceSel = new Set(priceValuesFor(filter.price));
+    const catCounts = new Map<string, number>();
+    const tagCounts = new Map<string, number>();
+    const priceCounts = new Map<string, number>();
+    const platformCounts = new Map<string, number>();
+    const bump = (m: Map<string, number>, k: string) => m.set(k, (m.get(k) ?? 0) + 1);
+
+    for (const r of CATALOG_INDEX) {
+      if (hitOrder && !hitOrder.has(r.s)) continue;
+      const okCat = catSel.size === 0 || r.c.some((c) => catSel.has(c));
+      const okTag = tagSel.size === 0 || r.t.some((t) => tagSel.has(t));
+      const okPrice = priceSel.size === 0 || priceSel.has(r.p);
+      const okPlat = platSel.size === 0 || r.pl.some((p) => platSel.has(p.toLowerCase()));
+      if (okTag && okPrice && okPlat) for (const c of r.c) bump(catCounts, c);
+      if (okCat && okPrice && okPlat) for (const t of r.t) bump(tagCounts, t);
+      if (okCat && okTag && okPlat) bump(priceCounts, r.p);
+      if (okCat && okTag && okPrice) for (const p of r.pl) bump(platformCounts, p);
+    }
+    return { catCounts, tagCounts, priceCounts, platformCounts };
+  }, [filter.cats, filter.tags, filter.price, filter.platforms, hitOrder]);
+
+  /** 三档价格恒显示 3 行（0 命中也留着，降到 40% 但仍可点）。 */
+  const priceOptions = useMemo(
+    () =>
+      PRICE_FILTERS.map((o) => ({
+        value: o.value,
+        label: o.label,
+        count:
+          o.value === 'free'
+            ? (facet.priceCounts.get('fully-free') ?? 0) + (facet.priceCounts.get('open-source') ?? 0)
+            : (facet.priceCounts.get(o.value) ?? 0),
+      })),
+    [facet],
+  );
+
+  /**
+   * 平台顺序固定按全库频次降序，**不能**按 facet 计数排：那样每点一个分类
+   * 整个列表都在跳，读者刚想点的那一行会跑掉。
+   */
+  const platformRank = useMemo(() => {
     const counts = new Map<string, number>();
     for (const r of CATALOG_INDEX) {
       for (const p of r.pl) counts.set(p, (counts.get(p) ?? 0) + 1);
     }
-    return [...counts.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .map(([name, count]) => ({ name, count }));
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([name]) => name);
   }, []);
 
-  const results = useMemo(() => {
-    const base = filterRecords(CATALOG_INDEX, {
-      cats: filter.cats,
-      tags: filter.tags,
-      price: filter.price,
-      platforms: filter.platforms,
-    });
-
-    const q = filter.q.trim();
-    if (!q) return sortRecords(base, filter.sort);
-
-    // 有查询词时用同一个搜索函数（与命令面板一致），再与分类/标签取交集。
-    // 顺序默认保留**相关度**（`searchIndex` 的返回顺序）；读者显式选了排序
-    // 才覆盖它 —— 「最近更新」在搜索语境下仍然有意义（我要最新的那个）。
-    const allowed = new Set(base.map((r) => r.s));
-    const hits = searchIndex(CATALOG_INDEX, q, Number.POSITIVE_INFINITY).filter((h) =>
-      allowed.has(h.slug),
-    );
-    if (!filter.sort) {
-      const bySlug = new Map(base.map((r) => [r.s, r]));
-      return hits.map((h) => bySlug.get(h.slug)).filter((r) => r !== undefined);
-    }
-    const bySlug = new Map(base.map((r) => [r.s, r]));
-    const ordered = hits.map((h) => bySlug.get(h.slug)).filter((r) => r !== undefined);
-    return sortRecords(ordered, filter.sort);
-  }, [filter]);
+  const platformOptions = useMemo(
+    () => platformRank.map((name) => ({ name, count: facet.platformCounts.get(name) ?? 0 })),
+    [platformRank, facet],
+  );
 
   const totalPages = Math.max(1, Math.ceil(results.length / PAGE));
   const page = clampPage(filter.page, totalPages);
@@ -246,23 +333,78 @@ export function ToolsExplorer({ categories, tags }: { categories: Category[]; ta
     [results.length, categories],
   );
 
-  const chip = (on: boolean) =>
-    (on
-      ? 'inline-flex items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-2.5 py-1 text-xs font-medium text-accent'
-      : 'inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground') +
-    // 触控目标：手机上 chip 高度 30px，低于 44px 建议值（a11y 审计的
-    // 「24–44px 那批」）。max-md 抬到 36px，桌面维持原密度。
-    ' max-md:min-h-9 max-md:py-1.5';
+  /** 生效的筛选**项数**（不含查询词与排序）：手机上按钮的徽章、左栏标题共用。 */
+  const activeFacetCount =
+    filter.cats.length + filter.tags.length + filter.platforms.length + (filter.price ? 1 : 0);
+
+  const catBySlug = useMemo(() => new Map(categories.map((c) => [c.slug, c])), [categories]);
+
+  /**
+   * 生效筛选的可移除 chips。
+   *
+   * 价格单独走 `PRICE_LABEL`：手改 URL 会留下历史别名（`?price=fully-free`、
+   * `open-source`、`unrated`），只查 `PRICE_FILTERS` 会把这些渲染成裸 slug。
+   */
+  const activeChips = [
+    ...filter.cats.map((slug) => ({
+      key: `cat:${slug}`,
+      label: catBySlug.get(slug)?.name ?? slug,
+      color: catBySlug.get(slug)?.color as string | undefined,
+      remove: () => toggleCategory(slug),
+    })),
+    ...filter.tags.map((name) => ({
+      key: `tag:${name}`,
+      label: name,
+      color: undefined as string | undefined,
+      remove: () => toggleTag(name),
+    })),
+    ...(filter.price
+      ? [
+          {
+            key: `price:${filter.price}`,
+            label: `价格：${PRICE_LABEL[filter.price] ?? filter.price}`,
+            color: undefined as string | undefined,
+            remove: () => update({ price: '' }),
+          },
+        ]
+      : []),
+    ...filter.platforms.map((name) => ({
+      key: `platform:${name}`,
+      label: `平台：${name}`,
+      color: undefined as string | undefined,
+      remove: () => togglePlatform(name),
+    })),
+  ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-3">
-        {/* 搜索框在 2560 下会拉成 1696px 的空带 —— 一个单行输入框铺满整版
-            只会让读者以为哪里没加载完。限宽加在定位外层，放大镜与清空按钮
-            跟着一起收窄；手机上仍是满宽。 */}
-        <div className="relative md:max-w-2xl">
+    /* 两栏：≥1024px 左侧 248px 粘性筛选栏 + 右侧结果区；<1024px 塌成单列，
+       同一份筛选面板改由底部抽屉承载（见文件末尾的 `FilterSheet`）。
+       `items-start` 是粘性生效的前提；右侧 `min-w-0` 防止长分类名把整行推宽。 */
+    <div className="lg:grid lg:grid-cols-[248px_minmax(0,1fr)] lg:items-start lg:gap-8">
+      <FacetRail
+        categories={categories}
+        tags={tags}
+        catCounts={facet.catCounts}
+        tagCounts={facet.tagCounts}
+        priceOptions={priceOptions}
+        platformOptions={platformOptions}
+        selected={filter}
+        onToggleCategory={toggleCategory}
+        onToggleTag={toggleTag}
+        onTogglePrice={togglePrice}
+        onTogglePlatform={togglePlatform}
+        activeCount={activeFacetCount}
+        canClear={hasFilter(filter)}
+        onClear={reset}
+      />
+
+      <div className="min-w-0 space-y-4">
+        {/* 搜索框：整行宽、48px 高。左放大镜、右侧清空（手机上 44px 触控目标）。
+            没有 `/` 快捷键提示 —— 本页的 `/` 绑在页眉的全站命令面板上
+            （见 `header.tsx` 的 keydown），标在这里会承诺「按 / 聚焦这个框」。 */}
+        <div className="relative">
           <Search
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
             aria-hidden="true"
           />
           <input
@@ -270,131 +412,105 @@ export function ToolsExplorer({ categories, tags }: { categories: Category[]; ta
             onChange={(e) => update({ q: e.target.value }, false)}
             placeholder="搜索工具名称、简介，或直接说你想做什么…"
             aria-label="搜索工具名称、简介或分类"
-            className="h-10 w-full rounded-md border border-border bg-background pl-9 pr-9 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring md:text-sm"
+            className="h-12 w-full rounded-md border border-border bg-background pl-10 pr-12 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring lg:text-sm"
           />
           {filter.q && (
             <button
               type="button"
               onClick={() => update({ q: '' })}
               aria-label="清空搜索"
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-1 text-muted-foreground hover:bg-foreground/5"
+              className="absolute right-1.5 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded text-muted-foreground transition-colors duration-200 hover:bg-foreground/5 max-lg:h-11 max-lg:w-11"
             >
-              <X className="h-3.5 w-3.5" aria-hidden="true" />
+              <X className="h-4 w-4" aria-hidden="true" />
             </button>
           )}
         </div>
 
-        {tags.length > 0 && (
-          /* 手机上单行横滑（26 个标签铺开是第二道墙），桌面回到换行。
-             标签名用 sticky 钉在左侧，横滑时不会跟着滚走；右缘一道渐隐，
-             提示右边还有内容 —— 直接切掉半个 chip 看起来像溢出。 */
-          <div className="relative -mx-4 md:static md:mx-0">
-            <div className="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto px-4 md:flex-wrap md:overflow-visible md:px-0">
-              <span className="sticky left-0 shrink-0 bg-background pr-2 text-xs text-muted-foreground">
-                标签
-              </span>
-              {tags.map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => toggleTag(t.name)}
-                  aria-pressed={filter.tags.includes(t.name)}
-                  className={chip(filter.tags.includes(t.name)) + ' shrink-0'}
-                >
-                  {t.name}
-                </button>
-              ))}
-            </div>
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-background to-transparent md:hidden"
-            />
-          </div>
-        )}
-
-        <div id="tools-category-chips" className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground">分类</span>
-          {categories.map((c, i) => {
-            const on = filter.cats.includes(c.slug);
-            const foldedOnMobile = !expanded && i >= MOBILE_CATEGORY_LIMIT && !on;
-            return (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => toggleCategory(c.slug)}
-                aria-pressed={on}
-                className={
-                  (on
-                    ? // A transparent border keeps the chip the same height as the
-                      // unselected ones, so the row doesn't jump when toggling.
-                      'inline-flex items-center gap-1 rounded-full border border-transparent px-2.5 py-1 text-xs font-medium'
-                    : 'inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground') +
-                  (foldedOnMobile ? ' max-md:!hidden' : '') +
-                  ' max-md:min-h-9 max-md:py-1.5'
-                }
-                style={
-                  on ? { background: rgbAlpha(c.color, 0.14), color: rgb(c.color) } : undefined
-                }
-              >
-                <CategoryIcon name={c.icon} className="h-3 w-3" />
-                {c.name}
-              </button>
-            );
-          })}
+        {/* <1024 的紧凑工具条：筛选（带生效数徽章）+ 结果数 + 排序下拉。
+            每一项都 ≥44px 高；`flex-wrap` 兜住 320px 下最窄的一档 —— 宁可换行，
+            也不让工具条把页面撑出横向滚动条。 */}
+        <div className="flex flex-wrap items-center gap-2 lg:hidden">
           <button
             type="button"
-            onClick={() => setExpanded((v) => !v)}
-            aria-expanded={expanded}
-            aria-controls="tools-category-chips"
-            className="inline-flex items-center gap-1 rounded-full border border-dashed border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground max-md:min-h-9 max-md:py-1.5 md:hidden"
+            onClick={() => setSheetOpen(true)}
+            aria-haspopup="dialog"
+            aria-expanded={sheetOpen}
+            aria-controls="tools-filter-sheet"
+            className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-[13px] text-foreground transition-colors duration-200 hover:border-foreground/25"
           >
-            {expanded ? '收起分类' : `全部分类（${categories.length}）`}
-          </button>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground">价格</span>
-          {priceOptions.map((o) => (
-            <button
-              key={o.value}
-              type="button"
-              onClick={() => togglePrice(o.value)}
-              aria-pressed={filter.price === o.value}
-              className={chip(filter.price === o.value)}
-            >
-              {o.label} · {o.count}
-            </button>
-          ))}
-        </div>
-
-        {platformOptions.length > 1 && (
-          <div className="relative -mx-4 md:static md:mx-0">
-            <div className="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto px-4 md:flex-wrap md:overflow-visible md:px-0">
-              <span className="sticky left-0 shrink-0 bg-background pr-2 text-xs text-muted-foreground">
-                平台
+            <SlidersHorizontal className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            筛选
+            {activeFacetCount > 0 && (
+              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gongke-accent px-1 text-[11px] font-medium text-background">
+                {activeFacetCount}
               </span>
-              {platformOptions.map((o) => (
-                <button
-                  key={o.name}
-                  type="button"
-                  onClick={() => togglePlatform(o.name)}
-                  aria-pressed={filter.platforms.includes(o.name)}
-                  className={chip(filter.platforms.includes(o.name)) + ' shrink-0'}
-                >
-                  {o.name}
-                  <span className="text-[11px] opacity-60">{o.count}</span>
-                </button>
-              ))}
-            </div>
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-background to-transparent md:hidden"
-            />
+            )}
+          </button>
+          <p
+            className="min-w-0 flex-1 truncate text-xs text-muted-foreground"
+            aria-live="polite"
+          >
+            共 <span className="font-medium text-foreground">{results.length}</span> 个工具
+          </p>
+          <select
+            aria-label="排序方式"
+            value={filter.sort}
+            onChange={(e) => update({ sort: e.target.value as FilterState['sort'] })}
+            className="h-11 shrink-0 rounded-md border border-border bg-background px-2 text-xs text-foreground outline-none transition-colors focus-visible:ring-1 focus-visible:ring-ring"
+          >
+            {SORTS.map((s) => (
+              <option key={s.value || 'default'} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* 生效筛选的 chips：每一项都能单独移除。查询词不在这里 —— 它就在
+            上面的输入框里，右侧已有清空按钮，再放一枚 chip 是重复的。 */}
+        {hasFilter(filter) && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            {activeChips.map((c) => (
+              <button
+                key={c.key}
+                type="button"
+                onClick={c.remove}
+                aria-label={`移除筛选：${c.label}`}
+                className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-border bg-background px-2.5 text-xs text-foreground/80 transition-colors duration-200 hover:border-foreground/25 hover:text-foreground max-lg:h-11"
+              >
+                {c.color && (
+                  <span
+                    aria-hidden="true"
+                    className="h-2 w-2 shrink-0 rounded-full"
+                    style={{ background: rgb(c.color) }}
+                  />
+                )}
+                <span className="max-w-[11rem] truncate">{c.label}</span>
+                <X className="h-3 w-3 shrink-0" aria-hidden="true" />
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={reset}
+              className="inline-flex h-9 shrink-0 items-center rounded-full px-2 text-xs text-gongke-accent transition-colors duration-200 hover:underline max-lg:h-11"
+            >
+              清除全部
+            </button>
           </div>
         )}
-      </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3">
+        {/* ⚠️ 右栏**不能**在这里闭合。
+            2026-10-23 实测：结果头与工具网格一度落在这个两栏 grid 外面，
+            于是右栏只剩「搜索框 + 生效 chips」，网格被推到整条粘性左栏
+            （26 分类 + 标签 + 价格 + 平台，约 800px）之后 —— 1440 首屏一张卡
+            都看不到，页面看起来像「筛选器下面全白」。结构错了但 TSC 与构建
+            都不报错，只有渲染出来才发现。 */}
+        {/* 结果头只在 ≥1024 出现：<1024 的手机工具条（上面那段 `lg:hidden`）
+            已经给了「筛选 / 共 N 个 / 排序」三件事，两层同时渲染会得到**同一行
+            统计重复两遍**（2026-10-23 390 实测：`共 2081 个工具` 连着出现两次，
+            第二次还带着「第 1 / 35 页 排序 默认 最近更新 按名称」—— 首屏下移 44px
+            且看起来像没排版）。 */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 max-lg:hidden">
         <p className="text-sm text-muted-foreground" aria-live="polite">
           共 <span className="font-medium text-foreground">{results.length}</span> 个工具
           {totalPages > 1 && (
@@ -497,6 +613,7 @@ export function ToolsExplorer({ categories, tags }: { categories: Category[]; ta
           )}
         </>
       )}
+      </div>
     </div>
   );
 }

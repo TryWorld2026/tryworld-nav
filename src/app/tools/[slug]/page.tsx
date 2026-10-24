@@ -211,7 +211,7 @@ export default async function ToolDetailPage({
                 every category the entry carries. */}
             {primary && (
               <Link prefetch={false} href={`/categories/${primary.slug}`}>
-                <div className="flex items-center gap-1 rounded-full bg-foreground/5 px-3 py-1 text-sm text-gray-500 transition-colors hover:bg-foreground/10">
+                <div className="flex items-center gap-1 rounded-full bg-foreground/5 px-3 py-1 text-sm text-foreground/75 transition-colors hover:bg-foreground/10">
                   <CategoryIcon name={primary.icon} className="h-4 w-4" />
                   {primary.name}
                 </div>
@@ -219,7 +219,7 @@ export default async function ToolDetailPage({
             )}
 
             {updatedLabel && (
-              <div className="flex items-center gap-1 rounded-full bg-foreground/5 px-3 py-1 text-sm text-gray-500 transition-colors hover:bg-foreground/10">
+              <div className="flex items-center gap-1 rounded-full bg-foreground/5 px-3 py-1 text-sm text-foreground/75 transition-colors hover:bg-foreground/10">
                 <Timer width={16} height={16} aria-hidden="true" />
                 <time dateTime={extras?.updated}>{`更新于${updatedLabel}`}</time>
               </div>

@@ -109,7 +109,11 @@ export function ToolInfoPanel({
             <div className="ml-5">
               <span>{row.label} - </span>
               <a
-                className="space-x-1 hover:underline hover:text-accent"
+                // 2026-10-23（task-2 第 6 条）：这条外链原先只有 hover 下划线，
+                // 键盘聚焦时用的是浏览器默认蓝环。补成全站一致的 `ring-ring`
+                // （品牌深绿，#24564E 对卡片底 7.94:1、对纸底 7.29:1，≥1.4.11
+                // 的 3:1）。`rounded-sm` 只是让 2px 环贴合文字块，不改布局。
+                className="rounded-sm space-x-1 hover:underline hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 href={row.href}
                 target="_blank"
                 rel="nofollow noopener noreferrer"

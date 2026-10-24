@@ -201,6 +201,17 @@ test('新路由都生成：/favorites 与 /offline', (t) => {
   assert.match(fav, /noindex/, '/favorites 应带 noindex');
 });
 
+test('分享出来的工具栈 /stack 也生成，且同样 noindex', (t) => {
+  if (skipIfNoBuild(t)) return;
+  const html = page('stack.html');
+  assert.ok(html, '/stack 应该被导出（收件人打开的落地页）');
+  assert.match(html, /noindex/, '/stack 的内容完全由查询参数决定，收录只会抓到空壳');
+  // 静态 HTML 里是客户端骨架（链接参数要等浏览器读 location.search），
+  // 所以只能断言页头这类确定会预渲染的文案存在。
+  assert.match(html, /一个分享出来的 AI 工具栈/, '/stack 缺少只读说明的页头');
+  assert.match(html, /我的工具栈/, '/stack 缺少回 /favorites 的入口');
+});
+
 test('首页有「编辑精选」集合入口（原先 9 个集合全站 0 内链）', (t) => {
   if (skipIfNoBuild(t)) return;
   const html = page('index.html');

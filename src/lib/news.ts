@@ -144,9 +144,13 @@ const WEEKDAYS = ['周日', '周一', '周二', '周三', '周四', '周五', '�
 const NEWS_TONES: Record<string, { bar: string; text: string; wash: string }> = {
   'ai-products': { bar: '#24564E', text: '#24564E', wash: 'rgba(36, 86, 78, 0.10)' },
   'ai-models': { bar: '#1B2523', text: '#1B2523', wash: 'rgba(27, 37, 35, 0.08)' },
-  industry: { bar: '#B54826', text: '#B54826', wash: 'rgba(181, 72, 38, 0.10)' },
-  tip: { bar: '#F2693C', text: '#C14A22', wash: 'rgba(242, 105, 60, 0.12)' },
-  paper: { bar: '#616A63', text: '#616A63', wash: 'rgba(97, 106, 99, 0.12)' },
+  // 2026-10-23：`text` 从 #B54826 加深到 #9C3D1F —— 徽章文字压在自己的 10% 底色上，
+  // 实测 4.41:1（axe 判不合格，门槛 4.5）。色条仍是品牌 smallAccent 原色。
+  industry: { bar: '#B54826', text: '#9C3D1F', wash: 'rgba(181, 72, 38, 0.10)' },
+  // 教程：原 #C14A22 压 12% 橙底只有 4.14:1 —— 加深到 #B0421D（4.85:1）。
+  tip: { bar: '#F2693C', text: '#B0421D', wash: 'rgba(242, 105, 60, 0.12)' },
+  // 论文：原 #616A63 只有 4.56:1（刚过线，字体渲染差异就会掉下去），加深到 #5A625A（5.14:1）。
+  paper: { bar: '#616A63', text: '#5A625A', wash: 'rgba(97, 106, 99, 0.12)' },
   opinion: { bar: '#4A7A6F', text: '#3F6B60', wash: 'rgba(74, 122, 111, 0.12)' },
 };
 

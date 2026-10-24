@@ -10,6 +10,7 @@ import { CategoryIcon } from './category-icon';
 import { CATALOG_BY_SLUG, CATALOG_INDEX } from '@/lib/catalog-index';
 import { navCategories, navFeatured, navHotCategories } from '@/lib/nav';
 import { searchIndex } from '@/lib/search';
+import { searchReason } from '@/lib/search-reason';
 import { useBodyScrollLock } from '@/lib/use-body-scroll-lock';
 import { rgb, rgbAlpha } from '@/lib/utils';
 import { asset } from '@/lib/assets';
@@ -46,6 +47,13 @@ export function CommandDialog({
 }) {
   const router = useRouter();
   const [query, setQuery] = useState('');
+  /*
+   * 2026-10-23（task-2 第 4 条）复核：背景滚动锁**已经**接在这里了，走的是
+   * `lib/use-body-scroll-lock.ts` 的共用实现 —— 它用 `overflow: hidden` 而不是
+   * `position: fixed`（后者在 iOS 上会让页面跳回顶部）；用引用计数而不是布尔，
+   * 因为搜索面板可以叠在移动抽屉上打开，先关的那个不能把后关的锁解开；
+   * 关掉时把 `body.style.overflow` 还原成打开前的原值。这里不重复实现。
+   */
   useBodyScrollLock(open);
 
   useEffect(() => {
@@ -106,6 +114,26 @@ export function CommandDialog({
 
   const trimmed = query.trim();
   const toolResults = useMemo(() => searchIndex(CATALOG_INDEX, query, 30), [query]);
+
+  /**
+   * 命中依据的「解释力」：同一句话在结果里出现太多次就说明它不区分工具。
+   *
+   * 实测（2026-10-23）：搜「小红书」时前 5 条全是「因为命中关键词」——读者
+   * 看完仍然不知道它们彼此有什么不同，还把本来能区分工具的简介挤掉了。
+   * 所以这里统计每个依据在**本次结果集**里出现几次，超过一半的视为噪音，
+   * 那些行退回简介。
+   */
+  const reasonNoise = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const h of toolResults) {
+      const line = searchReason(h, trimmed).line;
+      if (line) counts.set(line, (counts.get(line) ?? 0) + 1);
+    }
+    const threshold = Math.max(3, Math.ceil(toolResults.length / 2));
+    const noisy = new Set<string>();
+    for (const [line, n] of counts) if (n >= threshold) noisy.add(line);
+    return noisy;
+  }, [toolResults, trimmed]);
   const catResults = useMemo(() => {
     const q = trimmed.toLowerCase();
     if (!q) return navHotCategories.slice(0, 8);
@@ -146,13 +174,19 @@ export function CommandDialog({
               onValueChange={setQuery}
               placeholder="搜索 AI 工具、分类，或直接说你想做什么…"
               aria-label="搜索 AI 工具"
-              className="h-12 w-full rounded bg-transparent text-base outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring md:text-sm"
+              // `text-base md:text-sm`：16px 是 iOS Safari 聚焦时**不**强制放大
+              // 页面的阈值（<16px 会让整页跳一下），桌面端再回到 14px。
+              // 2026-10-23（task-2 第 6 条）：焦点环从 1px 提到 2px 并用
+              // `ring-ring`（品牌深绿），与全站其余可交互元素同档。
+              className="h-12 w-full rounded bg-transparent text-base outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring md:text-sm"
             />
             <button
               type="button"
               onClick={() => onOpenChange(false)}
               aria-label="关闭"
-              className="rounded-md p-1 text-muted-foreground hover:bg-foreground/5 focus-visible:ring-1 focus-visible:ring-ring"
+              // 原先只有 `focus-visible:ring-1` 且没有 `outline-none`：
+              // 键盘聚焦时会同时出现一条浏览器默认蓝外框和一圈绿环。
+              className="rounded-md p-1 text-muted-foreground hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -213,9 +247,25 @@ export function CommandDialog({
                         className="h-7 w-7 shrink-0 rounded-md border border-border object-contain p-0.5"
                       />
                       <span className="min-w-0 flex-1 truncate font-medium">{t.n}</span>
-                      <span className="max-w-[55%] truncate text-xs text-muted-foreground">
-                        {t.d}
-                      </span>
+                      {/* 右侧优先给「为什么它出现」：命中词 + 字段。没有命中依据
+                          （比如只有推荐列表里的条目）才退回简介 —— 简介在搜索结果
+                          里几乎每行都一样长，读者扫不出区别；命中词能解释排序。 */}
+                      {(() => {
+                        const reason = searchReason(h, trimmed);
+                        // 整列重复的依据没有解释力（见 reasonNoise 的注释），退回简介。
+                        const showReason = reason.line !== '' && !reasonNoise.has(reason.line);
+                        return (
+                          <span
+                            className={
+                              showReason
+                                ? 'max-w-[55%] shrink-0 truncate text-[11.5px] text-gongke-accent'
+                                : 'max-w-[55%] truncate text-xs text-muted-foreground'
+                            }
+                          >
+                            {showReason ? reason.line : t.d}
+                          </span>
+                        );
+                      })()}
                     </Command.Item>
                   );
                 })}

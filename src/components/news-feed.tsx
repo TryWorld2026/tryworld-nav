@@ -308,18 +308,26 @@ export function NewsFeed({
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="搜索标题、来源、摘要…"
                 aria-label="搜索资讯"
-                // `text-base sm:text-sm` 而不是写死 `text-sm`：iOS Safari 在
+                // `text-base md:text-sm` 而不是写死 `text-sm`：iOS Safari 在
                 // 聚焦 font-size < 16px 的输入框时会强制放大整个页面，用户
                 // 一按搜索框页面就跳一下、退出时还停在放大状态。16px 是那条
-                // 阈值，桌面端再用回 14px。`/tools` 的搜索框同一条规则。
-                className="h-11 w-full rounded-full border border-foreground/10 bg-card pl-10 pr-20 text-base outline-none transition-all duration-200 placeholder:text-muted-foreground focus:border-gongke-accent/40 focus:ring-2 focus:ring-gongke-accent/15 sm:text-sm"
+                // 阈值，桌面端（≥768）再用回 14px。`/tools` 的搜索框同一条规则。
+                //
+                // 2026-10-23（task-2 第 3 条）：断点从 `sm:`(640) 改成
+                // `md:`(768)。640–767 正好是 iPad 竖屏与横屏，iOS 在平板上
+                // 同样会缩放 —— 旧写法在这两个宽度上仍是 14px，等于漏了。
+                //
+                // 焦点环：原来只有 `focus:ring-2 focus:ring-gongke-accent/15`
+                // （15% 透明度绿，对卡片底约 1.1:1，1.4.11 要求 3:1），
+                // 换成 `focus-visible:ring-2 ring-ring`（深绿，7.94:1）。
+                className="h-11 w-full rounded-full border border-foreground/10 bg-card pl-10 pr-20 text-base outline-none transition-all duration-200 placeholder:text-muted-foreground focus:border-gongke-accent/40 focus-visible:ring-2 focus-visible:ring-ring md:text-sm"
               />
               <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-1">
                 {query && (
                   <button
                     onClick={() => setQuery('')}
                     aria-label="清空搜索"
-                    className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+                    className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <X className="h-3.5 w-3.5" aria-hidden="true" />
                   </button>
@@ -330,11 +338,16 @@ export function NewsFeed({
               </div>
             </div>
 
+            {/* 手机上「筛选」两个字被 `hidden sm:inline` 藏起来了，图标本身
+                是 aria-hidden —— 于是这个按钮在 <640px 没有任何可访问名称
+                （axe 的 button-name 会报）。桌面端有可见文字，屏幕阅读器读
+                aria-label 也一致，所以常驻即可。 */}
             <button
               type="button"
               onClick={() => setFiltersOpen((v) => !v)}
               aria-expanded={filtersOpen}
-              className={`inline-flex h-11 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-sm font-medium transition-all duration-200 active:scale-95 ${
+              aria-label="筛选资讯"
+              className={`inline-flex h-11 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-sm font-medium transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 filtersOpen || cats.length || source || range !== 'all'
                   ? 'border-gongke-accent/30 bg-gongke-accent/10 text-gongke-accent'
                   : 'border-foreground/10 bg-card text-foreground/70 hover:border-foreground/20'
@@ -358,7 +371,7 @@ export function NewsFeed({
               {hasFilter && (
                 <button
                   onClick={reset}
-                  className="rounded-full border border-foreground/10 px-2.5 py-1 text-xs text-foreground/70 transition-colors hover:border-foreground/20 hover:text-foreground"
+                  className="rounded-full border border-foreground/10 px-2.5 py-1 text-xs text-foreground/70 transition-colors hover:border-foreground/20 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   重置筛选
                 </button>
@@ -375,7 +388,7 @@ export function NewsFeed({
                   key={r.id}
                   onClick={() => setRange(r.id)}
                   aria-pressed={on}
-                  className={`inline-flex min-h-11 shrink-0 items-center justify-center rounded-full px-3.5 text-[13px] font-medium transition-all duration-200 active:scale-95 sm:min-h-0 sm:px-3 sm:py-1 sm:text-xs ${
+                  className={`inline-flex min-h-11 shrink-0 items-center justify-center rounded-full px-3.5 text-[13px] font-medium transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-0 sm:px-3 sm:py-1 sm:text-xs ${
                     on
                       ? 'bg-foreground text-background'
                       : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground'
@@ -400,7 +413,7 @@ export function NewsFeed({
             {hasFilter && (
               <button
                 onClick={reset}
-                className="ml-auto shrink-0 rounded-full px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground sm:hidden"
+                className="ml-auto shrink-0 rounded-full px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:hidden"
               >
                 重置
               </button>
@@ -426,8 +439,16 @@ export function NewsFeed({
                         // 手机上 34px 高的 chip 点起来发飘（面板里一次要连点
                         // 好几个分类），`max-sm:py-2.5` 提到 38px；桌面保持
                         // 紧凑，26 个分类才排得下两行。
-                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 max-sm:py-2.5 text-xs transition-all duration-150 active:scale-95 ${
-                          on ? 'border-transparent font-medium' : 'border-foreground/10 text-foreground/65 hover:border-foreground/20'
+                        //
+                        // 2026-10-23（task-2 第 2/6 条）：
+                        //   · 未选中文字 `/65`（4.80:1）→ `/70`（5.63:1），
+                        //     计数从 `opacity-60` 改成 `text-muted-foreground`。
+                        //     原先两层 alpha 相乘（0.65 × 0.6 = 0.39）只有
+                        //     **2.31:1**，比报告里的 11px 摘要还低；现在
+                        //     5.21:1（选中态叠在分类 wash 上最差 4.60:1）。
+                        //   · 补 `focus-visible` 环：这一排原来只有浏览器默认蓝。
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 max-sm:py-2.5 text-xs transition-all duration-150 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                          on ? 'border-transparent font-medium' : 'border-foreground/10 text-foreground/70 hover:border-foreground/20'
                         }`}
                         style={
                           on
@@ -441,7 +462,7 @@ export function NewsFeed({
                           aria-hidden="true"
                         />
                         {f.label}
-                        <span className="tabular-nums opacity-60">{f.count}</span>
+                        <span className="tabular-nums text-muted-foreground">{f.count}</span>
                       </button>
                     );
                   })}
@@ -460,14 +481,23 @@ export function NewsFeed({
                         key={s.name}
                         onClick={() => setSource(on ? '' : s.name)}
                         aria-pressed={on}
-                        className={`max-w-full truncate rounded-full border px-2.5 py-1 max-sm:py-2 text-xs transition-all duration-150 active:scale-95 ${
+                        // 与分类 chip 同一条修补（2026-10-23）：计数去掉
+                        // `opacity-60`（合成后 2.31:1）改 `text-muted-foreground`
+                        // （5.21:1），未选中文字 `/65` → `/70`，并补焦点环。
+                        className={`max-w-full truncate rounded-full border px-2.5 py-1 max-sm:py-2 text-xs transition-all duration-150 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                           on
                             ? 'border-gongke-accent bg-gongke-accent text-white'
-                            : 'border-foreground/10 text-foreground/65 hover:border-foreground/20'
+                            : 'border-foreground/10 text-foreground/70 hover:border-foreground/20'
                         }`}
                       >
                         {s.name}
-                        <span className="ml-1 tabular-nums opacity-60">{s.count}</span>
+                        {/* 选中态底是实心品牌绿 → 计数必须走白字（`text-white/80`
+                            约 5.4:1）；未选中才用 muted（5.21:1）。 */}
+                        <span
+                          className={`ml-1 tabular-nums ${on ? 'text-white/80' : 'text-muted-foreground'}`}
+                        >
+                          {s.count}
+                        </span>
                       </button>
                     );
                   })}
@@ -504,7 +534,7 @@ export function NewsFeed({
             {hasFilter && (
               <button
                 onClick={reset}
-                className="mt-4 rounded-full bg-gongke-accent px-4 py-1.5 text-xs font-medium text-white transition-all duration-200 hover:bg-gongke-accent/90 active:scale-95"
+                className="mt-4 rounded-full bg-gongke-accent px-4 py-1.5 text-xs font-medium text-white transition-all duration-200 hover:bg-gongke-accent/90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 清除全部筛选
               </button>
@@ -564,7 +594,7 @@ export function NewsFeed({
           <div className="mt-8 flex justify-center">
             <button
               onClick={() => setLimit((l) => l + PAGE)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-card px-5 py-2.5 text-sm font-medium text-foreground/75 transition-all duration-200 hover:-translate-y-0.5 hover:border-gongke-accent/30 hover:text-foreground hover:shadow-md active:translate-y-0 active:scale-[0.98]"
+              className="inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-card px-5 py-2.5 text-sm font-medium text-foreground/75 transition-all duration-200 hover:-translate-y-0.5 hover:border-gongke-accent/30 hover:text-foreground hover:shadow-md active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <ChevronDown className="h-4 w-4" aria-hidden="true" />
               加载更多（还有 {filtered.length - visibleCount} 条）
@@ -581,7 +611,7 @@ export function NewsFeed({
             href="https://aihot.news"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-6 items-center underline decoration-foreground/20 underline-offset-2 hover:text-foreground"
+            className="inline-flex min-h-6 items-center rounded-sm underline decoration-foreground/20 underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             AIHOT
           </a>
@@ -648,7 +678,7 @@ function NewsCard({
             href={item.originalUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="line-clamp-2 after:absolute after:inset-0 after:content-['']"
+            className="line-clamp-2 rounded-sm after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <HeadlineText text={item.title} />
           </a>
@@ -677,7 +707,7 @@ function NewsCard({
               <Link prefetch={false}
                 key={t.slug}
                 href={`/tools/${t.slug}`}
-                className="inline-flex items-center gap-1 rounded-md border border-foreground/10 bg-foreground/[0.02] px-1.5 py-0.5 text-[11px] text-foreground/70 transition-colors hover:border-gongke-accent/30 hover:text-gongke-accent"
+                className="inline-flex items-center gap-1 rounded-md border border-foreground/10 bg-foreground/[0.02] px-1.5 py-0.5 text-[11px] text-foreground/70 transition-colors hover:border-gongke-accent/30 hover:text-gongke-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -705,7 +735,7 @@ function NewsCard({
               href={item.aihotUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative z-10 ml-auto inline-flex min-h-6 items-center gap-0.5 rounded-full px-1.5 py-1.5 transition-colors hover:bg-foreground/5 hover:text-foreground"
+              className="relative z-10 ml-auto inline-flex min-h-6 items-center gap-0.5 rounded-full px-1.5 py-1.5 transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               AIHOT 条目
             </a>

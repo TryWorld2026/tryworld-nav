@@ -550,4 +550,115 @@ describe('桌面端交互', () => {
     }
   });
 
+  /**
+   * 决策 → 工具栈：/decide 的三个候选必须能一次存进本机收藏。
+   *
+   * 这一步没有服务端参与，全部落在 localStorage；断言的正是「点一下之后
+   * 三个 slug 真的在 store 里」，以及页面给出可读的反馈（不是静默）。
+   * 它还守着一条容易复发的错：如果把批量收藏改成 toggleFavorite 的语义，
+   * 已收藏的那一个会被**取消**，added 数就从 3 变成 2。
+   */
+  test('/decide 的三个候选能一次加进工具栈', async (t) => {
+    if (!ready(t)) return;
+    const { browser, page, errors } = await openPage({ width: 1440, height: 900 }, false);
+    try {
+      await page.goto(BASE + '/decide?task=video', { waitUntil: 'domcontentloaded' });
+      await waitHydrated(page);
+      await page.waitForTimeout(1200);
+
+      const picks = await page.locator('[data-testid^=decide-pick-] h3').count();
+      assert.equal(picks, 3, '「做视频」场景应给出 3 个候选');
+
+      await page.locator('button:has-text("把这三个加进我的工具栈")').click();
+      await page.waitForTimeout(600);
+
+      const slugs = await page.evaluate(() => {
+        const raw = window.localStorage.getItem('tryworld:favorites');
+        if (!raw) return [];
+        const data = JSON.parse(raw);
+        return (data.items || []).map((i) => i.slug);
+      });
+      assert.equal(slugs.length, 3, `应存下 3 个，实际 ${slugs.join(',')}`);
+
+      const status = await page.locator('[role=status]').first().innerText();
+      assert.match(status, /已加进工具栈/, '应有可见反馈，而不是静默写入');
+
+      assert.deepEqual(realErrors(errors), [], '加进工具栈的过程不应有 console 错误');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  /**
+   * 分享链接 → 收件人一键收进自己的收藏。
+   *
+   * 这是「分享」这件事的产品断言：链路不是「复制一条链接」就结束，而是
+   * 收件人打开后能把这几个工具变成自己的。静态站没有服务端，所以这里
+   * 同时证明了「链接即状态」在真实浏览器里成立。
+   */
+  test('/stack 的分享链接能一键收进本机收藏', async (t) => {
+    if (!ready(t)) return;
+    const { browser, page, errors } = await openPage({ width: 1440, height: 900 }, false);
+    try {
+      await page.goto(BASE + '/stack?ids=lovart-ai,cursor,midjourney', {
+        waitUntil: 'domcontentloaded',
+      });
+      await waitHydrated(page);
+      await page.waitForTimeout(1200);
+
+      const cards = await page.locator('a[href^="/tools/"]').count();
+      assert.ok(cards >= 3, `分享页应渲染 3 个工具，实际 ${cards}`);
+
+      await page.locator('button:has-text("保存这 3 个到我的收藏")').click();
+      await page.waitForTimeout(700);
+
+      await page.goto(BASE + '/favorites', { waitUntil: 'domcontentloaded' });
+      await waitHydrated(page);
+      await page.waitForTimeout(1200);
+
+      const body = await page.evaluate(() => document.body.innerText);
+      assert.ok(/共\s*3\s*个收藏/.test(body), '收藏页应显示 3 个收藏');
+      assert.ok(body.includes('Lovart'), '收藏页应出现分享链接里的工具');
+
+      assert.deepEqual(realErrors(errors), [], '导入过程不应有 console 错误');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  /**
+   * 分享 2 个工具 → 收件人第一眼看到对比表。
+   *
+   * 「这两个该选哪个」是最常见的分享动机，所以 2–4 个时必须直接给对比表，
+   * 而不是两张要来回看的卡。这条同时守着「表只有一处实现」：`/favorites`
+   * 与 `/stack` 用的是同一个组件，行序必须还是那九行。
+   */
+  test('/stack 分享 2 个工具时直接给并排对比表', async (t) => {
+    if (!ready(t)) return;
+    const { browser, page, errors } = await openPage({ width: 1440, height: 900 }, false);
+    try {
+      await page.goto(BASE + '/stack?ids=lovart-ai,cursor', { waitUntil: 'domcontentloaded' });
+      await waitHydrated(page);
+      await page.waitForTimeout(1200);
+
+      const table = page.locator('table');
+      assert.equal(await table.count(), 1, '两个工具时应有且仅有一张对比表');
+
+      // 九行固定顺序：读第一列的项目名，逐项比对
+      const labels = await page.locator('tbody th').allInnerTexts();
+      assert.deepEqual(
+        labels.map((x) => x.trim()),
+        ['分类', '价格档', '免费额度', '起价', '平台', '最近收录更新', '编辑判断·适合', '编辑判断·不适合', '与同类差异'],
+        '对比表行序必须固定（换了对比对象，眼睛还在同一行）',
+      );
+
+      const heading = await page.locator('h1').innerText();
+      assert.match(heading, /分享/, '仍应是分享落地页');
+
+      assert.deepEqual(realErrors(errors), [], '分享页不应有 console 错误');
+    } finally {
+      await browser.close();
+    }
+  });
+
 });

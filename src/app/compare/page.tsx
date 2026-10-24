@@ -80,7 +80,7 @@ export default function CompareIndexPage() {
         这份清单不是手挑的：它按「读者关心度」从目录数据算出来 —— 首页常用推荐、
         被编辑集合收录、以及两边都写过判断的工具排在前，并且只取**同分类**的组合
         （跨分类的二选一对读者没有意义）。想让我们补上某一对，可在
-        <Link prefetch={false} href="/about" className="mx-1 text-gongke-accent hover:underline">
+        <Link prefetch={false} href="/about" className="mx-1 text-gongke-accent underline underline-offset-2 hover:text-gongke-accent/80">
           关于我们
         </Link>
         页找到反馈方式。

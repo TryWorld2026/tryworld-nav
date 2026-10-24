@@ -242,6 +242,11 @@ export function ToolMiniCard({
    *
    * 排版顺序按「读者最想先知道的」排：价格 → 平台 → 新鲜度。
    * 三者都没有时这一行整块不渲染（不是渲染一个空 div）。
+   *
+   * 2026-10-23 复查（task-2 第 5 条）：这一行是 11px + `text-gongke-muted`，
+   * 实测对卡片底 **5.31:1**（`work/_contrast.mjs`），已在 AA 的 4.5:1 之上，
+   * 所以字号与颜色**刻意不动** —— 卡片是 15/13/11 三档，meta 提到 12px 或
+   * 加粗就与描述同级，「描述 → 可比较的事实」的层级会塌掉。
    */
   const meta = (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] leading-none text-gongke-muted">
@@ -401,12 +406,39 @@ export function ToolMiniCard({
 export function ToolRowCard({ tool }: { tool: CardTool }) {
   const price = priceShortLabel(tool.price);
 
+  /*
+   * 2026-10-23 工艺修补（task-2）。三处，全是样式类，DOM 与 props 未动：
+   *
+   *   1. **名字改成两行**（原 `line-clamp-1`）。这条 rail 在 1440 宽下每格只有
+   *      164px：右栏内宽 344（rail 容器 1216 / 3 列 − 列距）− 卡片 p-5 40 −
+   *      两列 gap-x-4 16，再 ÷2。扣掉 32px 图标、6px 间距与价格，14px 的名字
+   *      只剩 70–80px ≈ 8–10 个字符 —— 实测渲染成 `Microso…`、`Upscale.n`。
+   *      改 `line-clamp-2` + `leading-snug`（14px × 1.375 = 19.25px）后
+   *      `Chatbase`、`Microsoft Copilot` 都能完整读到；短名仍占一行，卡片
+   *      高度只在长名处增加。
+   *
+   *   2. **价格降级成 12px 纯文本**（原 10px 胶囊：border + 7% 底色 + px-1）。
+   *      这两条 rail 是 10 + 10 行，而 2081 条里 83% 是 freemium，于是
+   *      「免费额度」在右栏重复 8 次以上 —— 一排实心底块比名字还抢眼。
+   *      去掉边框与底色后信息不丢，字号反而从 10px 提到 12px：
+   *      付费 #B54826 on 卡片 4.73:1 → **5.08:1**；免费/开源/免费额度
+   *      text-gongke-muted **5.31:1**（旧绿徽章 7.11:1）。数字见
+   *      `work/_contrast.mjs`。
+   *
+   *   3. **补焦点环**：这个 `<Link>` 原先没有任何 `focus-visible` 样式，
+   *      键盘走进右栏 20 行只剩浏览器默认蓝。现在与全站一致用 `ring-ring`
+   *      （深绿，对卡片底 7.94:1、对纸底 7.29:1，远高于 1.4.11 的 3:1）。
+   */
   return (
     // 这个行卡在工具页右栏出现 **两处 × 10 行**（类似工具 / 最新收录），
     // 所以一个工具详情页一打开就有 20 条视口内的链接在请求 RSC payload ——
     // 那不是「预取下一屏」，而是把右栏二十个页面的 2 MB 预取塞进出站队列，
     // 与截图、字体抢同一条连接。见 ToolMiniCard 上的同一条注释。
-    <Link href={`/tools/${tool.slug}`} prefetch={false}>
+    <Link
+      href={`/tools/${tool.slug}`}
+      prefetch={false}
+      className="block rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
       <div className="flex items-center group border-b border-muted border-dashed py-1">
         <div className="w-8 h-8 rounded-md mr-1 flex items-center justify-center overflow-hidden">
           {tool.icon ? (
@@ -429,15 +461,13 @@ export function ToolRowCard({ tool }: { tool: CardTool }) {
             </span>
           )}
         </div>
-        <span className="min-w-0 flex-1 group-hover:text-gongke-accent transition-colors text-sm text-neutral-600 line-clamp-1">
+        <span className="min-w-0 flex-1 line-clamp-2 text-sm leading-snug text-neutral-600 group-hover:text-gongke-accent transition-colors">
           {tool.name}
         </span>
         {price && (
           <span
-            className={`ml-1.5 shrink-0 rounded border px-1 py-px text-[10px] font-medium ${
-              price === '付费'
-                ? 'border-[#B54826]/25 bg-[#F2693C]/[0.07] text-[#B54826]'
-                : 'border-gongke-accent/25 bg-gongke-accent/[0.07] text-gongke-accent'
+            className={`ml-2 shrink-0 text-[12px] ${
+              price === '付费' ? 'font-medium text-[#B54826]' : 'text-gongke-muted'
             }`}
           >
             {price}

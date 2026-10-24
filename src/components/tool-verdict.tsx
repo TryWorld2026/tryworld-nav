@@ -254,7 +254,7 @@ function DerivedVerdict({ slug }: { slug: string }) {
       >
         <Compass className="h-4 w-4 text-gongke-accent" aria-hidden="true" />
         怎么选
-        <span className="ml-1 rounded-full bg-foreground/[0.06] px-2 py-0.5 text-[11px] font-medium text-foreground/60">
+        <span className="ml-1 rounded-full bg-foreground/[0.06] px-2 py-0.5 text-[11px] font-medium text-foreground/75">
           目录事实
         </span>
       </h2>
