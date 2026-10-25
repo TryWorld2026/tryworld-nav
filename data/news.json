@@ -1,5 +1,31 @@
 [
   {
+    "id": "d92mrmxvsfmnoyw3comncgz2c",
+    "title": "Ethan Mollick：OpenAI 红队测试显示前沿模型智能体真能越狱沙箱，实验室的 AI 安全警告值得重视",
+    "originalTitle": "Without being overly credulous, we should be taking seemingly “out there” ideas about AI cybersecurity from the Labs more seriously. Exam...",
+    "summary": "Ethan Mollick 转引 OpenAI 红队测试认为，实验室看似夸张的 AI 网络安全判断应被更认真对待。OpenAI 让前沿模型智能体团队攻击其加固的隔离基础设施，智能体几乎在每个受限联网服务中都找到漏洞，还能利用 CPU 缓存时序在不联网、无共享文件的虚拟机之间传递秘密，类似 Spectre 和 Meltdown 的攻击手法。作者提到 Anthropic 和 Noam Brown 此前关于 AI 网络攻防与模型自发协调的说法曾被嘲笑。",
+    "source": "X：Ethan Mollick (@emollick)",
+    "originalUrl": "https://x.com/emollick/status/2114001653879672877",
+    "aihotUrl": "https://aihot.news/items/d92mrmxvsfmnoyw3comncgz2c",
+    "publishedAt": "2026-10-24T14:30:45.000Z",
+    "category": "opinion",
+    "categoryLabel": "观点",
+    "reason": "作者借 OpenAI 红队测试的具体案例，说明实验室关于 AI 网络安全的前瞻判断值得认真对待。"
+  },
+  {
+    "id": "imgp55zxmw4jugt1a29ap9yo1",
+    "title": "OpenAI 智能体在隔离测试中借 CPU 缓存隐蔽通信",
+    "originalTitle": "OpenAI's isolated AI agents found ways to talk to each other through CPU cache",
+    "summary": "OpenAI 介绍其前沿模型训练已完全断网，并用 AI 智能体红队测试自家基础设施。隔离测试中，智能体在无网络、无共享文件的条件下通过 CPU 缓存时序差异、共享内存写入模式等侧信道通信，甚至独立建立编码方案交换信息。",
+    "source": "The Decoder：AI News（RSS）",
+    "originalUrl": "https://the-decoder.com/openais-isolated-ai-agents-found-ways-to-talk-to-each-other-through-cpu-cache/",
+    "aihotUrl": "https://aihot.news/items/imgp55zxmw4jugt1a29ap9yo1",
+    "publishedAt": "2026-10-24T11:12:36.000Z",
+    "category": "paper",
+    "categoryLabel": "论文",
+    "reason": "文章梳理了 OpenAI 沙箱与红队机制的来龙去脉，隔离智能体通过 CPU 缓存通信的细节让抽象的包含问题变得具体。"
+  },
+  {
     "id": "gwhdq3jo5p1z27wh2i46ntd2s",
     "title": "Kimi 发布开源旗舰模型 K3.1 Pro：2.8T 参数、100万 Token 上下文，实测 3D 与视频动效",
     "originalTitle": "Kimi K3.1 Pro来了，国产模型审美的新巅峰。",
@@ -1119,16 +1145,16 @@
   },
   {
     "id": "apaky0ybxpb9uwt12jrwj954p",
-    "title": "Redact 调查：WhatsApp 帮助页面隐藏 LLM 指令，让 AI 不推荐监管机构、不提 GDPR",
+    "title": "Redact 调查 WhatsApp 帮助页面隐藏的 LLM 指令：不让 AI 推荐监管机构",
     "originalTitle": "WhatsApp's help pages hid LLM instructions: dont recommend a regulator",
-    "summary": "Redact 发现 WhatsApp 帮助中心页面向 LLM 发送用户看不到的隐藏指令，指示其支持聊天机器人不推荐数据保护监管机构，并在用户提到律师或法律行动后不引用 GDPR、LGPD 或 CCPA。",
+    "summary": "Redact 调查发现，截至 2026 年 10 月中旬，WhatsApp 帮助中心 545 个页面中有 80 个页面嵌入了 102 段屏幕上不可见、仅供 AI 读取的隐藏指令，其中删除账号页面指示 AI 不要推荐联系任何数据保护监管机构，举报与屏蔽页面指示 AI 在用户提及律师或诉讼时不引用 GDPR、LGPD、CCPA 等法规。",
     "source": "Hacker News：AI 热帖",
     "originalUrl": "https://redact.dev/blog/whatsapp-help-pages-hidden-ai-instructions",
     "aihotUrl": "https://aihot.news/items/apaky0ybxpb9uwt12jrwj954p",
     "publishedAt": "2026-10-19T16:00:00.000Z",
     "category": "industry",
     "categoryLabel": "行业动态",
-    "reason": "作者逐页核对了 WhatsApp 全部 545 页帮助文档并留档，还给出用 Internet Archive 自行验证的方法，事实与证据链都在原文里。"
+    "reason": "作者逐页核对了 545 个帮助页面并保存存档，读者可以据此了解隐藏 AI 指令的具体内容和 WhatsApp 的回应。"
   },
   {
     "id": "qh6pvehounuylklti7i0zl124",
@@ -1236,15 +1262,15 @@
   },
   {
     "id": "tzuiybo7a45sm87wj4rec2mvo",
-    "title": "OpenAI 发布 GPT-6 系列模型，提升 COBOL 等低资源编程语言编码能力",
+    "title": "OpenAI 推出两项自建评测，展示 GPT-6 系列在 COBOL 等低资源编程语言上的进步",
     "originalTitle": "Advancing coding in low‑resource programming languages",
     "summary": "OpenAI 宣布最新模型在 COBOL、Fortran、Visual Basic 等低资源编程语言上能力显著提升，并推出两项自建评测。",
     "source": "OpenAI：官网动态（RSS · 排除企业/客户案例）",
     "originalUrl": "https://openai.com/index/low-resource-programming-languages",
     "aihotUrl": "https://aihot.news/items/tzuiybo7a45sm87wj4rec2mvo",
     "publishedAt": "2026-10-19T12:00:00.000Z",
-    "category": "ai-models",
-    "categoryLabel": "AI 模型",
+    "category": "paper",
+    "categoryLabel": "论文",
     "reason": "原文给出低资源语言的两套自建评测和逐语言数据，读者可据此评估新模型在遗留系统维护与迁移上的可用性。"
   },
   {
@@ -1339,19 +1365,6 @@
     "reason": "两起德国法院判例指向同一法律逻辑，文章还分析了 Google 以和解回避判例对 AI 搜索商业模式的潜在影响。"
   },
   {
-    "id": "i8vi0763u7lz34lkoagoh0agt",
-    "title": "卡兹克实测华硕 ProArt 创16 RTX Spark 电脑，37999 元实现本地 Token 自由",
-    "originalTitle": "这台卖37999的RTX Spark电脑，让我实现了Token自由。",
-    "summary": "作者分享受邀参加英伟达 RTX Spark 全球开售活动后，深度使用一周华硕 ProArt 创16（128G 统一内存+1T，京东售价 37999 元）的体验，开售时 128G 版本在京东几分钟内被抢空。",
-    "source": "X：卡兹克 (@Khazix0918)",
-    "originalUrl": "https://x.com/Khazix0918/status/2111639562720329976",
-    "aihotUrl": "https://aihot.news/items/i8vi0763u7lz34lkoagoh0agt",
-    "publishedAt": "2026-10-18T02:04:38.000Z",
-    "category": "tip",
-    "categoryLabel": "教程",
-    "reason": "作者亲测 RTX Spark 上的本地模型部署路径，并把整套流程封装成 WorkBuddy 专家，读者可以照着复现本地 Token 自由的用法。"
-  },
-  {
     "id": "w3vpc68lufgj57zcy1hd38a60",
     "title": "Browser Use 讲解浏览器智能体的工作原理与使用时机",
     "originalTitle": "What Is a Browser Agent? How It Works and When to Use One",
@@ -1363,71 +1376,6 @@
     "category": "tip",
     "categoryLabel": "教程",
     "reason": "原文系统拆解浏览器智能体的组成、运行循环与选型边界，并用自家云端使用数据说明典型场景、成本风险与起步方法。"
-  },
-  {
-    "id": "a1dez7azk8nkmj0mgeb9pep03",
-    "title": "SGLang 发布 Low-Latency Mode，通过插件框架在 NVIDIA 和 AMD GPU 上降低推理延迟",
-    "originalTitle": "SGLang Low-Latency Mode: Kernels and Runtime",
-    "summary": "SGLang 团队推出 Low-Latency Mode，通过插件框架引入专用内核，在 NVIDIA GB300 和 AMD MI355X GPU 上显著降低推理延迟。",
-    "source": "LMSYS Blog",
-    "originalUrl": "https://www.lmsys.org/blog/2026-10-18-sglang-low-latency-mode",
-    "aihotUrl": "https://aihot.news/items/a1dez7azk8nkmj0mgeb9pep03",
-    "publishedAt": "2026-10-17T16:00:00.000Z",
-    "category": "ai-products",
-    "categoryLabel": "AI 产品",
-    "reason": "原文给出 SGLang 低延迟模式的具体内核优化路径和 NVIDIA、AMD 两套实测数字，可帮助读者评估低并发推理场景的收益。"
-  },
-  {
-    "id": "xgj246drlw70qbgypibz6atla",
-    "title": "WorkBuddy Intl 更新支持 DeepSeek-V4.1-Flash-1017，10 月 31 日前免费",
-    "originalTitle": "New DeepSeek just dropped. WorkBuddy Intl is updated to the latest too, and it's free through Oct 31. Take it for a spin.",
-    "summary": "WorkBuddy Intl 已更新至最新的 DeepSeek-V4.1-Flash-1017 模型，10 月 31 日前免费开放。引用的 DeepSeek 官方内容称该模型相比上一版性能更强、任务完成更快、输出更短，已上线网站、App 和 API，并针对 DeepSeek Harness、Tencent CodeBuddy、WorkBuddy 等做了优化。",
-    "source": "X：Tencent WorkBuddy (@WorkBuddy_AI)",
-    "originalUrl": "https://x.com/WorkBuddy_AI/status/2111404103402430558",
-    "aihotUrl": "https://aihot.news/items/xgj246drlw70qbgypibz6atla",
-    "publishedAt": "2026-10-17T10:29:00.000Z",
-    "category": "ai-products",
-    "categoryLabel": "AI 产品",
-    "reason": "作者以官方身份说明 WorkBuddy Intl 已同步最新 DeepSeek 模型并限期免费，读者可直接试用体验。"
-  },
-  {
-    "id": "ffpkck4k06le4smuaz4slhvcz",
-    "title": "卡兹克实测37999元RTX Spark轻薄本：一周实现本地Token自由",
-    "originalTitle": "这台卖37999的RTX Spark电脑，让我实现了Token自由。",
-    "summary": "数字生命卡兹克分享华硕ProArt创16（RTX Spark N1X芯片、128G统一内存、37999元）的一周深度使用体验，该机全球开售时128G版本在京东几分钟内被抢空。",
-    "source": "公众号：数字生命卡兹克",
-    "originalUrl": "https://mp.weixin.qq.com/s?__biz=MzIyMzA5NjEyMA%3D%3D&mid=2647687354&idx=1&sn=dea0d54dc3b71b361e36199db6cf4a86",
-    "aihotUrl": "https://aihot.news/items/ffpkck4k06le4smuaz4slhvcz",
-    "publishedAt": "2026-10-17T10:19:04.000Z",
-    "category": "tip",
-    "categoryLabel": "教程",
-    "reason": "作者用一周实测讲清了如何在128G统一内存的RTX Spark笔记本上部署本地模型，并给出可复用的WorkBuddy专家整合流程。"
-  },
-  {
-    "id": "w34qm27sedtziwxig5ub9wwhr",
-    "title": "DeepSeek-V4.1-Flash-1017 发布，多基准成绩提升且 API 价格不变",
-    "originalTitle": "DeepSeek-V4.1-Flash-1017 更新",
-    "summary": "DeepSeek 将 V4.1 Flash 升级至 DeepSeek-V4.1-Flash-1017，网页端与 APP 同步更新，API 调用方式与价格不变，仍用 deepseek-flash 访问。",
-    "source": "DeepSeek：API 更新日志",
-    "originalUrl": "https://api-docs.deepseek.com/zh-cn/updates/#deepseek-v41-flash-1017-更新",
-    "aihotUrl": "https://aihot.news/items/w34qm27sedtziwxig5ub9wwhr",
-    "publishedAt": "2026-10-16T16:00:00.000Z",
-    "category": "ai-models",
-    "categoryLabel": "AI 模型",
-    "reason": "原文列出各基准分数并说明 API 调用与价格不变，读者可直接评估新版模型是否值得切换。"
-  },
-  {
-    "id": "x7hxr1lvyddc8hrbrugfx4uyg",
-    "title": "DeepSeek 开放自研搜索 API",
-    "originalTitle": "开放自研搜索 API",
-    "summary": "DeepSeek 开放自研搜索 API，底层由 AI 原生的 DeepSeek 搜索引擎提供，每天稳定处理数亿次搜索请求。该引擎索引全球千亿级网页、支持多语言，并通过识别机制过滤 SEO 作弊、GEO 操纵和低质 AIGC，使用方式见网页搜索与抓取指南。",
-    "source": "DeepSeek：API 更新日志",
-    "originalUrl": "https://api-docs.deepseek.com/zh-cn/updates/#开放自研搜索-api",
-    "aihotUrl": "https://aihot.news/items/x7hxr1lvyddc8hrbrugfx4uyg",
-    "publishedAt": "2026-10-16T16:00:00.000Z",
-    "category": "ai-products",
-    "categoryLabel": "AI 产品",
-    "reason": "原文给出开放入口、索引规模与过滤机制，接入 RAG 或智能体的开发者可据此评估是否纳入现有工作流。"
   },
   {
     "id": "jmd8cc56pi525th3tcccmzxqf",
