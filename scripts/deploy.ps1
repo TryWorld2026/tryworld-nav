@@ -241,11 +241,34 @@ while ($attempt -lt $MaxAttempts) {
       $lastReport = Get-Date
       $elapsed = [math]::Round($sw.Elapsed.TotalMinutes, 1)
       $cpuNow = if ($null -eq $proc.CPU) { 0 } else { [math]::Round($proc.CPU, 1) }
+      # 状态要看**进度数字**，不能只看尾行：上传失败时 wrangler 反复写
+      # `Asset upload failed. Retrying... N of 5`，尾行永远被它占据 ——
+      # 于是「已经传到 304/2062」这个关键信息看不见，人无法判断该等还是该停
+      # （2026-10-25 部署时就是这样盯了 20 分钟）。
       $tail = ''
       if (Test-Path $outLog) {
-        $last = Get-Content $outLog -Tail 1 -EA SilentlyContinue
-        if ($last) { $tail = ($last -replace '\s+', ' ').Trim() }
-        if ($tail.Length -gt 55) { $tail = $tail.Substring($tail.Length - 55) }
+        $log = Get-Content $outLog -Raw -EA SilentlyContinue
+        if ($log) {
+          $up = [regex]::Matches($log, 'Uploaded (\d+) of (\d+) assets')
+          if ($up.Count -gt 0) {
+            $lastUp = $up[$up.Count - 1]
+            $tail = "上传 $($lastUp.Groups[1].Value)/$($lastUp.Groups[2].Value) 资产"
+          }
+          $rt = [regex]::Matches($log, 'Asset upload failed\. Retrying\.\.\. (\d+) of')
+          if ($rt.Count -gt 0) {
+            $lastRt = $rt[$rt.Count - 1]
+            $tail = "$tail  内部重试至 $($lastRt.Groups[1].Value) 次"
+          }
+          if ($log -match 'Read (\d+) files') {
+            $tail = "$tail  清单 $($Matches[1]) 个文件"
+          }
+          if (-not $tail) {
+            $last = ($log -split "?
+" | Where-Object { $_ -and $_ -notmatch '^\s*$' } | Select-Object -Last 1)
+            if ($last) { $tail = $last.Trim() }
+            if ($tail.Length -gt 55) { $tail = $tail.Substring(0, 55) }
+          }
+        }
       }
       Write-Host "  …已跑 $elapsed 分钟  CPU=${cpuNow}s  $tail" -ForegroundColor DarkGray
     }
