@@ -205,9 +205,17 @@ npx wrangler whoami     # 出现 Account Name 才算真登录
 `scripts/deploy.ps1` 现在第 0 步就查 `wrangler whoami`（在构建**之前**，坏凭据下 6 秒
 就 `exit 2`，不会先白烧 9 分钟构建），并对两种情况分别措辞。
 
-**B 类还会连带影响 CI**：`deploy.yml` 的 secret `CLOUDFLARE_WRANGLER_OAUTH` 是本机这份
-登录文件的历史快照。本机 refresh_token 一旦失效，每天 10:30（北京）的定时部署很可能
-撞同一个错——**重新登录之后记得同步更新那个 secret**，否则本机好了、CI 还是坏的。
+**B 类曾经连带拖垮 CI（2026-10-25 已修）**：原先 `deploy.yml` 的 secret
+`CLOUDFLARE_WRANGLER_OAUTH` 是本机这份登录文件的历史快照，本意是「CI 与本机共用一份凭据」。
+10-25 实测这个前提**是错的**：把 `expiration_time` 改到过去强制刷新一次，
+`refresh_token` 的 md5 立刻从 `124bda58` 变成 `f7e825fa` —— OAuth 的 refresh_token
+**单次有效、刷新即轮换**，本机每刷新一次就把 CI 手里那份作废。于是 CI 报
+`Not logged in. Your auth token has expired and could not be refreshed, and the environment is non-interactive.`，
+deploy 从 10-21 首次运行起一路 FAILURE（10-25 才拿到日志）。
+
+现在 CI 改用 **`CLOUDFLARE_API_TOKEN`**（账号级 API Token，不轮换、权限可只给 Workers），
+`CLOUDFLARE_WRANGLER_OAUTH` 只作为没配 token 时的退路保留。本机仍旧用 `wrangler login`
+的 OAuth 凭据跑 `scripts/deploy.ps1`，两边互不影响。
 
 写匹配判据时的一个坑（同样实测过）：wrangler 的错误输出带 ANSI 颜色码，还会被控制台
 宽度**在单词中间**折断，实测断成 `could not be r` + 换行 + `efreshed`。所以守卫里是
@@ -257,22 +265,36 @@ R2 未开通，所以媒体不进 git、也不放 R2。当前方案：
 1. 本地 `npm run media:backup` 生成 `assets-<日期>.tar.gz`（只含 icons/shots/tags/news）。
 2. 改名为 `assets.tar.gz`，用 `gh release create media-v1 assets.tar.gz` 上传（网页上传也行）。
 3. 仓库变量 `MEDIA_VERSION=media-v1`。
-4. 仓库 Secret `CLOUDFLARE_WRANGLER_OAUTH` = 本机 wrangler 的登录凭据文件
-   （`%APPDATA%/xdg.config/.wrangler/config/default.toml` 全文）。**不需要绑卡**，
-   也不需要去 dashboard 手工创建 API Token。
+4. 仓库 Secret `CLOUDFLARE_API_TOKEN` = 在 dashboard 用「Edit Cloudflare Workers」模板建的
+   账号级 API Token（2026-10-25 起；`CLOUDFLARE_WRANGLER_OAUTH` 只在没配它时才作为退路使用）。
 5. `.github/workflows/deploy.yml` 每天 02:30 UTC（北京时间 10:30）构建并部署；也可手动 `workflow_dispatch`。
 
 workflow 会先用 `actions/cache` 恢复 `public/assets/{icons,shots,tags,news}`，cache miss 时才从 Release 下载约 292 MB（解压后 327 MB）；解包后跑 `npm run media:check` 校验 data 引用的每个文件都存在，再 build、`prune --lean`、部署。媒体变化时发 `media-v2` 并把 `MEDIA_VERSION` 改过去；旧 release 可以删，保留最近一两个即可。
 
-### 为什么用 wrangler 的 OAuth 凭据而不是 API Token
+### 为什么现在用 API Token（2026-10-25 更正）
 
-账号开不了 R2（要绑支付方式），而 API Token 同样只能在 dashboard 手工创建 —— 实测 wrangler 的 OAuth 凭据里**没有「API Tokens: Edit」权限**，调 `/user/tokens/permission_groups` 返回 403，所以没法自动签发一条 token 出来。
+早先这一节写的是「用 wrangler 的 OAuth 凭据而不是 API Token」，理由是「带 refresh_token，
+过期自动续期，CI 与本机可以共用一份」。**这两条实测都站不住**：
 
-但 OAuth 凭据本身就能部署：它的 scope 含 `workers:write` / `workers_scripts:write` / `workers_routes:write`，与 `wrangler deploy` 需要的权限一致；而且**带 refresh_token，过期时 wrangler 会自己续期**。实测把 `expiration_time` 改到过去后跑 `wrangler whoami`，wrangler 刷新并写回配置，同一个 refresh_token 被消费过后仍能再次刷新，所以 CI 与本机可以共用同一份凭据。
+- refresh_token **单次有效、刷新即轮换**：本机刷一次，CI 手里那份立刻作废（见上文 B 类）。
+- 账号确实开不了 R2（要绑支付方式），但**API Token 不需要绑卡**：dashboard →
+  My Profile → API Tokens → Create Token →「Edit Cloudflare Workers」模板，帐户选
+  `TryWorld`、区域选 `tryworld.com.cn`（`Workers 路由: 编辑` 是 `wrangler.toml` 里
+  `custom_domain` 必须的）。OAuth 凭据没有「API Tokens: Edit」，所以这条只能人工建一次，
+  不能自动签发。
 
-**代价要知道**：OAuth 凭据的权限远大于一条只含 Workers 的 API Token（还带 `workers_kv:write`、`d1:write`、`pages:write`、`ssl_certs:write` 等），泄露等于账号相当一部分能力失守。它只存在 GitHub Actions Secrets（公开仓库的 secret 只有写权限者能读，也不会下发给 PR），在 runner 上临时落盘、用完随 runner 销毁。**更严格的做法**是去 dashboard 手工建一条仅含 Workers 权限的 API Token，替换掉这个 secret —— 但那需要绑卡才能自助完成，是当前约束下的一处妥协。
+现在的做法：token 存 GitHub Secret `CLOUDFLARE_API_TOKEN`，workflow 的 job env 注入
+`CLOUDFLARE_API_TOKEN` 与 `CLOUDFLARE_ACCOUNT_ID`；`npm ci` 之后用**锁定版本**的 wrangler
+跑一次 `wrangler whoami` 并**显式判退出码**（旧写法 `npx wrangler whoami 2>&1 | sed -n '1,12p'`
+把失败吃进管道，步骤照样 success，于是凭据坏了要等 8 分钟构建完、在部署步骤才炸）。
 
-CI 上的凭据路径是 `$XDG_CONFIG_HOME/.wrangler/config/default.toml`（实测只有这个路径 wrangler 认；`$HOME/.wrangler` 与 `$XDG_CONFIG_HOME/wrangler` 都不行）。
+验证：手动 `workflow_dispatch` 跑通 run `40184913165` —— `Uploaded 2660 files (10681 already uploaded)`、
+76.7 秒、Version `3839b06d-7df3-47ae-b1c1-9e033c04d0c0`；线上 `/decide` 126223 B、
+`/stack` 115318 B、`/compare` 1316223 B，与本地 `out/` 逐字节一致。
+
+CI 上的 OAuth 退路（仅在没配 `CLOUDFLARE_API_TOKEN` 时执行）写的是
+`$XDG_CONFIG_HOME/.wrangler/config/default.toml`（实测只有这个路径 wrangler 认；
+`$HOME/.wrangler` 与 `$XDG_CONFIG_HOME/wrangler` 都不行）。
 
 为什么不是 `on: push`：news-refresh 用 `GITHUB_TOKEN` 提交，不会触发新的 workflow；普通 push 直接部署又会绕过 CI。日常内容靠 schedule，代码发布用 workflow_dispatch。
 
