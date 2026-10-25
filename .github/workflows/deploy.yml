@@ -18,23 +18,28 @@ name: deploy
 #      凭据文件（见下方「为什么用 OAuth 而不是 API Token」）
 #   5. 媒体变化时发 media-v2，并把 MEDIA_VERSION 改成 media-v2
 #
-# 为什么用 OAuth 而不是 API Token：
-#   账号当前无法开通 R2（需要绑支付方式），而 Cloudflare 的 API Token 同样
-#   要在 dashboard 里手工创建、并且 API Token 管理接口需要「API Tokens: Edit」
-#   权限，wrangler 的 OAuth 凭据没有这个权限，拿不到 token。
-#   但 OAuth 凭据本身就能部署：它的 scope 里含 workers:write /
-#   workers_scripts:write / workers_routes:write，与 `wrangler deploy` 需要
-#   的权限一致，而且**带 refresh_token，会在过期时自动续期**。
-#   实测：把 expiration_time 改到过去后跑 `wrangler whoami`，wrangler 自己
-#   刷新并写回配置；同一个 refresh_token 被消费过一次后仍能再次刷新，所以
-#   CI 与本机可以共用同一份凭据，互不踢掉对方。
+# 凭据：优先 CLOUDFLARE_API_TOKEN（2026-10-25 更正）
+#   本文件早先让 CI 直接复用本机 wrangler 的 OAuth 凭据（secret
+#   CLOUDFLARE_WRANGLER_OAUTH），理由是「带 refresh_token，过期会自动续期，
+#   CI 与本机可以共用同一份凭据」。**这个前提是错的。**
 #
-#   代价要说清楚：OAuth 凭据的权限比一条只含 Workers 的 API Token 大得多
-#   （还带 workers_kv:write、d1:write、pages:write、ssl_certs:write 等），
-#   泄露等于账号相当一部分能力失守。它只存在 GitHub Actions Secrets 里
-#   （公开仓库的 secret 只有写权限者能读，且不会下发给 PR），且只在 runner
-#   上临时落盘、用完即随 runner 销毁。若要更严格，应改用 dashboard 手工
-#   创建一条仅含 Workers 权限的 API Token，替换掉这个 secret。
+#   10-25 的实测：把 expiration_time 改到过去再跑 `wrangler whoami`，
+#   refresh_token 的 md5 立刻从 124bda58 变成 f7e825fa —— OAuth 的
+#   refresh_token 是**单次有效、刷新即轮换**。于是本机每刷新一次，就把 CI
+#   手里那份作废；CI 报
+#     Not logged in. Your auth token has expired and could not be refreshed,
+#     and the environment is non-interactive.
+#   这正是 deploy 从 10-21 首次运行起一路 FAILURE 的原因（10-25 才拿到日志）。
+#   附带教训：旧的 `npx wrangler whoami 2>&1 | sed -n '1,12p'` 把退出码吃掉了，
+#   whoami 明明没跑起来（wrangler 没装）而步骤照样 success，必须显式判退出码。
+#
+#   生产凭据因此改为 `CLOUDFLARE_API_TOKEN`：
+#     My Profile → API Tokens → Create Token →「Edit Cloudflare Workers」模板，
+#     account = d59de4a1d41cd3bfce2ce0c459cfe359。
+#   API Token 不会轮换、权限可以只给 Workers，CI 与本机互不影响。
+#   本机仍然用 `wrangler login` 的 OAuth 凭据跑 scripts/deploy.ps1。
+#   CLOUDFLARE_WRANGLER_OAUTH 只作为兼容保留（没配 API_TOKEN 时才用），
+#   且必须与本机最近一次刷新同步，否则必然过期。
 #
 # 为什么没有 `on: push`：
 #   news-refresh 用 GITHUB_TOKEN 提交，GitHub 不会因这种提交触发新的 workflow；
@@ -64,6 +69,8 @@ jobs:
     timeout-minutes: 60
     env:
       MEDIA_VERSION: ${{ vars.MEDIA_VERSION }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: d59de4a1d41cd3bfce2ce0c459cfe359
     steps:
       - uses: actions/checkout@v4
 
@@ -72,27 +79,34 @@ jobs:
           CLOUDFLARE_WRANGLER_OAUTH: ${{ secrets.CLOUDFLARE_WRANGLER_OAUTH }}
         run: |
           missing=0
-          for name in MEDIA_VERSION CLOUDFLARE_WRANGLER_OAUTH; do
-            if [ -z "${!name}" ]; then
-              echo "::error::$name is not set. See the header of .github/workflows/deploy.yml."
-              missing=1
-            fi
-          done
+          if [ -z "$MEDIA_VERSION" ]; then
+            echo "::error::MEDIA_VERSION is not set. See the header of .github/workflows/deploy.yml."
+            missing=1
+          fi
+          # 两条凭据只要有一条在就行：API Token 优先，OAuth 是兼容退路。
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] && [ -z "$CLOUDFLARE_WRANGLER_OAUTH" ]; then
+            echo "::error::既没有 CLOUDFLARE_API_TOKEN 也没有 CLOUDFLARE_WRANGLER_OAUTH，wrangler 在非交互 runner 上无处登录。"
+            missing=1
+          fi
+          if [ -n "$CLOUDFLARE_WRANGLER_OAUTH" ] && [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::warning::正在用 OAuth 凭据退路：refresh_token 刷新即轮换，本机一登录就会把它作废。建议改用 CLOUDFLARE_API_TOKEN。"
+          fi
           [ "$missing" = 0 ] || exit 1
 
-      # 把 wrangler 的 OAuth 凭据放回它认得的位置。Linux runner 上 wrangler
-      # 读的是 $XDG_CONFIG_HOME/.wrangler/config/default.toml（实测：只有这个
-      # 路径能被认到，$HOME/.wrangler 与 $XDG_CONFIG_HOME/wrangler 都不行）。
-      # 凭据过期时 wrangler 会自己用其中的 refresh_token 续期并写回该文件，
-      # 所以 CI 不需要人工换 token。
+      # 退路：只在没配 API Token 时把 OAuth 凭据放回 wrangler 认得的位置。
+      # Linux runner 上 XDG_CONFIG_HOME=/home/runner/.config（实测），wrangler 读
+      # $XDG_CONFIG_HOME/.wrangler/config/default.toml；这里带回退值，免得哪天
+      # runner 不再导出这个变量时文件写到 / 根目录去。
       - name: Restore wrangler credentials
+        if: env.CLOUDFLARE_API_TOKEN == ''
         env:
           CLOUDFLARE_WRANGLER_OAUTH: ${{ secrets.CLOUDFLARE_WRANGLER_OAUTH }}
         run: |
-          mkdir -p "$XDG_CONFIG_HOME/.wrangler/config"
-          printf '%s' "$CLOUDFLARE_WRANGLER_OAUTH" > "$XDG_CONFIG_HOME/.wrangler/config/default.toml"
-          chmod 600 "$XDG_CONFIG_HOME/.wrangler/config/default.toml"
-          npx wrangler whoami 2>&1 | sed -n '1,12p'
+          cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
+          mkdir -p "$cfg/.wrangler/config"
+          printf '%s' "$CLOUDFLARE_WRANGLER_OAUTH" > "$cfg/.wrangler/config/default.toml"
+          chmod 600 "$cfg/.wrangler/config/default.toml"
+          echo "wrote $cfg/.wrangler/config/default.toml ($(wc -c < "$cfg/.wrangler/config/default.toml") bytes)"
 
       - uses: actions/setup-node@v4
         with:
@@ -148,6 +162,21 @@ jobs:
         run: npm run media:check
 
       - run: npm ci
+
+      # 装好依赖之后再验凭据：用的是 npm 锁定的 wrangler（4.151.0），不是 npx
+      # 临时下载的最新版。必须显式判退出码 —— 旧写法 `npx wrangler whoami | sed`
+      # 把失败吃进了管道，于是「凭据坏掉」要等 8 分钟构建完才暴露，且报错指向
+      # 部署步骤而不是凭据步骤。
+      - name: Verify wrangler credentials
+        run: |
+          set +e
+          npx --no-install wrangler whoami > /tmp/whoami.log 2>&1
+          code=$?
+          sed -n '1,10p' /tmp/whoami.log
+          if [ "$code" -ne 0 ]; then
+            echo "::error::wrangler 没有可用凭据（exit $code）。配 CLOUDFLARE_API_TOKEN，或更新 CLOUDFLARE_WRANGLER_OAUTH。"
+            exit 1
+          fi
 
       - name: Build
         run: npm run build
