@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, Scale } from 'lucide-react';
+import { ArrowRight, ChevronRight, Scale } from 'lucide-react';
 
 import { PageHeader } from '@/components/page-header';
 import { allComparePairs, topComparePairs } from '@/lib/compare-server';
 import type { ComparePair } from '@/lib/compare';
-import { toolBySlug, SITE } from '@/lib/data';
+import { categories, toolBySlug, SITE } from '@/lib/data';
 import { canonical } from '@/lib/canonical';
 import { withOg } from '@/lib/og';
 
@@ -37,13 +37,14 @@ export default function CompareIndexPage() {
   const top = topComparePairs(7);
   const topSlugs = new Set(top.map((p) => p.slug));
   const rest = pairs.filter((p) => !topSlugs.has(p.slug));
+  const groups = groupByCategory(rest);
 
   return (
     <div className="content-container space-y-8 py-8 md:py-10">
       <PageHeader
         eyebrow="决策辅助"
         title="二选一对比"
-        description={`${pairs.length} 组并排对比。每组先给事实差异（价格、平台、更新时间），再给编辑判断 —— 两边都有判断的排在最前。`}
+        description={`${pairs.length} 组并排对比。每组先给事实差异（价格、平台、更新时间），再给编辑判断 —— 两边都有判断的排在最前，其余按分类折叠。`}
       />
 
       {top.length > 0 && (
@@ -63,16 +64,46 @@ export default function CompareIndexPage() {
         </section>
       )}
 
-      {rest.length > 0 && (
-        <section aria-labelledby="rest-heading">
-          <h2 id="rest-heading" className="mb-3 text-[15px] font-semibold text-foreground">
-            其他对比
+      {/* 其余按分类折叠。
+          原先 294 张卡片平铺：手机 390×844 实测页高 **20553px（约 24 屏）**，
+          桌面也要滚 7300px —— 而这一页的职责是「找到该比的那一对」，不是
+          「滚完所有对」。折叠后首屏只剩 26 个分类摘要，点开才是清单。
+          链接仍在 DOM 里（`<details>` 收起不影响抓取），294 个对比页的
+          内链可达性没有损失。 */}
+      {groups.length > 0 && (
+        <section aria-labelledby="rest-heading" className="space-y-3">
+          <h2 id="rest-heading" className="text-[15px] font-semibold text-foreground">
+            按分类浏览其余 {rest.length} 组
           </h2>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {rest.map((p) => (
-              <PairCard key={p.slug} pair={p} />
-            ))}
-          </div>
+          {groups.map((g) => (
+            <details
+              key={g.slug}
+              className="group rounded-xl border border-foreground/10 bg-card"
+            >
+              <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 [&::-webkit-details-marker]:hidden">
+                <span
+                  aria-hidden="true"
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: g.color ? `rgb(${g.color})` : undefined }}
+                />
+                <span className="min-w-0 flex-1 truncate text-[13.5px] font-medium text-foreground">
+                  {g.name}
+                </span>
+                <span className="shrink-0 text-[12px] tabular-nums text-muted-foreground">
+                  {g.pairs.length} 组
+                </span>
+                <ChevronRight
+                  className="h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform group-open:rotate-90"
+                  aria-hidden="true"
+                />
+              </summary>
+              <div className="grid grid-cols-1 gap-3 border-t border-foreground/[0.07] p-4 md:grid-cols-2 lg:grid-cols-3">
+                {g.pairs.map((p) => (
+                  <PairCard key={p.slug} pair={p} />
+                ))}
+              </div>
+            </details>
+          ))}
         </section>
       )}
 
@@ -87,6 +118,52 @@ export default function CompareIndexPage() {
       </p>
     </div>
   );
+}
+
+/**
+ * 其余对比按「两边共同的那个分类」分组。
+ *
+ * `comparePairs()` 已经把跨分类的组合挡掉了（见 `lib/compare.ts`），所以每组
+ * 工具理论上都有共同分类；取 `a` 的分类里第一个也出现在 `b` 上的那个即可。
+ * 万一取不到（数据被改过），落到「其他」而不是丢掉 —— 294 组必须一个不少，
+ * 这一页的底部文案写着「这份清单不是手挑的」，悄悄少几组就是谎。
+ *
+ * 组的顺序用 `categories` 自己的顺序（与首页、侧栏一致），不按组内数量排，
+ * 免得同一页在两个地方给出两套顺序。
+ */
+function groupByCategory(pairs: ComparePair[]): {
+  slug: string;
+  name: string;
+  color?: string;
+  pairs: ComparePair[];
+}[] {
+  const bucket = new Map<string, ComparePair[]>();
+  for (const p of pairs) {
+    const ca = toolBySlug.get(p.a)?.categories ?? [];
+    const cb = toolBySlug.get(p.b)?.categories ?? [];
+    const shared = ca.find((c) => cb.some((x) => x.slug === c.slug));
+    const key = shared?.slug ?? '__other__';
+    const list = bucket.get(key);
+    if (list) list.push(p);
+    else bucket.set(key, [p]);
+  }
+
+  const groups: { slug: string; name: string; color?: string; pairs: ComparePair[] }[] = [];
+  for (const c of categories) {
+    const list = bucket.get(c.slug);
+    if (list?.length) {
+      groups.push({ slug: c.slug, name: c.name, color: c.color, pairs: list });
+      bucket.delete(c.slug);
+    }
+  }
+  const rest = bucket.get('__other__');
+  if (rest?.length) groups.push({ slug: '__other__', name: '其他', pairs: rest });
+  bucket.delete('__other__'); // 不删的话，下面兜底循环会把它再 push 一遍
+  // 没被 categories 认出的分类（数据里删过分类但还有对比页）也保留，不静默丢
+  for (const [slug, list] of bucket) {
+    if (list.length) groups.push({ slug, name: slug, pairs: list });
+  }
+  return groups;
 }
 
 /** 一组对比的入口卡：两个工具名 + 图标 + 「vs」。 */
