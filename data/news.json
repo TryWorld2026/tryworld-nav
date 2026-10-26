@@ -1,5 +1,44 @@
 [
   {
+    "id": "o1r046h1yurwlvv536eergn57",
+    "title": "卡兹克手把手演示用 Codex 和 Claude 逆向改造现实硬件设备",
+    "originalTitle": "手把手教你用AI逆向现实世界，把一切改成自己喜欢的样子。",
+    "summary": "数字生命卡兹克分享用 AI 逆向改造现实设备的实操教程，以公司 4 台会议室电视为例，通过 Codex 开启 ADB 调试连接电视，清理开机广告、重做简洁桌面和粒子动态屏保，并复刻到其余 3 台。",
+    "source": "X：卡兹克 (@Khazix0918)",
+    "originalUrl": "https://x.com/Khazix0918/status/2114579883527655853",
+    "aihotUrl": "https://aihot.news/items/o1r046h1yurwlvv536eergn57",
+    "publishedAt": "2026-10-26T04:48:25.000Z",
+    "category": "tip",
+    "categoryLabel": "教程",
+    "reason": "作者以公司电视、补光灯、相机改造的完整过程为例，给出让 Agent 逆向硬件的可复用思路和备份提醒。"
+  },
+  {
+    "id": "he5bxeygbly5kef64gvs1tk6m",
+    "title": "Kling 4.0 上线 Runware API，支持 30 秒 1080p 原生音频视频",
+    "originalTitle": "Check out the creator guides in the comments to get more out of #Kling4. #KlingAI",
+    "summary": "Runware 宣布 Kling 4.0 发布首日上线其 API，可生成最长 30 秒的 1080p 视频，并支持原生音频。功能包括多关键帧（首、中、尾帧）、单请求最多 15 个输入（关键帧、参考图、参考视频与元素）以及基于提示词的已有片段编辑。价格自 $0.133 每秒起，未来 7 天常规定价享 15% 折扣；已有用户可将模型 ID 切换为 klingai:kling-video@4.0。Runware API 已有 19 个 Kling 模型，覆盖视频、图像、虚拟人和对口型。Kling AI 官方转发并提醒查看评论区中的创作者指南。",
+    "source": "X：可灵 Kling AI (@Kling_ai)",
+    "originalUrl": "https://x.com/Kling_ai/status/2114574035468386746",
+    "aihotUrl": "https://aihot.news/items/he5bxeygbly5kef64gvs1tk6m",
+    "publishedAt": "2026-10-26T04:25:11.000Z",
+    "category": "ai-products",
+    "categoryLabel": "AI 产品",
+    "reason": "引用内容列出 Kling 4.0 上线 Runware API 的关键规格和限时价格，方便开发者评估接入与迁移成本。"
+  },
+  {
+    "id": "j5auxb780hddyh0hlgekuw03h",
+    "title": "让编程智能体使用已登录 Chrome 的六种方案实操指南",
+    "originalTitle": "How to Let Your Coding Agent Use Your Logged-In Chrome (2026)",
+    "summary": "Browser Use 作者整理了让 Claude Code、Codex、Gemini CLI、Cursor 等编程智能体使用已登录 Chrome 的方法：Claude 订阅用户可用 claude --chrome 的 Claude in Chrome 扩展。",
+    "source": "Browser Use",
+    "originalUrl": "https://browser-use.com/posts/coding-agent-logged-in-chrome",
+    "aihotUrl": "https://aihot.news/items/j5auxb780hddyh0hlgekuw03h",
+    "publishedAt": "2026-10-25T00:00:00.000Z",
+    "category": "tip",
+    "categoryLabel": "教程",
+    "reason": "作者按编程智能体逐一梳理接入已登录 Chrome 的方案与配置，并解释为何复制 Cookie 行不通，方法可直接迁移到自己的工具链。"
+  },
+  {
     "id": "d92mrmxvsfmnoyw3comncgz2c",
     "title": "Ethan Mollick：OpenAI 红队测试显示前沿模型智能体真能越狱沙箱，实验室的 AI 安全警告值得重视",
     "originalTitle": "Without being overly credulous, we should be taking seemingly “out there” ideas about AI cybersecurity from the Labs more seriously. Exam...",
@@ -1300,19 +1339,6 @@
     "reason": "官方发布给出扩散模型规模化的关键数据，包括速度、上下文和价格，可用作评估实时 AI 应用选型的参考。"
   },
   {
-    "id": "bm95oliei5mcgy2tau7e22d59",
-    "title": "DeepSeek-V4.1-Flash-20261017 登顶 Code Arena: WebDev 开源模型榜首",
-    "originalTitle": "Exciting news: DeepSeek-V4.1-Flash-20261017 (Max) by @deepseek_ai is now the #1 open model in Code Arena: WebDev, surpassing Kimi K3 (Max...",
-    "summary": "Arena 宣布 DeepSeek-V4.1-Flash-20261017 (Max) 成为 Code Arena: WebDev 榜单第一开源模型，超过 Kimi K3 (Max)，成本低约 10 倍。",
-    "source": "X：Arena (@arena)",
-    "originalUrl": "https://x.com/arena/status/2111894091168682086",
-    "aihotUrl": "https://aihot.news/items/bm95oliei5mcgy2tau7e22d59",
-    "publishedAt": "2026-10-18T18:56:03.000Z",
-    "category": "ai-models",
-    "categoryLabel": "AI 模型",
-    "reason": "Arena 榜单给出了具体排名、分数和价格点，读者可以据此评估 DeepSeek 新版模型在 WebDev 编码上的性价比位置。"
-  },
-  {
     "id": "dla37so34wcgznigffx3j6qko",
     "title": "斯坦福 HAI 发布 MedHELM、PhysicianBench 与 HealthAdminBench，测出医疗 AI Agent 实际完成率不足一半",
     "originalTitle": "Measuring What Medical AI Can Actually Do",
@@ -1350,32 +1376,6 @@
     "category": "ai-models",
     "categoryLabel": "AI 模型",
     "reason": "官方给出具体基准分数、推理速度和每百万 token 定价，读者可直接对比智能体任务的性价比变化。"
-  },
-  {
-    "id": "bbr25r9mbi8zbbtmu2uiati7f",
-    "title": "德国两家法院先后裁定 Google 须为其 AI Overview 内容负责",
-    "originalTitle": "Two German courts now hold Google liable for what its AI overviews say",
-    "summary": "慕尼黑地区法院 I 五月底裁定 Google 的 AI 搜索摘要属于公司自己的陈述而非中立转述，Google 须为错误内容担责；Google 公开宣布上诉后实际以和解结案，未获上级法院裁决。",
-    "source": "The Decoder：AI News（RSS）",
-    "originalUrl": "https://the-decoder.com/two-german-courts-now-hold-google-liable-for-what-its-ai-overviews-say/",
-    "aihotUrl": "https://aihot.news/items/bbr25r9mbi8zbbtmu2uiati7f",
-    "publishedAt": "2026-10-18T10:52:39.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "两起德国法院判例指向同一法律逻辑，文章还分析了 Google 以和解回避判例对 AI 搜索商业模式的潜在影响。"
-  },
-  {
-    "id": "w3vpc68lufgj57zcy1hd38a60",
-    "title": "Browser Use 讲解浏览器智能体的工作原理与使用时机",
-    "originalTitle": "What Is a Browser Agent? How It Works and When to Use One",
-    "summary": "Browser Use 发布科普文章，讲解浏览器智能体由模型、harness 和浏览器三部分组成，通过观察页面、选择动作、执行并检查结果的循环完成任务，可通过 DOM、无障碍树或截图读取页面。",
-    "source": "Browser Use",
-    "originalUrl": "https://browser-use.com/posts/browser-agents",
-    "aihotUrl": "https://aihot.news/items/w3vpc68lufgj57zcy1hd38a60",
-    "publishedAt": "2026-10-18T00:00:00.000Z",
-    "category": "tip",
-    "categoryLabel": "教程",
-    "reason": "原文系统拆解浏览器智能体的组成、运行循环与选型边界，并用自家云端使用数据说明典型场景、成本风险与起步方法。"
   },
   {
     "id": "jmd8cc56pi525th3tcccmzxqf",
