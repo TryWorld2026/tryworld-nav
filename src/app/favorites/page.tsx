@@ -39,12 +39,12 @@ export default function FavoritesPage() {
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <Link prefetch={false}
             href="/tools"
-            className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3.5 py-2 text-[13px] font-medium text-foreground/80 transition-all hover:-translate-y-px hover:border-foreground/25 hover:text-foreground"
+            className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3.5 py-2 text-sm font-medium text-foreground/80 transition-all hover:-translate-y-px hover:border-foreground/25 hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             返回全部工具
           </Link>
-          <span className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
             <Bookmark className="h-3.5 w-3.5" aria-hidden="true" />
             在工具详情页点「添加收藏」即可加入
           </span>

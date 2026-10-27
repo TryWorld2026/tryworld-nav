@@ -59,7 +59,7 @@ export default function HotTopicsPage() {
         {updateDate && (
           <MastheadMeta>
             <span className="inline-flex items-center gap-1.5">
-              <Radio className="h-3 w-3 text-[#F2A07F]" aria-hidden="true" />
+              <Radio className="h-3 w-3 text-gongke-onInk" aria-hidden="true" />
               榜单随构建刷新
             </span>
             <span>
@@ -126,7 +126,7 @@ export default function HotTopicsPage() {
                           <div className="min-w-0 lg:flex-1">
                             {/* `text-balance`：390 下三条标题折成两行，末行
                                 只剩 1–2 个字（实测 5%、5%、17%）。 */}
-                            <h2 className="text-balance text-[15px] font-semibold leading-snug text-foreground/90 transition-colors group-hover:text-gongke-accent md:text-base">
+                            <h2 className="text-balance text-base font-semibold leading-snug text-foreground/90 transition-colors group-hover:text-gongke-accent md:text-base">
                               {t.title}
                               <ArrowUpRight
                                 className="ml-1 inline h-3.5 w-3.5 -translate-y-0.5 opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-60"
@@ -135,14 +135,14 @@ export default function HotTopicsPage() {
                             </h2>
 
                             {t.sourceNames.length > 0 && (
-                              <p className="mt-1.5 line-clamp-1 text-[12px] text-muted-foreground">
+                              <p className="mt-1.5 line-clamp-1 text-xs text-muted-foreground">
                                 {t.sourceNames.slice(0, 6).join(' · ')}
                                 {t.sourceNames.length > 6 && ` 等 ${t.sourceNames.length} 家`}
                               </p>
                             )}
                           </div>
 
-                          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-muted-foreground lg:mt-0 lg:shrink-0 lg:flex-nowrap lg:gap-x-5">
+                          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground lg:mt-0 lg:shrink-0 lg:flex-nowrap lg:gap-x-5">
                             <span className="text-foreground/70">{t.source}</span>
                             <span className="inline-flex items-center gap-1">
                               <Flame className="h-3 w-3" aria-hidden="true" />

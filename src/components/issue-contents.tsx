@@ -35,28 +35,28 @@ export function IssueContents({
   if (!sections.length && !extra.length) return null;
   return (
     <div className="min-w-0">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#F2EEE6]/55">
+      <p className="text-2xs font-semibold uppercase tracking-[0.16em] text-gongke-paper/55">
         {label}
       </p>
       <ol className="mt-3 space-y-2">
         {sections.map((s, i) => (
-          <li key={s.label} className="flex items-baseline gap-2.5 text-[13px]">
+          <li key={s.label} className="flex items-baseline gap-2.5 text-sm">
             {/* 序号是正文，不是装饰：`/45` 在墨底上 3.90:1，低于 AA 的 4.5。
                 升到 `/60`（5.80:1）仍然比栏目名（`/75`）淡一档，层级不变。 */}
-            <span className="w-4 shrink-0 tabular-nums text-[11px] text-[#F2EEE6]/60">
+            <span className="w-4 shrink-0 tabular-nums text-2xs text-gongke-paper/60">
               {String(i + 1).padStart(2, '0')}
             </span>
-            <span className="min-w-0 flex-1 truncate text-[#F2EEE6]/75">{s.label}</span>
-            <span className="shrink-0 tabular-nums text-[11px] text-[#F2EEE6]/55">
+            <span className="min-w-0 flex-1 truncate text-gongke-paper/75">{s.label}</span>
+            <span className="shrink-0 tabular-nums text-2xs text-gongke-paper/55">
               {s.items.length} 条
             </span>
           </li>
         ))}
         {extra.map((e) => (
-          <li key={e.label} className="flex items-baseline gap-2.5 text-[13px]">
+          <li key={e.label} className="flex items-baseline gap-2.5 text-sm">
             <span className="w-4 shrink-0" aria-hidden="true" />
-            <span className="min-w-0 flex-1 truncate text-[#F2EEE6]/55">{e.label}</span>
-            <span className="shrink-0 tabular-nums text-[11px] text-[#F2EEE6]/55">
+            <span className="min-w-0 flex-1 truncate text-gongke-paper/55">{e.label}</span>
+            <span className="shrink-0 tabular-nums text-2xs text-gongke-paper/55">
               {e.count} 条
             </span>
           </li>
@@ -91,19 +91,19 @@ export function IssueCoverlines({
   if (!list.length) return null;
   return (
     <div className="mt-6 min-w-0 border-t border-white/10 pt-4">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#F2EEE6]/55">
+      <p className="text-2xs font-semibold uppercase tracking-[0.16em] text-gongke-paper/55">
         {label}
       </p>
       <ul className="mt-2.5 grid grid-cols-1 gap-x-8 gap-y-2 md:grid-cols-2">
         {list.map((it, i) => (
-          <li key={i} className="flex min-w-0 items-baseline gap-2 text-[13px]">
+          <li key={i} className="flex min-w-0 items-baseline gap-2 text-sm">
             {/* 这个破折号是纯装饰（`aria-hidden`），但 `/35` 在墨底上只有
                 2.92:1，读起来是一条断掉的灰点。升到 `/50`（4.48:1）仍然
                 比正文淡一档，却不再像是渲染失败。 */}
-            <span aria-hidden="true" className="shrink-0 text-[#F2EEE6]/50">
+            <span aria-hidden="true" className="shrink-0 text-gongke-paper/50">
               —
             </span>
-            <span className="min-w-0 flex-1 truncate text-[#F2EEE6]/65">{it.title}</span>
+            <span className="min-w-0 flex-1 truncate text-gongke-paper/65">{it.title}</span>
           </li>
         ))}
       </ul>

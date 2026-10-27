@@ -102,7 +102,7 @@ export default function RootLayout({
             聚焦时才出现，是 WCAG 2.4.1 的最小实现。 */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:inline-flex focus:h-10 focus:items-center focus:rounded-md focus:bg-gongke-dark focus:px-4 focus:text-sm focus:font-medium focus:text-[#F2EEE6] focus:shadow-lg"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:inline-flex focus:h-10 focus:items-center focus:rounded-md focus:bg-gongke-dark focus:px-4 focus:text-sm focus:font-medium focus:text-gongke-paper focus:shadow-lg"
         >
           跳到主要内容
         </a>

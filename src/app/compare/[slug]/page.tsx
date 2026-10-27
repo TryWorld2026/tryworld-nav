@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Check, Minus, Scale, Sparkles, Wallet } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Minus, Scale, Wallet } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
 import { CategoryIcon } from '@/components/category-icon';
@@ -231,7 +231,7 @@ export default async function ComparePage({
       <section className="mt-8" aria-labelledby="facts-heading">
         <h2
           id="facts-heading"
-          className="mb-3 flex items-center gap-2 text-[15px] font-semibold text-foreground"
+          className="mb-3 flex items-center gap-2 text-base font-semibold text-foreground"
         >
           <Scale className="h-4 w-4 text-gongke-accent" aria-hidden="true" />
           事实对照
@@ -253,7 +253,7 @@ export default async function ComparePage({
             两块里各出现一次，眼睛要来回跳 —— 那是这一页最不该做的事。
             所以只在 ≥768 保留 34rem 下限（宽屏下别让表格被拉得过宽）。 */}
         <div className="overflow-x-auto rounded-xl border border-foreground/10">
-          <table className="w-full text-left text-[13px] md:min-w-[34rem]">
+          <table className="w-full text-left text-sm md:min-w-[34rem]">
             <thead className="bg-foreground/[0.03]">
               <tr>
                 <th scope="col" className="px-4 py-2.5 font-medium text-muted-foreground">
@@ -288,56 +288,41 @@ export default async function ComparePage({
             </tbody>
           </table>
         </div>
-        <p className="mt-2 text-[11.5px] text-muted-foreground">
+        <p className="mt-2 text-2xs text-muted-foreground">
           以上来自站内采集快照，缺失项如实显示为「—」而不做推测。价格以各工具官网为准。
         </p>
       </section>
 
-      {/* ── 第 2 层：差异高亮（compare 页真正的价值） ─────────────── */}
-      {/* 这一节**永远渲染**，包括没有差异的时候。
-          2026-10-22 之前是 `diffs.length > 0 &&`，于是约 20 个「两个工具处处
-          相同」的页面上这一节整块消失，而页面开头仍在承诺「先看事实差异」——
-          读者会以为没加载完。现在无差异时给一句明确的事实陈述：
-          「没有可数的差异」本身是有价值的信息（说明这两个几乎一样），
-          不该表现为一片空白。见 `hasDiffs` 处的说明。 */}
-      <section className="mt-6" aria-labelledby="diff-heading">
-        <h2 id="diff-heading" className="mb-2.5 text-[13px] font-semibold text-foreground">
-          差在哪
-        </h2>
-        {hasDiffs ? (
-          <ul className="space-y-1.5">
-            {diffs.map((r) => (
-              <li
-                key={r.label}
-                className="flex flex-wrap gap-x-2 rounded-lg border border-foreground/[0.07] bg-foreground/[0.02] px-3 py-2 text-[13px] leading-relaxed"
-              >
-                <span className="shrink-0 font-medium text-foreground">{r.label}：</span>
-                <span className="text-foreground/80">
-                  {toolA.name} <span className="font-medium">{r.a}</span>
-                  <span className="mx-1.5 text-muted-foreground">/</span>
-                  {toolB.name} <span className="font-medium">{r.b}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="rounded-lg border border-foreground/[0.07] bg-foreground/[0.02] px-3 py-2.5 text-[13px] leading-relaxed text-foreground/80">
+      {/* ── 第 2 层：无差异时的明确说明 ───────────────────────────
+          2026-10-27：删掉了原来的「差在哪」列表。
+
+          那一节把与上面表格**同一批 facts** 用句子再排一遍（`价格档：A 免费额度 / B 付费`），
+          两块相距不到 300px，同一屏里同一个数据出现两次 —— 这是报告里
+          「同一批数据渲染两遍」的那一条。而且表格自己已经在做差异高亮
+          （`row.differs` 的行加粗、没有差异的行降为 70% 灰），信息并没有丢。
+
+          保留下面的**无差异态**：它说的不是数据，是「这两个几乎一样」这个结论，
+          表格表达不出来。2026-10-22 之前这段是跟着 `diffs.length > 0` 一起消失的，
+          于是约 20 个页面在开头承诺「先看事实差异」之后出现一片空白。 */}
+      {!hasDiffs && (
+        <section className="mt-6">
+          <p className="rounded-lg border border-foreground/[0.07] bg-foreground/[0.02] px-3 py-2.5 text-sm leading-relaxed text-foreground/80">
             这两个在价格档、支持平台、所属分类、收录更新上
             <span className="font-medium text-foreground">没有可数的差异</span>
             {' '}—— 它们几乎是同一类东西。真正的区别要靠下面的编辑判断，或者点进各自页面看完整介绍。
           </p>
-        )}
-      </section>
+        </section>
+      )}
 
       {/* ── 第 3 层：编辑判断并排（有则并排，缺则如实说没有） ──────── */}
       <section className="mt-8" aria-labelledby="verdict-heading">
         <h2
           id="verdict-heading"
-          className="mb-3 flex items-center gap-2 text-[15px] font-semibold text-foreground"
+          className="mb-3 flex items-center gap-2 text-base font-semibold text-foreground"
         >
-          <Sparkles className="h-4 w-4 text-gongke-accent" aria-hidden="true" />
+          <Scale className="h-4 w-4 text-gongke-accent" aria-hidden="true" />
           怎么选
-          <span className="ml-1 rounded-full bg-gongke-accent/10 px-2 py-0.5 text-[11px] font-medium text-gongke-accent">
+          <span className="ml-1 rounded-full bg-gongke-accent/10 px-2 py-0.5 text-2xs font-medium text-gongke-accent">
             编辑判断
           </span>
         </h2>
@@ -350,7 +335,7 @@ export default async function ComparePage({
       {/* ── 其他对比 ─────────────────────────────────────────── */}
       {siblings.length > 0 && (
         <section className="mt-10 border-t border-foreground/10 pt-8">
-          <h2 className="mb-4 text-[19px] font-semibold text-foreground">其他对比</h2>
+          <h2 className="mb-4 text-xl font-semibold text-foreground">其他对比</h2>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {siblings.map((p) => {
               const x = toolBySlug.get(p.a);
@@ -360,12 +345,12 @@ export default async function ComparePage({
                 <Link prefetch={false}
                   key={p.slug}
                   href={`/compare/${p.slug}`}
-                  className="group flex items-center gap-2 rounded-lg border border-foreground/10 bg-card px-3 py-2 text-[13px] transition-all duration-150 hover:-translate-y-px hover:border-foreground/20 hover:shadow-sm"
+                  className="group flex items-center gap-2 rounded-lg border border-foreground/10 bg-card px-3 py-2 text-sm transition-all duration-150 hover:-translate-y-px hover:border-foreground/20 hover:shadow-sm"
                 >
                   <span className="min-w-0 truncate text-foreground/85 group-hover:text-gongke-accent">
                     {x.name}
                   </span>
-                  <span className="shrink-0 text-[11px] text-muted-foreground">vs</span>
+                  <span className="shrink-0 text-2xs text-muted-foreground">vs</span>
                   <span className="min-w-0 truncate text-foreground/85 group-hover:text-gongke-accent">
                     {y.name}
                   </span>
@@ -378,7 +363,7 @@ export default async function ComparePage({
 
       {/* 同类推荐：对比完之后读者可能想再找一个候选。 */}
       <section className="mt-10 border-t border-foreground/10 pt-8">
-        <h2 className="mb-4 text-[19px] font-semibold text-foreground">还想看看别的</h2>
+        <h2 className="mb-4 text-xl font-semibold text-foreground">还想看看别的</h2>
         <div className={TOOL_GRID}>
           {relatedTools(pair.a, 6)
             .filter((t) => t.slug !== pair.b)
@@ -437,19 +422,19 @@ function VerdictColumn({
           )}
         </span>
         <div className="min-w-0">
-          <h3 id={`col-${tool.slug}`} className="text-[17px] font-semibold text-foreground">
+          <h3 id={`col-${tool.slug}`} className="text-lg font-semibold text-foreground">
             <Link prefetch={false} href={`/tools/${tool.slug}`} className="hover:text-gongke-accent hover:underline">
               {tool.name}
             </Link>
           </h3>
-          <p className="mt-0.5 line-clamp-2 text-[13px] leading-relaxed text-gongke-muted">
+          <p className="mt-0.5 line-clamp-2 text-sm leading-relaxed text-gongke-muted">
             {tool.description}
           </p>
         </div>
       </div>
 
       {!verdict ? (
-        <p className="mt-4 text-[13px] leading-relaxed text-muted-foreground">
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
           这一侧还没有编辑判断。上面的事实对照表与
           <Link prefetch={false}
             href={`/tools/${tool.slug}`}
@@ -463,7 +448,7 @@ function VerdictColumn({
         <>
           {verdict.bestFor.length > 0 && (
             <div className="mt-4">
-              <h4 className="flex items-center gap-1.5 text-[13px] font-medium text-foreground/80">
+              <h4 className="flex items-center gap-1.5 text-sm font-medium text-foreground/80">
                 <Check className="h-3.5 w-3.5 text-gongke-accent" aria-hidden="true" />
                 适合
               </h4>
@@ -471,7 +456,7 @@ function VerdictColumn({
                 {verdict.bestFor.map((s) => (
                   <li
                     key={s}
-                    className="flex gap-2 text-[13.5px] leading-relaxed text-foreground/80"
+                    className="flex gap-2 text-sm leading-relaxed text-foreground/80"
                   >
                     <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-gongke-accent" />
                     {s}
@@ -483,17 +468,17 @@ function VerdictColumn({
 
           {verdict.notFor && verdict.notFor.length > 0 && (
             <div className="mt-4">
-              <h4 className="flex items-center gap-1.5 text-[13px] font-medium text-foreground/80">
-                <Minus className="h-3.5 w-3.5 text-[#B54826]" aria-hidden="true" />
+              <h4 className="flex items-center gap-1.5 text-sm font-medium text-foreground/80">
+                <Minus className="h-3.5 w-3.5 text-gongke-earth" aria-hidden="true" />
                 不适合
               </h4>
               <ul className="mt-2 space-y-1.5">
                 {verdict.notFor.map((s) => (
                   <li
                     key={s}
-                    className="flex gap-2 text-[13.5px] leading-relaxed text-foreground/80"
+                    className="flex gap-2 text-sm leading-relaxed text-foreground/80"
                   >
-                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#B54826]/70" />
+                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-gongke-earth/70" />
                     {s}
                   </li>
                 ))}
@@ -502,14 +487,14 @@ function VerdictColumn({
           )}
 
           {verdict.diff && (
-            <p className="mt-4 rounded-lg border border-foreground/[0.07] bg-foreground/[0.02] p-3 text-[12.5px] leading-relaxed text-foreground/80">
+            <p className="mt-4 rounded-lg border border-foreground/[0.07] bg-foreground/[0.02] p-3 text-xs leading-relaxed text-foreground/80">
               <span className="font-medium text-foreground">与同类比：</span>
               {verdict.diff}
             </p>
           )}
 
           {price && (price.freeTier || (price.from ?? 0) > 0) && (
-            <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12.5px] text-gongke-muted">
+            <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gongke-muted">
               <Wallet className="h-3.5 w-3.5" aria-hidden="true" />
               {price.freeTier && <span>{price.freeTier}</span>}
               {typeof price.from === 'number' && price.from > 0 && (
@@ -528,7 +513,7 @@ function VerdictColumn({
         {primary && (
           <Link prefetch={false}
             href={`/categories/${primary.slug}`}
-            className="inline-flex items-center gap-1 rounded-full bg-foreground/5 px-2.5 py-1 text-[12px] text-muted-foreground transition-colors hover:bg-foreground/10"
+            className="inline-flex items-center gap-1 rounded-full bg-foreground/5 px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-foreground/10"
           >
             <CategoryIcon name={primary.icon} className="h-3 w-3" />
             {primary.name}
@@ -536,7 +521,7 @@ function VerdictColumn({
         )}
         <Link prefetch={false}
           href={`/tools/${tool.slug}`}
-          className="ml-auto inline-flex items-center gap-1 text-[12.5px] font-medium text-gongke-accent hover:underline"
+          className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-gongke-accent hover:underline"
         >
           看完整介绍
           <ArrowRight className="h-3 w-3" aria-hidden="true" />

@@ -38,7 +38,7 @@ export function HomeNews() {
         <div className="mb-4 flex items-center gap-3">
           <h2
             id="home-news-heading"
-            className="flex shrink-0 items-center gap-2.5 text-[19px] font-semibold text-foreground"
+            className="flex shrink-0 items-center gap-2.5 text-xl font-semibold text-foreground"
           >
             <span
               className="flex h-8 w-8 items-center justify-center rounded-lg bg-gongke-accent/[0.07] text-gongke-accent ring-1 ring-inset ring-gongke-accent/10"
@@ -47,14 +47,14 @@ export function HomeNews() {
               <Newspaper className="h-4 w-4" />
             </span>
             AI 资讯
-            <span className="ml-1 rounded-full bg-gongke-accent/10 px-2 py-0.5 text-[11px] font-medium text-gongke-accent">
+            <span className="ml-1 rounded-full bg-gongke-accent/10 px-2 py-0.5 text-2xs font-medium text-gongke-accent">
               每日更新
             </span>
           </h2>
           <span className="h-px min-w-4 flex-1 bg-foreground/10" aria-hidden="true" />
           <Link prefetch={false}
             href="/news"
-            className="group hidden shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[13px] font-medium text-muted-foreground transition-colors hover:text-gongke-accent md:inline-flex"
+            className="group hidden shrink-0 items-center gap-1 rounded-full px-2 py-1 text-sm font-medium text-muted-foreground transition-colors hover:text-gongke-accent md:inline-flex"
           >
             进入资讯频道
             <ArrowRight
@@ -71,14 +71,14 @@ export function HomeNews() {
           {daily && (
             <Link prefetch={false}
               href={`/news/daily/${daily.date}`}
-              className="ink-band group relative flex flex-col justify-between overflow-hidden rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#1B2523]/25 active:translate-y-0 active:scale-[0.995]"
+              className="ink-band group relative flex flex-col justify-between overflow-hidden rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-gongke-dark/25 active:translate-y-0 active:scale-[0.995]"
             >
               <div className="relative">
-                <p className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-widest text-[#F2EEE6]/60">
+                <p className="flex items-center gap-1.5 text-2xs font-medium uppercase tracking-widest text-gongke-paper/60">
                   <CalendarDays className="h-3 w-3" aria-hidden="true" />
                   今日日报 · {formatDateShort(daily.date)} {weekdayZh(daily.date)}
                 </p>
-                <h3 className="mt-2 line-clamp-3 font-display text-lg leading-snug text-[#F2EEE6] transition-colors group-hover:text-white">
+                <h3 className="mt-2 line-clamp-3 font-display text-lg leading-snug text-gongke-paper transition-colors group-hover:text-white">
                   {daily.lead?.title ? (
                     <HeadlineText text={daily.lead.title} />
                   ) : (
@@ -86,12 +86,12 @@ export function HomeNews() {
                   )}
                 </h3>
                 {daily.lead?.leadParagraph && (
-                  <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-[#F2EEE6]/60">
+                  <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-gongke-paper/60">
                     {daily.lead.leadParagraph}
                   </p>
                 )}
               </div>
-              <span className="relative mt-4 inline-flex items-center gap-1 text-xs font-medium text-[#F2EEE6]/85">
+              <span className="relative mt-4 inline-flex items-center gap-1 text-xs font-medium text-gongke-paper/85">
                 阅读本期
                 <ArrowRight
                   className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1"
@@ -119,7 +119,7 @@ export function HomeNews() {
                     aria-hidden="true"
                   />
                   <div>
-                    <p className="flex items-center gap-1.5 text-[10px]">
+                    <p className="flex items-center gap-1.5 text-2xs">
                       <span
                         className="inline-flex items-center rounded-full px-1.5 py-0.5 font-medium"
                         style={{ background: tone.wash, color: tone.text }}
@@ -132,7 +132,7 @@ export function HomeNews() {
                       <HeadlineText text={it.title} />
                     </h3>
                   </div>
-                  <p className="mt-2 flex items-center gap-1 text-[10px] text-muted-foreground">
+                  <p className="mt-2 flex items-center gap-1 text-2xs text-muted-foreground">
                     <span className="min-w-0 truncate">{it.source}</span>
                     <ArrowUpRight
                       className="ml-auto h-3 w-3 shrink-0 opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-70"
@@ -151,8 +151,8 @@ export function HomeNews() {
             href="/news/hot"
             className="group inline-flex max-w-full items-center gap-1.5 rounded-full border border-foreground/10 bg-card px-3 py-1.5 text-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-gongke-accent/30 hover:shadow-sm active:translate-y-0"
           >
-            <Flame className="h-3 w-3 shrink-0 text-[#B54826]" aria-hidden="true" />
-            <span className="font-medium text-[#B54826]">此刻最热</span>
+            <Flame className="h-3 w-3 shrink-0 text-gongke-earth" aria-hidden="true" />
+            <span className="font-medium text-gongke-earth">此刻最热</span>
             {hot && <span className="min-w-0 truncate text-foreground/70">{hot.title}</span>}
           </Link>
           <Link prefetch={false}

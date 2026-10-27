@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertCircle, ArrowRight, BookmarkPlus, Check, Copy, Link2, Sparkles } from 'lucide-react';
+import { AlertCircle, ArrowRight, Bookmark, BookmarkPlus, Check, Copy, Link2 } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CATALOG_BY_SLUG, DATA_EPOCH } from '@/lib/catalog-index';
@@ -257,7 +257,7 @@ export function SharedStack() {
               <span className="text-muted-foreground">（另有 {missing} 个已不在目录里）</span>
             ) : null}
           </p>
-          <p className="mt-0.5 text-[12px] leading-relaxed text-muted-foreground">
+          <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
             链接里只有工具名，没有分享者的个人信息，也不含他的实时收藏 —— 增删不会同步。
           </p>
         </div>
@@ -266,7 +266,7 @@ export function SharedStack() {
             type="button"
             onClick={importAll}
             disabled={allOwned}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-gongke-accent px-3.5 text-[12.5px] font-medium text-white transition-colors hover:bg-gongke-accent/90 disabled:cursor-default disabled:bg-foreground/10 disabled:text-foreground/50"
+            className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-gongke-accent px-3.5 text-xs font-medium text-white transition-colors hover:bg-gongke-accent/90 disabled:cursor-default disabled:bg-foreground/10 disabled:text-foreground/50"
           >
             {allOwned ? (
               <Check className="h-3.5 w-3.5" aria-hidden="true" />
@@ -278,7 +278,7 @@ export function SharedStack() {
           <button
             type="button"
             onClick={copyMarkdown}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3 text-[12.5px] font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
+            className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
           >
             <Copy className="h-3.5 w-3.5" aria-hidden="true" />
             复制 Markdown
@@ -286,7 +286,7 @@ export function SharedStack() {
           <button
             type="button"
             onClick={copyLink}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3 text-[12.5px] font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
+            className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
           >
             {copied ? (
               <Check className="h-3.5 w-3.5 text-gongke-accent" aria-hidden="true" />
@@ -301,7 +301,7 @@ export function SharedStack() {
       {merged ? (
         <div
           role="status"
-          className="rounded-xl border border-gongke-accent/25 bg-gongke-accent/[0.06] px-4 py-3 text-[12.5px] leading-relaxed text-foreground/80"
+          className="rounded-xl border border-gongke-accent/25 bg-gongke-accent/[0.06] px-4 py-3 text-xs leading-relaxed text-foreground/80"
         >
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <Check className="h-3.5 w-3.5 shrink-0 text-gongke-accent" aria-hidden="true" />
@@ -327,7 +327,7 @@ export function SharedStack() {
             <Link
               prefetch={false}
               href="/favorites"
-              className="inline-flex min-h-8 items-center gap-1 rounded-full bg-gongke-accent px-3 text-[12px] font-medium text-white transition-colors hover:bg-gongke-accent/90"
+              className="inline-flex min-h-8 items-center gap-1 rounded-full bg-gongke-accent px-3 text-xs font-medium text-white transition-colors hover:bg-gongke-accent/90"
             >
               去我的工具栈看看
               <ArrowRight className="h-3 w-3" aria-hidden="true" />
@@ -335,7 +335,7 @@ export function SharedStack() {
             {merged.onlyMine > 0 ? (
               <a
                 href={merged.myShareHref}
-                className="inline-flex min-h-8 items-center gap-1 rounded-full border border-foreground/15 px-3 text-[12px] font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
+                className="inline-flex min-h-8 items-center gap-1 rounded-full border border-foreground/15 px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
               >
                 <Link2 className="h-3 w-3" aria-hidden="true" />
                 看看我这份的链接
@@ -353,11 +353,11 @@ export function SharedStack() {
           <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
             <h2
               id="stack-share-compare"
-              className="font-display text-[17px] font-semibold text-foreground"
+              className="font-display text-lg font-semibold text-foreground"
             >
               并排对比
             </h2>
-            <p className="text-[12px] text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               九行固定顺序，只摆事实与判断原文，不替你下结论
             </p>
           </div>
@@ -375,13 +375,13 @@ export function SharedStack() {
           才回到卡片清单。 */}
       {hasCompare ? (
         <ul className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-foreground/10 bg-foreground/[0.02] px-4 py-3">
-          <li className="text-[12.5px] text-muted-foreground">逐个看详情：</li>
+          <li className="text-xs text-muted-foreground">逐个看详情：</li>
           {found.map((row) => (
             <li key={row.slug}>
               <Link
                 prefetch={false}
                 href={`/tools/${row.slug}`}
-                className="inline-flex min-h-8 items-center gap-1 rounded-full border border-foreground/15 px-3 text-[12.5px] font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
+                className="inline-flex min-h-8 items-center gap-1 rounded-full border border-foreground/15 px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
               >
                 {row.card.name}
                 <ArrowRight className="h-3 w-3" aria-hidden="true" />
@@ -396,7 +396,7 @@ export function SharedStack() {
             return (
               <li
                 key={row.slug}
-                className="flex items-start gap-3 rounded-xl border border-dashed border-foreground/15 px-4 py-3.5 text-[13px] text-muted-foreground"
+                className="flex items-start gap-3 rounded-xl border border-dashed border-foreground/15 px-4 py-3.5 text-sm text-muted-foreground"
               >
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                 <span className="min-w-0">
@@ -425,7 +425,7 @@ export function SharedStack() {
                     className="h-11 w-11 object-contain"
                   />
                 ) : (
-                  <Sparkles className="h-5 w-5 text-muted-foreground/50" aria-hidden="true" />
+                  <Bookmark className="h-5 w-5 text-muted-foreground/50" aria-hidden="true" />
                 )}
               </div>
 
@@ -433,21 +433,21 @@ export function SharedStack() {
                 <Link
                   prefetch={false}
                   href={`/tools/${row.slug}`}
-                  className="line-clamp-1 text-[15px] font-semibold text-foreground hover:text-gongke-accent"
+                  className="line-clamp-1 text-base font-semibold text-foreground hover:text-gongke-accent"
                 >
                   {row.card.name}
                 </Link>
                 {row.verdict?.bestFor[0] ? (
-                  <p className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-muted-foreground">
+                  <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                     适合：{row.verdict.bestFor[0]}
                   </p>
                 ) : row.card.description ? (
-                  <p className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-muted-foreground">
+                  <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                     {row.card.description}
                   </p>
                 ) : null}
 
-                <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11.5px] text-muted-foreground">
+                <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs text-muted-foreground">
                   {row.cat ? (
                     <span className="inline-flex items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-foreground/70">
                       <span
@@ -478,7 +478,7 @@ export function SharedStack() {
 
       {/* ── 收尾 ───────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-foreground/10 pt-4">
-        <p className="text-[12px] leading-relaxed text-muted-foreground">
+        <p className="text-xs leading-relaxed text-muted-foreground">
           这份清单由收件人的浏览器在本地还原：工具事实来自目录，适合/不适合来自编辑判断。
           收藏保存在各自设备上，不上传。
         </p>
@@ -486,14 +486,14 @@ export function SharedStack() {
           <Link
             prefetch={false}
             href="/favorites"
-            className="inline-flex min-h-9 items-center rounded-full border border-foreground/15 px-3.5 text-[12.5px] font-medium text-foreground/80 transition-colors hover:border-foreground/25"
+            className="inline-flex min-h-9 items-center rounded-full border border-foreground/15 px-3.5 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/25"
           >
             我的工具栈
           </Link>
           <Link
             prefetch={false}
             href="/decide"
-            className="inline-flex min-h-9 items-center rounded-full bg-gongke-accent px-3.5 text-[12.5px] font-medium text-white transition-colors hover:bg-gongke-accent/90"
+            className="inline-flex min-h-9 items-center rounded-full bg-gongke-accent px-3.5 text-xs font-medium text-white transition-colors hover:bg-gongke-accent/90"
           >
             我也去选 3 个
           </Link>

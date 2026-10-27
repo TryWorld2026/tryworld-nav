@@ -64,8 +64,24 @@ import { useModKey } from '@/lib/use-mod-key';
  * 右侧重量，但不再使用那套 `--color-1..5` 渐变描边（它是原站深底页眉的产物，
  * 在纸色底上读起来像一块彩色污渍，注释见上方 FAVORITES_BUTTON_CLASS 处）。
  */
+/**
+ * `shrink-0` + `whitespace-nowrap` 是 2026-10-27 补的，不是可选项：
+ *
+ * 这个按钮在 `lg:grid-cols-[1fr_auto_1fr]` 的第三格里。中栏导航固定 479px，
+ * 两列 1fr 平分剩余宽度 —— 1024 视口下第三格只有 256px，而格里还要放
+ * 搜索按钮（图标版 40px / 带文字版 173px）。按钮是 flex 子项，默认
+ * `min-width: auto` 但可以被压缩，于是被挤到 76px；「我的收藏」四个汉字
+ * 逐字换行成 4 行（4×20=80px），而按钮是 `h-11`（44px）—— 文字直接穿出
+ * 下沿 18px，压在下面的墨色 hero 上。
+ *
+ * 实测（`work/_design-audit/header4.mjs`，只量文字节点的 Range）：
+ *   1024 → 按钮 76px / 文字 4 行 / 溢出 +18px
+ *   1280 → 按钮 76px / 文字 4 行 / 溢出 +18px
+ *   1180–1279、1440+ → 118px / 1 行 / 正常
+ * 也就是说它只在两个最常见的主流宽度上坏掉，只测 390 与 1440 是看不见的。
+ */
 const FAVORITES_BUTTON_CLASS =
-  'group inline-flex h-11 items-center justify-center gap-1.5 rounded-xl bg-gongke-dark px-5 text-sm font-medium text-[#F2EEE6] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#253230] hover:shadow-lg hover:shadow-[#1B2523]/20 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gongke-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+  'group inline-flex h-11 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl bg-gongke-dark px-4 text-sm font-medium text-gongke-paper transition-all duration-200 hover:-translate-y-0.5 hover:bg-gongke-darkHover hover:shadow-lg hover:shadow-gongke-dark/20 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gongke-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background xl:px-5';
 
 /** The three top-level nav items share this exact class string in the origin. */
 const NAV_ITEM_CLASS =
@@ -94,7 +110,7 @@ const NEWS_NAV_CLASS = `${NAV_ITEM_CLASS} relative`;
  * 再来一个实心块会让右边重量翻倍。
  */
 const DECIDE_NAV_CLASS =
-  'inline-flex h-9 items-center gap-1.5 rounded-full border border-gongke-accent/30 bg-gongke-accent/[0.06] px-3 text-[13px] font-medium text-gongke-accent transition-colors hover:border-gongke-accent/45 hover:bg-gongke-accent/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+  'inline-flex h-9 items-center gap-1.5 rounded-full border border-gongke-accent/30 bg-gongke-accent/[0.06] px-3 text-sm font-medium text-gongke-accent transition-colors hover:border-gongke-accent/45 hover:bg-gongke-accent/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -316,7 +332,7 @@ export function Header() {
                       {/* 下拉里原先只有 26 个分类，没有通向「分类总览」或
                           「精选集合」的路 —— 桌面端去 /categories 的唯一入口
                           埋在首页下半屏。两个出口放到底部一条细线之后。 */}
-                      <div className="mt-1.5 flex items-center gap-3 border-t border-foreground/[0.07] px-2 pt-2 text-[12.5px]">
+                      <div className="mt-1.5 flex items-center gap-3 border-t border-foreground/[0.07] px-2 pt-2 text-xs">
                         <Link prefetch={false}
                           href="/categories"
                           onClick={() => setCatOpen(false)}
@@ -366,19 +382,38 @@ export function Header() {
                   className="flex shrink-0 items-center space-x-2 rounded-md px-3 py-2 text-gongke-muted transition-colors hover:bg-gongke-gray/10"
                 >
                   <Search className="h-4 w-4" aria-hidden="true" />
-                  <span className="hidden text-sm md:inline lg:hidden xl:inline">
+                  {/* 搜索文字只在「右侧栏真的放得下」的宽度出现。
+                      三栏网格是 `1fr auto 1fr`，中栏导航固定 479px，两列平分
+                      剩余宽度：
+                        1024 → 每列 128px   1280 → 256px   1440 → 336px
+                      带文字的搜索按钮 173px + 12px gap + 收藏按钮 118px = 303px，
+                      所以在 1024 与 1280 都放不下 —— 原来的 `lg:hidden xl:inline`
+                      恰好把 173px 在 1280 放了回来，是页眉崩掉的直接触发点。
+                      `2xl`（1536，此时每列 384px）才是安全起点。 */}
+                  <span className="hidden text-sm md:inline lg:hidden 2xl:inline">
                     搜索AI工具
-                    <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+                    <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-2xs font-medium text-muted-foreground opacity-100">
                       <span className="text-xs">{modKey}</span>K
                     </kbd>
                   </span>
                 </button>
 
                 <div className="hidden lg:block">
-                  {/* 指向真实的 /favorites，不再弹「未包含账号系统」的说明框。 */}
-                  <Link prefetch={false} href="/favorites" className={FAVORITES_BUTTON_CLASS}>
+                  {/* 指向真实的 /favorites，不再弹「未包含账号系统」的说明框。
+                      1024–1279 这段里右侧栏只有 128–206px，放不下
+                      「图标 + 我的收藏」118px 的完整按钮，所以这一段收成
+                      48px 的图标按钮（`aria-label` + `title` 保证仍可读、
+                      可悬停辨识），1280 起恢复文字。见 FAVORITES_BUTTON_CLASS
+                      上方那段实测说明。 */}
+                  <Link
+                    prefetch={false}
+                    href="/favorites"
+                    aria-label="我的收藏"
+                    title="我的收藏"
+                    className={FAVORITES_BUTTON_CLASS}
+                  >
                     <Bookmark className="h-4 w-4" aria-hidden="true" />
-                    我的收藏
+                    <span className="hidden xl:inline">我的收藏</span>
                   </Link>
                 </div>
 

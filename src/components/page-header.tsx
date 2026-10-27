@@ -41,7 +41,7 @@ export function PageHeader({
               {eyebrow}
             </p>
           )}
-          <h1 className="font-display text-3xl leading-tight tracking-tight text-foreground sm:text-4xl 4xl:text-5xl 4xl:leading-[1.12]">
+          <h1 className="font-display text-3xl leading-tight tracking-tight text-foreground sm:text-4xl 4xl:text-6xl 4xl:leading-tight">
             {title}
           </h1>
         </div>
@@ -53,7 +53,7 @@ export function PageHeader({
           // 上稳定断在「关键词筛 / 选。」：末行只剩两个字，是典型的孤行。
           // `text-balance` 让两行长度接近（约 20/20），孤行消失；它只在
           // 折成 2 行时生效，一行或单栏时是无操作。
-          <p className="mt-2.5 max-w-[66ch] text-balance text-[15px] leading-relaxed text-gongke-muted 4xl:mt-0">
+          <p className="mt-2.5 max-w-[66ch] text-balance text-base leading-relaxed text-gongke-muted 4xl:mt-0">
             {description}
           </p>
         )}

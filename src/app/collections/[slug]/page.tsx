@@ -116,7 +116,7 @@ export default async function CollectionDetailPage({
                 <h1 className="font-display text-3xl leading-tight text-foreground md:text-4xl">
                   {collection.title}
                 </h1>
-                <p className="mt-2.5 max-w-[62ch] text-[15px] leading-relaxed text-gongke-muted">
+                <p className="mt-2.5 max-w-[62ch] text-base leading-relaxed text-gongke-muted">
                   {collection.intro}
                 </p>
               </div>
@@ -158,7 +158,7 @@ export default async function CollectionDetailPage({
       {others.length > 0 && (
         <div className="border-t border-foreground/10 py-10">
           <div className="content-container">
-            <h2 className="mb-4 text-[19px] font-semibold text-foreground">其他集合</h2>
+            <h2 className="mb-4 text-xl font-semibold text-foreground">其他集合</h2>
             {/* 每个集合的 `others` 恰好 3 项（9 个集合互指），所以列数只能取
                 3 的约数：sm 2 列（2+1，读作「一共三个」）→ lg 起 3 列一行
                 排满。原先写的是 lg:grid-cols-4 —— 在 ≥1024 上永远空着第四
@@ -186,10 +186,10 @@ export default async function CollectionDetailPage({
                     />
                   </span>
                   <div className="min-w-0">
-                    <h3 className="text-[15px] font-semibold leading-snug text-foreground transition-colors group-hover:text-gongke-accent">
+                    <h3 className="text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-gongke-accent">
                       {o.title}
                     </h3>
-                    <p className="mt-0.5 line-clamp-2 text-[13px] leading-relaxed text-gongke-muted">
+                    <p className="mt-0.5 line-clamp-2 text-sm leading-relaxed text-gongke-muted">
                       {o.description}
                     </p>
                   </div>

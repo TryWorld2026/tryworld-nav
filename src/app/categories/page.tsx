@@ -51,13 +51,13 @@ export default function CategoriesPage() {
             计数从描述句里搬出来：同一组数字在一屏里写两遍会显得没整理过。 */}
         <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
           <div className="min-w-0">
-            <h1 className="font-display text-3xl leading-tight text-foreground md:text-4xl 4xl:text-5xl 4xl:leading-[1.1]">
+            <h1 className="font-display text-3xl leading-tight text-foreground md:text-4xl 4xl:text-6xl 4xl:leading-tight">
               所有分类
             </h1>
             {/* 一句话的 <p> 必须写成一行。JSX 在 `，` 与 `而不是` 之间换行时
                 会插进一个空格（中文里等于多出半个字宽的洞），而且 52ch 的
                 上限在 15px 下只有约 437px，这句话会折成两行、末行只剩三四个字。 */}
-            <p className="mt-2 max-w-[36em] text-[15px] leading-relaxed text-gongke-muted">
+            <p className="mt-2 max-w-[36em] text-base leading-relaxed text-gongke-muted">
               按你想做的事开始，而不是按它用了什么技术开始。
             </p>
           </div>
@@ -86,7 +86,7 @@ export default function CategoriesPage() {
             <li key={c.slug}>
               <a
                 href={`#${c.slug}`}
-                className="group inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-card px-2.5 py-1 text-[12px] text-foreground/65 transition-all duration-150 hover:-translate-y-px hover:border-foreground/20 hover:text-foreground"
+                className="group inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-card px-2.5 py-1 text-xs text-foreground/65 transition-all duration-150 hover:-translate-y-px hover:border-foreground/20 hover:text-foreground"
               >
                 <span
                   className="h-1.5 w-1.5 rounded-full"
@@ -157,7 +157,7 @@ export default function CategoriesPage() {
                 <CategoryIcon name={c.icon} className="h-5 w-5 md:h-6 md:w-6" />
               </span>
               <div className="min-w-0 flex-1">
-                <h3 className="text-[17px] font-semibold leading-snug text-foreground">
+                <h3 className="text-lg font-semibold leading-snug text-foreground">
                   {/* 整卡可点：`after` 铺满最近的定位祖先（卡片本体），这是
                       嵌套锚点之外唯一合法的「整卡链接」。头像链接各自抬到
                       z-20 才能拿到点击。 */}
@@ -171,7 +171,7 @@ export default function CategoriesPage() {
                 {/* 4xl（≥1800）一档卡片内宽只有 254px，分类说明的可用宽度
                     约 156px —— 13 个字的 tagline 正好断成 12 + 1，末行留一个
                     「手」字。`text-balance` 把两行拉成 7/6，孤字消失。 */}
-                <p className="mt-1 text-balance line-clamp-2 text-[13px] leading-relaxed text-gongke-muted">
+                <p className="mt-1 text-balance line-clamp-2 text-sm leading-relaxed text-gongke-muted">
                   {c.tagline}
                 </p>
               </div>
@@ -185,12 +185,14 @@ export default function CategoriesPage() {
               {/* 成员头像。图标本身带品牌色块，叠在一起会糊成一条彩色带 ——
                   所以每个头像都套一个**白色圆片**（`bg-card` + 发丝描边），
                   圆圈之间只靠叠压露出层次，颜色被框在各自的圆里。
-                  最多露 5 个：这一行还要放下「+N」和工具数，最窄的卡片内宽
-                  262px，5 个（叠压 8px，含 +N 共 157px）+ 12px 间隔 +
-                  58px 计数 = 227px，留 35px 余量；6 个则要 251px，只剩 11px，
-                  字体一有差异就会顶出去。露不下的由「+N」接着数。 */}
-              <div className="flex -space-x-2">
-                {c.members.slice(0, 5).map((m) => (
+
+                  2026-10-27：从「5 个头像 + `+103` 灰药丸」收成「4 个头像」。
+                  那个 +N 是 `aria-hidden` 的纯装饰，而它数的数与右下角
+                  「161 个工具」**口径不同**（前者是原站目录规模，后者是本站
+                  收录数），并排放着就是在同一个行里给两个互相矛盾的数字。
+                  删掉之后这一行只回答一件事：这个分类里有什么。 */}
+              <div className="flex -space-x-1.5">
+                {c.members.slice(0, 4).map((m) => (
                   <Link prefetch={false}
                     key={m.slug}
                     href={`/tools/${m.slug}`}
@@ -201,7 +203,7 @@ export default function CategoriesPage() {
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      className="h-5 w-5 rounded-[5px] object-contain"
+                      className="h-5 w-5 rounded-sm object-contain"
                       src={m.icon}
                       width={20}
                       height={20}
@@ -209,17 +211,11 @@ export default function CategoriesPage() {
                     />
                   </Link>
                 ))}
-                <span
-                  className="relative z-0 flex h-8 items-center justify-center rounded-full bg-foreground/[0.05] px-2 text-[12px] font-medium tabular-nums text-foreground/70"
-                  aria-hidden="true"
-                >
-                  +{c.plus}
-                </span>
               </div>
               {/* 工具数用**本站目录**的真实计数（`toolsByCategory`），不是
-                  `+N` 徽章那个数 —— 后者是原站自己的目录规模（例如 AI智能体
-                  的 +103 合计 109），本站收录 161 个，两者口径不同。 */}
-              <span className="shrink-0 text-[12px] tabular-nums text-muted-foreground">
+                  原站目录规模 —— 后者口径不同（例如 AI 智能体的原站 +103
+                  合计 109，本站收录 161 个）。 */}
+              <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
                 {toolsByCategory(c.slug).length} 个工具
               </span>
             </div>
@@ -238,14 +234,14 @@ export default function CategoriesPage() {
           className="group flex flex-col gap-4 rounded-2xl border border-dashed border-foreground/15 p-5 transition-colors duration-200 hover:border-gongke-accent/40 hover:bg-card md:col-span-2 md:flex-row md:items-center md:justify-between md:gap-6 xl:col-span-1 xl:flex-col xl:items-start xl:justify-between xl:gap-4 2xl:col-span-2 2xl:flex-row 2xl:items-center 2xl:justify-between 2xl:gap-6 4xl:col-span-4"
         >
           <div>
-            <p className="text-[17px] font-semibold leading-snug text-foreground">
+            <p className="text-lg font-semibold leading-snug text-foreground">
               没找到合适的？
             </p>
-            <p className="mt-1 text-[13px] leading-relaxed text-gongke-muted">
+            <p className="mt-1 text-sm leading-relaxed text-gongke-muted">
               跳过分类，直接浏览全部 {tools.length} 个工具。
             </p>
           </div>
-          <span className="inline-flex shrink-0 items-center gap-1.5 text-[13px] font-medium text-gongke-accent">
+          <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-gongke-accent">
             浏览全部工具
             <ArrowUpRight
               className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"

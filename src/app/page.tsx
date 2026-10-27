@@ -171,12 +171,12 @@ export default function HomePage() {
               href="/tools"
               linkLabel="查看全部"
               icon={<Rocket className="h-4 w-4" />}
+              aside={<InlineStats />}
             />
-            {/* 移动端：体量数字从 hero 搬到这里（`md:hidden`）。
-                读者此时已经看到工具卡了，数字变成「证明这站很大」而不是
-                「挡住我看工具」—— hero 里它在 390×844 下把第一张卡推到
-                top 773（屏高 844，只露 71px）。见 `home-stats.tsx`。 */}
-            <div className="mb-3 mt-2 md:hidden">
+            {/* 体量数字（2026-10-27）：从 hero 搬到这里，**所有断点都显示**。
+                宽屏时它挂在标题行右侧（`SectionHeader` 的 `aside`，`lg` 起），
+                窄屏放不下就落到标题下方。理由见 `home-stats.tsx`。 */}
+            <div className="mb-3 mt-2 lg:hidden">
               <InlineStats />
             </div>
             <Grid items={hotTools} />
@@ -221,11 +221,11 @@ export default function HomePage() {
         <div className="content-container">
           <header className="mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
             <div className="min-w-0">
-              <p className="mb-2 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+              <p className="mb-2 flex items-center gap-2 text-2xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
                 <LayoutGrid className="h-3.5 w-3.5 text-gongke-accent" aria-hidden="true" />
                 按场景浏览
               </p>
-              <h2 className="font-display text-[26px] leading-tight text-foreground md:text-[30px]">
+              <h2 className="font-display text-3xl leading-tight text-foreground md:text-3xl">
                 从你想做的事开始
               </h2>
               <p className="mt-2 max-w-[52ch] text-sm leading-relaxed text-gongke-muted">
@@ -235,7 +235,7 @@ export default function HomePage() {
             </div>
             <Link prefetch={false}
               href="/categories"
-              className="group inline-flex shrink-0 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3.5 py-2 text-[13px] font-medium text-foreground/80 transition-all duration-200 hover:-translate-y-px hover:border-foreground/25 hover:text-foreground"
+              className="group inline-flex shrink-0 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3.5 py-2 text-sm font-medium text-foreground/80 transition-all duration-200 hover:-translate-y-px hover:border-foreground/25 hover:text-foreground"
             >
               分类总览
               <ArrowUpRight
@@ -252,12 +252,12 @@ export default function HomePage() {
               <div key={group.id} className="mt-12 first:mt-0">
                 <div className="mb-4 flex items-end gap-4 border-b border-foreground/10 pb-2.5">
                   <div className="min-w-0">
-                    <h3 className="font-display text-[20px] leading-tight text-foreground">
+                    <h3 className="font-display text-xl leading-tight text-foreground">
                       {group.title}
                     </h3>
-                    <p className="mt-0.5 text-[12.5px] text-muted-foreground">{group.note}</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{group.note}</p>
                   </div>
-                  <span className="mb-0.5 ml-auto shrink-0 text-[11px] tabular-nums text-muted-foreground">
+                  <span className="mb-0.5 ml-auto shrink-0 text-2xs tabular-nums text-muted-foreground">
                     {items.length} 个分类
                   </span>
                 </div>
@@ -288,10 +288,10 @@ export default function HomePage() {
                         <CategoryIcon name={s.icon} className="h-[18px] w-[18px]" />
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[14px] font-semibold leading-snug text-foreground transition-colors group-hover:text-gongke-accent">
+                        <span className="block truncate text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-gongke-accent">
                           {s.name}
                         </span>
-                        <span className="mt-0.5 block text-[11.5px] tabular-nums text-muted-foreground">
+                        <span className="mt-0.5 block text-2xs tabular-nums text-muted-foreground">
                           {toolsByCategory(s.slug).length} 个工具
                         </span>
                       </span>

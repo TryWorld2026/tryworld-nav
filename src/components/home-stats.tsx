@@ -4,20 +4,28 @@ import { dailyArchive, hotTopics } from '@/lib/daily-data';
 /**
  * 站点体量的四个数字 —— 全站唯一来源。
  *
- * 为什么抽成组件：这四个数字原来只住在 `hero.tsx` 里，而 2026-10-22 实测
- * 移动端（390×844）首屏被它整块吃掉 —— hero 内 6 个纵向块（定义句 → H1 →
- * 搜索框 → 两个 CTA → stats），stats 在 top 516、hero 到 685 结束，中间
- * 119px 是纯留白，而**第一张工具卡落在 top 773**（屏高 844，只露 71px）。
+ * **它不在 hero 里**（2026-10-27 定稿）。曾经有两个形态：`HeroStats`（墨底
+ * 四栏看板，桌面端留在 hero）与 `InlineStats`（一行旁注，仅移动端）。
+ * 2026-10-26 的实测审计把前者删掉了，理由不是审美，是预算：
  *
- * 也就是说手机用户打开首页，看到的是「一句话 + 一个搜索框 + 四个数字」，
- * 一张工具卡都看不全。而这四个数字回答的是「这站大不大」（信任背书），
- * 不是「我下一步做什么」（行动引导）—— 它挡在了唯一该做的事前面。
+ *   七个主流视口里只有 768×1024 与 1920×1080 能看到一张完整的工具卡。
+ *   390×664 / 1024×768 / 1280×800 的首卡可见高度是 **0**，1440×900 只露
+ *   44/139。hero 占掉首屏 53–83%，而它内部除了四行字就是这一排数字。
  *
- * 处理：**移动端搬走，桌面端留在 hero**。搬到的位置是「热门工具」区块的
- * 标题行右侧 —— 那里读者已经看到工具卡了，数字变成「证明这站很大」而不是
- * 「挡住我看工具」。桌面端（≥768）首屏够高，留在 hero 作为落地基线。
+ * 四个数字回答的是「这站大不大」（信任背书），不是「我下一步做什么」
+ * （行动引导）。它挡在了唯一该做的事前面 —— 尤其在一个导航站上，读者
+ * 打开首页的目的就是「有没有我那个需求」。
  *
- * 两种渲染形态共用同一份数据与同一套措辞，避免两处各写一遍然后漂移。
+ * 所以现在**只有一个形态**：一行旁注，挂在「热门工具」标题行里。读者
+ * 看到工具卡的同时看到体量，数字变成「证明这站很大」而不是「挡住我看工具」。
+ * 桌面端也因此受益：首卡从 top 857 提到 617，1440×900 终于能在第一屏
+ * 看到完整的一张卡。
+ *
+ * 标签必须可见（2026-10-22 的教训）：第一版把 `<dt>` 写成 `sr-only`，
+ * 理由写着「读屏用户仍能听到『收录工具 2081 个』」—— 但那是把**视觉用户**
+ * 排除在外了。390×844 实测页面上只剩「2081 个 26 个 180 期 10 条」，
+ * 四个数字各自指什么完全读不出来，比不显示更糟：数字本身没有信息量，
+ * 标签才是信息。
  */
 
 /** 四个统计项。顺序固定：先「有多少工具」，再「分几类」，然后「有内容」，最后「有热点」。 */
@@ -30,41 +38,19 @@ export function homeStats(): { value: number; label: string; unit: string }[] {
   ];
 }
 
-/** 墨底版本（hero 内，桌面端）。四个数字横跨全宽，左缘与站名对齐。 */
-export function HeroStats() {
-  return (
-    <dl className="mt-10 hidden grid-cols-2 gap-x-6 gap-y-5 border-t border-white/10 pt-6 sm:grid-cols-4 md:grid lg:mt-12">
-      {homeStats().map((s) => (
-        <div key={s.label}>
-          <dt className="text-[11px] tracking-wide text-[#F2EEE6]/60">{s.label}</dt>
-          <dd className="mt-0.5 font-display text-2xl tabular-nums text-[#F2EEE6]">
-            {s.value}
-            <span className="ml-1 text-sm text-[#F2EEE6]/55">{s.unit}</span>
-          </dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
 /**
- * 纸面版本（「热门工具」标题行右侧，仅移动端）。
+ * 单行横排、12px、用「·」分隔 —— 它是**旁注**而不是看板。
  *
- * 单行横排、字号压到 12px、用「·」分隔 —— 它现在是一个**旁注**而不是看板。
- *
- * **标签必须可见**（2026-10-22 修）：第一版把 `<dt>` 写成 `sr-only`，理由写着
- * 「读屏用户仍能听到『收录工具 2081 个』」—— 但那是把**视觉用户**排除在外了。
- * 390×844 实测页面上只剩「2081 个 26 个 180 期 10 条」，四个数字各自指什么
- * 完全读不出来，比不显示更糟：数字本身没有信息量，标签才是信息。
- * 现在用短标签（工具 / 分类 / 日报 / 热点）压在数字后面，一行仍然放得下。
+ * 没有断点条件：所有视口都显示（原来只有 `md:hidden` 的移动端显示）。
+ * 桌面端放在「热门工具」标题行右侧，与标题同一基线。
  */
 export function InlineStats() {
   return (
-    <dl className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[12px] text-muted-foreground md:hidden">
+    <dl className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-muted-foreground">
       {homeStats().map((s) => (
         <div key={s.label} className="flex items-baseline gap-0.5">
           <dd className="tabular-nums font-medium text-foreground/80">{s.value}</dd>
-          <dt className="text-[11px]">
+          <dt className="text-2xs">
             {s.unit}
             {s.label.replace(/^(收录|此刻)/, '')}
           </dt>

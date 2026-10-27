@@ -27,6 +27,7 @@ export function SectionHeader({
   icon,
   id,
   compact = false,
+  aside,
 }: {
   title: string;
   href?: string;
@@ -34,13 +35,15 @@ export function SectionHeader({
   icon?: React.ReactNode;
   id?: string;
   compact?: boolean;
+  /** 标题行里的旁注（例如「热门工具」右侧的体量数字）。 */
+  aside?: React.ReactNode;
 }) {
   return (
     <div
       className={`flex items-center gap-3${compact ? '' : ' mb-4'}`}
     >
       <h2
-        className="flex shrink-0 items-center gap-2.5 text-[19px] font-semibold text-foreground"
+        className="flex shrink-0 items-center gap-2.5 text-xl font-semibold text-foreground"
         id={id}
       >
         {icon && (
@@ -57,10 +60,14 @@ export function SectionHeader({
       {/* 发丝线：从标题一直铺到右侧的链接，把两者钉在同一行上。 */}
       <span className="h-px min-w-4 flex-1 bg-foreground/10" aria-hidden="true" />
 
+      {/* 旁注：贴着「查看更多」左侧，与标题同一基线。窄屏放不下，由调用方
+          在标题下方另给一份（同一组件、同一份数据）。 */}
+      {aside && <div className="hidden shrink-0 lg:block">{aside}</div>}
+
       {href && (
         <Link prefetch={false}
           href={href}
-          className="group inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[13px] font-medium text-muted-foreground transition-colors hover:text-gongke-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="group inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-sm font-medium text-muted-foreground transition-colors hover:text-gongke-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {linkLabel}
           <ArrowRight

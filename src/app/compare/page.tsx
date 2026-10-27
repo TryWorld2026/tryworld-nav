@@ -51,7 +51,7 @@ export default function CompareIndexPage() {
         <section aria-labelledby="top-heading">
           <h2
             id="top-heading"
-            className="mb-3 flex items-center gap-2 text-[15px] font-semibold text-foreground"
+            className="mb-3 flex items-center gap-2 text-base font-semibold text-foreground"
           >
             <Scale className="h-4 w-4 text-gongke-accent" aria-hidden="true" />
             最值得看的 {top.length} 组
@@ -72,7 +72,7 @@ export default function CompareIndexPage() {
           内链可达性没有损失。 */}
       {groups.length > 0 && (
         <section aria-labelledby="rest-heading" className="space-y-3">
-          <h2 id="rest-heading" className="text-[15px] font-semibold text-foreground">
+          <h2 id="rest-heading" className="text-base font-semibold text-foreground">
             按分类浏览其余 {rest.length} 组
           </h2>
           {groups.map((g) => (
@@ -86,10 +86,10 @@ export default function CompareIndexPage() {
                   className="h-2 w-2 shrink-0 rounded-full"
                   style={{ backgroundColor: g.color ? `rgb(${g.color})` : undefined }}
                 />
-                <span className="min-w-0 flex-1 truncate text-[13.5px] font-medium text-foreground">
+                <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
                   {g.name}
                 </span>
-                <span className="shrink-0 text-[12px] tabular-nums text-muted-foreground">
+                <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
                   {g.pairs.length} 组
                 </span>
                 <ChevronRight
@@ -107,7 +107,7 @@ export default function CompareIndexPage() {
         </section>
       )}
 
-      <p className="border-t border-foreground/10 pt-5 text-[12.5px] leading-relaxed text-muted-foreground">
+      <p className="border-t border-foreground/10 pt-5 text-xs leading-relaxed text-muted-foreground">
         这份清单不是手挑的：它按「读者关心度」从目录数据算出来 —— 首页常用推荐、
         被编辑集合收录、以及两边都写过判断的工具排在前，并且只取**同分类**的组合
         （跨分类的二选一对读者没有意义）。想让我们补上某一对，可在
@@ -198,15 +198,15 @@ function PairCard({
             className="h-7 w-7 shrink-0 rounded-md object-contain"
           />
         )}
-        <span className="min-w-0 truncate text-[14px] font-medium text-foreground transition-colors group-hover:text-gongke-accent">
+        <span className="min-w-0 truncate text-sm font-medium text-foreground transition-colors group-hover:text-gongke-accent">
           {a.name}
         </span>
       </span>
-      <span className="shrink-0 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+      <span className="shrink-0 text-2xs font-medium uppercase tracking-wider text-muted-foreground">
         vs
       </span>
       <span className="flex min-w-0 flex-1 items-center justify-end gap-2">
-        <span className="min-w-0 truncate text-right text-[14px] font-medium text-foreground transition-colors group-hover:text-gongke-accent">
+        <span className="min-w-0 truncate text-right text-sm font-medium text-foreground transition-colors group-hover:text-gongke-accent">
           {b.name}
         </span>
         {b.icon && (

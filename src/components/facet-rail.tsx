@@ -67,7 +67,7 @@ const PLATFORM_PREVIEW = 8;
 const CAT_PREVIEW = 10;
 
 const ROW_BASE =
-  'flex w-full items-center gap-2 rounded-md px-2 text-left text-[13px] leading-none transition-colors duration-200 h-8 max-lg:min-h-11';
+  'flex w-full items-center gap-2 rounded-md px-2 text-left text-sm leading-none transition-colors duration-200 h-8 max-lg:min-h-11';
 
 function rowClass(on: boolean, zero: boolean) {
   return cn(
@@ -85,7 +85,7 @@ function rowClass(on: boolean, zero: boolean) {
 
 function GroupHeading({ children }: { children: ReactNode }) {
   return (
-    <h3 className="mb-1.5 px-2 text-[12.5px] font-semibold leading-5 text-foreground">
+    <h3 className="mb-1.5 px-2 text-xs font-semibold leading-5 text-foreground">
       {children}
     </h3>
   );

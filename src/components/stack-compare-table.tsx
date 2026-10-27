@@ -35,7 +35,7 @@ export function StackCompareTable({
   return (
     <>
       <div className="hidden overflow-x-auto rounded-2xl border border-foreground/10 bg-card lg:block">
-        <table className="w-full min-w-[36rem] table-fixed border-collapse text-[12.5px]">
+        <table className="w-full min-w-[36rem] table-fixed border-collapse text-xs">
           <caption className="sr-only">
             {caption ?? `${tools.map((t) => t.name).join('、')} 的可比较事实与编辑判断`}
           </caption>
@@ -56,7 +56,7 @@ export function StackCompareTable({
                   <Link
                     prefetch={false}
                     href={`/tools/${t.slug}`}
-                    className="block text-[13px] font-semibold leading-snug text-foreground hover:text-gongke-accent"
+                    className="block text-sm font-semibold leading-snug text-foreground hover:text-gongke-accent"
                   >
                     {t.name}
                   </Link>
@@ -107,17 +107,17 @@ export function StackCompareTable({
               <Link
                 prefetch={false}
                 href={`/tools/${t.slug}`}
-                className="text-[14.5px] font-semibold text-foreground hover:text-gongke-accent"
+                className="text-sm font-semibold text-foreground hover:text-gongke-accent"
               >
                 {t.name}
               </Link>
-              <span className="text-[11.5px] text-muted-foreground">详情</span>
+              <span className="text-2xs text-muted-foreground">详情</span>
             </h3>
             <dl className="space-y-2">
               {rows.map((row) => {
                 const cell = row.cells[tools.findIndex((x) => x.slug === t.slug)] ?? '—';
                 return (
-                  <div key={row.key} className="flex gap-3 text-[12.5px] leading-relaxed">
+                  <div key={row.key} className="flex gap-3 text-xs leading-relaxed">
                     <dt className="w-[5.5rem] shrink-0 text-muted-foreground">{row.label}</dt>
                     <dd className="min-w-0 flex-1 text-foreground/80">
                       {MULTI_VALUE_ROWS.has(row.key) && cell.includes(LIST_SEP) ? (

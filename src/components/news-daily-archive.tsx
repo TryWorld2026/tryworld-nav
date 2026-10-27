@@ -73,7 +73,7 @@ export function DailyArchive({
                       {num}
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-[11px] leading-4 text-muted-foreground">
+                      <span className="block text-2xs leading-4 text-muted-foreground">
                         {weekdayZh(d.date)}
                         {on ? ' · 当前' : ''}
                       </span>
@@ -97,7 +97,7 @@ export function DailyArchive({
         <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3.5 text-sm font-semibold [&::-webkit-details-marker]:hidden">
           <span className="inline-flex items-center gap-2">
             往期日报
-            <span className="rounded-full bg-foreground/5 px-1.5 py-0.5 text-[11px] font-normal text-muted-foreground">
+            <span className="rounded-full bg-foreground/5 px-1.5 py-0.5 text-2xs font-normal text-muted-foreground">
               共 {archive.length} 期
             </span>
           </span>
@@ -123,11 +123,11 @@ export function DailyArchive({
       >
         <div className="mb-3 flex items-center justify-between px-2">
           <h2 className="text-sm font-semibold text-foreground">往期</h2>
-          <span className="text-[11px] text-muted-foreground">共 {archive.length} 期</span>
+          <span className="text-2xs text-muted-foreground">共 {archive.length} 期</span>
         </div>
         <ArchiveScrollToCurrent />
         {list}
-        <p className="mt-4 border-t border-foreground/5 px-2 pt-3 text-[11px] leading-relaxed text-muted-foreground">
+        <p className="mt-4 border-t border-foreground/5 px-2 pt-3 text-2xs leading-relaxed text-muted-foreground">
           第 {issueNumber(archive, current) || '—'} 期 · {formatDateFull(current)}
           <br />
           每天 08:00（北京时间）出刊
@@ -156,9 +156,9 @@ export function DailyMiniCalendar({
     <div className="rounded-xl border border-foreground/10 bg-card p-3.5">
       <div className="mb-2.5 flex items-baseline justify-between">
         <h3 className="text-sm font-semibold text-foreground">{calendar.label}</h3>
-        <span className="text-[11px] text-muted-foreground">本月 {monthCount} 期</span>
+        <span className="text-2xs text-muted-foreground">本月 {monthCount} 期</span>
       </div>
-      <div className="grid grid-cols-7 gap-1 text-center text-[10px] text-muted-foreground">
+      <div className="grid grid-cols-7 gap-1 text-center text-2xs text-muted-foreground">
         {['一', '二', '三', '四', '五', '六', '日'].map((d) => (
           <span key={d} className="py-1">
             {d}
@@ -193,7 +193,7 @@ export function DailyMiniCalendar({
           );
         })}
       </div>
-      <p className="mt-2.5 flex items-center gap-1 border-t border-foreground/5 pt-2 text-[10px] text-muted-foreground">
+      <p className="mt-2.5 flex items-center gap-1 border-t border-foreground/5 pt-2 text-2xs text-muted-foreground">
         <Clock3 className="h-3 w-3" aria-hidden="true" />
         每天 08:00 出刊，深色数字为已出版
       </p>

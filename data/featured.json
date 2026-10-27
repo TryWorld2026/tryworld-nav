@@ -14,14 +14,14 @@
         "slug": "ai-image-design",
         "name": "AI图像/设计",
         "icon": "image",
-        "color": "244 63 94"
+        "color": "242 105 60"
       },
       {
         "id": "30vv02cxnnx6iey",
         "slug": "ai-agents",
         "name": "AI智能体",
         "icon": "brain-circuit",
-        "color": "234 88 12"
+        "color": "242 105 60"
       }
     ]
   },
@@ -40,7 +40,7 @@
         "slug": "ai-video-animation",
         "name": "AI视频/动画",
         "icon": "clapperboard",
-        "color": "239 68 68"
+        "color": "242 105 60"
       }
     ]
   },
@@ -59,14 +59,14 @@
         "slug": "ai-data-analysis",
         "name": "AI数据分析",
         "icon": "chart-area",
-        "color": "5 150 105"
+        "color": "36 86 78"
       },
       {
         "id": "8vrbi328a85enh8",
         "slug": "ai-document-tools",
         "name": "AI文档办公",
         "icon": "scroll-text",
-        "color": "68 64 60"
+        "color": "27 37 35"
       }
     ]
   },
@@ -88,7 +88,7 @@
         "slug": "ai-image-design",
         "name": "AI图像/设计",
         "icon": "image",
-        "color": "244 63 94"
+        "color": "242 105 60"
       }
     ]
   },
@@ -109,14 +109,14 @@
         "slug": "ai-video-animation",
         "name": "AI视频/动画",
         "icon": "clapperboard",
-        "color": "239 68 68"
+        "color": "242 105 60"
       },
       {
         "id": "30vv02cxnnx6iey",
         "slug": "ai-agents",
         "name": "AI智能体",
         "icon": "brain-circuit",
-        "color": "234 88 12"
+        "color": "242 105 60"
       }
     ]
   }

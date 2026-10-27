@@ -71,8 +71,8 @@ export function NewsMasthead({
               而不是没排完。 */}
           <div className="min-w-0 2xl:grid 2xl:grid-cols-[auto_minmax(0,1fr)] 2xl:items-stretch 2xl:gap-x-12">
             <div className="min-w-0 2xl:col-start-1 2xl:row-start-1">
-              <p className="mb-2.5 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#F2EEE6]/55">
-                <span className="text-[#F2A07F]" aria-hidden="true">
+              <p className="mb-2.5 flex items-center gap-2 text-2xs font-medium uppercase tracking-[0.18em] text-gongke-paper/55">
+                <span className="text-gongke-onInk" aria-hidden="true">
                   {icon ?? <Newspaper className="h-3.5 w-3.5" />}
                 </span>
                 {eyebrow}
@@ -80,7 +80,7 @@ export function NewsMasthead({
               {/* 标题随版心一起放大：1760 的报头里一个 36px 的标题等于一句「注脚」，
                   读者先看到的是四边的空。宽屏下报到 56px，尺寸本身就承担了「这是
                   一张报头」的交代，而不是靠再加一块色块。 */}
-              <h1 className="font-display text-[30px] leading-[1.15] tracking-[-0.01em] text-[#F2EEE6] md:text-[40px] 2xl:text-[56px]">
+              <h1 className="font-display text-3xl leading-tight tracking-[-0.01em] text-gongke-paper md:text-5xl 2xl:text-7xl">
                 {title}
               </h1>
             </div>
@@ -94,7 +94,7 @@ export function NewsMasthead({
                   /news/weekly 与 /news/hot 1024 下都折成三行，末行只剩
                   6–8% 宽的一两个字。均衡换行把三行拉平，墨底上不再出现
                   一条挂在左边的短尾。 */}
-              <p className="mt-3 max-w-[34rem] text-balance text-[15px] leading-relaxed text-[#F2EEE6]/[0.62] 2xl:mt-0 2xl:max-w-[41rem]">
+              <p className="mt-3 max-w-[34rem] text-balance text-base leading-relaxed text-gongke-paper/[0.62] 2xl:mt-0 2xl:max-w-[41rem]">
                 {description}
               </p>
             </div>
@@ -129,14 +129,14 @@ export function NewsMasthead({
                   className="group flex items-start gap-2.5 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07] active:translate-y-0"
                 >
                   <Newspaper
-                    className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#F2A07F]"
+                    className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gongke-onInk"
                     aria-hidden="true"
                   />
                   <span className="min-w-0">
-                    <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-[#F2EEE6]/55">
+                    <span className="block text-2xs font-semibold uppercase tracking-[0.14em] text-gongke-paper/55">
                       最新日报 · {formatDateFull(daily.date)} {weekdayZh(daily.date)}
                     </span>
-                    <span className="mt-0.5 line-clamp-1 text-[13px] text-[#F2EEE6]/85 transition-colors group-hover:text-white">
+                    <span className="mt-0.5 line-clamp-1 text-sm text-gongke-paper/85 transition-colors group-hover:text-white">
                       {daily.lead?.title ?? '今日无大事发生'}
                     </span>
                   </span>
@@ -148,14 +148,14 @@ export function NewsMasthead({
                   className="group flex items-start gap-2.5 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07] active:translate-y-0"
                 >
                   <Flame
-                    className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#F2A07F]"
+                    className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gongke-onInk"
                     aria-hidden="true"
                   />
                   <span className="min-w-0">
-                    <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-[#F2EEE6]/55">
+                    <span className="block text-2xs font-semibold uppercase tracking-[0.14em] text-gongke-paper/55">
                       此刻最热 · {hotCount} 条
                     </span>
-                    <span className="mt-0.5 line-clamp-1 text-[13px] text-[#F2EEE6]/85 transition-colors group-hover:text-white">
+                    <span className="mt-0.5 line-clamp-1 text-sm text-gongke-paper/85 transition-colors group-hover:text-white">
                       {hot.title}
                     </span>
                   </span>
@@ -175,7 +175,7 @@ export function NewsMasthead({
  */
 export function MastheadMeta({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-[#F2EEE6]/55">
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-gongke-paper/55">
       {children}
     </div>
   );
@@ -186,7 +186,7 @@ export function MastheadLink({ href, children }: { href: string; children: React
   return (
     <Link prefetch={false}
       href={href}
-      className="group inline-flex min-h-6 items-center gap-1 font-medium text-[#F2EEE6]/80 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60"
+      className="group inline-flex min-h-6 items-center gap-1 font-medium text-gongke-paper/80 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60"
     >
       {children}
       <ArrowUpRight

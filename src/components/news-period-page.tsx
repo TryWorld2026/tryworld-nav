@@ -72,7 +72,7 @@ export function NewsPeriodPage({
             // ≥1536 时 1088 扣掉目录列后 768）本身就把行长收在 51–53 个
             // 汉字，正好是中文正文的舒适上限。再套一层 ch 限宽只会让导语
             // 比它下面的栏目标题、条目短掉 1/3，右缘参差。
-            <p className="mt-5 border-l-2 border-gongke-accent/30 pl-4 text-[15px] leading-relaxed text-foreground/70">
+            <p className="mt-5 border-l-2 border-gongke-accent/30 pl-4 text-base leading-relaxed text-foreground/70">
               {report.overview}
             </p>
           )}
@@ -86,7 +86,7 @@ export function NewsPeriodPage({
                 <Layers className="h-3.5 w-3.5" aria-hidden="true" />
                 本期头条
               </p>
-              <h2 className="text-balance font-display text-[22px] leading-snug text-foreground md:text-2xl">
+              <h2 className="text-balance font-display text-2xl leading-snug text-foreground md:text-2xl">
                 <HeadlineText text={report.headline} />
               </h2>
             </div>
@@ -134,10 +134,10 @@ export function NewsPeriodPage({
                       className="group block rounded-lg"
                       id={`${periodAnchor(si)}-${ii}`}
                     >
-                      <p className="text-[11px] font-medium text-foreground/70">{it.source}</p>
+                      <p className="text-2xs font-medium text-foreground/70">{it.source}</p>
                       {/* `text-balance`：标题在 390 的窄卡里折成两行，末行常
                           只剩一两个字（实测 4 条里 3 条 <15%）。 */}
-                      <h3 className="mt-0.5 text-balance text-[16px] font-semibold leading-snug text-foreground/90 transition-colors group-hover:text-gongke-accent md:text-[17px]">
+                      <h3 className="mt-0.5 text-balance text-base font-semibold leading-snug text-foreground/90 transition-colors group-hover:text-gongke-accent md:text-lg">
                         <HeadlineText text={it.title} />
                         <ArrowUpRight
                           className="ml-1 inline h-3.5 w-3.5 -translate-y-0.5 opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-60"
@@ -222,7 +222,7 @@ export function NewsPeriodPage({
           className="sticky"
           style={{ top: 'calc(var(--site-header-h, 3.5rem) + 1.5rem)' }}
         >
-          <p className="mb-3 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="mb-3 flex items-center gap-1.5 text-2xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             <List className="h-3.5 w-3.5 text-gongke-accent" aria-hidden="true" />
             本期目录
           </p>
@@ -231,13 +231,13 @@ export function NewsPeriodPage({
               <li key={s.label}>
                 <a
                   href={`#${periodAnchor(si)}`}
-                  className="-ml-px flex items-baseline gap-2 border-l-2 border-transparent py-1.5 pl-3 pr-1 text-[13px] text-foreground/65 transition-colors hover:border-gongke-accent/50 hover:text-foreground"
+                  className="-ml-px flex items-baseline gap-2 border-l-2 border-transparent py-1.5 pl-3 pr-1 text-sm text-foreground/65 transition-colors hover:border-gongke-accent/50 hover:text-foreground"
                 >
-                  <span className="shrink-0 text-[11px] tabular-nums text-gongke-accent">
+                  <span className="shrink-0 text-2xs tabular-nums text-gongke-accent">
                     {String(si + 1).padStart(2, '0')}
                   </span>
                   <span className="min-w-0 flex-1 truncate">{s.label}</span>
-                  <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground">
+                  <span className="shrink-0 text-2xs tabular-nums text-muted-foreground">
                     {s.items.length}
                   </span>
                 </a>
@@ -246,7 +246,7 @@ export function NewsPeriodPage({
           </ol>
           <a
             href="#top"
-            className="mt-4 inline-flex items-center gap-1 pl-3 text-[11px] text-muted-foreground transition-colors hover:text-foreground"
+            className="mt-4 inline-flex items-center gap-1 pl-3 text-2xs text-muted-foreground transition-colors hover:text-foreground"
           >
             回到顶部
             <ArrowUpRight className="h-3 w-3" aria-hidden="true" />

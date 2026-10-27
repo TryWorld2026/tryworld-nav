@@ -76,7 +76,7 @@ export default function OfflinePage() {
           <h1 className="mt-3 font-display text-3xl leading-tight tracking-tight text-foreground sm:text-4xl">
             当前处于离线状态
           </h1>
-          <p className="mx-auto mt-4 max-w-[54ch] text-balance text-[15px] leading-relaxed text-gongke-muted">
+          <p className="mx-auto mt-4 max-w-[54ch] text-balance text-base leading-relaxed text-gongke-muted">
             网络连接已断开，这一页没法从服务器取到内容。检查一下 Wi-Fi 或移动数据，
             恢复网络后刷新就能接着看。
           </p>
@@ -96,7 +96,7 @@ export default function OfflinePage() {
                     没有它，长提示文案会把整行推出屏幕（手机上表现为右侧被裁）。 */}
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-medium text-foreground">{label}</span>
-                  <span className="mt-0.5 block text-[13px] leading-relaxed text-muted-foreground">
+                  <span className="mt-0.5 block text-sm leading-relaxed text-muted-foreground">
                     {hint}
                   </span>
                 </span>
@@ -109,7 +109,7 @@ export default function OfflinePage() {
           ))}
         </ul>
 
-        <p className="mt-10 border-t border-foreground/10 pt-6 text-center text-[13px] leading-relaxed text-muted-foreground">
+        <p className="mt-10 border-t border-foreground/10 pt-6 text-center text-sm leading-relaxed text-muted-foreground">
           看过的样式、字体与缩略图已经缓存在这台设备上，所以这一页通常仍是站内的样子；
           如果它看起来没有排版，说明样式还没被缓存，联网后刷新一次即可。
           收藏列表只存在浏览器里，断网也能打开。

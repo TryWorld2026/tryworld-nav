@@ -48,7 +48,7 @@ export default function WeeklyIndexPage() {
       >
         <MastheadMeta>
           <span>
-            已收录 <strong className="font-semibold text-[#F2EEE6]">{weeklyReports.length}</strong> 期
+            已收录 <strong className="font-semibold text-gongke-paper">{weeklyReports.length}</strong> 期
           </span>
           <span>每周一更新</span>
           {latest && <span>最新：{formatWeek(latest.week)}</span>}
@@ -63,7 +63,7 @@ export default function WeeklyIndexPage() {
             <Reveal as="section" className="mt-8">
               <Link prefetch={false}
                 href={`/news/weekly/${latest.week}`}
-                className="ink-band group relative block overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#1B2523]/25 active:translate-y-0 md:p-8"
+                className="ink-band group relative block overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-gongke-dark/25 active:translate-y-0 md:p-8"
               >
                 {/* 卡片是一张封面：左边讲什么（标题/导语/入口），右边的书脊
                     竖着排「分几栏 + 多少量」。书脊撑满卡片高度，宽屏上不再
@@ -71,23 +71,23 @@ export default function WeeklyIndexPage() {
                 <div className="relative lg:grid lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-10 2xl:grid-cols-[minmax(0,1fr)_21rem] 2xl:gap-14">
                   <div className="min-w-0">
                     <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
-                      <span className="rounded-full bg-[#F2EEE6] px-2.5 py-1 font-semibold text-[#1B2523]">
+                      <span className="rounded-full bg-gongke-paper px-2.5 py-1 font-semibold text-gongke-dark">
                         最新一期
                       </span>
-                      <span className="text-[#F2EEE6]/55">{formatWeek(latest.week)}</span>
-                      <span className="text-[#F2EEE6]/55">
+                      <span className="text-gongke-paper/55">{formatWeek(latest.week)}</span>
+                      <span className="text-gongke-paper/55">
                         {formatPeriodRange(latest.periodStart, latest.periodEnd)}
                       </span>
                     </div>
-                    <h2 className="max-w-[40ch] text-balance font-display text-2xl leading-[1.22] text-[#F2EEE6] transition-colors group-hover:text-white md:text-[30px] 2xl:text-[42px]">
+                    <h2 className="max-w-[40ch] text-balance font-display text-2xl leading-tight text-gongke-paper transition-colors group-hover:text-white md:text-3xl 2xl:text-5xl">
                       <HeadlineText text={latest.headline ?? formatWeek(latest.week)} />
                     </h2>
                     {latest.overview && (
-                      <p className="mt-3 line-clamp-3 max-w-[58ch] text-sm leading-relaxed text-[#F2EEE6]/60 md:text-[15px] 2xl:max-w-[44rem] 2xl:text-[16px]">
+                      <p className="mt-3 line-clamp-3 max-w-[58ch] text-sm leading-relaxed text-gongke-paper/60 md:text-base 2xl:max-w-[44rem] 2xl:text-base">
                         {latest.overview}
                       </p>
                     )}
-                    <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-[#F2A07F]">
+                    <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-gongke-onInk">
                       阅读本期
                       <ArrowRight
                         className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
@@ -113,10 +113,10 @@ export default function WeeklyIndexPage() {
                           ['分钟读完', latestStats.minutes],
                         ].map(([label, value]) => (
                           <div key={String(label)} className="min-w-0">
-                            <dd className="font-display text-[24px] leading-none tabular-nums text-[#F2EEE6]">
+                            <dd className="font-display text-2xl leading-none tabular-nums text-gongke-paper">
                               {value}
                             </dd>
-                            <dt className="mt-1.5 text-[11px] tracking-wide text-[#F2EEE6]/55">
+                            <dt className="mt-1.5 text-2xs tracking-wide text-gongke-paper/55">
                               {label}
                             </dt>
                           </div>
@@ -132,7 +132,7 @@ export default function WeeklyIndexPage() {
                 <div className="mb-4 flex items-baseline justify-between gap-4">
                   {/* 与日报「全部往期」同一档：页底横带标题 19px 半粗。
                       原先 12px 大写小字，和右侧「共 N 期」挤成了同一级。 */}
-                  <h2 className="text-[19px] font-semibold text-foreground">往期周报</h2>
+                  <h2 className="text-xl font-semibold text-foreground">往期周报</h2>
                   <span className="text-xs tabular-nums text-muted-foreground">
                     共 {rest.length} 期
                   </span>
@@ -157,7 +157,7 @@ export default function WeeklyIndexPage() {
                             <span className="min-w-0 flex-1 truncate text-sm text-foreground/75 transition-colors group-hover:text-foreground">
                               {w.headline ?? '（无头条）'}
                             </span>
-                            <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground">
+                            <span className="shrink-0 text-2xs tabular-nums text-muted-foreground">
                               {stats.items} 条
                             </span>
                           </Link>

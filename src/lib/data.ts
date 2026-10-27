@@ -22,12 +22,43 @@ import { asset, assetList } from './assets';
 import rawSearchIndex from '../../data/search-index.json';
 import { decodeSearchIndex, searchIndex, type SearchRecord } from './search';
 
+export const categories = rawCategories as Category[];
+const categoryBySlugRaw = new Map(categories.map((c) => [c.slug, c]));
+
+/**
+ * 工具自带的分类副本 **不带颜色**（颜色一律回查 `categories.json`）。
+ *
+ * `data/tools.json` 里每个工具的 `categories` 都内嵌了一份
+ * `{id, slug, name, icon, color}` —— 那是采集时从每页 HTML 抄下来的快照，
+ * 于是「分类的颜色」在这份 7 MB 的数据里被重复存了几千次，而它真正的归属地
+ * 是 `data/categories.json`（26 条）。
+ *
+ * 2026-10-27 实测出代价：把 26 个分类从「15 个色相族 × 3 个明度」收成 4 个
+ * 品牌色调、并改了 `categories.json` 之后，**卡片上的分类色点全是旧颜色** ——
+ * 因为卡片读的是工具内嵌的那份快照，不是 `categories.json`。同一条数据住在
+ * 两个地方，改一处等于没改。
+ *
+ * 现在只在 `categories.json` 里保留颜色；工具内嵌的分类对象只留身份字段，
+ * 颜色在渲染边界按 slug 回查。这与 `asset()` 前缀在渲染边界补是同一种做法
+ * （见 `card.ts` 的注释），也是这份数据唯一不会漂移的做法。
+ */
 export const tools = (rawTools as Tool[]).map((t) => ({
   ...t,
   icon: asset(t.icon),
   image: asset(t.image),
+  categories: (t.categories ?? []).map((c) => {
+    const canonical = categoryBySlugRaw.get(c.slug);
+    return canonical
+      ? {
+          id: canonical.id,
+          slug: canonical.slug,
+          name: canonical.name,
+          icon: canonical.icon,
+          color: canonical.color,
+        }
+      : c;
+  }),
 }));
-export const categories = rawCategories as Category[];
 export const collections = (rawCollections as Collection[]).map((c) => ({
   ...c,
   icon: asset(c.icon),
@@ -37,7 +68,7 @@ export const collections = (rawCollections as Collection[]).map((c) => ({
 }));
 export const collectionBySlug = new Map(collections.map((c) => [c.slug, c]));
 export const toolBySlug = new Map(tools.map((t) => [t.slug, t]));
-export const categoryBySlug = new Map(categories.map((c) => [c.slug, c]));
+export const categoryBySlug = categoryBySlugRaw;
 
 /**
  * 客户端搜索索引（由 `scripts/generate-search-index.mjs` 生成）。
@@ -142,17 +173,25 @@ const categoryOrder = rawCategoryOrder as Record<string, string[]>;
  * six curated member avatars per card and the `+N` overflow counts are all
  * harvested facts about the origin's page rather than derivations from the
  * catalog — see the note on the page.
+ *
+ * `color` 与工具内嵌的分类副本同一个坑：`data/category-cards.json` 也自带一份
+ * 采集快照里的颜色，2026-10-27 把分类色收成品牌 4 色之后，/categories 顶部那
+ * 26 个色点仍是旧的 15 个色相 —— 因为这里读的是快照。颜色只认
+ * `categories.json`，其余一律按 slug 回查（与上方 `tools` 的注释同一条原则）。
  */
-export const categoryCards = (rawCategoryCards as {
-  slug: string;
-  name: string;
-  tagline: string;
-  color: string;
-  icon: string;
-  plus: number;
-  members: { slug: string; icon: string; name: string }[];
-}[]).map((c) => ({
+export const categoryCards = (
+  rawCategoryCards as {
+    slug: string;
+    name: string;
+    tagline: string;
+    color: string;
+    icon: string;
+    plus: number;
+    members: { slug: string; icon: string; name: string }[];
+  }[]
+).map((c) => ({
   ...c,
+  color: categoryBySlugRaw.get(c.slug)?.color ?? c.color,
   members: c.members.map((m) => ({ ...m, icon: asset(m.icon) })),
 }));
 

@@ -85,7 +85,7 @@ export default function DailyArchivePage() {
                         {/* 10px × 70% 的灰字在骨白底上几乎看不见（对比度约
                             2.6:1）；星期是这条目里唯一能区分「哪天」的线索，
                             至少要到 11px + 正常 muted。 */}
-                        <span className="hidden shrink-0 text-[11px] text-muted-foreground sm:inline">
+                        <span className="hidden shrink-0 text-2xs text-muted-foreground sm:inline">
                           {weekdayZh(d.date)}
                         </span>
                       </Link>

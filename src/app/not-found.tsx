@@ -33,15 +33,29 @@ export default function NotFound() {
   return (
     <div className="content-container flex min-h-[calc(100vh-320px)] flex-col items-center justify-center py-16">
       <NotFoundArt />
-      <h1 className="mt-2 text-2xl font-medium font-display text-foreground">404 - 页面未找到</h1>
+      {/* 2026-10-27：h1 从 `text-2xl font-medium`（24px/500）改回全站阶梯。
+          它是全站唯一一个不在 30/36/40/56 + 650 阶梯上的页面主标题 —— 其余
+          15 条路由的 h1 都走 `page-header.tsx` 的 `text-3xl sm:text-4xl
+          4xl:text-6xl`（30/36/48，650 由 `font-display` 与 `h1{650}` 给）。
+          24px/500 让 404 看起来像另一个站的页面，也让人误以为这是条说明
+          而不是「页面不存在」。这里复用 `page-header.tsx` 的同一串 class，
+          唯一差别是不带 `tracking-tight`（中文四字 + 数字，收紧后「404」
+          与「页面未找到」会粘在一起）。 */}
+      <h1 className="mt-2 font-display text-3xl leading-tight text-foreground sm:text-4xl 4xl:text-6xl">
+        404 - 页面未找到
+      </h1>
       <p className="mt-2 max-w-md text-balance text-center text-sm leading-relaxed text-gongke-muted">
         这个地址不存在，可能已过期或下架。试试下面的入口。
       </p>
 
+      {/* 2026-10-27：按钮从 `rounded-md`(6px) 改成 `rounded-full`。
+          6px 那版是从原站复刻来的，但全站的实心主行动（hero 的「浏览全部工具」、
+          `/about` 底部、决策条的「帮我选」）一律是胶囊 —— 404 曾是全站唯一
+          用 6px 直角墨色按钮的地方，看起来像另一个组件库。 */}
       <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
         <Link prefetch={false}
           href="/tools"
-          className="inline-flex h-10 items-center gap-2 rounded-md bg-gongke-dark px-4 text-sm font-medium text-[#F2EEE6] transition-colors hover:bg-[#253230]"
+          className="inline-flex h-10 items-center gap-2 rounded-full bg-gongke-dark px-5 text-sm font-medium text-gongke-paper transition-colors hover:bg-gongke-darkHover"
         >
           <Search className="h-4 w-4" aria-hidden="true" />
           搜索全部工具
@@ -49,7 +63,7 @@ export default function NotFound() {
         </Link>
         <Link prefetch={false}
           href="/"
-          className="inline-flex h-10 items-center gap-2 rounded-md border border-foreground/15 px-4 text-sm font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
+          className="inline-flex h-10 items-center gap-2 rounded-full border border-foreground/15 px-5 text-sm font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
         >
           <Home className="h-4 w-4" aria-hidden="true" />
           返回首页
@@ -66,14 +80,14 @@ export default function NotFound() {
             <Link prefetch={false}
               key={c.slug}
               href={`/categories/${c.slug}`}
-              className="inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-card px-3 py-1.5 text-[13px] text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
+              className="inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-card px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
             >
               {c.name}
             </Link>
           ))}
           <Link prefetch={false}
             href="/categories"
-            className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-foreground/20 px-3 py-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-foreground/20 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             全部 {navCategories.length} 个分类
           </Link>

@@ -213,7 +213,7 @@ export function ToolMiniCard({
         {toolTags.map((g) => (
           <span
             key={g.slug}
-            className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-[12px] text-foreground/70"
+            className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-xs text-foreground/70"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -223,7 +223,7 @@ export function ToolMiniCard({
               height={14}
               loading="lazy"
               decoding="async"
-              className="h-3.5 w-3.5 shrink-0 rounded-[3px]"
+              className="h-3.5 w-3.5 shrink-0 rounded-sm"
             />
             <span className="truncate">{g.name}</span>
           </span>
@@ -249,12 +249,12 @@ export function ToolMiniCard({
    * 加粗就与描述同级，「描述 → 可比较的事实」的层级会塌掉。
    */
   const meta = (
-    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] leading-none text-gongke-muted">
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs leading-none text-gongke-muted">
       {price && (
         <span
           className={
             price === '付费'
-              ? 'inline-flex items-center rounded border border-[#B54826]/25 bg-[#F2693C]/[0.07] px-1.5 py-0.5 font-medium text-[#B54826]'
+              ? 'inline-flex items-center rounded border border-gongke-earth/25 bg-gongke-orange/[0.07] px-1.5 py-0.5 font-medium text-gongke-earth'
               : 'inline-flex items-center rounded border border-gongke-accent/25 bg-gongke-accent/[0.07] px-1.5 py-0.5 font-medium text-gongke-accent'
           }
         >
@@ -292,7 +292,7 @@ export function ToolMiniCard({
         {cats.map((c) => (
           <span
             key={c.slug}
-            className="inline-flex max-w-full items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-[12px] text-foreground/70"
+            className="inline-flex max-w-full items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-xs text-foreground/70"
           >
             <span
               className="h-1.5 w-1.5 shrink-0 rounded-full"
@@ -369,10 +369,10 @@ export function ToolMiniCard({
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug text-foreground transition-colors group-hover:text-gongke-accent">
+          <h3 className="line-clamp-2 text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-gongke-accent">
             {tool.name}
           </h3>
-          <p className="mt-1 line-clamp-2 text-[13px] leading-relaxed text-gongke-muted">
+          <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-gongke-muted">
             {tool.description}
           </p>
         </div>
@@ -456,18 +456,18 @@ export function ToolRowCard({ tool }: { tool: CardTool }) {
               className="object-contain rounded-md"
             />
           ) : (
-            <span className="text-xs font-semibold text-neutral-600">
+            <span className="text-xs font-semibold text-gongke-muted">
               {tool.name.slice(0, 1)}
             </span>
           )}
         </div>
-        <span className="min-w-0 flex-1 line-clamp-2 text-sm leading-snug text-neutral-600 group-hover:text-gongke-accent transition-colors">
+        <span className="min-w-0 flex-1 line-clamp-2 text-sm leading-snug text-gongke-muted group-hover:text-gongke-accent transition-colors">
           {tool.name}
         </span>
         {price && (
           <span
-            className={`ml-2 shrink-0 text-[12px] ${
-              price === '付费' ? 'font-medium text-[#B54826]' : 'text-gongke-muted'
+            className={`ml-2 shrink-0 text-xs ${
+              price === '付费' ? 'font-medium text-gongke-earth' : 'text-gongke-muted'
             }`}
           >
             {price}

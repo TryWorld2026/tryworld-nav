@@ -13,7 +13,6 @@ import {
   Minus,
   RotateCcw,
   Scale,
-  Sparkles,
 } from 'lucide-react';
 import { asset } from '@/lib/assets';
 import { mergeFavorites, readStore, writeStore } from '@/lib/favorites';
@@ -110,14 +109,14 @@ function Row({
   return (
     <div className="flex flex-col gap-2 border-t border-foreground/[0.07] py-3.5 first:border-t-0 first:pt-0 md:flex-row md:items-start md:gap-5">
       <div className="flex shrink-0 items-baseline gap-2 md:w-[7.5rem] md:flex-col md:gap-0.5">
-        <span className="flex items-center gap-1.5 text-[13px] font-semibold text-foreground">
-          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-foreground/[0.06] text-[10px] tabular-nums text-foreground/75">
+        <span className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
+          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-foreground/[0.06] text-2xs tabular-nums text-foreground/75">
             {index}
           </span>
           {label}
         </span>
         {note ? (
-          <span className="text-[11.5px] leading-snug text-muted-foreground md:mt-0.5">{note}</span>
+          <span className="text-2xs leading-snug text-muted-foreground md:mt-0.5">{note}</span>
         ) : null}
       </div>
       <div className="min-w-0 flex-1">{children}</div>
@@ -148,7 +147,7 @@ function Segmented<T extends string>({
             aria-pressed={on}
             onClick={() => onChange(o.id)}
             className={
-              'inline-flex min-h-9 items-center rounded-full border px-3 py-1.5 text-[12.5px] transition-colors md:min-h-8 ' +
+              'inline-flex min-h-9 items-center rounded-full border px-3 py-1.5 text-xs transition-colors md:min-h-8 ' +
               (on
                 ? 'border-gongke-accent/40 bg-gongke-accent/[0.10] font-medium text-gongke-accent'
                 : 'border-foreground/15 bg-card text-foreground/70 hover:border-foreground/25 hover:text-foreground')
@@ -190,13 +189,13 @@ function PickCard({
       <div className="mb-2.5 flex items-center gap-2">
         <span
           className={
-            'inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ' +
+            'inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-semibold ' +
             (first ? 'bg-gongke-accent text-white' : 'bg-foreground/[0.06] text-foreground/75')
           }
         >
           {first ? '首选' : rank === 2 ? '次选' : '第三'}
         </span>
-        <span className="truncate text-[11.5px] text-muted-foreground">{catName}</span>
+        <span className="truncate text-2xs text-muted-foreground">{catName}</span>
       </div>
 
       <Link prefetch={false} href={`/tools/${slug}`} className="group flex items-center gap-2.5">
@@ -210,19 +209,19 @@ function PickCard({
           decoding="async"
           className="h-10 w-10 shrink-0 rounded-lg bg-white object-contain ring-1 ring-inset ring-foreground/5"
         />
-        <h3 className="min-w-0 truncate font-display text-[17px] font-semibold leading-tight text-foreground transition-colors group-hover:text-gongke-accent">
+        <h3 className="min-w-0 truncate font-display text-lg font-semibold leading-tight text-foreground transition-colors group-hover:text-gongke-accent">
           {entry.name}
         </h3>
       </Link>
 
       <div className="mt-3.5">
-        <p className="mb-1 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="mb-1 text-2xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
           适合
         </p>
         <ul className="space-y-1">
           {entry.bestFor.slice(0, 2).map((b) => (
-            <li key={b} className="flex gap-1.5 text-[13px] leading-relaxed text-foreground/85">
-              <Check className="mt-[3px] h-3.5 w-3.5 shrink-0 text-gongke-accent" aria-hidden="true" />
+            <li key={b} className="flex gap-1.5 text-sm leading-relaxed text-foreground/85">
+              <Check className="mt-1 h-3.5 w-3.5 shrink-0 text-gongke-accent" aria-hidden="true" />
               <span className="min-w-0">{b}</span>
             </li>
           ))}
@@ -231,17 +230,17 @@ function PickCard({
 
       {entry.notFor[0] ? (
         <div className="mt-2.5">
-          <p className="mb-1 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="mb-1 text-2xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
             不适合
           </p>
-          <p className="flex gap-1.5 text-[13px] leading-relaxed text-muted-foreground">
-            <Minus className="mt-[3px] h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <p className="flex gap-1.5 text-sm leading-relaxed text-muted-foreground">
+            <Minus className="mt-1 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
             <span className="min-w-0">{entry.notFor[0]}</span>
           </p>
         </div>
       ) : null}
 
-      <div className="mt-3.5 space-y-1 border-t border-foreground/[0.07] pt-3 text-[12px] leading-relaxed">
+      <div className="mt-3.5 space-y-1 border-t border-foreground/[0.07] pt-3 text-xs leading-relaxed">
         <p>
           <PriceDetail entry={entry} />
         </p>
@@ -251,7 +250,7 @@ function PickCard({
             <span className={stale ? 'inline-flex items-center gap-1 text-foreground/60' : ''}>
               · 收录更新 {updatedMonth(entry.updated)}
               {stale ? (
-                <span className="inline-flex items-center gap-0.5 text-[11px] text-foreground/60">
+                <span className="inline-flex items-center gap-0.5 text-2xs text-foreground/60">
                   <AlertCircle className="h-3 w-3" aria-hidden="true" />
                   已超一年
                 </span>
@@ -265,7 +264,7 @@ function PickCard({
         <Link
           prefetch={false}
           href={`/tools/${slug}`}
-          className="inline-flex min-h-9 items-center gap-1 rounded-full bg-foreground/[0.06] px-3 text-[12.5px] font-medium text-foreground/80 transition-colors hover:bg-foreground/[0.10] hover:text-foreground"
+          className="inline-flex min-h-9 items-center gap-1 rounded-full bg-foreground/[0.06] px-3 text-xs font-medium text-foreground/80 transition-colors hover:bg-foreground/[0.10] hover:text-foreground"
         >
           查看详情
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -274,7 +273,7 @@ function PickCard({
           <Link
             prefetch={false}
             href={compare}
-            className="inline-flex min-h-9 items-center gap-1 rounded-full border border-foreground/15 px-3 text-[12.5px] text-foreground/70 transition-colors hover:border-foreground/25 hover:text-foreground"
+            className="inline-flex min-h-9 items-center gap-1 rounded-full border border-foreground/15 px-3 text-xs text-foreground/70 transition-colors hover:border-foreground/25 hover:text-foreground"
           >
             <Scale className="h-3.5 w-3.5" aria-hidden="true" />
             与 {ENTRIES[entry.vs ?? '']?.name ?? '同类'} 比
@@ -304,14 +303,14 @@ function RejectRow({ reject }: { reject: DecideReject }) {
           <Link
             prefetch={false}
             href={`/tools/${slug}`}
-            className="text-[13.5px] font-medium text-foreground hover:text-gongke-accent"
+            className="text-sm font-medium text-foreground hover:text-gongke-accent"
           >
             {entry.name}
           </Link>
-          <span className="text-[12px] text-muted-foreground">{reasons.join('、')}</span>
+          <span className="text-xs text-muted-foreground">{reasons.join('、')}</span>
         </p>
         {entry.notFor[0] ? (
-          <p className="mt-0.5 text-[12px] leading-relaxed text-muted-foreground">
+          <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
             编辑判断里还写着：{entry.notFor[0]}
           </p>
         ) : null}
@@ -426,14 +425,14 @@ export function DecideFlow() {
                   aria-pressed={on}
                   onClick={() => update({ task: on ? null : t.id })}
                   className={
-                    'flex min-h-11 items-center gap-1.5 rounded-lg border px-2.5 py-2 text-left text-[12.5px] leading-tight transition-colors ' +
+                    'flex min-h-11 items-center gap-1.5 rounded-lg border px-2.5 py-2 text-left text-xs leading-tight transition-colors ' +
                     (on
                       ? 'border-gongke-accent/40 bg-gongke-accent/[0.10] font-medium text-gongke-accent'
                       : 'border-foreground/10 bg-background text-foreground/75 hover:border-foreground/20 hover:text-foreground')
                   }
                 >
                   <span className="min-w-0 flex-1">{t.label}</span>
-                  <span className="shrink-0 text-[11px] tabular-nums text-foreground/70">
+                  <span className="shrink-0 text-2xs tabular-nums text-foreground/70">
                     {TASK_COUNTS[t.id] ?? 0}
                   </span>
                 </button>
@@ -475,7 +474,7 @@ export function DecideFlow() {
         <section className="rounded-2xl border border-dashed border-foreground/15 px-5 py-12 text-center">
           <Compass className="mx-auto mb-3 h-7 w-7 text-foreground/25" aria-hidden="true" />
           <p className="text-sm font-medium text-foreground/80">先在上面的 16 个场景里选一个</p>
-          <p className="mx-auto mt-1.5 max-w-[42ch] text-[12.5px] leading-relaxed text-muted-foreground">
+          <p className="mx-auto mt-1.5 max-w-[42ch] text-xs leading-relaxed text-muted-foreground">
             选一个你想做的事，我们用 {VERDICT_COUNT} 条人工判断把 2081 个工具缩到 3 个。
             没有任务就没有「相关」，所以这里不会先塞给你一堆热门工具。
           </p>
@@ -484,10 +483,10 @@ export function DecideFlow() {
         <section aria-labelledby="decide-result" data-testid="decide-results">
           <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
             <div className="min-w-0">
-              <h2 id="decide-result" className="font-display text-[22px] font-semibold text-foreground">
+              <h2 id="decide-result" className="font-display text-2xl font-semibold text-foreground">
                 {task.label}
               </h2>
-              <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground" aria-live="polite">
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground" aria-live="polite">
                 这一类里有编辑判断的 <span className="font-medium text-foreground/80">{result.inCategory}</span> 个，
                 按你的条件筛出 <span className="font-medium text-foreground/80">{result.matched}</span> 个
                 {/* 数量句必须和下面真的渲染了几张卡一致。
@@ -509,7 +508,7 @@ export function DecideFlow() {
                 <button
                   type="button"
                   onClick={copyConditionLink}
-                  className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 px-3 text-[12.5px] text-muted-foreground transition-colors hover:border-foreground/25 hover:text-foreground"
+                  className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 px-3 text-xs text-muted-foreground transition-colors hover:border-foreground/25 hover:text-foreground"
                 >
                   {linkCopied ? (
                     <Check className="h-3.5 w-3.5 text-gongke-accent" aria-hidden="true" />
@@ -521,7 +520,7 @@ export function DecideFlow() {
                 <button
                   type="button"
                   onClick={() => update({ ...DECIDE_DEFAULTS, task: prefs.task })}
-                  className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 px-3 text-[12.5px] text-muted-foreground transition-colors hover:border-foreground/25 hover:text-foreground"
+                  className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 px-3 text-xs text-muted-foreground transition-colors hover:border-foreground/25 hover:text-foreground"
                 >
                   <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                   重置条件
@@ -535,7 +534,7 @@ export function DecideFlow() {
               <p className="text-sm font-medium text-foreground/80">
                 这一类里没有同时满足这三个条件的工具
               </p>
-              <p className="mx-auto mt-1.5 max-w-[46ch] text-[12.5px] leading-relaxed text-muted-foreground">
+              <p className="mx-auto mt-1.5 max-w-[46ch] text-xs leading-relaxed text-muted-foreground">
                 这不代表没有能用的工具，只代表「我们有编辑判断」的那 {result.inCategory} 个里没有。
                 放宽任意一条就能看到候选：
               </p>
@@ -544,7 +543,7 @@ export function DecideFlow() {
                   <button
                     type="button"
                     onClick={() => update({ plat: 'any' })}
-                    className="inline-flex min-h-9 items-center rounded-full border border-gongke-accent/30 bg-card px-3 text-[12.5px] font-medium text-gongke-accent hover:bg-gongke-accent/[0.08]"
+                    className="inline-flex min-h-9 items-center rounded-full border border-gongke-accent/30 bg-card px-3 text-xs font-medium text-gongke-accent hover:bg-gongke-accent/[0.08]"
                   >
                     不限平台
                   </button>
@@ -555,7 +554,7 @@ export function DecideFlow() {
                     onClick={() =>
                       update({ budget: prefs.budget === 'free' ? 'free-tier' : 'any' })
                     }
-                    className="inline-flex min-h-9 items-center rounded-full border border-gongke-accent/30 bg-card px-3 text-[12.5px] font-medium text-gongke-accent hover:bg-gongke-accent/[0.08]"
+                    className="inline-flex min-h-9 items-center rounded-full border border-gongke-accent/30 bg-card px-3 text-xs font-medium text-gongke-accent hover:bg-gongke-accent/[0.08]"
                   >
                     放宽预算
                   </button>
@@ -563,7 +562,7 @@ export function DecideFlow() {
                 <Link
                   prefetch={false}
                   href={`/categories/${task.category}`}
-                  className="inline-flex min-h-9 items-center rounded-full border border-foreground/15 px-3 text-[12.5px] text-foreground/70 hover:border-foreground/25 hover:text-foreground"
+                  className="inline-flex min-h-9 items-center rounded-full border border-foreground/15 px-3 text-xs text-foreground/70 hover:border-foreground/25 hover:text-foreground"
                 >
                   看这一类全部工具
                 </Link>
@@ -594,7 +593,7 @@ export function DecideFlow() {
               只在本机写 localStorage，不涉及账号（与 /favorites 同一份存储）。 */}
           {!result.empty ? (
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-foreground/10 bg-foreground/[0.02] px-4 py-3">
-              <p className="min-w-0 flex-1 text-[12.5px] leading-relaxed text-muted-foreground">
+              <p className="min-w-0 flex-1 text-xs leading-relaxed text-muted-foreground">
                 把这三个一起存进「我的工具栈」，就能并排对比价格与平台、导出成 Markdown
                 —— 或者生成一条链接发给同事。
               </p>
@@ -602,7 +601,7 @@ export function DecideFlow() {
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                   <span
                     role="status"
-                    className="inline-flex items-center gap-1 text-[12.5px] font-medium text-gongke-accent"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-gongke-accent"
                   >
                     <Check className="h-3.5 w-3.5" aria-hidden="true" />
                     {saved.added > 0
@@ -612,7 +611,7 @@ export function DecideFlow() {
                   <Link
                     prefetch={false}
                     href="/favorites"
-                    className="inline-flex min-h-9 items-center gap-1 rounded-full border border-foreground/15 px-3 text-[12.5px] font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
+                    className="inline-flex min-h-9 items-center gap-1 rounded-full border border-foreground/15 px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
                   >
                     去工具栈看看
                     <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -622,7 +621,7 @@ export function DecideFlow() {
                 <button
                   type="button"
                   onClick={saveAll}
-                  className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border border-gongke-accent/30 bg-card px-3.5 text-[12.5px] font-medium text-gongke-accent transition-colors hover:border-gongke-accent/50 hover:bg-gongke-accent/[0.08]"
+                  className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border border-gongke-accent/30 bg-card px-3.5 text-xs font-medium text-gongke-accent transition-colors hover:border-gongke-accent/50 hover:bg-gongke-accent/[0.08]"
                 >
                   <BookmarkPlus className="h-3.5 w-3.5" aria-hidden="true" />
                   把这三个加进我的工具栈
@@ -633,11 +632,10 @@ export function DecideFlow() {
 
           {result.rejects.length > 0 ? (
             <div className="mt-6 rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-4 md:p-5">
-              <h3 className="mb-1 flex items-center gap-1.5 text-[13px] font-semibold text-foreground">
-                <Sparkles className="h-3.5 w-3.5 text-gongke-accent" aria-hidden="true" />
+              <h3 className="mb-1 flex items-center gap-1.5 text-sm font-semibold text-foreground">
                 我们没选它们
               </h3>
-              <p className="mb-2 text-[12px] leading-relaxed text-muted-foreground">
+              <p className="mb-2 text-xs leading-relaxed text-muted-foreground">
                 这几个在目录里排得更前、你更可能自己撞见，但它们没过你的条件 —— 原因写在这里，而不是藏起来。
               </p>
               <div>
@@ -653,14 +651,14 @@ export function DecideFlow() {
               换成能跟着 open 旋转的 chevron —— 默认三角在纸色卡片上读起来像
               浏览器自带控件的残渣。 */}
           <details className="group mt-5 rounded-xl border border-foreground/10 bg-card px-4 py-3">
-            <summary className="flex cursor-pointer list-none items-center gap-1.5 text-[12.5px] font-medium text-foreground/70 transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
+            <summary className="flex cursor-pointer list-none items-center gap-1.5 text-xs font-medium text-foreground/70 transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
               <ChevronRight
                 className="h-3.5 w-3.5 shrink-0 transition-transform group-open:rotate-90"
                 aria-hidden="true"
               />
               这 3 个是怎么排出来的
             </summary>
-            <div className="mt-2.5 space-y-1.5 text-[12px] leading-relaxed text-muted-foreground">
+            <div className="mt-2.5 space-y-1.5 text-xs leading-relaxed text-muted-foreground">
               <p>候选池只有「编辑写过判断」的 {VERDICT_COUNT} 个工具（全站 2081 个收录里）。先按你的预算与平台做硬筛，再按下面的依据排序：</p>
               <ol className="list-decimal space-y-1 pl-5">
                 <li><strong className="font-medium text-foreground/75">主分类就是这个场景</strong>的排在前面 —— 有些工具同时挂在 3 个分类下，主业算第一个；</li>

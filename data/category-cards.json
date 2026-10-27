@@ -36,7 +36,7 @@
       }
     ],
     "plus": 103,
-    "color": "234 88 12",
+    "color": "27 37 35",
     "icon": "brain-circuit"
   },
   {
@@ -76,7 +76,7 @@
       }
     ],
     "plus": 53,
-    "color": "59 130 246",
+    "color": "27 37 35",
     "icon": "bot-message-square"
   },
   {
@@ -116,7 +116,7 @@
       }
     ],
     "plus": 60,
-    "color": "51 65 85",
+    "color": "242 105 60",
     "icon": "pen-tool"
   },
   {
@@ -156,7 +156,7 @@
       }
     ],
     "plus": 133,
-    "color": "244 63 94",
+    "color": "242 105 60",
     "icon": "image"
   },
   {
@@ -196,7 +196,7 @@
       }
     ],
     "plus": 116,
-    "color": "239 68 68",
+    "color": "242 105 60",
     "icon": "clapperboard"
   },
   {
@@ -236,7 +236,7 @@
       }
     ],
     "plus": 73,
-    "color": "120 113 108",
+    "color": "27 37 35",
     "icon": "square-terminal"
   },
   {
@@ -276,7 +276,7 @@
       }
     ],
     "plus": 57,
-    "color": "219 39 119",
+    "color": "242 105 60",
     "icon": "audio-waveform"
   },
   {
@@ -316,7 +316,7 @@
       }
     ],
     "plus": 34,
-    "color": "13 148 136",
+    "color": "242 105 60",
     "icon": "presentation"
   },
   {
@@ -356,7 +356,7 @@
       }
     ],
     "plus": 38,
-    "color": "8 145 178",
+    "color": "36 86 78",
     "icon": "binoculars"
   },
   {
@@ -396,7 +396,7 @@
       }
     ],
     "plus": 18,
-    "color": "5 150 105",
+    "color": "36 86 78",
     "icon": "chart-area"
   },
   {
@@ -436,7 +436,7 @@
       }
     ],
     "plus": 18,
-    "color": "14 116 144",
+    "color": "36 86 78",
     "icon": "compass"
   },
   {
@@ -476,7 +476,7 @@
       }
     ],
     "plus": 46,
-    "color": "77 124 15",
+    "color": "27 37 35",
     "icon": "globe"
   },
   {
@@ -516,7 +516,7 @@
       }
     ],
     "plus": 20,
-    "color": "3 105 161",
+    "color": "242 105 60",
     "icon": "network"
   },
   {
@@ -556,7 +556,7 @@
       }
     ],
     "plus": 53,
-    "color": "15 118 110",
+    "color": "27 37 35",
     "icon": "notebook-pen"
   },
   {
@@ -596,7 +596,7 @@
       }
     ],
     "plus": 11,
-    "color": "185 28 28",
+    "color": "36 86 78",
     "icon": "radar"
   },
   {
@@ -636,7 +636,7 @@
       }
     ],
     "plus": 51,
-    "color": "68 64 60",
+    "color": "27 37 35",
     "icon": "scroll-text"
   },
   {
@@ -676,7 +676,7 @@
       }
     ],
     "plus": 22,
-    "color": "4 120 87",
+    "color": "27 37 35",
     "icon": "pyramid"
   },
   {
@@ -716,7 +716,7 @@
       }
     ],
     "plus": 25,
-    "color": "2 132 199",
+    "color": "36 86 78",
     "icon": "graduation-cap"
   },
   {
@@ -756,7 +756,7 @@
       }
     ],
     "plus": 19,
-    "color": "220 38 38",
+    "color": "27 37 35",
     "icon": "cpu"
   },
   {
@@ -796,7 +796,7 @@
       }
     ],
     "plus": 18,
-    "color": "29 78 216",
+    "color": "27 37 35",
     "icon": "text-cursor-input"
   },
   {
@@ -836,7 +836,7 @@
       }
     ],
     "plus": 5,
-    "color": "190 18 60",
+    "color": "181 72 38",
     "icon": "megaphone"
   },
   {
@@ -876,7 +876,7 @@
       }
     ],
     "plus": 8,
-    "color": "194 65 12",
+    "color": "27 37 35",
     "icon": "languages"
   },
   {
@@ -916,7 +916,7 @@
       }
     ],
     "plus": 6,
-    "color": "21 128 61",
+    "color": "181 72 38",
     "icon": "briefcase-business"
   },
   {
@@ -946,7 +946,7 @@
       }
     ],
     "plus": null,
-    "color": "161 98 7",
+    "color": "181 72 38",
     "icon": "badge-japanese-yen"
   },
   {
@@ -986,7 +986,7 @@
       }
     ],
     "plus": 3,
-    "color": "87 83 78",
+    "color": "181 72 38",
     "icon": "scale"
   },
   {
@@ -1026,7 +1026,7 @@
       }
     ],
     "plus": 14,
-    "color": "180 83 9",
+    "color": "181 72 38",
     "icon": "headset"
   }
 ]

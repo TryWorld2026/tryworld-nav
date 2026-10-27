@@ -39,7 +39,7 @@ export function ProsePage({
               {title}
             </h1>
             {intro && (
-              <p className="mt-3 text-[15px] leading-relaxed text-gongke-muted">{intro}</p>
+              <p className="mt-3 text-base leading-relaxed text-gongke-muted">{intro}</p>
             )}
           </header>
 
@@ -47,7 +47,7 @@ export function ProsePage({
               末行常只剩「访问；」这类两个字（实测 9%、13%）。条款一句一条，
               均衡换行不会把一句话拆到两行里读不通，只把短尾挪平。正文段落
               （`<p>`）保持默认——四行以上的白话，均衡反而让行宽显得机械。 */}
-          <div className="mt-8 space-y-5 text-[15px] leading-[1.85] text-foreground/75 [&_h2]:mt-10 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-foreground [&_li]:ml-5 [&_li]:list-disc [&_li]:pl-0.5 [&_li]:marker:text-gongke-accent/50 [&_li]:[text-wrap:balance] [&_strong]:font-semibold [&_strong]:text-foreground [&_ul]:space-y-1.5">
+          <div className="mt-8 space-y-5 text-base leading-loose text-foreground/75 [&_h2]:mt-10 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-foreground [&_li]:ml-5 [&_li]:list-disc [&_li]:pl-0.5 [&_li]:marker:text-gongke-accent/50 [&_li]:[text-wrap:balance] [&_strong]:font-semibold [&_strong]:text-foreground [&_ul]:space-y-1.5">
             {children}
           </div>
         </article>

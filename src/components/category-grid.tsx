@@ -132,7 +132,7 @@ export function CategoryGrid({
                           {chips.map((g) => (
                             <span
                               key={g.slug}
-                              className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-[11px] text-foreground/70"
+                              className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-2xs text-foreground/70"
                             >
                               {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
@@ -142,7 +142,7 @@ export function CategoryGrid({
                                 height={14}
                                 loading="lazy"
                                 decoding="async"
-                                className="h-3.5 w-3.5 shrink-0 rounded-[3px]"
+                                className="h-3.5 w-3.5 shrink-0 rounded-sm"
                               />
                               <span className="truncate">{g.name}</span>
                             </span>

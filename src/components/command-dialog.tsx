@@ -258,7 +258,7 @@ export function CommandDialog({
                           <span
                             className={
                               showReason
-                                ? 'max-w-[55%] shrink-0 truncate text-[11.5px] text-gongke-accent'
+                                ? 'max-w-[55%] shrink-0 truncate text-2xs text-gongke-accent'
                                 : 'max-w-[55%] truncate text-xs text-muted-foreground'
                             }
                           >
@@ -327,7 +327,7 @@ export function CommandDialog({
             )}
           </Command.List>
 
-          <div className="flex items-center justify-between gap-3 border-t border-border px-4 py-2 text-[11px] text-muted-foreground">
+          <div className="flex items-center justify-between gap-3 border-t border-border px-4 py-2 text-2xs text-muted-foreground">
             <span className="hidden sm:inline">↑↓ 选择 · ↵ 打开 · Esc 关闭</span>
             {trimmed ? (
               // 30 条之外的出口：把原话带进 /tools，那里没有条数上限。

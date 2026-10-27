@@ -27,24 +27,35 @@ export const PRICING_PREFIX =
   'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset';
 
 const TONES = {
+  /*
+   * 2026-10-27：四档颜色全部收进品牌 token。
+   *
+   * 改之前 `免费` 用 Tailwind 的 `green-50/700/600`、`免费开源` 用
+   * `blue-50/700/600`、未知用 `gray-50/700/600` —— 于是同一个详情页上
+   * 「免费」是亮绿、「免费增值」是品牌深绿，两个绿不是同一个绿；而「免费开源」
+   * 干脆是一枚蓝胶囊，蓝在品牌里根本没有定义。
+   *
+   * 现在只留三段语义，按「有多免费」递降，不再按色相区分：
+   *   免费     品牌绿实底（最强）
+   *   免费开源 品牌绿描边（弱一档，不开底色）
+   *   免费增值 墨色中性（声明的是「有额度」，不是「免费」）
+   *   付费     品牌橙
+   * 未知退回中性，与免费增值同色 —— 它是缺数据，不该被涂成第四种颜色。
+   */
   free: {
     label: '免费',
     className:
-      'bg-green-50 bg-opacity-50 text-green-700 ring-green-600/20',
+      'bg-gongke-accent/[0.12] bg-opacity-50 text-gongke-accent ring-gongke-accent/25',
   },
   /*
    * 原站的四档用的是 Tailwind 的 purple / yellow 色相。免费增值是**最常见**
    * 的一档（2081 个工具里 1737 个），等于每一页工具详情都挂着一枚紫色胶囊 ——
    * 直接违反试界「禁紫色」的品牌约束（`src/lib/news.ts` 里对资讯分类写过同一条）。
-   *
-   * 改成品牌绿：绿在试界的语义是「可用/正向」，免费增值本来就是「有免费额度」，
-   * 语义也对得上。付费保留暖色，但收到品牌橙的浅档（#B54826 家族），
-   * 不再用 Tailwind 的 yellow-700。
    */
   freemium: {
     label: '免费增值',
     className:
-      'bg-gongke-accent/[0.07] bg-opacity-50 text-gongke-accent ring-gongke-accent/20',
+      'bg-foreground/[0.04] bg-opacity-50 text-gongke-muted ring-foreground/15',
   },
   paid: {
     label: '付费',
@@ -52,17 +63,17 @@ const TONES = {
       // 付费：文字用 #B54826 的加深版（#9C3D1F）。原色叠在 10% 品牌橙底上实测
       // 4.25:1，低于 AA 的 4.5（2026-10-23 全站巡检抓到）；加深后约 5.3:1，
       // 色相不变，扫读时仍是「暖色 = 要花钱」那一档。
-      'bg-[#F2693C]/10 bg-opacity-50 text-[#9C3D1F] ring-[#B54826]/20',
+      'bg-gongke-orange/10 bg-opacity-50 text-[#9C3D1F] ring-gongke-earth/20',
   },
   open: {
     label: '免费开源',
     className:
-      'bg-blue-50 bg-opacity-50 text-blue-700 ring-blue-600/20',
+      'text-gongke-accent ring-gongke-accent/30',
   },
   unknown: {
     label: '',
     className:
-      'bg-gray-50 bg-opacity-50 text-gray-700 ring-gray-600/20',
+      'bg-foreground/[0.04] bg-opacity-50 text-gongke-muted ring-foreground/15',
   },
 } as const;
 

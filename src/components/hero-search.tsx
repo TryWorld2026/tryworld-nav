@@ -20,8 +20,12 @@ import { useModKey } from '@/lib/use-mod-key';
  * 无障碍：它是 `<button type="button">` 而不是 div，`aria-label` 写明「打开
  * 搜索面板」，键盘可达、有 focus ring。**不能**加 `role="combobox"`：那是给
  * 真输入框的语义，用在这里会让读屏用户以为可以直接输入。
+ *
+ * 2026-10-27：垂直节奏交给调用方（`className`），组件不再写死 `mt-7`。
+ * 首屏预算按屏高分配时，hero 内部每一段间距都要能被 hero 统一调节 ——
+ * 一个组件自带 `mt-7` 就把 28px 钉死了，矮屏上只能靠整体 padding 兜。
  */
-export function HeroSearch() {
+export function HeroSearch({ className = '' }: { className?: string }) {
   const modKey = useModKey();
 
   return (
@@ -30,16 +34,16 @@ export function HeroSearch() {
       onClick={() => window.dispatchEvent(new CustomEvent('tryworld:search'))}
       aria-label="打开搜索面板，搜索 AI 工具"
       data-testid="hero-search"
-      className="group mt-7 flex w-full max-w-[34rem] items-center gap-3 rounded-full border border-white/15 bg-white/[0.06] px-4 py-3 text-left backdrop-blur-sm transition-all duration-200 hover:border-white/30 hover:bg-white/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F2EEE6]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1B2523] active:scale-[0.995]"
+      className={`group flex w-full max-w-[34rem] items-center gap-3 rounded-full border border-white/15 bg-white/[0.06] px-4 py-2.5 text-left backdrop-blur-sm transition-all duration-200 hover:border-white/30 hover:bg-white/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gongke-paper/70 focus-visible:ring-offset-2 focus-visible:ring-offset-gongke-dark active:scale-[0.995] ${className}`}
     >
       <Search
-        className="h-4 w-4 shrink-0 text-[#F2EEE6]/55 transition-colors group-hover:text-[#F2EEE6]/80"
+        className="h-4 w-4 shrink-0 text-gongke-paper/55 transition-colors group-hover:text-gongke-paper/80"
         aria-hidden="true"
       />
-      <span className="min-w-0 flex-1 truncate text-[14px] text-[#F2EEE6]/60 transition-colors group-hover:text-[#F2EEE6]/80">
+      <span className="min-w-0 flex-1 truncate text-sm text-gongke-paper/60 transition-colors group-hover:text-gongke-paper/80">
         搜工具名、简介，或直接说你想做什么…
       </span>
-      <kbd className="hidden shrink-0 items-center gap-0.5 rounded border border-white/15 bg-white/[0.06] px-1.5 py-0.5 font-mono text-[10px] font-medium text-[#F2EEE6]/60 sm:inline-flex">
+      <kbd className="hidden shrink-0 items-center gap-0.5 rounded border border-white/15 bg-white/[0.06] px-1.5 py-0.5 font-mono text-2xs font-medium text-gongke-paper/60 sm:inline-flex">
         {modKey}K
       </kbd>
     </button>

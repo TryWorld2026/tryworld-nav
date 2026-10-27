@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Library } from 'lucide-react';
 import { collections } from '@/lib/data';
 
 /**
@@ -26,23 +26,23 @@ export function HomeCollections() {
         <div className="mb-4 flex items-center gap-3">
           <h2
             id="home-collections-heading"
-            className="flex shrink-0 items-center gap-2.5 text-[19px] font-semibold text-foreground"
+            className="flex shrink-0 items-center gap-2.5 text-xl font-semibold text-foreground"
           >
             <span
               className="flex h-8 w-8 items-center justify-center rounded-lg bg-gongke-accent/[0.07] text-gongke-accent ring-1 ring-inset ring-gongke-accent/10"
               aria-hidden="true"
             >
-              <Sparkles className="h-4 w-4" />
+              <Library className="h-4 w-4" />
             </span>
             编辑精选
-            <span className="ml-1 rounded-full bg-gongke-accent/10 px-2 py-0.5 text-[11px] font-medium text-gongke-accent">
+            <span className="ml-1 rounded-full bg-gongke-accent/10 px-2 py-0.5 text-2xs font-medium text-gongke-accent">
               {collections.length} 个清单
             </span>
           </h2>
           <span className="h-px min-w-4 flex-1 bg-foreground/10" aria-hidden="true" />
           <Link prefetch={false}
             href="/collections"
-            className="group hidden shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[13px] font-medium text-muted-foreground transition-colors hover:text-gongke-accent md:inline-flex"
+            className="group hidden shrink-0 items-center gap-1 rounded-full px-2 py-1 text-sm font-medium text-muted-foreground transition-colors hover:text-gongke-accent md:inline-flex"
           >
             全部清单
             <ArrowRight
@@ -65,13 +65,13 @@ export function HomeCollections() {
                 i === 5 ? ' xl:hidden' : ''
               }`}
             >
-              <span className="line-clamp-2 text-[14px] font-semibold leading-snug text-foreground transition-colors group-hover:text-gongke-accent">
+              <span className="line-clamp-2 text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-gongke-accent">
                 {c.name}
               </span>
-              <span className="mt-1 line-clamp-2 text-[12px] leading-relaxed text-gongke-muted">
+              <span className="mt-1 line-clamp-2 text-xs leading-relaxed text-gongke-muted">
                 {c.description}
               </span>
-              <span className="mt-3 flex items-center gap-1.5 text-[11.5px] tabular-nums text-muted-foreground">
+              <span className="mt-3 flex items-center gap-1.5 text-2xs tabular-nums text-muted-foreground">
                 {c.memberIcons.slice(0, 4).map((icon) => (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -81,7 +81,7 @@ export function HomeCollections() {
                     width={16}
                     height={16}
                     loading="lazy"
-                    className="h-4 w-4 rounded-[3px] object-contain"
+                    className="h-4 w-4 rounded-sm object-contain"
                   />
                 ))}
                 <span className="ml-1">{c.tools.length} 个工具</span>

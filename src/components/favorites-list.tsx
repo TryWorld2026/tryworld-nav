@@ -341,7 +341,7 @@ export function FavoritesList() {
           </p>
           {staleCount > 0 ? (
             <span
-              className="inline-flex items-center gap-1 rounded-full border border-foreground/10 bg-foreground/[0.03] px-2 py-0.5 text-[11.5px] text-muted-foreground"
+              className="inline-flex items-center gap-1 rounded-full border border-foreground/10 bg-foreground/[0.03] px-2 py-0.5 text-2xs text-muted-foreground"
               title="收录快照超过一年，功能与价格可能已经变化"
             >
               <AlertCircle className="h-3 w-3" aria-hidden="true" />
@@ -366,13 +366,13 @@ export function FavoritesList() {
 
       {/* ── 导出 ───────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-2 rounded-xl border border-foreground/10 bg-foreground/[0.02] px-3 py-2.5">
-        <span className="mr-auto text-[12.5px] text-muted-foreground">
+        <span className="mr-auto text-xs text-muted-foreground">
           带走整份清单（{store.items.length} 个，按分类分组，含判断摘要）
         </span>
         <button
           type="button"
           onClick={() => copy('md')}
-          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3 text-[12.5px] font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
         >
           {copied === 'md' ? (
             <Check className="h-3.5 w-3.5 text-gongke-accent" aria-hidden="true" />
@@ -384,7 +384,7 @@ export function FavoritesList() {
         <button
           type="button"
           onClick={download}
-          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3 text-[12.5px] font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
         >
           <Download className="h-3.5 w-3.5" aria-hidden="true" />
           下载 .md
@@ -393,7 +393,7 @@ export function FavoritesList() {
           type="button"
           onClick={share}
           title="复制一个链接；对方打开后可以一键收进他自己的收藏"
-          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3 text-[12.5px] font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-foreground/15 bg-card px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
         >
           {copied === 'link' ? (
             <Check className="h-3.5 w-3.5 text-gongke-accent" aria-hidden="true" />
@@ -405,12 +405,12 @@ export function FavoritesList() {
         <button
           type="button"
           onClick={() => copy('plain')}
-          className="inline-flex min-h-9 items-center gap-1.5 rounded-full px-2.5 text-[12.5px] text-muted-foreground transition-colors hover:text-foreground"
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-full px-2.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
         >
           {copied === 'plain' ? '已复制纯文本' : '复制纯文本'}
         </button>
         {failed ? (
-          <span className="text-[12px] text-destructive" role="status">
+          <span className="text-xs text-destructive" role="status">
             剪贴板不可用，请改用「下载 .md」
           </span>
         ) : null}
@@ -420,10 +420,10 @@ export function FavoritesList() {
       {compareTools.length >= 2 ? (
         <section aria-labelledby="stack-compare" className="space-y-2">
           <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-            <h2 id="stack-compare" className="font-display text-[17px] font-semibold text-foreground">
+            <h2 id="stack-compare" className="font-display text-lg font-semibold text-foreground">
               并排对比
             </h2>
-            <p className="text-[12px] text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               勾选 2–4 个工具；这张表只摆事实与判断原文，不替你下结论
             </p>
           </div>
@@ -489,21 +489,21 @@ export function FavoritesList() {
                 <div className="min-w-0 flex-1">
                   <Link prefetch={false}
                     href={`/tools/${it.slug}`}
-                    className="line-clamp-1 text-[15px] font-semibold text-foreground hover:text-gongke-accent"
+                    className="line-clamp-1 text-base font-semibold text-foreground hover:text-gongke-accent"
                   >
                     {stack.name}
                   </Link>
                   {stack.bestFor[0] ? (
-                    <p className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-gongke-muted">
+                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-gongke-muted">
                       适合：{stack.bestFor[0]}
                     </p>
                   ) : it.description ? (
-                    <p className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-gongke-muted">
+                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-gongke-muted">
                       {it.description}
                     </p>
                   ) : null}
 
-                  <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11.5px] text-muted-foreground">
+                  <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs text-muted-foreground">
                     {categoryName ? (
                       <span className="inline-flex items-center gap-1 rounded-md border border-foreground/10 px-1.5 py-0.5 text-foreground/70">
                         <span
@@ -542,17 +542,17 @@ export function FavoritesList() {
       {/* ── 同类补充 ───────────────────────────────────────────── */}
       {suggestions.length > 0 ? (
         <section aria-labelledby="stack-more" className="rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-4 md:p-5">
-          <h2 id="stack-more" className="text-[13px] font-semibold text-foreground">
+          <h2 id="stack-more" className="text-sm font-semibold text-foreground">
             同类里编辑写过判断、你还没收的
           </h2>
-          <p className="mt-1 text-[12px] leading-relaxed text-muted-foreground">
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
             按目录排位取每个分类的前两个 —— 「排位」只是 tools.json 的原始顺序，不是评分。
           </p>
           <ul className="mt-2.5 divide-y divide-foreground/[0.07]">
             {suggestions.map((s) => (
               <li key={s.slug} className="flex min-w-0 items-start gap-2 py-2 first:pt-0">
-                <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-foreground/30" aria-hidden="true" />
-                <p className="min-w-0 flex-1 text-[12.5px] leading-relaxed">
+                <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-foreground/30" aria-hidden="true" />
+                <p className="min-w-0 flex-1 text-xs leading-relaxed">
                   <Link
                     prefetch={false}
                     href={`/tools/${s.slug}`}
@@ -569,7 +569,7 @@ export function FavoritesList() {
                 <Link
                   prefetch={false}
                   href={`/tools/${s.slug}`}
-                  className="shrink-0 text-[11.5px] text-gongke-accent hover:underline"
+                  className="shrink-0 text-2xs text-gongke-accent hover:underline"
                 >
                   看看
                 </Link>
@@ -579,7 +579,7 @@ export function FavoritesList() {
         </section>
       ) : null}
 
-      <p className="flex items-center gap-1.5 pt-1 text-[12px] text-muted-foreground">
+      <p className="flex items-center gap-1.5 pt-1 text-xs text-muted-foreground">
         <BookmarkCheck className="h-3.5 w-3.5" aria-hidden="true" />
         收藏只保存在这台设备的浏览器里，不上传、不需要账号。换设备或清除浏览器数据会丢失。
       </p>

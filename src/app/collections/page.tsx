@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { collections } from '@/lib/data';
 import { canonical } from '@/lib/canonical';
 import { withOg } from '@/lib/og';
@@ -40,11 +40,10 @@ export default function CollectionsPage() {
         {/* 集合数并进眉标。原先它单独挂在标题行右侧（`justify-between`），
             1440 下被推到容器最右，与标题隔开 600px 空白，既不像副标题也不像
             度量衡，像是页面上的残留。基数很小（9），放进眉标读起来更顺。 */}
-        <p className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-          <Sparkles className="h-3.5 w-3.5 text-gongke-accent" aria-hidden="true" />
+        <p className="mb-2 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
           编辑精选 · <span className="tabular-nums">{collections.length} 个集合</span>
         </p>
-        <h1 className="font-display text-3xl leading-tight text-foreground md:text-4xl 4xl:text-5xl 4xl:leading-[1.15]">
+        <h1 className="font-display text-3xl leading-tight text-foreground md:text-4xl 4xl:text-6xl 4xl:leading-tight">
           精选AI利器集合
         </h1>
         {/* 一行写完：JSX 在 `，` 后换行会插进一个空格，中文里等于凭空多出
@@ -65,7 +64,7 @@ export default function CollectionsPage() {
             不是「在集合里挑工具」。铺 54 张卡会把它变成第二个 `/tools`，而
             「九个集合各是什么」这件事会被卡海淹掉。真要比较工具，每个集合页
             里已经是完整名单 + 全站卡片。 */}
-        <p className="mt-2 max-w-[41em] text-balance text-[15px] leading-relaxed text-gongke-muted">
+        <p className="mt-2 max-w-[41em] text-balance text-base leading-relaxed text-gongke-muted">
           按公司、按场景、按使用人群整理的工具清单。每张卡上是六个成员图标与收录总数，点进去是完整名单。
         </p>
       </header>
@@ -107,14 +106,14 @@ export default function CollectionsPage() {
               />
             </div>
 
-            <h2 className="relative mt-3 text-[17px] font-semibold leading-snug text-foreground transition-colors group-hover:text-gongke-accent">
+            <h2 className="relative mt-3 text-lg font-semibold leading-snug text-foreground transition-colors group-hover:text-gongke-accent">
               {c.title}
             </h2>
             {/* `min-h-[42px]` = 13px × 1.6 × 2 行。集合简介有一行的也有两行的，
                 不锁高度时同一网格里两种卡的内容起点会差 21px（成员图标被
                 `mt-auto` 压到底，于是中间那段留白忽宽忽窄，九张卡看起来
                 像两套模板）。 */}
-            <p className="relative mt-1 line-clamp-2 min-h-[42px] text-[13px] leading-relaxed text-gongke-muted">
+            <p className="relative mt-1 line-clamp-2 min-h-[42px] text-sm leading-relaxed text-gongke-muted">
               {c.description}
             </p>
 
@@ -137,14 +136,14 @@ export default function CollectionsPage() {
               {/* 数据里每个集合正好六个成员图标，`+N` 只是防御 —— 采集端哪天
                   给出更多切片时不会悄悄丢。 */}
               {c.memberIcons.length > 6 && (
-                <span className="text-[12px] tabular-nums text-muted-foreground">
+                <span className="text-xs tabular-nums text-muted-foreground">
                   +{c.memberIcons.length - 6}
                 </span>
               )}
               {/* 集合的规模是这张卡最该被比较的数字（六个代表图标长得都差不多），
                   原来页面上完全没有它。贴右侧、与图标条同基线，扫读时一眼就能
                   区分「六个工具」和「二十个工具」。 */}
-              <span className="ml-auto shrink-0 pl-2 text-[12px] tabular-nums text-muted-foreground">
+              <span className="ml-auto shrink-0 pl-2 text-xs tabular-nums text-muted-foreground">
                 {c.toolCount} 个工具
               </span>
             </div>

@@ -22,8 +22,8 @@ import {
   Pyramid,
   Radar,
   Scale,
+  Circle,
   ScrollText,
-  Sparkles,
   SquareTerminal,
   TextCursorInput,
   type LucideIcon,
@@ -54,12 +54,14 @@ const REGISTRY: Record<string, LucideIcon> = {
   radar: Radar,
   scale: Scale,
   'scroll-text': ScrollText,
-  sparkles: Sparkles,
   'square-terminal': SquareTerminal,
   'text-cursor-input': TextCursorInput,
 };
 
 export function CategoryIcon({ name, className }: { name: string; className?: string }) {
-  const Cmp = REGISTRY[name] ?? Sparkles;
+  // 兜底从 `Sparkles` 换成 `Circle`。星形是「AI 通用装饰」的符号，用它表示
+  // 「这个分类图标我们没登记」等于把一个无语义的装饰当占位符；圆点是中性的。
+  // 26 个分类的图标名全部已在 REGISTRY 里，兜底只在数据漂移时才会走到。
+  const Cmp = REGISTRY[name] ?? Circle;
   return <Cmp className={className} />;
 }

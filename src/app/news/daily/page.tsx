@@ -61,7 +61,7 @@ export default function DailyIndexPage() {
       >
         <MastheadMeta>
           <span>
-            已出刊 <strong className="font-semibold text-[#F2EEE6]">{dailyArchive.length}</strong> 期
+            已出刊 <strong className="font-semibold text-gongke-paper">{dailyArchive.length}</strong> 期
           </span>
           {latest && (
             <span>
@@ -87,33 +87,33 @@ export default function DailyIndexPage() {
           <Reveal as="section" className="mt-8">
             <Link prefetch={false}
               href={`/news/daily/${latest.date}`}
-              className="ink-band group relative block overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#1B2523]/25 active:translate-y-0 md:p-8"
+              className="ink-band group relative block overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-gongke-dark/25 active:translate-y-0 md:p-8"
             >
               {/* 与周报/月报同一张封面：左边讲什么，右边书脊竖排「本期版面 +
                   体量数字」。快讯不占版面，但该被看见，跟在版面清单末尾。 */}
               <div className="relative lg:grid lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-10 2xl:grid-cols-[minmax(0,1fr)_21rem] 2xl:gap-14">
                 <div className="min-w-0">
                   <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
-                    <span className="rounded-full bg-[#F2EEE6] px-2.5 py-1 font-semibold text-[#1B2523]">
+                    <span className="rounded-full bg-gongke-paper px-2.5 py-1 font-semibold text-gongke-dark">
                       最新一期
                     </span>
-                    <span className="inline-flex items-center gap-1 text-[#F2EEE6]/55">
+                    <span className="inline-flex items-center gap-1 text-gongke-paper/55">
                       <CalendarDays className="h-3 w-3" aria-hidden="true" />
                       {formatDateFull(latest.date)} · {weekdayZh(latest.date)}
                     </span>
-                    <span className="text-[#F2EEE6]/55">
+                    <span className="text-gongke-paper/55">
                       第 {issueNumber(dailyArchive, latest.date)} 期
                     </span>
                   </div>
-                  <h2 className="max-w-[46ch] text-balance font-display text-2xl leading-[1.22] text-[#F2EEE6] transition-colors group-hover:text-white md:text-[30px] 2xl:text-[42px]">
+                  <h2 className="max-w-[46ch] text-balance font-display text-2xl leading-tight text-gongke-paper transition-colors group-hover:text-white md:text-3xl 2xl:text-5xl">
                     {latest.lead?.title ?? '今日无大事发生'}
                   </h2>
                   {latest.lead?.leadParagraph && (
-                    <p className="mt-3 max-w-[62ch] text-sm leading-relaxed text-[#F2EEE6]/60 md:text-[15px] 2xl:max-w-[44rem] 2xl:text-[16px]">
+                    <p className="mt-3 max-w-[62ch] text-sm leading-relaxed text-gongke-paper/60 md:text-base 2xl:max-w-[44rem] 2xl:text-base">
                       {latest.lead.leadParagraph}
                     </p>
                   )}
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-[#F2A07F]">
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-gongke-onInk">
                     阅读本期
                     <ArrowRight
                       className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
@@ -140,10 +140,10 @@ export default function DailyIndexPage() {
                         ['分钟读完', latestStats.minutes],
                       ].map(([label, value]) => (
                         <div key={String(label)} className="min-w-0">
-                          <dd className="font-display text-[24px] leading-none tabular-nums text-[#F2EEE6]">
+                          <dd className="font-display text-2xl leading-none tabular-nums text-gongke-paper">
                             {value}
                           </dd>
-                          <dt className="mt-1.5 text-[11px] tracking-wide text-[#F2EEE6]/55">
+                          <dt className="mt-1.5 text-2xs tracking-wide text-gongke-paper/55">
                             {label}
                           </dt>
                         </div>
@@ -162,7 +162,7 @@ export default function DailyIndexPage() {
                 「其他分类」、合集详情的「其他集合」同档）。原来这里是 12px
                 大写小字 —— 同一条页面上，相隔 300px 的两条内容带用了两种
                 字号，读者会以为「最近几期」只是筛选器旁边的一个说明标签。 */}
-            <h2 className="mb-4 text-[19px] font-semibold text-foreground">
+            <h2 className="mb-4 text-xl font-semibold text-foreground">
               最近几期
             </h2>
             <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 lg:grid-cols-3">
@@ -176,13 +176,13 @@ export default function DailyIndexPage() {
                     href={`/news/daily/${d.date}`}
                     className="group flex h-full flex-col rounded-xl border border-foreground/10 bg-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-md active:translate-y-0"
                   >
-                    <span className="text-[11px] font-medium text-gongke-accent">
+                    <span className="text-2xs font-medium text-gongke-accent">
                       {formatDateShort(d.date)} · {weekdayZh(d.date)}
                     </span>
                     <span className="mt-1.5 line-clamp-2 flex-1 text-sm font-medium leading-snug text-foreground/80 transition-colors group-hover:text-foreground">
                       {d.lead?.title ?? '今日无大事发生'}
                     </span>
-                    <span className="mt-2 text-[11px] text-muted-foreground">
+                    <span className="mt-2 text-2xs text-muted-foreground">
                       第 {issueNumber(dailyArchive, d.date)} 期
                     </span>
                   </Link>
@@ -194,7 +194,7 @@ export default function DailyIndexPage() {
 
         {/* 全部往期：按月分组 */}
         <section className="mt-12">
-          <h2 className="mb-4 text-[19px] font-semibold text-foreground">全部往期</h2>
+          <h2 className="mb-4 text-xl font-semibold text-foreground">全部往期</h2>
           <div className="space-y-6">
             {groups.map((g, gi) => (
               <details key={g.key} open={gi < 2} className="group">

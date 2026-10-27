@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Flame, LayoutList, Newspaper, Orbit, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CalendarRange, Flame, LayoutList, Newspaper, Orbit } from 'lucide-react';
 import { SECTION_WIDTH_CLASS, type SectionWidth } from '@/lib/layout';
 
 /**
@@ -26,7 +26,7 @@ const TABS = [
   { href: '/news', label: '资讯流', icon: LayoutList, key: 'feed' },
   { href: '/news/daily', label: 'AI 日报', icon: Newspaper, key: 'daily' },
   { href: '/news/weekly', label: '周报', icon: Orbit, key: 'weekly' },
-  { href: '/news/monthly', label: '月报', icon: Sparkles, key: 'monthly' },
+  { href: '/news/monthly', label: '月报', icon: CalendarRange, key: 'monthly' },
   { href: '/news/hot', label: '热点', icon: Flame, key: 'hot' },
 ] as const;
 
@@ -197,7 +197,7 @@ function PagerSide({
     <>
       {dir === 'prev' && <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />}
       <span className="min-w-0 flex-1">
-        <span className="block text-[11px] uppercase tracking-wide text-muted-foreground">
+        <span className="block text-2xs uppercase tracking-wide text-muted-foreground">
           {dir === 'prev' ? '上一期' : '下一期'}
         </span>
         <span className="block truncate text-sm font-medium">{text ?? '—'}</span>

@@ -11,10 +11,12 @@
  *                                 field, not a constant, because a future
  *                                 harvest could carry a second row kind.
  *   .flex.flex-wrap.gap-2.mt-2    the 支持平台 label plus one chip per platform.
- *                                 Its dot is the origin's own hardcoded
- *                                 #00AF79, which is not the green used by the
- *                                 pricing badge — a coincidence of palette, not
- *                                 a shared token.
+ *                                 Its dot was the origin's own hardcoded
+ *                                 #00AF79 — a bright mint green that appears
+ *                                 nowhere else on this site. 2026-10-27 swapped
+ *                                 it for the brand green, so the platform chips
+ *                                 and the pricing badge now belong to the same
+ *                                 palette instead of merely both being "green".
  *
  * Each row's trailing favicon and each platform's icon are raw inline `<svg>`
  * strings from the harvest (the origin renders them from a CDN that no longer
@@ -31,8 +33,11 @@ import { ArrowUpRight } from 'lucide-react';
 
 import type { ToolInfoRow, ToolPlatform } from '@/lib/types';
 
-/** The 支持平台 dot colour — the origin's own literal, not a shared token. */
-const PLATFORM_DOT = '#00AF79';
+/**
+ * 支持平台色点。原站是 `#00AF79`（亮薄荷绿），全站没有任何第二处用它 ——
+ * 它与价格徽章的品牌绿只是「都绿」，不是同一个色。2026-10-27 统一到品牌绿。
+ */
+const PLATFORM_DOT = '#24564E';
 
 /**
  * 抓取来的 `<svg>` 里有没有**损坏的 path**。

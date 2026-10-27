@@ -332,7 +332,7 @@ export function NewsFeed({
                     <X className="h-3.5 w-3.5" aria-hidden="true" />
                   </button>
                 )}
-                <kbd className="hidden rounded border border-foreground/10 bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:block">
+                <kbd className="hidden rounded border border-foreground/10 bg-background px-1.5 py-0.5 font-mono text-2xs text-muted-foreground sm:block">
                   /
                 </kbd>
               </div>
@@ -356,7 +356,7 @@ export function NewsFeed({
               <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">筛选</span>
               {(cats.length > 0 || source) && (
-                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-gongke-accent px-1 text-[10px] font-bold text-white">
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-gongke-accent px-1 text-2xs font-bold text-white">
                   {cats.length + (source ? 1 : 0)}
                 </span>
               )}
@@ -388,7 +388,7 @@ export function NewsFeed({
                   key={r.id}
                   onClick={() => setRange(r.id)}
                   aria-pressed={on}
-                  className={`inline-flex min-h-11 shrink-0 items-center justify-center rounded-full px-3.5 text-[13px] font-medium transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-0 sm:px-3 sm:py-1 sm:text-xs ${
+                  className={`inline-flex min-h-11 shrink-0 items-center justify-center rounded-full px-3.5 text-sm font-medium transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-0 sm:px-3 sm:py-1 sm:text-xs ${
                     on
                       ? 'bg-foreground text-background'
                       : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground'
@@ -424,7 +424,7 @@ export function NewsFeed({
           {filtersOpen && (
             <div className="mt-3 space-y-3 rounded-2xl border border-foreground/10 bg-card p-3.5 animate-[sheet-fade_0.2s_ease-out]">
               <div>
-                <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                <p className="mb-1.5 text-2xs font-medium uppercase tracking-wide text-muted-foreground">
                   分类
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -470,7 +470,7 @@ export function NewsFeed({
               </div>
 
               <div>
-                <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                <p className="mb-1.5 text-2xs font-medium uppercase tracking-wide text-muted-foreground">
                   来源
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -505,7 +505,7 @@ export function NewsFeed({
               </div>
 
               {months.length > 1 && (
-                <p className="border-t border-foreground/5 pt-2.5 text-[11px] text-muted-foreground">
+                <p className="border-t border-foreground/5 pt-2.5 text-2xs text-muted-foreground">
                   时间跨度：{months[months.length - 1].label} – {months[0].label}
                   <span className="ml-2 text-muted-foreground">
                     （共 {months.reduce((n, m) => n + m.count, 0)} 条）
@@ -559,7 +559,7 @@ export function NewsFeed({
                     {formatDateShort(g.items[0]?.publishedAt)}
                     {g.weekday && ` · ${g.weekday}`}
                   </span>
-                  <span className="ml-auto text-[11px] tabular-nums text-muted-foreground">
+                  <span className="ml-auto text-2xs tabular-nums text-muted-foreground">
                     {g.items.length} 条
                   </span>
                 </div>
@@ -652,7 +652,7 @@ function NewsCard({
         aria-hidden="true"
       />
       <div className="flex flex-1 flex-col p-4 pl-5 md:p-5 md:pl-6">
-        <div className="mb-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px]">
+        <div className="mb-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs">
           <span
             className="inline-flex items-center rounded-full px-2 py-0.5 font-medium"
             style={{ background: tone.wash, color: tone.text }}
@@ -673,7 +673,7 @@ function NewsCard({
             31px 的「自由」）。实测 390/768/1440/2560 四档孤行数 2/0/2/4 → 0，
             并且 `truncated` 数不变（`line-clamp-2` 真的截断时仍是两条线，
             不会被均衡换行挤掉可见文字）。 */}
-        <h3 className="text-balance text-[15px] font-semibold leading-snug text-foreground/90 transition-colors group-hover:text-gongke-accent md:text-base">
+        <h3 className="text-balance text-base font-semibold leading-snug text-foreground/90 transition-colors group-hover:text-gongke-accent md:text-base">
           <a
             href={item.originalUrl}
             target="_blank"
@@ -707,7 +707,7 @@ function NewsCard({
               <Link prefetch={false}
                 key={t.slug}
                 href={`/tools/${t.slug}`}
-                className="inline-flex items-center gap-1 rounded-md border border-foreground/10 bg-foreground/[0.02] px-1.5 py-0.5 text-[11px] text-foreground/70 transition-colors hover:border-gongke-accent/30 hover:text-gongke-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex items-center gap-1 rounded-md border border-foreground/10 bg-foreground/[0.02] px-1.5 py-0.5 text-2xs text-foreground/70 transition-colors hover:border-gongke-accent/30 hover:text-gongke-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -716,7 +716,7 @@ function NewsCard({
                   width={12}
                   height={12}
                   loading="lazy"
-                  className="h-3 w-3 rounded-[2px] object-contain"
+                  className="h-3 w-3 rounded-sm object-contain"
                 />
                 站内收录 · {t.name}
               </Link>
@@ -724,7 +724,7 @@ function NewsCard({
           </div>
         )}
 
-        <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-2.5 text-[11px] text-muted-foreground">
+        <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-2.5 text-2xs text-muted-foreground">
           {item.originalTitle && item.originalTitle !== item.title && (
             <span className="line-clamp-1 max-w-full text-muted-foreground">
               {item.originalTitle}
@@ -743,12 +743,12 @@ function NewsCard({
           {item.reason && (
             <details className="relative z-10 w-full">
               {/* `-my-1 py-2` 让行高不变但命中区有 24px，满足移动端最小触控目标。 */}
-              <summary className="-my-1 inline-flex min-h-6 cursor-pointer list-none items-center gap-1 py-2 text-[11px] text-gongke-accent/80 transition-colors hover:text-gongke-accent [&::-webkit-details-marker]:hidden">
+              <summary className="-my-1 inline-flex min-h-6 cursor-pointer list-none items-center gap-1 py-2 text-2xs text-gongke-accent/80 transition-colors hover:text-gongke-accent [&::-webkit-details-marker]:hidden">
                 <Flame className="h-3 w-3" aria-hidden="true" />
                 入选理由
                 <ChevronDown className="h-3 w-3 transition-transform" />
               </summary>
-              <p className="mt-1 rounded-lg bg-foreground/[0.03] px-2.5 py-1.5 text-balance text-[11px] leading-relaxed text-foreground/70">
+              <p className="mt-1 rounded-lg bg-foreground/[0.03] px-2.5 py-1.5 text-balance text-2xs leading-relaxed text-foreground/70">
                 {item.reason}
               </p>
             </details>

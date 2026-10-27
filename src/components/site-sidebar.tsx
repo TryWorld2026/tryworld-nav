@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Bookmark, ChevronRight, Compass, Layers2, Newspaper, Scale, Sparkles } from 'lucide-react';
+import { Bookmark, ChevronRight, Compass, Layers2, Newspaper, Scale } from 'lucide-react';
 import { CategoryIcon } from './category-icon';
 import { NavMark } from './nav-mark';
 import { navFeatured as featured, navHotCategories as hotCategories } from '@/lib/nav';
@@ -86,7 +86,7 @@ const FEATURED_LABELS: Record<string, string> = { 'seko-ai': 'Seko' };
 const NAV_CLASS =
   'flex items-center py-2 hover:bg-foreground/5 rounded-md px-2 transition-colors';
 const LABEL_CLASS = 'text-sm text-foreground/80';
-const HEADING_CLASS = 'text-sm font-semibold text-gray-500 mb-4 flex items-center';
+const HEADING_CLASS = 'text-sm font-semibold text-gongke-muted mb-4 flex items-center';
 
 /**
  * 「AI 资讯」是侧栏里唯一的顶级入口，也是本轮**有意偏离原站**的一处。
@@ -182,10 +182,7 @@ export function SiteSidebar() {
         </Link>
 
         <div className="mb-8">
-          <h2 className={HEADING_CLASS}>
-            <Sparkles className="w-4 h-4 mr-2" aria-hidden="true" />
-            常用推荐
-          </h2>
+          <h2 className={HEADING_CLASS}>常用推荐</h2>
           <nav className="space-y-1">
             {featured.map((t) => (
               <Link prefetch={false}
@@ -252,10 +249,7 @@ export function SiteSidebar() {
         </div>
 
         <div className="mb-8">
-          <h2 className={HEADING_CLASS}>
-            <Sparkles className="w-4 h-4 mr-2" aria-hidden="true" />
-            编辑精选
-          </h2>
+          <h2 className={HEADING_CLASS}>编辑精选</h2>
           <nav className="space-y-1">
             {/* 9 个编辑集合原先全站 0 内链（只在 sitemap 里），是最接近
                 「第一次来不知道选哪个」的内容，却没有任何入口。 */}

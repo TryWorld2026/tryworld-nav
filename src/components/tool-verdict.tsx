@@ -1,4 +1,4 @@
-import { Check, Compass, Minus, Sparkles, Wallet } from 'lucide-react';
+import { Check, Compass, Minus, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { CATALOG_BY_SLUG, CATALOG_INDEX, DATA_EPOCH } from '@/lib/catalog-index';
 import { extrasBySlug, toolBySlug } from '@/lib/data';
@@ -111,24 +111,23 @@ function ManualVerdict({ verdict }: { verdict: ToolVerdictData }) {
     >
       <h2
         id="verdict-heading"
-        className="flex items-center gap-2 text-[15px] font-semibold text-foreground"
+        className="flex items-center gap-2 text-base font-semibold text-foreground"
       >
-        <Sparkles className="h-4 w-4 text-gongke-accent" aria-hidden="true" />
         怎么选
-        <span className="ml-1 rounded-full bg-gongke-accent/10 px-2 py-0.5 text-[11px] font-medium text-gongke-accent">
+        <span className="ml-1 rounded-full bg-gongke-accent/10 px-2 py-0.5 text-2xs font-medium text-gongke-accent">
           编辑判断
         </span>
       </h2>
 
       <div className="mt-4 grid gap-5 md:grid-cols-2">
         <div>
-          <h3 className="flex items-center gap-1.5 text-[13px] font-medium text-foreground/80">
+          <h3 className="flex items-center gap-1.5 text-sm font-medium text-foreground/80">
             <Check className="h-3.5 w-3.5 text-gongke-accent" aria-hidden="true" />
             适合
           </h3>
           <ul className="mt-2 space-y-1.5">
             {verdict.bestFor.map((s) => (
-              <li key={s} className="flex gap-2 text-[13.5px] leading-relaxed text-foreground/80">
+              <li key={s} className="flex gap-2 text-sm leading-relaxed text-foreground/80">
                 <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-gongke-accent" />
                 {s}
               </li>
@@ -138,14 +137,14 @@ function ManualVerdict({ verdict }: { verdict: ToolVerdictData }) {
 
         {verdict.notFor && verdict.notFor.length > 0 && (
           <div>
-            <h3 className="flex items-center gap-1.5 text-[13px] font-medium text-foreground/80">
-              <Minus className="h-3.5 w-3.5 text-[#B54826]" aria-hidden="true" />
+            <h3 className="flex items-center gap-1.5 text-sm font-medium text-foreground/80">
+              <Minus className="h-3.5 w-3.5 text-gongke-earth" aria-hidden="true" />
               不适合
             </h3>
             <ul className="mt-2 space-y-1.5">
               {verdict.notFor.map((s) => (
-                <li key={s} className="flex gap-2 text-[13.5px] leading-relaxed text-foreground/80">
-                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#B54826]/70" />
+                <li key={s} className="flex gap-2 text-sm leading-relaxed text-foreground/80">
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-gongke-earth/70" />
                   {s}
                 </li>
               ))}
@@ -156,7 +155,7 @@ function ManualVerdict({ verdict }: { verdict: ToolVerdictData }) {
 
       {verdict.diff && (
         <div className="mt-5 rounded-lg border border-foreground/[0.07] bg-foreground/[0.02] p-3.5">
-          <p className="text-[13px] leading-relaxed text-foreground/80">
+          <p className="text-sm leading-relaxed text-foreground/80">
             <span className="font-medium text-foreground">与同类比：</span>
             {verdict.diff}
             {vsTool && (
@@ -175,7 +174,7 @@ function ManualVerdict({ verdict }: { verdict: ToolVerdictData }) {
       )}
 
       {hasPrice && (
-        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12.5px] text-gongke-muted">
+        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gongke-muted">
           <Wallet className="h-3.5 w-3.5" aria-hidden="true" />
           {price?.freeTier && <span>{price.freeTier}</span>}
           {typeof price?.from === 'number' && price.from > 0 && (
@@ -189,7 +188,7 @@ function ManualVerdict({ verdict }: { verdict: ToolVerdictData }) {
         </p>
       )}
 
-      <p className="mt-3 text-[11.5px] text-muted-foreground">
+      <p className="mt-3 text-2xs text-muted-foreground">
         以上为编辑判断，价格以官网为准。发现信息有误可在「关于我们」页找到反馈方式。
       </p>
     </section>
@@ -250,11 +249,11 @@ function DerivedVerdict({ slug }: { slug: string }) {
     >
       <h2
         id="verdict-heading"
-        className="flex items-center gap-2 text-[15px] font-semibold text-foreground"
+        className="flex items-center gap-2 text-base font-semibold text-foreground"
       >
         <Compass className="h-4 w-4 text-gongke-accent" aria-hidden="true" />
         怎么选
-        <span className="ml-1 rounded-full bg-foreground/[0.06] px-2 py-0.5 text-[11px] font-medium text-foreground/75">
+        <span className="ml-1 rounded-full bg-foreground/[0.06] px-2 py-0.5 text-2xs font-medium text-foreground/75">
           目录事实
         </span>
       </h2>
@@ -266,13 +265,13 @@ function DerivedVerdict({ slug }: { slug: string }) {
           实际不符，而且只在降级页里出现，抽查人工条目页是看不到的。
           改成动态数字也不做：读者关心的是「这个工具有没有」，不是「你们
           做了多少个」；而动态数字每加一条都要重新构建才能对。 */}
-      <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         这个工具还没有编辑判断。下面是可以从目录里直接数出来的事实，供你判断要不要花时间。
       </p>
 
       {peers > 0 && primary && (
         <div className="mt-4 rounded-lg border border-foreground/[0.07] bg-foreground/[0.02] p-3.5">
-          <p className="text-[13px] leading-relaxed text-foreground/80">
+          <p className="text-sm leading-relaxed text-foreground/80">
             <span className="font-medium text-foreground">同类还有：</span>
             「{primary.name}」下另有 {peers} 个工具
             {freePeers > 0 ? (
@@ -307,7 +306,7 @@ function DerivedVerdict({ slug }: { slug: string }) {
 
       {judged.length > 0 && (
         <div className="mt-3">
-          <h3 className="flex items-center gap-1.5 text-[13px] font-medium text-foreground/80">
+          <h3 className="flex items-center gap-1.5 text-sm font-medium text-foreground/80">
             <Check className="h-3.5 w-3.5 text-gongke-accent" aria-hidden="true" />
             同类里已有编辑判断的
           </h3>
@@ -318,7 +317,7 @@ function DerivedVerdict({ slug }: { slug: string }) {
               const first = v?.bestFor?.[0];
               if (!peer) return null;
               return (
-                <li key={s} className="flex gap-2 text-[13.5px] leading-relaxed">
+                <li key={s} className="flex gap-2 text-sm leading-relaxed">
                   <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-gongke-accent" />
                   <span className="min-w-0">
                     <Link prefetch={false}
@@ -339,8 +338,8 @@ function DerivedVerdict({ slug }: { slug: string }) {
       )}
 
       {stale && (
-        <p className="mt-4 flex gap-2 text-[12.5px] leading-relaxed text-muted-foreground">
-          <Minus className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#B54826]" aria-hidden="true" />
+        <p className="mt-4 flex gap-2 text-xs leading-relaxed text-muted-foreground">
+          <Minus className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gongke-earth" aria-hidden="true" />
           <span>
             站内对这个工具的收录快照停在 <time dateTime={staleDate}>{staleDate}</time>
             ，已超过一年。价格、功能与支持平台都可能已经变了，请以官网为准。
@@ -348,7 +347,7 @@ function DerivedVerdict({ slug }: { slug: string }) {
         </p>
       )}
 
-      <p className="mt-3 text-[11.5px] text-muted-foreground">
+      <p className="mt-3 text-2xs text-muted-foreground">
         以上为目录统计，不含编辑推荐。想让我们补上这个工具的判断，可在「关于我们」页找到反馈方式。
       </p>
     </section>

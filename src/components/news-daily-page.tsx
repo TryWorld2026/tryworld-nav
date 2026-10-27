@@ -159,7 +159,7 @@ export function NewsDailyPage({
             人工智能 · 每日要闻
           </p>
 
-          <h1 className="font-display text-[26px] leading-tight text-foreground sm:text-3xl md:text-[34px]">
+          <h1 className="font-display text-3xl leading-tight text-foreground sm:text-3xl md:text-4xl">
             AI 日报 · {formatDateFull(report.date)}
             {/* 星期只在 sm 起跟着标题。390 下「AI 日报 · 2026 年 10 月 17 日」
                 已经占满一整行，「周六」必然被挤到第二行、单独占一行两字，
@@ -210,7 +210,7 @@ export function NewsDailyPage({
                   {s.prefix}
                   {s.value}
                 </dd>
-                <dt className="mt-0.5 text-[11px] text-muted-foreground">{s.label}</dt>
+                <dt className="mt-0.5 text-2xs text-muted-foreground">{s.label}</dt>
               </div>
             ))}
           </dl>
@@ -229,7 +229,7 @@ export function NewsDailyPage({
                 <Flag className="h-3.5 w-3.5" aria-hidden="true" />
                 头条
               </p>
-              <h2 className="text-balance font-display text-[22px] leading-snug text-foreground md:text-[28px]">
+              <h2 className="text-balance font-display text-2xl leading-snug text-foreground md:text-3xl">
                 {leadLink ? (
                   <a
                     href={leadLink.original}
@@ -258,7 +258,7 @@ export function NewsDailyPage({
                   右侧平白空出 250px。 */}
               {/* `text-balance`：1024 下中栏 623px，导语折成三行，末行只剩
                   十来个字（实测 12%）。这是全页的字眼，值得排匀。 */}
-              <p className="mt-3 text-balance text-[15px] leading-relaxed text-foreground/70">
+              <p className="mt-3 text-balance text-base leading-relaxed text-foreground/70">
                 {leadDek}
               </p>
               <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -305,16 +305,16 @@ export function NewsDailyPage({
                       href={`#${h.anchor}`}
                       className="group flex items-start gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-foreground/[0.03]"
                     >
-                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gongke-accent/10 text-[11px] font-bold text-gongke-accent tabular-nums">
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gongke-accent/10 text-2xs font-bold text-gongke-accent tabular-nums">
                         {i + 1}
                       </span>
                       <span className="min-w-0">
                         {/* `text-balance`：列表项标题在 1024 的窄栏里折两行，
                             末行只剩几个字（实测 8%、11%）。 */}
-                        <span className="block text-balance text-[15px] leading-snug text-foreground/85 transition-colors group-hover:text-gongke-accent">
+                        <span className="block text-balance text-base leading-snug text-foreground/85 transition-colors group-hover:text-gongke-accent">
                           {h.title}
                         </span>
-                        <span className="mt-0.5 block text-[11px] text-muted-foreground">
+                        <span className="mt-0.5 block text-2xs text-muted-foreground">
                           {h.sectionLabel} · {h.source}
                         </span>
                       </span>
@@ -344,13 +344,13 @@ export function NewsDailyPage({
                   href={`#${s.anchor}`}
                   className="group min-w-[7rem] flex-1 rounded-xl border border-foreground/10 bg-card px-3 py-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-gongke-accent/30 hover:shadow-sm active:translate-y-0"
                 >
-                  <span className="block text-[11px] font-semibold tracking-wider text-gongke-accent tabular-nums">
+                  <span className="block text-2xs font-semibold tracking-wider text-gongke-accent tabular-nums">
                     {s.index}
                   </span>
                   <span className="mt-0.5 block truncate text-sm text-foreground/80 transition-colors group-hover:text-foreground">
                     {s.label}
                   </span>
-                  <span className="text-[11px] text-muted-foreground">{s.count} 件</span>
+                  <span className="text-2xs text-muted-foreground">{s.count} 件</span>
                 </a>
               ))}
             </div>
@@ -378,7 +378,7 @@ export function NewsDailyPage({
                       rel="noopener noreferrer"
                       className="block rounded-lg transition-colors"
                     >
-                      <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px]">
+                      <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs">
                         {/* 11px 的来源行按 AA 要 5:1，/60 只有 4.06:1；
                             /75 落在 6.4:1，仍是弱化的次级信息。 */}
                         <span className="inline-flex items-center gap-1 font-medium text-foreground/75">
@@ -389,7 +389,7 @@ export function NewsDailyPage({
                           {it.source}
                         </span>
                       </p>
-                      <h3 className="mt-1 text-balance text-[17px] font-semibold leading-snug text-foreground/90 transition-colors group-hover:text-gongke-accent md:text-lg">
+                      <h3 className="mt-1 text-balance text-lg font-semibold leading-snug text-foreground/90 transition-colors group-hover:text-gongke-accent md:text-lg">
                         <HeadlineText text={it.title} />
                         <ArrowUpRight
                           className="ml-1 inline h-3.5 w-3.5 -translate-y-0.5 opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-60"
@@ -432,13 +432,13 @@ export function NewsDailyPage({
                     className="group flex items-baseline gap-2.5 rounded-lg px-2 py-2 transition-colors hover:bg-foreground/[0.03]"
                   >
                     <span
-                      className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/25 transition-colors group-hover:bg-gongke-accent"
+                      className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/25 transition-colors group-hover:bg-gongke-accent"
                       aria-hidden="true"
                     />
                     <span className="min-w-0 flex-1 text-sm leading-relaxed text-foreground/75 transition-colors group-hover:text-foreground">
                       {f.title}
                     </span>
-                    <span className="shrink-0 text-[11px] text-muted-foreground">
+                    <span className="shrink-0 text-2xs text-muted-foreground">
                       {f.source}
                       {beijingTime(f.publishedAt) && (
                         <span className="ml-1.5 tabular-nums">{beijingTime(f.publishedAt)}</span>

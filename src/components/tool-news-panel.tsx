@@ -31,10 +31,10 @@ export function ToolNewsPanel({ slug, name }: { slug: string; name: string }) {
               href={it.originalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group block text-[13px] leading-snug text-foreground/80 transition-colors hover:text-gongke-accent"
+              className="group block text-sm leading-snug text-foreground/80 transition-colors hover:text-gongke-accent"
             >
               <span className="line-clamp-2">{it.title}</span>
-              <span className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">
+              <span className="mt-1 flex items-center gap-1 text-2xs text-muted-foreground">
                 {formatDateShort(it.publishedAt)} · {it.source}
                 <ArrowUpRight
                   className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-70"
@@ -51,7 +51,7 @@ export function ToolNewsPanel({ slug, name }: { slug: string; name: string }) {
           明明上面刚列出三条相关资讯。 */}
       <Link prefetch={false}
         href={`/news?q=${encodeURIComponent(name)}`}
-        className="mt-3 inline-flex items-center gap-1 text-[11.5px] text-gongke-accent hover:underline"
+        className="mt-3 inline-flex items-center gap-1 text-2xs text-gongke-accent hover:underline"
       >
         在资讯频道搜索
         <ArrowUpRight className="h-3 w-3" aria-hidden="true" />

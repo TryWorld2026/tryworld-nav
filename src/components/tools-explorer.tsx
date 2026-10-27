@@ -217,6 +217,18 @@ export function ToolsExplorer({ categories, tags }: { categories: Category[]; ta
    *
    * 一次遍历算完四维（2081 × 4 个布尔判断），所以打字时它也跟得上。四维各自
    * 检查的条件互不相同，无法合并成一个 `ok`，这是这段代码唯一啰嗦的地方。
+   *
+   * ── 搜索词零命中时的退让（2026-10-27）──────────────────────────────
+   * 查询词自己命中 0 条时（`/tools?q=zzzz`），四个维度会**同时**变成 0：
+   * 26 个分类、9 个标签、3 档价格、18 个平台全部显示 0，整块筛选面板变成
+   * 一排读不出信息的灰字。实测这个状态下用户失去的唯一线索是「放松哪一维
+   * 还有东西」—— 而答案其实是「哪一维都有，是你的词不对」。
+   *
+   * 所以这里分两种口径：
+   *   - 正常态：计数含查询词（点进去确实只剩这么多）；
+   *   - `queryMiss`：计数**不含**查询词，只反映分类/标签/价格/平台四维。
+   *     同时把 `queryMiss` 抛给界面，由空态明说「下面的数字不含搜索词」——
+   *     悄悄换口径比给 0 更误导。
    */
   const facet = useMemo(() => {
     const catSel = new Set(filter.cats);
@@ -228,9 +240,11 @@ export function ToolsExplorer({ categories, tags }: { categories: Category[]; ta
     const priceCounts = new Map<string, number>();
     const platformCounts = new Map<string, number>();
     const bump = (m: Map<string, number>, k: string) => m.set(k, (m.get(k) ?? 0) + 1);
+    // 查询词一条都没命中 → 计数改用「不含查询词」的口径，否则整块面板归零。
+    const queryMiss = hitOrder !== null && hitOrder.size === 0;
 
     for (const r of CATALOG_INDEX) {
-      if (hitOrder && !hitOrder.has(r.s)) continue;
+      if (hitOrder && !queryMiss && !hitOrder.has(r.s)) continue;
       const okCat = catSel.size === 0 || r.c.some((c) => catSel.has(c));
       const okTag = tagSel.size === 0 || r.t.some((t) => tagSel.has(t));
       const okPrice = priceSel.size === 0 || priceSel.has(r.p);
@@ -240,7 +254,7 @@ export function ToolsExplorer({ categories, tags }: { categories: Category[]; ta
       if (okCat && okTag && okPlat) bump(priceCounts, r.p);
       if (okCat && okTag && okPrice) for (const p of r.pl) bump(platformCounts, p);
     }
-    return { catCounts, tagCounts, priceCounts, platformCounts };
+    return { catCounts, tagCounts, priceCounts, platformCounts, queryMiss };
   }, [filter.cats, filter.tags, filter.price, filter.platforms, hitOrder]);
 
   /** 三档价格恒显示 3 行（0 命中也留着，降到 40% 但仍可点）。 */
@@ -436,12 +450,12 @@ export function ToolsExplorer({ categories, tags }: { categories: Category[]; ta
             aria-haspopup="dialog"
             aria-expanded={sheetOpen}
             aria-controls="tools-filter-sheet"
-            className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-[13px] text-foreground transition-colors duration-200 hover:border-foreground/25"
+            className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-sm text-foreground transition-colors duration-200 hover:border-foreground/25"
           >
             <SlidersHorizontal className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
             筛选
             {activeFacetCount > 0 && (
-              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gongke-accent px-1 text-[11px] font-medium text-background">
+              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gongke-accent px-1 text-2xs font-medium text-background">
                 {activeFacetCount}
               </span>
             )}
@@ -555,6 +569,14 @@ export function ToolsExplorer({ categories, tags }: { categories: Category[]; ta
           <p className="mt-1.5 text-xs text-muted-foreground">
             换个说法试试，或先从一个分类进去看看。
           </p>
+          {/* 查询词零命中时左栏/抽屉的计数是「不含搜索词」的 —— 明说，
+              否则读者会以为「AI图像/设计 336」这个数字是当前搜索的结果。 */}
+          {facet.queryMiss && (
+            <p className="mx-auto mt-2 max-w-md text-balance text-xs leading-relaxed text-muted-foreground">
+              筛选里的数字不含你输入的搜索词，是各分类/标签本身的规模；
+              清空搜索框就能看到它们。
+            </p>
+          )}
           <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
             {suggestedCats.map((c) => (
               <button
@@ -614,6 +636,37 @@ export function ToolsExplorer({ categories, tags }: { categories: Category[]; ta
         </>
       )}
       </div>
+
+      {/* <1024px 的筛选抽屉。
+          **2026-10-27 修**：`FilterSheet` 一直被 import、`sheetOpen` 一直有
+          状态、上面那个「筛选」按钮也一直挂着 `aria-controls="tools-filter-sheet"`，
+          但这个组件**从来没被渲染过** —— 手机上点「筛选」按钮，`aria-expanded`
+          变成 true，屏幕上什么都不会发生，也没有任何报错。实测 390 下
+          `#tools-filter-sheet` 不存在、`[role=dialog]` 不存在，而左栏是
+          `hidden lg:block`。等于手机端**完全没有筛选功能**，只能靠搜索框。
+          这与 `filter-sheet.tsx` 顶部那段「为什么是抽屉」的完整论证正好相反：
+          代码写好了，最后一根线没接上。 */}
+      <FilterSheet
+        open={sheetOpen}
+        onClose={closeSheet}
+        onClear={reset}
+        activeCount={activeFacetCount}
+        resultCount={results.length}
+      >
+        <FacetPanel
+          categories={categories}
+          tags={tags}
+          catCounts={facet.catCounts}
+          tagCounts={facet.tagCounts}
+          priceOptions={priceOptions}
+          platformOptions={platformOptions}
+          selected={filter}
+          onToggleCategory={toggleCategory}
+          onToggleTag={toggleTag}
+          onTogglePrice={togglePrice}
+          onTogglePlatform={togglePlatform}
+        />
+      </FilterSheet>
     </div>
   );
 }

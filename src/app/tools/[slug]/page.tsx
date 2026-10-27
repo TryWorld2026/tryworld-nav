@@ -113,6 +113,56 @@ export default async function ToolDetailPage({
         {/* Hero 与正文共用同一个容器：之前 hero 用 `.content-container`、
             正文用更窄的一套，2560 下标题与正文左缘差 160px。 */}
         <div className="rail-container py-8 md:py-10">
+          {/* 面包屑（2026-10-27 新增）。
+              之前这一页是全站唯一没有「你在哪」的页面：从首页或搜索结果点进来
+              只有 h1「Lovart」，没有上级、没有同级、没有回目录的路 —— 实测
+              `hasBreadcrumb: false`，页面上第一个链接直接是「访问官网」外链。
+              详情页是全站 2081 个落地页，也是外部搜索的主要入口，一个不知道
+              自己在哪的落地页会让人立刻按后退。
+
+              三段：全部工具 → 主分类 → 工具名。最后一段不是链接（当前页），
+              用 `aria-current="page"`。分隔符是 `/` 而不是 `›`：品牌没有箭头
+              语汇，斜杠更像索引而不是「前进」。 */}
+          <nav aria-label="面包屑" className="mb-4 min-w-0">
+            <ol className="flex min-w-0 items-center gap-1.5 text-sm text-gongke-muted">
+              <li className="shrink-0">
+                <Link
+                  prefetch={false}
+                  href="/tools"
+                  className="rounded-sm transition-colors hover:text-gongke-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  全部工具
+                </Link>
+              </li>
+              {primary && (
+                <>
+                  <li aria-hidden="true" className="shrink-0 text-foreground/25">
+                    /
+                  </li>
+                  <li className="min-w-0">
+                    <Link
+                      prefetch={false}
+                      href={`/categories/${primary.slug}`}
+                      className="block truncate rounded-sm transition-colors hover:text-gongke-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      {primary.name}
+                    </Link>
+                  </li>
+                </>
+              )}
+              <li aria-hidden="true" className="shrink-0 text-foreground/25">
+                /
+              </li>
+              <li className="min-w-0">
+                <span
+                  aria-current="page"
+                  className="block truncate font-medium text-foreground/70"
+                >
+                  {tool.name}
+                </span>
+              </li>
+            </ol>
+          </nav>
           {/* 标题 + 动作按钮：`justify-between` 在宽容器里会把按钮推到最右，
               中间留 800px 空白。曾经用 `max-w-[64rem]` 收住整行 —— 代价是
               按钮组右缘与右栏卡片对不齐。

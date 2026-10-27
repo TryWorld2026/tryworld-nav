@@ -91,7 +91,7 @@ export default async function CategoryDetailPage({
                   {category.name}
                 </h1>
                 {card?.tagline && (
-                  <p className="mt-2.5 max-w-[62ch] text-[15px] leading-relaxed text-gongke-muted">
+                  <p className="mt-2.5 max-w-[62ch] text-base leading-relaxed text-gongke-muted">
                     {card.tagline}
                   </p>
                 )}
@@ -110,7 +110,7 @@ export default async function CategoryDetailPage({
                   筛选，还能把条件写进 URL 分享出去。 */}
               <Link prefetch={false}
                 href={`/tools?cat=${category.slug}`}
-                className="inline-flex items-center gap-1 rounded-full border border-foreground/15 px-3 py-1 text-[12px] font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
+                className="inline-flex items-center gap-1 rounded-full border border-foreground/15 px-3 py-1 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/25 hover:text-foreground"
               >
                 在工具目录中筛选
                 <ArrowRight className="h-3 w-3" aria-hidden="true" />
@@ -154,7 +154,7 @@ export default async function CategoryDetailPage({
           {/* 页底横带标题统一 19px（与「其他集合」「全部往期」同档）。
               原来这里是 14px，读起来像筛选器旁边的小标签，而不是一条新的
               内容带的开头。 */}
-          <h2 className="mb-4 text-[19px] font-semibold text-foreground">其他分类</h2>
+          <h2 className="mb-4 text-xl font-semibold text-foreground">其他分类</h2>
           <div className="flex flex-wrap gap-2">
             {categories
               .filter((c) => c.slug !== slug)

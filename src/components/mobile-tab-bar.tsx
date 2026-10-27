@@ -88,7 +88,7 @@ export function MobileTabBar() {
               <Link prefetch={false}
                 href={tab.href}
                 aria-current={active ? 'page' : undefined}
-                className={`group flex flex-col items-center gap-0.5 rounded-xl py-2 text-[11px] transition-colors duration-150 active:scale-95 ${
+                className={`group flex flex-col items-center gap-0.5 rounded-xl py-2 text-2xs transition-colors duration-150 active:scale-95 ${
                   active ? 'text-gongke-accent' : 'text-gongke-muted'
                 }`}
                 data-testid={`tab-${tab.href === '/' ? 'home' : tab.href.slice(1)}`}

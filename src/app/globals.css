@@ -11,15 +11,21 @@
 
 @layer base {
   :root {
-    /* Noto Sans SC 承载中英文正文与标题。回退栈与品牌规范一致：
-       PingFang SC / Microsoft YaHei 兜住中文。 */
-    --font-inter: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
-    --font-display: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
-    /* 品牌规范里 Fraunces 只承担英文点题，但全站已经 0 处 `font-serif` 调用，
-       12 条 Fraunces @font-face / 6 个 woff2 / 233 KB 是纯死重，已从字体包里
-       删掉。栈里也一并去掉这个族名 —— 留着只会让浏览器为每一段 serif 文本
-       白做一次族名匹配，最后仍然落到 Georgia。 */
-    --font-serif: Georgia, 'Songti SC', serif;
+    /* 全站只有一个字体族：Noto Sans SC（100–900 可变字体）。
+       回退栈与品牌规范一致：PingFang SC / Microsoft YaHei 兜住中文。
+
+       2026-10-27 清理：
+       · 原来这里有三条变量 —— `--font-inter`、`--font-display`（**值与前者
+         逐字相同**）、`--font-serif`。前两条一模一样，于是 `font-sans` 与
+         `font-display` 这两个 class 在浏览器里得到同一个族名，`fontFamily`
+         配置里那套「正文一个族、标题一个族」的设计从来没成立过。现在合并成
+         一条 `--font-sans`，`tailwind.config.ts` 的 `sans` 与 `display` 都指向
+         它 —— class 名字保留，因为 156 个调用点不值得为一次改名重排。
+       · `--font-serif` 指向 Georgia / Songti SC，而全站 `font-serif` 调用是
+         0 处（Fraunces 的 12 条 @font-face / 6 个 woff2 / 233 KB 早已删除）。
+         留着的唯一效果是让浏览器为每一段 serif 文本白做一次族名匹配。
+       · 变量名 `--font-inter` 本身也是历史遗留：它从来没有指向 Inter。 */
+    --font-sans: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
 
     /* 色板映射自试界品牌 token（assets/tokens/brand.json），HSL 三元组格式：
        paper #F2EEE6 / ink #1B2523 / green #24564E / orange #F2693C
@@ -43,20 +49,13 @@
     --border: 70 11% 81%;
     --input: 70 11% 81%;
     --ring: 168 41% 24%;
-    --magicborder: 70 11% 89%;
     --radius: 0.5rem;
-    --chart-1: 12 89% 59%;
-    --chart-2: 168 41% 24%;
-    --chart-3: 168 14% 13%;
-    --chart-4: 138 6% 40%;
-    --chart-5: 70 11% 81%;
-    /* 品牌四色，供渐变按钮与顶部色带使用。原站是紫/粉/橙/青/黄五色，这里收敛到
-       品牌的深绿—橙两色之间，保持「少量橙色」的比例。 */
-    --color-1: 168 41% 24%;
-    --color-2: 12 89% 59%;
-    --color-3: 168 41% 30%;
-    --color-4: 12 89% 66%;
-    --color-5: 168 30% 36%;
+    /* 2026-10-27 删掉的三组空转变量 —— 它们定义了但全站 0 处 `var()` 消费：
+       · `--magicborder`（shadcn 脚手架残留，`bg-magicborder` 使用 0 次）
+       · `--chart-1..5`（同上，本站没有图表）
+       · `--color-1..5`（原站渐变按钮的五色，渐变文字在 2026-10-22 已清理）
+       留着它们的代价不只是几行 CSS：读代码的人会以为存在一套图表色/渐变色
+       体系，然后照着这个「体系」去加新颜色。 */
   }
 }
 
@@ -103,6 +102,40 @@
   h2 {
     font-variation-settings: 'opsz' 32;
     font-weight: 650;
+  }
+
+  /*
+   * 焦点环的**全局兜底**（2026-10-27 新增）。
+   *
+   * 为什么需要它：站里原先逐个给「重点控件」手写焦点环（`focus-visible:ring-2`
+   * 111 处、`focus-visible:outline-none` 39 处），覆盖到 5%–69% 就停了。剩下的
+   * 元素没有 `outline-none`，于是拿到浏览器 UA 默认环 —— 实测 8 条路由、841 次
+   * 真键盘 Tab 里，**502 个（59.7%）**是 UA 默认，`/decide` 更是 84 步里 77 步。
+   * UA 环的问题不是「看不见」（Chrome 会按底色自动反色，墨底上给 3px 奶白，
+   * 13.59:1，够用），而是**同一屏上三套焦点语言打架**：`/decide` 侧栏的
+   * 「AI 资讯」是 3px 白环 + 3 层阴影、外扩 5.5px，旁边 16 个任务按钮是 1px
+   * 纯黑直角框、外扩 0 —— 粗细比 1:3、外扩比 1:5.5。
+   *
+   * 这条规则放在 `@layer base` 里，所以：
+   *   - 已经写了 `focus-visible:outline-none` 的元素**不受影响**（utilities 层
+   *     优先级更高，它仍然走自己那套 ring）；
+   *   - 没写的元素从「UA 黑框」变成「品牌墨绿框」，与全站 ring 同色系。
+   *
+   * 环色用 `--ring`（= `168 41% 24%`，品牌绿 #24564E）。纸色底上 7.94:1。
+   */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /*
+   * 深色面上的环必须反色：`#24564E` 压在 `.ink-band` 的 `#1B2523` 上只有
+   * 1.5:1，等于没有。这里用纸色，与 hero CTA / hero-search 里手写的那套
+   * `ring-[#F2EEE6]` 保持同一视觉结果，但不再需要每个组件各写一遍。
+   */
+  .ink-band :focus-visible,
+  .ink-band:focus-visible {
+    outline-color: hsl(var(--background));
   }
 }
 
@@ -316,25 +349,33 @@
   }
 
   /*
-   * A sparkles glyph before every h2 inside the long-form copy. The origin used
-   * its violet `#8b5cf6`; this is the brand's deep green `#24564E` instead.
-   * Inlined as a data URI so there is no network call for a 300-byte glyph.
+   * 长正文里每个 h2 前面的一道竖杠（不是星标）。
+   *
+   * 原先这里是一枚 **sparkles 星形字形**（原站用紫色 `#8b5cf6`，改成了品牌绿
+   * `#24564E` 的 data-URI）。问题不在配色，在符号本身：2081 个工具详情页的
+   * **每一个 h2** 前面都挂着一颗星星，而星星不表示任何东西 —— 它不是「这里有
+   * 新内容」，不是「推荐」，只是装饰。把同一个装饰重复几千次，是审计报告
+   * 「AI Slop 自检」第一条要抓的东西（无意义的 sparkles 线）。
+   *
+   * 现在换成一道 3px 的品牌绿竖杠：它读作「小节起点」，是印刷品里最常见的
+   * 分节记号，不需要读者去猜它代表什么。宽度和字号无关，所以 h2 在移动端
+   * 缩小时竖杠不会跟着变成一个点。
    */
   :is(.tool-details, .article-content) h2 {
     position: relative;
-    padding-left: 1.6rem;
+    padding-left: 0.85rem;
   }
   :is(.tool-details, .article-content) h2::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 40%;
-    transform: translateY(-50%);
-    width: 1.2rem;
-    height: 1.2rem;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2324564e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z'/%3E%3Cpath d='M5 3v4'/%3E%3Cpath d='M19 17v4'/%3E%3Cpath d='M3 5h4'/%3E%3Cpath d='M17 19h4'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-size: contain;
+    /* 与首行文字的视觉中线对齐，而不是盒子的 40% —— h2 是 1.5em/1.33，
+       盒高 2em，首行中线在 0.665em ≈ 33%。 */
+    top: 0.36em;
+    width: 3px;
+    height: 1.1em;
+    border-radius: 1px;
+    background-color: hsl(var(--primary));
   }
 
   :is(.tool-details, .article-content) p {
@@ -530,13 +571,6 @@
    * every viewport, which `mx-auto max-w-[1536px] px-4` would also do — this
    * just keeps it in one place next to the prose rules it sits beside.
    */
-  .brand-container {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 1536px;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
 
 }
 
