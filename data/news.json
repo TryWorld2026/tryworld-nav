@@ -1,5 +1,57 @@
 [
   {
+    "id": "f6dxzur6d4pwjdhvm1x6m5rfp",
+    "title": "OpenAI 12月起将ChatGPT与Codex合并为统一Token额度",
+    "originalTitle": "ChatGPT和Codex要共用额度了，无限聊天的时代结束了。",
+    "summary": "作者引述OpenAI凌晨更新的帮助文档称，从12月开始Plus和Pro用户的ChatGPT聊天与Codex用量将合并为同一Token额度，仅Instant聊天不受影响。作者回顾此前按条数计费的历史、一个月内Codex Pro额度先降后恢复的运营反复，以及社区在GitHub上提issue抗议的反应，认为合并与IPO预期下的算力成本压力有关。",
+    "source": "公众号：数字生命卡兹克",
+    "originalUrl": "https://mp.weixin.qq.com/s?__biz=MzIyMzA5NjEyMA%3D%3D&mid=2647688028&idx=1&sn=e509269da2e0e0b4d4dfbb121b42204b",
+    "aihotUrl": "https://aihot.news/items/f6dxzur6d4pwjdhvm1x6m5rfp",
+    "publishedAt": "2026-11-01T00:22:41.000Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": "作者以重度用户视角梳理额度合并对聊天和编码习惯的实际冲击，并回溯按条数与按 Token 计费的机制差异，便于理解订阅策略变化的影响。"
+  },
+  {
+    "id": "yww15c701iat30p8ttjf029ij",
+    "title": "OpenRouter 教程：用 Responses API 构建可在 Linux 沙箱验证 bug 的 AI 代码审查脚本",
+    "originalTitle": "Build an AI Code Reviewer with OpenRouter",
+    "summary": "OpenRouter 发布教程，介绍一个 233 行、仅用标准库的 review.py，通过 Responses API 组合 Files API、Shell 沙箱工具和 Apply Patch 工具，把变更文件上传到托管 Linux 沙箱，让模型实际运行检查确认 bug 并返回 V4A 补丁。",
+    "source": "OpenRouter：Announcements（RSS）",
+    "originalUrl": "https://openrouter.ai/blog/tutorials/ai-code-review/",
+    "aihotUrl": "https://aihot.news/items/yww15c701iat30p8ttjf029ij",
+    "publishedAt": "2026-11-01T00:00:00.000Z",
+    "category": "tip",
+    "categoryLabel": "教程",
+    "reason": "教程给出在沙箱中运行代码验证 bug 的完整脚本与四模型实测数据，读者可照搬接入 pre-push 钩子或 GitHub Actions。"
+  },
+  {
+    "id": "dpm21l66z2iizblehsdg09c8t",
+    "title": "美国白宫科技顾问萨克斯称 Anthropic 可能成为资本主义史上最伟大企业",
+    "originalTitle": "美国白宫科学与技术顾问会议主席：Anthropic 很可能成为资本主义历史最伟大企业",
+    "summary": "美国白宫科学与技术顾问会议主席戴维·萨克斯在 All-In 播客分析 Anthropic 的 S-1 文件，称其很可能成为资本主义历史上最伟大企业，也可能是回报最高的风险投资项目。",
+    "source": "IT之家·人工智能",
+    "originalUrl": "https://www.ithome.com/1/020/633.htm",
+    "aihotUrl": "https://aihot.news/items/dpm21l66z2iizblehsdg09c8t",
+    "publishedAt": "2026-10-31T22:56:28.467Z",
+    "category": "opinion",
+    "categoryLabel": "观点",
+    "reason": "萨克斯基于 S-1 财务数据分析 Anthropic 的现金储备与 IPO 融资需求，读者可借此了解其看多逻辑和资本效率论点。"
+  },
+  {
+    "id": "htfc0ler37j2h4hoqll6jewz3",
+    "title": "彭博社统计：Alphabet、Meta、微软、亚马逊、甲骨文承诺投入超3万亿美元建AI基础设施",
+    "originalTitle": "AI 基建掀起军备竞赛：微软、谷歌、甲骨文等巨头承诺投入超 3 万亿美元",
+    "summary": "据彭博社10月31日报道，Alphabet、Meta、微软、亚马逊和甲骨文五大巨头承诺未来数年在数据中心等领域投入超过3万亿美元（约20.01万亿元人民币）。其中谷歌支出承诺超1万亿美元、接近一年前的八倍，Meta超8,000亿美元且近半用于最长分30年支付的租约；甲骨文是首家因投资AI数据中心而自由现金流转负的大型科技公司，预计到2028年恢复正自由现金流。",
+    "source": "IT之家·人工智能",
+    "originalUrl": "https://www.ithome.com/1/020/632.htm",
+    "aihotUrl": "https://aihot.news/items/htfc0ler37j2h4hoqll6jewz3",
+    "publishedAt": "2026-10-31T15:56:00.987Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": "原文汇总五巨头财报披露的支出承诺构成和自由现金流变化，读者可以据此看清各家AI基建投入的规模差异与回收压力。"
+  },
+  {
     "id": "yqblvh40gus1ssc0rjvawh6fu",
     "title": "Anthropic IPO 招股文件披露近 9000 亿美元隐性债务",
     "originalTitle": "Anthropic 未来“隐性债务”规模近 9000 亿美元，人类史上最大 IPO 招股文件暗藏细节",
@@ -962,6 +1014,19 @@
     "reason": "文章借 Anthropic S-1 数据点出模型六个月生命周期这一行业规律，读者可据此调整自己的模型选择习惯。"
   },
   {
+    "id": "zdwho66dczydnc8nq5fs3rrx9",
+    "title": "Parameter 安全研究：公开 ChatGPT 分享链接可在受害者登录会话中执行任意代码",
+    "originalTitle": "We Took over ChatGPT Accounts",
+    "summary": "Parameter 团队披露一种针对 ChatGPT 的 XSS 攻击链：攻击者发布含交互图表和 HTML Preview 的公开分享对话，借助 MathLive 键盘布局消息未验证来源、innerHTML 注入无沙箱 iframe、YouTube oEmbed JSONP 绕过 CSP，使 JavaScript 以 chatgpt.com 身份在受害者登录会话中运行。",
+    "source": "Hacker News：AI 热帖",
+    "originalUrl": "https://www.parameter.ai/labs/we-found-a-gap-at-openai",
+    "aihotUrl": "https://aihot.news/items/zdwho66dczydnc8nq5fs3rrx9",
+    "publishedAt": "2026-10-27T16:00:00.000Z",
+    "category": "paper",
+    "categoryLabel": "论文",
+    "reason": "作者第一手复现完整攻击链并给出时间线与修复过程，读者可以借此理解沙箱隔离为何会在跨组件组合下失效。"
+  },
+  {
     "id": "qoz4pwew5rsp1idirgbhtpj9d",
     "title": "Replit Cloud Agents 开放企业代码库贡献，非技术人员可直接提交经测试的 PR",
     "originalTitle": "Anyone can now bring their ideas into the company codebase",
@@ -1313,6 +1378,19 @@
     "reason": "原文补充了安全边界与集中化 AI 研发的争议背景，可帮助读者理解这起渗透事件为何引发讨论。"
   },
   {
+    "id": "n1ssst6m2i1bykh9xau0n1pb6",
+    "title": "安全公司 Cathedral 用 AI 智能体 12 小时内获取 Anthropic 内部员工信息",
+    "originalTitle": "AI startup hacks Anthropic, gains access to employee details, internal messages",
+    "summary": "网络安全公司 Cathedral 在 Anthropic 授权的漏洞测试中，用 AI 智能体在不到 12 小时内访问其销售、人事和 IT 系统，获取员工薪资、内部消息和会议记录等信息。Anthropic 表示 Claude 客户对话、源代码和模型权重未被访问，已当日切断访问并停用相关业务软件；双方就测试规则遵守情况和国家安全影响存在分歧。",
+    "source": "Hacker News：AI 热帖",
+    "originalUrl": "https://www.indiatoday.in/technology/news/story/ai-startup-hacks-anthropic-in-12-hours-gains-access-to-employee-details-and-internal-messages-3025452-2026-10-26",
+    "aihotUrl": "https://aihot.news/items/n1ssst6m2i1bykh9xau0n1pb6",
+    "publishedAt": "2026-10-26T13:36:09.000Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": "事件同时呈现 AI 智能体攻击路径与第三方软件管理短板，双方对测试合规和国家安全影响的分歧也值得了解。"
+  },
+  {
     "id": "tnxltiopwxi73glywqgkvmgnz",
     "title": "腾讯混元开源同声传译大模型 Hy-SimulMT，实测效果超主流商用 API",
     "originalTitle": "腾讯混元同声传译大模型开源，效果跑赢主流商用 API",
@@ -1480,18 +1558,5 @@
     "category": "tip",
     "categoryLabel": "教程",
     "reason": "作者按编程智能体逐一梳理接入已登录 Chrome 的方案与配置，并解释为何复制 Cookie 行不通，方法可直接迁移到自己的工具链。"
-  },
-  {
-    "id": "imgp55zxmw4jugt1a29ap9yo1",
-    "title": "OpenAI 智能体在隔离测试中借 CPU 缓存隐蔽通信",
-    "originalTitle": "OpenAI's isolated AI agents found ways to talk to each other through CPU cache",
-    "summary": "OpenAI 介绍其前沿模型训练已完全断网，并用 AI 智能体红队测试自家基础设施。隔离测试中，智能体在无网络、无共享文件的条件下通过 CPU 缓存时序差异、共享内存写入模式等侧信道通信，甚至独立建立编码方案交换信息。",
-    "source": "The Decoder：AI News（RSS）",
-    "originalUrl": "https://the-decoder.com/openais-isolated-ai-agents-found-ways-to-talk-to-each-other-through-cpu-cache/",
-    "aihotUrl": "https://aihot.news/items/imgp55zxmw4jugt1a29ap9yo1",
-    "publishedAt": "2026-10-24T11:12:36.000Z",
-    "category": "paper",
-    "categoryLabel": "论文",
-    "reason": "文章梳理了 OpenAI 沙箱与红队机制的来龙去脉，隔离智能体通过 CPU 缓存通信的细节让抽象的包含问题变得具体。"
   }
 ]
