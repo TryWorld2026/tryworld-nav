@@ -1,5 +1,31 @@
 [
   {
+    "id": "dzwfvd9xp6v4qaj6olxezpier",
+    "title": "数字生命卡兹克分享折腾一年的Agent自动化系统架构",
+    "originalTitle": "折腾了整整1年，毫无保留地分享一下我这套Agent自动化系统。",
+    "summary": "自媒体作者卡兹克分享自己搭建近一年的Agent自动化系统，核心是把任务起点从人身上移开，由事件触发Agent工作。系统分为自动化中台、Agent执行、CI中台和飞书决策四层：中台用rules.json统一管理事件触发和Agent调度，本地MacMini跑Agent任务，自建CI中台完成审查、检查、合并、发布、核实五步，只在删数据、花钱、改方向等关键决策时通过飞书卡片找作者拍板。",
+    "source": "公众号：数字生命卡兹克",
+    "originalUrl": "https://mp.weixin.qq.com/s?__biz=MzIyMzA5NjEyMA%3D%3D&mid=2647688060&idx=1&sn=e00d7e57b6f0e3670f0e267e677047df",
+    "aihotUrl": "https://aihot.news/items/dzwfvd9xp6v4qaj6olxezpier",
+    "publishedAt": "2026-11-02T00:19:00.000Z",
+    "category": "tip",
+    "categoryLabel": "教程",
+    "reason": "作者把自己一年搭建的Agent自动化架构拆成事件中台、执行、CI和飞书决策四层，给出可复用的规则与流程细节。"
+  },
+  {
+    "id": "mhw3rtr5o13p5777y7el9tczk",
+    "title": "Claude Code 技巧：任务变难时输入 ultrathink 提升当前回合推理努力",
+    "originalTitle": "Claude Code tip: if a task turns out harder than you expected, type ultrathink while Claude is working. It raises the effort for the rest...",
+    "summary": "Addy Osmani 分享 Claude Code 技巧：当任务比预期更难时，在 Claude 工作期间输入 ultrathink，可提升该回合剩余部分的推理努力，该功能适用于最新版本的终端。他引用 @dmwlff 的帖子，其中提到 ultrathink 已回归 Claude Code CLI，此前因显得怪异且可能令人困惑曾被关闭。",
+    "source": "X：Addy Osmani (@addyosmani)",
+    "originalUrl": "https://x.com/addyosmani/status/2116986087390486816",
+    "aihotUrl": "https://aihot.news/items/mhw3rtr5o13p5777y7el9tczk",
+    "publishedAt": "2026-11-01T20:09:49.000Z",
+    "category": "tip",
+    "categoryLabel": "教程",
+    "reason": "原文给出了一个 Claude Code 实用技巧，输入 ultrathink 可提升当前回合的推理努力，适合编码工作流直接复用。"
+  },
+  {
     "id": "f6dxzur6d4pwjdhvm1x6m5rfp",
     "title": "OpenAI 12月起将ChatGPT与Codex合并为统一Token额度",
     "originalTitle": "ChatGPT和Codex要共用额度了，无限聊天的时代结束了。",
@@ -1417,32 +1443,6 @@
     "reason": "Cohere 沙箱实测给出触发条件、主机名单和防御清单，读者可据此重新评估自托管开源权重的边界。"
   },
   {
-    "id": "o1r046h1yurwlvv536eergn57",
-    "title": "卡兹克手把手演示用 Codex 和 Claude 逆向改造现实硬件设备",
-    "originalTitle": "手把手教你用AI逆向现实世界，把一切改成自己喜欢的样子。",
-    "summary": "数字生命卡兹克分享用 AI 逆向改造现实设备的实操教程，以公司 4 台会议室电视为例，通过 Codex 开启 ADB 调试连接电视，清理开机广告、重做简洁桌面和粒子动态屏保，并复刻到其余 3 台。",
-    "source": "X：卡兹克 (@Khazix0918)",
-    "originalUrl": "https://x.com/Khazix0918/status/2114579883527655853",
-    "aihotUrl": "https://aihot.news/items/o1r046h1yurwlvv536eergn57",
-    "publishedAt": "2026-10-26T04:48:25.000Z",
-    "category": "tip",
-    "categoryLabel": "教程",
-    "reason": "作者以公司电视、补光灯、相机改造的完整过程为例，给出让 Agent 逆向硬件的可复用思路和备份提醒。"
-  },
-  {
-    "id": "he5bxeygbly5kef64gvs1tk6m",
-    "title": "Kling 4.0 上线 Runware API，支持 30 秒 1080p 原生音频视频",
-    "originalTitle": "Check out the creator guides in the comments to get more out of #Kling4. #KlingAI",
-    "summary": "Runware 宣布 Kling 4.0 发布首日上线其 API，可生成最长 30 秒的 1080p 视频，并支持原生音频。功能包括多关键帧（首、中、尾帧）、单请求最多 15 个输入（关键帧、参考图、参考视频与元素）以及基于提示词的已有片段编辑。价格自 $0.133 每秒起，未来 7 天常规定价享 15% 折扣；已有用户可将模型 ID 切换为 klingai:kling-video@4.0。Runware API 已有 19 个 Kling 模型，覆盖视频、图像、虚拟人和对口型。Kling AI 官方转发并提醒查看评论区中的创作者指南。",
-    "source": "X：可灵 Kling AI (@Kling_ai)",
-    "originalUrl": "https://x.com/Kling_ai/status/2114574035468386746",
-    "aihotUrl": "https://aihot.news/items/he5bxeygbly5kef64gvs1tk6m",
-    "publishedAt": "2026-10-26T04:25:11.000Z",
-    "category": "ai-products",
-    "categoryLabel": "AI 产品",
-    "reason": "引用内容列出 Kling 4.0 上线 Runware API 的关键规格和限时价格，方便开发者评估接入与迁移成本。"
-  },
-  {
     "id": "x7jvppwrm1ldjd93v0jvsfd9c",
     "title": "OpenAI 宣布模型产出三项数学成果并与学界协作发布",
     "originalTitle": "Working with academic communities to build scientific understanding",
@@ -1545,18 +1545,5 @@
     "category": "industry",
     "categoryLabel": "行业动态",
     "reason": "官方公告给出上市代码、交易所和承销商等关键安排，读者可据此了解 Anthropic IPO 的最新进展。"
-  },
-  {
-    "id": "j5auxb780hddyh0hlgekuw03h",
-    "title": "让编程智能体使用已登录 Chrome 的六种方案实操指南",
-    "originalTitle": "How to Let Your Coding Agent Use Your Logged-In Chrome (2026)",
-    "summary": "Browser Use 作者整理了让 Claude Code、Codex、Gemini CLI、Cursor 等编程智能体使用已登录 Chrome 的方法：Claude 订阅用户可用 claude --chrome 的 Claude in Chrome 扩展。",
-    "source": "Browser Use",
-    "originalUrl": "https://browser-use.com/posts/coding-agent-logged-in-chrome",
-    "aihotUrl": "https://aihot.news/items/j5auxb780hddyh0hlgekuw03h",
-    "publishedAt": "2026-10-25T00:00:00.000Z",
-    "category": "tip",
-    "categoryLabel": "教程",
-    "reason": "作者按编程智能体逐一梳理接入已登录 Chrome 的方案与配置，并解释为何复制 Cookie 行不通，方法可直接迁移到自己的工具链。"
   }
 ]
