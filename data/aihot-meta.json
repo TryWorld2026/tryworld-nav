@@ -1,8 +1,8 @@
 {
   "source": "AIHOT",
   "api": "https://aihot.news/api/v1",
-  "fetchedAt": "2026-11-03T07:54:07.588Z",
-  "etag": "W/\"v1-items-f957d31bdf5532a5\"",
-  "count": 102,
+  "fetchedAt": "2026-11-04T07:28:59.308Z",
+  "etag": "W/\"v1-items-f53e16e835c443d2\"",
+  "count": 86,
   "window": "7d"
 }
