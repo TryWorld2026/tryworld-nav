@@ -1,5 +1,31 @@
 [
   {
+    "id": "okhx4jjwucd647299qwzsl6ua",
+    "title": "Anthropic 拟感恩节前 IPO，接受低于预期的估值，募资 800–1000 亿美元",
+    "originalTitle": "Anthropic pushes ahead with pre-Thanksgiving IPO despite tech selloff, accepts lower valuation",
+    "summary": "据《金融时报》援引投资者的消息，Anthropic 计划在感恩节前 IPO，拟募资 800–1000 亿美元，估值 1.25–1.75 万亿美元，低于最乐观投资者期望的 2 万亿美元，但高于当前 9650 亿美元。",
+    "source": "The Decoder：AI News（RSS）",
+    "originalUrl": "https://the-decoder.com/anthropic-pushes-ahead-with-pre-thanksgiving-ipo-despite-tech-selloff-accepts-lower-valuation/",
+    "aihotUrl": "https://aihot.news/items/okhx4jjwucd647299qwzsl6ua",
+    "publishedAt": "2026-11-07T17:37:25.000Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": "文中给出 Anthropic IPO 的估值区间、募资规模和最新的年化营收数字，可对照 OpenAI 融资动向看当前 AI 市场降温。"
+  },
+  {
+    "id": "r0hypv8lgeq3nhx29eby0y3uv",
+    "title": "美国家长起诉谷歌 Gemini 被指协助 13 岁女孩制定轻生计划",
+    "originalTitle": "谷歌在美国遭家长起诉：Gemini 被指协助 13 岁女孩制定轻生计划",
+    "summary": "美国北卡罗来纳州一对夫妇起诉谷歌，其 13 岁女儿通过学校配发的 Chromebook 与 Gemini 和搜索 AI 模式进行数千条涉及自杀内容的交互。谷歌发言人表示正在审查指控，并称已将心理健康防护机制引入搜索 AI 功能。本周谷歌宣布对 K-12 学生账户默认关闭 AI 工具，但学校重新启用谷歌搜索须捆绑接受附带 AI 功能，Fairplay 批评该政策是在强迫学校接纳 AI。",
+    "source": "IT之家·人工智能",
+    "originalUrl": "https://www.ithome.com/1/023/765.htm",
+    "aihotUrl": "https://aihot.news/items/r0hypv8lgeq3nhx29eby0y3uv",
+    "publishedAt": "2026-11-07T09:16:42.957Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": "诉讼细节与谷歌 K-12 默认关闭 AI 的附带条件并置，帮助读者看清校园 AI 安全争议中商业与政策的纠缠。"
+  },
+  {
     "id": "pqbbgx5sn86iy7v4izf1qv49z",
     "title": "Artificial Analysis 实测 GPT Image 2.6 图像生成与编辑表现",
     "originalTitle": "OpenAI's GPT Image 2.6 takes #1 and #2 on both AA-Image-T2I v2.1 and AA-Image-Editing v2.1. GPT Image 2.6 Flare is almost twice as fast a...",
@@ -947,57 +973,5 @@
     "category": "ai-products",
     "categoryLabel": "AI 产品",
     "reason": "原文给出了 500k 至 1M token 请求下 TTFT 中位数下降约 35% 的数据，以及线程生命周期和接入方式，便于评估长会话智能体的延迟收益。"
-  },
-  {
-    "id": "f6dxzur6d4pwjdhvm1x6m5rfp",
-    "title": "OpenAI 12月起将ChatGPT与Codex合并为统一Token额度",
-    "originalTitle": "ChatGPT和Codex要共用额度了，无限聊天的时代结束了。",
-    "summary": "作者引述OpenAI凌晨更新的帮助文档称，从12月开始Plus和Pro用户的ChatGPT聊天与Codex用量将合并为同一Token额度，仅Instant聊天不受影响。作者回顾此前按条数计费的历史、一个月内Codex Pro额度先降后恢复的运营反复，以及社区在GitHub上提issue抗议的反应，认为合并与IPO预期下的算力成本压力有关。",
-    "source": "公众号：数字生命卡兹克",
-    "originalUrl": "https://mp.weixin.qq.com/s?__biz=MzIyMzA5NjEyMA%3D%3D&mid=2647688028&idx=1&sn=e509269da2e0e0b4d4dfbb121b42204b",
-    "aihotUrl": "https://aihot.news/items/f6dxzur6d4pwjdhvm1x6m5rfp",
-    "publishedAt": "2026-11-01T00:22:41.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "作者以重度用户视角梳理额度合并对聊天和编码习惯的实际冲击，并回溯按条数与按 Token 计费的机制差异，便于理解订阅策略变化的影响。"
-  },
-  {
-    "id": "yww15c701iat30p8ttjf029ij",
-    "title": "OpenRouter 教程：用 Responses API 构建可在 Linux 沙箱验证 bug 的 AI 代码审查脚本",
-    "originalTitle": "Build an AI Code Reviewer with OpenRouter",
-    "summary": "OpenRouter 发布教程，介绍一个 233 行、仅用标准库的 review.py，通过 Responses API 组合 Files API、Shell 沙箱工具和 Apply Patch 工具，把变更文件上传到托管 Linux 沙箱，让模型实际运行检查确认 bug 并返回 V4A 补丁。",
-    "source": "OpenRouter：Announcements（RSS）",
-    "originalUrl": "https://openrouter.ai/blog/tutorials/ai-code-review/",
-    "aihotUrl": "https://aihot.news/items/yww15c701iat30p8ttjf029ij",
-    "publishedAt": "2026-11-01T00:00:00.000Z",
-    "category": "tip",
-    "categoryLabel": "教程",
-    "reason": "教程给出在沙箱中运行代码验证 bug 的完整脚本与四模型实测数据，读者可照搬接入 pre-push 钩子或 GitHub Actions。"
-  },
-  {
-    "id": "dpm21l66z2iizblehsdg09c8t",
-    "title": "美国白宫科技顾问萨克斯称 Anthropic 可能成为资本主义史上最伟大企业",
-    "originalTitle": "美国白宫科学与技术顾问会议主席：Anthropic 很可能成为资本主义历史最伟大企业",
-    "summary": "美国白宫科学与技术顾问会议主席戴维·萨克斯在 All-In 播客分析 Anthropic 的 S-1 文件，称其很可能成为资本主义历史上最伟大企业，也可能是回报最高的风险投资项目。",
-    "source": "IT之家·人工智能",
-    "originalUrl": "https://www.ithome.com/1/020/633.htm",
-    "aihotUrl": "https://aihot.news/items/dpm21l66z2iizblehsdg09c8t",
-    "publishedAt": "2026-10-31T22:56:28.467Z",
-    "category": "opinion",
-    "categoryLabel": "观点",
-    "reason": "萨克斯基于 S-1 财务数据分析 Anthropic 的现金储备与 IPO 融资需求，读者可借此了解其看多逻辑和资本效率论点。"
-  },
-  {
-    "id": "htfc0ler37j2h4hoqll6jewz3",
-    "title": "彭博社统计：Alphabet、Meta、微软、亚马逊、甲骨文承诺投入超3万亿美元建AI基础设施",
-    "originalTitle": "AI 基建掀起军备竞赛：微软、谷歌、甲骨文等巨头承诺投入超 3 万亿美元",
-    "summary": "据彭博社10月31日报道，Alphabet、Meta、微软、亚马逊和甲骨文五大巨头承诺未来数年在数据中心等领域投入超过3万亿美元（约20.01万亿元人民币）。其中谷歌支出承诺超1万亿美元、接近一年前的八倍，Meta超8,000亿美元且近半用于最长分30年支付的租约；甲骨文是首家因投资AI数据中心而自由现金流转负的大型科技公司，预计到2028年恢复正自由现金流。",
-    "source": "IT之家·人工智能",
-    "originalUrl": "https://www.ithome.com/1/020/632.htm",
-    "aihotUrl": "https://aihot.news/items/htfc0ler37j2h4hoqll6jewz3",
-    "publishedAt": "2026-10-31T15:56:00.987Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "原文汇总五巨头财报披露的支出承诺构成和自由现金流变化，读者可以据此看清各家AI基建投入的规模差异与回收压力。"
   }
 ]
