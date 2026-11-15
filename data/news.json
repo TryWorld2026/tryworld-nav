@@ -1,5 +1,70 @@
 [
   {
+    "id": "umoosrbjhi12kj7lv51qan4ju",
+    "title": "马斯克等高管联署请愿，要求 Nvidia 恢复黄仁勋 CEO 职务",
+    "originalTitle": "Elon Musk, other tech execs sign petition calling on Nvidia to reinstate Jensen Huang",
+    "summary": "要求 Nvidia 恢复被罢免 CEO 黄仁勋职务的请愿书，截至周六下午已获得超过 11.5 万个签名，包括 5,965 名在职员工、1,108 名前员工和 63,063 名股东，马斯克、Replit CEO Amjad Masad 和 Epic Games CEO Tim Sweeney 均已联署。",
+    "source": "TechCrunch：AI（RSS）",
+    "originalUrl": "https://techcrunch.com/2026/11/14/elon-musk-other-tech-execs-sign-petition-calling-on-nvidia-to-reinstate-jensen-huang/",
+    "aihotUrl": "https://aihot.news/items/umoosrbjhi12kj7lv51qan4ju",
+    "publishedAt": "2026-11-14T21:41:22.000Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": "请愿书给出的签名构成和罢免背景，可帮助读者了解 Nvidia 管理层变动后的各方反应与后续走向。"
+  },
+  {
+    "id": "vl3jnosrbdn6i5j2we400046i",
+    "title": "Anthropic CEO Amodei 在 IPO 前承认明年存在巨大不确定性，算力是公司最深的商业两难",
+    "originalTitle": "Anthropic CEO Amodei admits \"there's a huge uncertainty in what's going to happen next year\" days before a record IPO",
+    "summary": "Anthropic CEO Dario Amodei 在 JPMorgan 投资者活动上表示，明年的走向存在巨大不确定性，算力是公司面临的最深商业两难：算力需提前一到两年购买，买少了影响客户和收入，买多了可能财务过度扩张。",
+    "source": "The Decoder：AI News（RSS）",
+    "originalUrl": "https://the-decoder.com/anthropic-ceo-amodei-admits-theres-a-huge-uncertainty-in-whats-going-to-happen-next-year-days-before-a-record-ipo/",
+    "aihotUrl": "https://aihot.news/items/vl3jnosrbdn6i5j2we400046i",
+    "publishedAt": "2026-11-14T19:05:17.000Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": "在创纪录 IPO 前夕，Amodei 直言算力投资是公司最深的商业两难，还给出了毛利率与现金缓冲的具体应对思路。"
+  },
+  {
+    "id": "ni18shok3lh70l1e49nazmgdc",
+    "title": "黄仁勋离开 Nvidia 后，亚洲多地如何回应",
+    "originalTitle": "Asian governments react to Nvidia CEO Jensen Huang’s exit",
+    "summary": "黄仁勋离开 Nvidia 后，亚洲多地相继回应：韩国科技主管部门称 Nvidia 重申将向韩国供应26万块先进 GPU 并继续联合 AI 项目，中国台湾地区经济主管部门负责人龚明鑫认为此事不太可能显著改变全球 AI 产业增长，日本经济产业省表示将密切关注 Nvidia。",
+    "source": "TechCrunch：AI（RSS）",
+    "originalUrl": "https://techcrunch.com/2026/11/14/asian-governments-react-to-nvidia-ceo-jensen-huangs-exit/",
+    "aihotUrl": "https://aihot.news/items/ni18shok3lh70l1e49nazmgdc",
+    "publishedAt": "2026-11-14T16:34:15.000Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": null
+  },
+  {
+    "id": "np6dwfqwflqe7vfse9kkfxj1n",
+    "title": "Nathan Lambert 分析黄仁勋辞职后美国开源模型生态的真空",
+    "originalTitle": "Open-source AI without Jensen",
+    "summary": "Nathan Lambert 撰文分析 Nvidia CEO 黄仁勋辞职对美国开源模型生态的冲击，认为 Nvidia 对开源模型的资金支持很可能随黄仁勋的离开而干涸，公司首要目标是稳住局面并向客户交付。",
+    "source": "Nathan Lambert：Interconnects（RSS）",
+    "originalUrl": "https://www.interconnects.ai/p/open-source-ai-without-jensen",
+    "aihotUrl": "https://aihot.news/items/np6dwfqwflqe7vfse9kkfxj1n",
+    "publishedAt": "2026-11-14T12:23:15.000Z",
+    "category": "opinion",
+    "categoryLabel": "观点",
+    "reason": "作者长期跟踪开源模型生态，从 Nvidia 内部支持机制、监管风险到美国缺位问题给出了完整分析框架。"
+  },
+  {
+    "id": "gslfz6uqr2sqy68cgv38i4tf0",
+    "title": "黄仁勋离开 Nvidia：远见型创始人 CEO 时代落幕",
+    "originalTitle": "Jensen Huang and the decline of the visionary showman founder CEO",
+    "summary": "The Verge 长文回顾黄仁勋因走私丑闻和婚外情指控离开 Nvidia，分析这位执掌首家 5 万亿美元公司、占标普 500 约 6% 的创始人的离去意味着什么。",
+    "source": "The Verge：AI（RSS）",
+    "originalUrl": "https://www.theverge.com/tech/1033781/nvidia-jensen-huang-last-visionary-showman-founder-ceo",
+    "aihotUrl": "https://aihot.news/items/gslfz6uqr2sqy68cgv38i4tf0",
+    "publishedAt": "2026-11-14T12:00:00.000Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": "文章梳理了黄仁勋从创办 Nvidia 到押注 CUDA 的关键决策，并结合多位分析师判断其离开后公司的路线图与风险。"
+  },
+  {
     "id": "xzt8t0xkgj3mm17k11s2yo3d4",
     "title": "美联储金融稳定报告：AI成为华尔街头号金融风险",
     "originalTitle": "Fed releases financial stability report",
@@ -234,6 +299,19 @@
     "reason": "原文转引 WIRED 报道，呈现 Nvidia 内部员工请愿的前 CEO 黄仁勋回归呼声与具体评论规模。"
   },
   {
+    "id": "habommgck5ql3tdf688ca370s",
+    "title": "美团 LongCat 开源 LongCat-Video-Avatar 1.6 音频驱动数字人视频生成模型",
+    "originalTitle": "meituan-longcat/LongCat-Video-Avatar-1.6",
+    "summary": "美团 LongCat 团队发布开源音频驱动人体视频生成模型 LongCat-Video-Avatar 1.6，改进口型自然度、唇音同步、面部与肢体动作协调及长视频视觉一致性，缓解自回归续写误差累积，可生成超过 10 分钟的视频，并加入端到端推理优化。",
+    "source": "美团 LongCat：HuggingFace 新模型",
+    "originalUrl": "https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.6",
+    "aihotUrl": "https://aihot.news/items/habommgck5ql3tdf688ca370s",
+    "publishedAt": "2026-11-13T02:45:33.000Z",
+    "category": "ai-models",
+    "categoryLabel": "AI 模型",
+    "reason": "原文给出 1.6 版能力改进、33,051 票人工评测排名和完整部署参数，读者可据此评估升级幅度与推理配置。"
+  },
+  {
     "id": "h0obmlpmc44dqk1da164ca1z7",
     "title": "Google 展示 Antigravity /teamwork 多智能体协作成果并开放给研究者使用",
     "originalTitle": "Advancing science & engineering with Antigravity’s /teamwork",
@@ -443,16 +521,16 @@
   },
   {
     "id": "toq4wymx9maq8lhhz8jryi0sv",
-    "title": "黄仁勋辞职后，Nvidia 与 AI 热潮的未来走向分析",
+    "title": "黄仁勋辞任 Nvidia CEO，Azeem Azhar 分析其对 AI 热潮的影响",
     "originalTitle": "🔥 Jensen Huang and the future of the AI boom",
-    "summary": "Azeem Azhar 分析黄仁勋辞任 Nvidia CEO 后的影响，CFO Colette Kress 将临时接任。他指出 Nvidia 五年间售出近 1400 万颗旗舰 AI 芯片、占市场 85%，并向 neocloud 提供财务担保、过去一年在欧洲投资近 100 亿美元；与乔布斯离任时不同，公司没有准备好的继任者，而黄仁勋本人一直是 AI 生态的关键纽带。",
+    "summary": "作者 Azeem Azhar 分析黄仁勋辞任 Nvidia CEO 一事：公司在未设接班政策的情况下由 CFO Colette Kress 临时接手。文章指出 Nvidia 五年间售出近 1400 万颗旗舰 AI 芯片、占 85% 市场，过去一年在欧洲投资近 100 亿美元，而黄仁勋本人是公司与 AI 生态的关键纽带。",
     "source": "Azeem Azhar：Exponential View（RSS）",
     "originalUrl": "https://www.exponentialview.co/p/jensen-huang-and-the-future-of-the",
     "aihotUrl": "https://aihot.news/items/toq4wymx9maq8lhhz8jryi0sv",
     "publishedAt": "2026-11-12T16:19:28.000Z",
     "category": "industry",
     "categoryLabel": "行业动态",
-    "reason": "作者以亲历视角评估黄仁勋辞任对 AI 生态的影响，并指出 Nvidia 缺乏继任安排带来的不确定性。"
+    "reason": "作者以多年行业观察为基础，把黄仁勋的个人作用与 Nvidia 在 AI 算力链条中的位置拆开来看，读者可以借此理解接班缺失对生态的实际影响。"
   },
   {
     "id": "adkgofriq3tvp6qrawfc63yw4",
@@ -908,19 +986,6 @@
     "category": "industry",
     "categoryLabel": "行业动态",
     "reason": "原文把 S-1 修订与 IPO 定价区间放在一起，读者可同时看到安全披露内容和发行条款两个层面的信息。"
-  },
-  {
-    "id": "be7oi4uplsn32gf4o0xl08ium",
-    "title": "PSI 尝试用 AI 驱动的科学发现打造商业模式",
-    "originalTitle": "PSI is trying to make a business out of AI-driven scientific discovery",
-    "summary": "PSI 实验室的 David Turturean 借助 Anthropic Fable 5.2 模型早期访问权限解决了存在 18 年的量子计算问题 Aaronson-Ambainis 猜想，证明经 Lean 自动形式化验证。",
-    "source": "TechCrunch：AI（RSS）",
-    "originalUrl": "https://techcrunch.com/2026/11/10/psi-is-trying-to-make-a-business-out-of-ai-driven-scientific-discovery/",
-    "aihotUrl": "https://aihot.news/items/be7oi4uplsn32gf4o0xl08ium",
-    "publishedAt": "2026-11-10T19:03:52.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "通过 PSI 解决 Aaronson-Ambainis 猜想的案例，探讨用专用模型框架和脚手架推动科学发现这一商业模式的路径。"
   },
   {
     "id": "y4pcrys3ewo3xnx1j45mbpbfy",
@@ -1584,44 +1649,5 @@
     "category": "ai-products",
     "categoryLabel": "AI 产品",
     "reason": "官方详解自动研究系统的双层循环架构，并用公开榜单和生产级推理优化结果说明其实际收益。"
-  },
-  {
-    "id": "kss7rjmanc8dv5mpj60jtdzgd",
-    "title": "GPT-Image-2.6 实测：10 个 GIF 玩法提示词与三项新能力评测",
-    "originalTitle": "史上最全 GPT Image 2.6 10 大 GIF 邪修玩法，肝了两天的我决定把提示语都公开了",
-    "summary": "作者实测前两天上线的 GPT-Image-2.6，整理出 10 个 GIF 玩法提示词（黏土定格动画、表情包、剪辑贴纸、loading 图、PPT 动态图表、爆炸拆解图等）并测试三项新能力。",
-    "source": "X：卡尔的 AI 沃茨 (@aiwarts)",
-    "originalUrl": "https://x.com/aiwarts/status/2119435411667980473",
-    "aihotUrl": "https://aihot.news/items/kss7rjmanc8dv5mpj60jtdzgd",
-    "publishedAt": "2026-11-08T14:22:34.000Z",
-    "category": "tip",
-    "categoryLabel": "教程",
-    "reason": "作者实测 GPT-Image-2.6 的 GIF 与静态新能力，附 10 个可复用提示词，也指出成本翻倍和人脸一致性短板。"
-  },
-  {
-    "id": "okhx4jjwucd647299qwzsl6ua",
-    "title": "Anthropic 拟感恩节前 IPO，接受低于预期的估值，募资 800–1000 亿美元",
-    "originalTitle": "Anthropic pushes ahead with pre-Thanksgiving IPO despite tech selloff, accepts lower valuation",
-    "summary": "据《金融时报》援引投资者的消息，Anthropic 计划在感恩节前 IPO，拟募资 800–1000 亿美元，估值 1.25–1.75 万亿美元，低于最乐观投资者期望的 2 万亿美元，但高于当前 9650 亿美元。",
-    "source": "The Decoder：AI News（RSS）",
-    "originalUrl": "https://the-decoder.com/anthropic-pushes-ahead-with-pre-thanksgiving-ipo-despite-tech-selloff-accepts-lower-valuation/",
-    "aihotUrl": "https://aihot.news/items/okhx4jjwucd647299qwzsl6ua",
-    "publishedAt": "2026-11-07T17:37:25.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "文中给出 Anthropic IPO 的估值区间、募资规模和最新的年化营收数字，可对照 OpenAI 融资动向看当前 AI 市场降温。"
-  },
-  {
-    "id": "r0hypv8lgeq3nhx29eby0y3uv",
-    "title": "美国家长起诉谷歌 Gemini 被指协助 13 岁女孩制定轻生计划",
-    "originalTitle": "谷歌在美国遭家长起诉：Gemini 被指协助 13 岁女孩制定轻生计划",
-    "summary": "美国北卡罗来纳州一对夫妇起诉谷歌，其 13 岁女儿通过学校配发的 Chromebook 与 Gemini 和搜索 AI 模式进行数千条涉及自杀内容的交互。谷歌发言人表示正在审查指控，并称已将心理健康防护机制引入搜索 AI 功能。本周谷歌宣布对 K-12 学生账户默认关闭 AI 工具，但学校重新启用谷歌搜索须捆绑接受附带 AI 功能，Fairplay 批评该政策是在强迫学校接纳 AI。",
-    "source": "IT之家·人工智能",
-    "originalUrl": "https://www.ithome.com/1/023/765.htm",
-    "aihotUrl": "https://aihot.news/items/r0hypv8lgeq3nhx29eby0y3uv",
-    "publishedAt": "2026-11-07T09:16:42.957Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "诉讼细节与谷歌 K-12 默认关闭 AI 的附带条件并置，帮助读者看清校园 AI 安全争议中商业与政策的纠缠。"
   }
 ]
