@@ -1,5 +1,70 @@
 [
   {
+    "id": "u36vxmxeopbsx4if4lap30899",
+    "title": "腾讯混元发布 Hy4 flash：224B 总参数、1M 上下文的日常高性价比模型",
+    "originalTitle": null,
+    "summary": "腾讯混元推出 Hy4 flash，总参数 224B（含 64B Engram 参数）、激活 12B，支持多模态和 1M 上下文，API 价格大幅低于 Hy4（输入 0.5 元、输出 2 元每百万 tokens）。",
+    "source": "腾讯混元：Research（API）",
+    "originalUrl": "https://hunyuan.tencent.com/research/100145?langVersion=zh",
+    "aihotUrl": "https://aihot.news/items/u36vxmxeopbsx4if4lap30899",
+    "publishedAt": "2026-11-16T04:29:37.000Z",
+    "category": "ai-models",
+    "categoryLabel": "AI 模型",
+    "reason": "原文给出架构、价格表、成本对比和多个业务场景评测数据，可帮助读者评估日常任务的性价比选型。"
+  },
+  {
+    "id": "r9e7azie93xzxxdf6yyd1jmqe",
+    "title": "通义千问发布 Qwen4 Max，Intelligence Index 较 Qwen3.8 Max 高 9 分且成本更低",
+    "originalTitle": "+9 points over Qwen3.8-Max with lower costs. Give it a try! @ArtificialAnlys",
+    "summary": "通义千问宣布发布 Qwen4 Max，据 Artificial Analysis 数据，其 Intelligence Index 得分 43，较 Qwen3.8 Max（xhigh）高 9 分，落后 Kimi K3.1 Pro 3 分。每任务成本 $3.27，约为 Qwen3.8 Max 的三分之一，输出 token 用量减少 39%；上下文窗口 1M tokens，定价 $1.50/$4.50 per 1M input/output tokens，已在阿里第一方 API 开放。",
+    "source": "X：通义千问 / Qwen (@Alibaba_Qwen)",
+    "originalUrl": "https://x.com/Alibaba_Qwen/status/2122174463479542126",
+    "aihotUrl": "https://aihot.news/items/r9e7azie93xzxxdf6yyd1jmqe",
+    "publishedAt": "2026-11-16T03:46:34.000Z",
+    "category": "ai-models",
+    "categoryLabel": "AI 模型",
+    "reason": "原文借助 Artificial Analysis 数据对比了 Qwen4 Max 的得分与成本变化，读者可据此评估它相对上代和竞品的性价比。"
+  },
+  {
+    "id": "kzt8bjcin243qefkuiq49c2i6",
+    "title": "Qwen4-Max 登顶 Agent Arena 中国模型榜首，Alibaba 排名升至总榜第14",
+    "originalTitle": "Qwen4-Max by @Alibaba_Qwen is the #1 Chinese model on the leaderboard making Alibaba now the #1 Chinese lab and #5 lab overall, just behi...",
+    "summary": "Arena 榜单显示 Qwen4-Max 以 +7.5% 净提升在 Agent Arena 总排名第14，成为第一中国模型，使 Alibaba 成为排名第一的中国实验室、总榜第5，仅次于 Anthropic、Google、OpenAI 和 Meta。",
+    "source": "X：Arena (@arena)",
+    "originalUrl": "https://x.com/arena/status/2122153116959482051",
+    "aihotUrl": "https://aihot.news/items/kzt8bjcin243qefkuiq49c2i6",
+    "publishedAt": "2026-11-16T02:21:45.000Z",
+    "category": "ai-models",
+    "categoryLabel": "AI 模型",
+    "reason": "榜单方基于 14.7k 真实 Agent 会话给出排名与四项信号拆解，读者可据此对比 Qwen4-Max 与其他中国模型的实际表现。"
+  },
+  {
+    "id": "nqcfrkilrh7nhnpd03t9q1zfh",
+    "title": "Qwen 发布 Qwen4-Max：2.4T 参数骨干、百万 token 上下文与长程智能体能力",
+    "originalTitle": null,
+    "summary": "Qwen 团队发布 Qwen4-Max，基于新 Qwen4 架构，拥有 2.4T 骨干参数、每 token 激活 71B、328B N-gram Embedding 参数，具备原生视觉能力和 100 万 token 上下文窗口。",
+    "source": "Qwen：Blog Retrieval（API）",
+    "originalUrl": "https://qwen.ai/blog?id=qwen4-max",
+    "aihotUrl": "https://aihot.news/items/nqcfrkilrh7nhnpd03t9q1zfh",
+    "publishedAt": "2026-11-16T02:00:00.000Z",
+    "category": "ai-models",
+    "categoryLabel": "AI 模型",
+    "reason": "官方发布同时给出架构细节、成本对比和行业实测案例，读者可据此评估 Qwen4-Max 相对上一代的实际变化。"
+  },
+  {
+    "id": "izdx1kuppob6c65ghvmyeal38",
+    "title": "AI 手搓的 1.4M 纯 HTML 3D 游戏走红，卡兹克拆解 Three.js 程序化生成原理并给出提示词模板",
+    "originalTitle": null,
+    "summary": "作者拆解了近期在群里疯传的 1.4M 纯 HTML 3D 游戏，指出其中约 700KB 是打包进文件的 Three.js，其余全部由代码程序化生成，没有图片、模型和录音。",
+    "source": "公众号：数字生命卡兹克",
+    "originalUrl": "https://mp.weixin.qq.com/s/ZJddy1ssHBvw_1sm12jrkg",
+    "aihotUrl": "https://aihot.news/items/izdx1kuppob6c65ghvmyeal38",
+    "publishedAt": "2026-11-15T23:56:00.000Z",
+    "category": "tip",
+    "categoryLabel": "教程",
+    "reason": "原文拆解了1.4M纯HTML 3D游戏的体积来源和程序化生成原理，并给出可直接复用的提示词模板和自查迭代方法。"
+  },
+  {
     "id": "umoosrbjhi12kj7lv51qan4ju",
     "title": "马斯克等高管联署请愿，要求 Nvidia 恢复黄仁勋 CEO 职务",
     "originalTitle": "Elon Musk, other tech execs sign petition calling on Nvidia to reinstate Jensen Huang",
@@ -26,17 +91,17 @@
     "reason": "在创纪录 IPO 前夕，Amodei 直言算力投资是公司最深的商业两难，还给出了毛利率与现金缓冲的具体应对思路。"
   },
   {
-    "id": "ni18shok3lh70l1e49nazmgdc",
-    "title": "黄仁勋离开 Nvidia 后，亚洲多地如何回应",
-    "originalTitle": "Asian governments react to Nvidia CEO Jensen Huang’s exit",
-    "summary": "黄仁勋离开 Nvidia 后，亚洲多地相继回应：韩国科技主管部门称 Nvidia 重申将向韩国供应26万块先进 GPU 并继续联合 AI 项目，中国台湾地区经济主管部门负责人龚明鑫认为此事不太可能显著改变全球 AI 产业增长，日本经济产业省表示将密切关注 Nvidia。",
-    "source": "TechCrunch：AI（RSS）",
-    "originalUrl": "https://techcrunch.com/2026/11/14/asian-governments-react-to-nvidia-ceo-jensen-huangs-exit/",
-    "aihotUrl": "https://aihot.news/items/ni18shok3lh70l1e49nazmgdc",
-    "publishedAt": "2026-11-14T16:34:15.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": null
+    "id": "txbnasfrp3d0w6wqmor5rp8fk",
+    "title": "Apple 联合 OpenEvidence 启动 Apple Health AI Usage Study 探索健康 AI 使用",
+    "originalTitle": "Apple launches research study to explore the use of AI for health",
+    "summary": "Apple 宣布在美国推出 Apple Health AI Usage Study，与 OpenEvidence 合作研究用户如何与对话式健康 AI 工具互动。",
+    "source": "Apple：Newsroom（RSS）",
+    "originalUrl": "https://www.apple.com/newsroom/2026/11/apple-launches-research-study-to-explore-the-use-of-ai-for-health/",
+    "aihotUrl": "https://aihot.news/items/txbnasfrp3d0w6wqmor5rp8fk",
+    "publishedAt": "2026-11-14T16:00:00.000Z",
+    "category": "paper",
+    "categoryLabel": "论文",
+    "reason": "原文给出研究规模、参与条件与隐私安排，可了解 Apple 如何与 OpenEvidence 合作评估健康 AI 的真实使用。"
   },
   {
     "id": "np6dwfqwflqe7vfse9kkfxj1n",
@@ -53,16 +118,16 @@
   },
   {
     "id": "gslfz6uqr2sqy68cgv38i4tf0",
-    "title": "黄仁勋离开 Nvidia：远见型创始人 CEO 时代落幕",
-    "originalTitle": "Jensen Huang and the decline of the visionary showman founder CEO",
-    "summary": "The Verge 长文回顾黄仁勋因走私丑闻和婚外情指控离开 Nvidia，分析这位执掌首家 5 万亿美元公司、占标普 500 约 6% 的创始人的离去意味着什么。",
+    "title": "黄仁勋离开Nvidia：远见型创始人CEO时代落幕",
+    "originalTitle": null,
+    "summary": "The Verge长文回顾黄仁勋离开Nvidia，分析这位执掌首家5万亿美元公司、占标普500约6%的创始人的离去意味着什么。文章梳理了黄仁勋从创办Nvidia到押注CUDA的关键决策，并结合多位分析师判断其离开后公司的路线图与风险。",
     "source": "The Verge：AI（RSS）",
     "originalUrl": "https://www.theverge.com/tech/1033781/nvidia-jensen-huang-last-visionary-showman-founder-ceo",
     "aihotUrl": "https://aihot.news/items/gslfz6uqr2sqy68cgv38i4tf0",
     "publishedAt": "2026-11-14T12:00:00.000Z",
     "category": "industry",
     "categoryLabel": "行业动态",
-    "reason": "文章梳理了黄仁勋从创办 Nvidia 到押注 CUDA 的关键决策，并结合多位分析师判断其离开后公司的路线图与风险。"
+    "reason": "文章梳理了黄仁勋从创办Nvidia到押注CUDA的关键决策，并结合多位分析师判断其离开后公司的路线图与风险。"
   },
   {
     "id": "xzt8t0xkgj3mm17k11s2yo3d4",
@@ -338,36 +403,23 @@
     "reason": "Anthropic 把常驻智能体拆成五个可落地的架构原语，并给出实现细节与最佳实践，读者可按此搭建自己的方案。"
   },
   {
-    "id": "t86m3q7vdlqmvm2zmx91vps5a",
-    "title": "黄仁勋辞去英伟达总裁兼CEO，作者梳理14天风波始末",
-    "originalTitle": "黄仁勋辞职始末。",
-    "summary": "英伟达公告黄仁勋辞去总裁、CEO和董事职务，即刻生效，股价开盘下跌14个点。作者依据《纽约时报》、The Information 等报道梳理脉络：从2022年A100、H100对华禁售，到 Megaspeed 采购争议、黄乐被情报机构认定涉间谍活动，再到婚外情曝光后董事会于10月29日起14天内收网，黄仁勋在英伟达33年的时代就此结束。",
-    "source": "公众号：数字生命卡兹克",
-    "originalUrl": "https://mp.weixin.qq.com/s/ToplAo9NHP356Fu-hbYlsg",
-    "aihotUrl": "https://aihot.news/items/t86m3q7vdlqmvm2zmx91vps5a",
-    "publishedAt": "2026-11-12T23:56:00.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "作者梳理了从芯片出口管制、Megaspeed 调查到黄仁勋辞职的完整时间线，适合想理解事件脉络的读者。"
-  },
-  {
     "id": "cfh0nazzl7eedgttz8n99fza4",
-    "title": "民主党对 Nvidia 对华芯片销售启动调查，致函质疑黄仁勋与特朗普的安排",
-    "originalTitle": "Democrats launch Nvidia investigation, write scathing letter on Huang’s ‘scheme’ with Trump",
-    "summary": "民主党议员 Rep. Richard Neal 和 Sen. Ron Wyden 就特朗普政府处理 Nvidia 对华芯片销售一事开启调查，并致函商务部长 Howard Lutnick 要求保存相关记录。",
+    "title": "美国民主党议员就英伟达对华芯片销售启动调查",
+    "originalTitle": null,
+    "summary": "美国国会民主党议员近日就特朗普政府处理英伟达对华芯片销售一事启动调查，并致函商务部长要求保存相关记录。调查关注芯片出口许可、关税安排及英伟达与政府之间的商业往来等监管问题。",
     "source": "TechCrunch：AI（RSS）",
     "originalUrl": "https://techcrunch.com/2026/11/12/democrats-launch-nvidia-investigation-write-scathing-letter-on-huangs-scheme-with-trump/",
     "aihotUrl": "https://aihot.news/items/cfh0nazzl7eedgttz8n99fza4",
     "publishedAt": "2026-11-12T22:42:51.000Z",
     "category": "industry",
     "categoryLabel": "行业动态",
-    "reason": "原文梳理了民主党对 Nvidia 对华芯片销售安排的调查要点，包括关税分成与许可细节，读者可借此了解监管争议的具体脉络。"
+    "reason": "原文梳理了美国民主党对英伟达对华芯片销售安排的调查要点，包括出口许可与关税安排等细节，读者可借此了解相关监管争议的具体脉络。"
   },
   {
     "id": "k1kga19xtdab67lhplor8he8n",
     "title": "Rohan Paul 类比乔布斯被逐，评 NVIDIA 放走黄仁勋",
-    "originalTitle": "Apple 1985 (Steve Jobs), Atari 1978 (Nolan Bushnell), Uber 2017 (Travis Kalanick), OpenAI 2023 (Sam Altman).",
-    "summary": "Lex Fridman 发文称 NVIDIA 让黄仁勋离开对美国和人类都是巨大错误，堪比 Apple 当年解雇 Steve Jobs 但影响更大，并为其品格辩护、回应间谍传闻。Rohan Paul 转引并列举 Atari 1978（Nolan Bushnell）、Apple 1985（Steve Jobs）、Uber 2017（Travis Kalanick）、OpenAI 2023（Sam Altman），称每隔几年董事会就会重新认识到创始人本身就是战略。",
+    "originalTitle": null,
+    "summary": "Lex Fridman 发文称 NVIDIA 让黄仁勋离开对美国和人类都是巨大错误，堪比 Apple 当年解雇 Steve Jobs 但影响更大，并为其品格辩护。Rohan Paul 转引并列举 Atari 1978（Nolan Bushnell）、Apple 1985（Steve Jobs）、Uber 2017（Travis Kalanick）、OpenAI 2023（Sam Altman），称每隔几年董事会就会重新认识到创始人本身就是战略。",
     "source": "X：Rohan Paul (@rohanpaul_ai)",
     "originalUrl": "https://x.com/rohanpaul_ai/status/2120994977421705296",
     "aihotUrl": "https://aihot.news/items/k1kga19xtdab67lhplor8he8n",
@@ -444,7 +496,7 @@
   {
     "id": "n73ab4h9gqlu6ucv69ynzxln4",
     "title": "SemiAnalysis 分析黄仁勋辞任 Nvidia 后的公司结构与出口管制走向",
-    "originalTitle": "Nvidia and the World Without Jensen",
+    "originalTitle": null,
     "summary": "SemiAnalysis 长文分析黄仁勋辞任 Nvidia CEO 后的连锁影响，作者推测其去职与 GPU 走私及美国推动 RASA 出口管制立法有关。文中指出公司约 60 名直管高管的扁平结构依赖黄本人，继任者 Colette Kress 为临时 CEO，Ian Buck 与 Jonah Alben 被视为技术侧人选但无人能全面接替。",
     "source": "SemiAnalysis 长文 RSS（RSS）",
     "originalUrl": "https://newsletter.semianalysis.com/p/nvidia-and-the-world-without-jensen",
@@ -583,6 +635,19 @@
     "category": "ai-models",
     "categoryLabel": "AI 模型",
     "reason": "文章按官网图表整理 MOSS-Live 与三款语音模型的全双工评测对比，同时指出多轮任务和理解指标上仍存在的差距。"
+  },
+  {
+    "id": "m76r4bnrvb21vkm8wn2khk0jr",
+    "title": "Kate Clark 转发 WSJ 报道称 Nvidia 正准备罢免 CEO 黄仁勋并征集信源",
+    "originalTitle": "If you want to chat about what all this means for private markets - dealmaking, fundraising, Jensen’s role here, or the ripple effects ac...",
+    "summary": "记者 Kate Clark 分享 WSJ 报道链接，该报道称 Nvidia 正准备罢免 CEO 黄仁勋。她同时留下 Signal 联系方式 415-409-9095，征集关于此事对私募市场、交易撮合、融资及 AI 行业连锁影响的爆料与讨论。",
+    "source": "X：Kate Clark (@KateClarkTweets)",
+    "originalUrl": "https://x.com/KateClarkTweets/status/2120889116250288597",
+    "aihotUrl": "https://aihot.news/items/m76r4bnrvb21vkm8wn2khk0jr",
+    "publishedAt": "2026-11-12T14:39:04.000Z",
+    "category": "industry",
+    "categoryLabel": "行业动态",
+    "reason": "记者转发 WSJ 关于 Nvidia 拟罢免 CEO 黄仁勋的报道，并留下 Signal 联系方式征集一手信源，可关注后续进展。"
   },
   {
     "id": "x751c9ptxg9qviw1ts32aoa79",
@@ -726,19 +791,6 @@
     "category": "tip",
     "categoryLabel": "教程",
     "reason": "原文用六个模型的实测数据给出防止 Agent 死循环的四层防护，含配置细节和成本对比，方法可直接迁移到自己的 Agent 代码。"
-  },
-  {
-    "id": "aoxmmcsudy1gf9xmti7slu1wd",
-    "title": "WSJ 报道 Nvidia 董事会接近决定是否罢免 CEO 黄仁勋",
-    "originalTitle": "WSJ: Nvidia’s board, which publicly backed Jensen Huang on Sunday, is now close to deciding whether to remove its founder CEO.",
-    "summary": "WSJ 报道，Nvidia 董事会此前公开支持黄仁勋，如今接近决定是否罢免这位创始人 CEO。起因是黄仁勋与一名被指为中国情报人员的女子交往，随后又曝出与一名 Nvidia 员工的第二段婚外情；周日开始独立调查时董事会表示没有理由认为 Nvidia 机密泄露。",
-    "source": "X：Rohan Paul (@rohanpaul_ai)",
-    "originalUrl": "https://x.com/rohanpaul_ai/status/2120663635479625930",
-    "aihotUrl": "https://aihot.news/items/aoxmmcsudy1gf9xmti7slu1wd",
-    "publishedAt": "2026-11-11T23:43:05.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "原文汇总了董事会调查、持股与接班安排等关键事实，读者可据此理解 Nvidia 治理层面的最新走向。"
   },
   {
     "id": "bx3sq4dxfqblyztkuiktiz0wv",
@@ -1002,16 +1054,16 @@
   },
   {
     "id": "gqzca7y2h3m9p0fxtj60m4i1t",
-    "title": "Ed Zitron 长文剖析黄仁勋丑闻与 NVIDIA 疑似借 Megaspeed 向中国走私 GPU",
-    "originalTitle": "Jensen's Bizarre Adventure",
-    "summary": "Ed Zitron 长文梳理黄仁勋承认与 Megaspeed CEO Alice Huang 的婚外情事件，并整合 Bloomberg、纽约时报、金融时报与 Culper Research 的报道，指 Megaspeed 疑似作为转口实体将 NVIDIA GPU 非法流入中国。",
+    "title": "Ed Zitron 长文剖析黄仁勋与 Megaspeed 关系及 NVIDIA GPU 疑似流入中国的调查",
+    "originalTitle": null,
+    "summary": "Ed Zitron 长文梳理黄仁勋承认与 Megaspeed CEO Alice Huang 的私人关系事件，并整合 Bloomberg、纽约时报、金融时报与 Culper Research 的报道，指 Megaspeed 疑似作为转口实体将 NVIDIA GPU 流入中国。文章还涉及美国商务部对 Megaspeed 的调查进展、NVIDIA 与监管机构的沟通，以及 Culper Research 对 NVIDIA 营收结构的质疑。",
     "source": "Ed Zitron 长文 / Where’s Your Ed At（RSS）",
     "originalUrl": "https://www.wheresyoured.at/jensens-bizarre-adventure/",
     "aihotUrl": "https://aihot.news/items/gqzca7y2h3m9p0fxtj60m4i1t",
     "publishedAt": "2026-11-10T17:43:27.000Z",
     "category": "industry",
     "categoryLabel": "行业动态",
-    "reason": "作者整合 Bloomberg、NYT、FT 与 Culper 报告，梳理黄仁勋与 Megaspeed 关系及 GPU 疑似走私中国的资金链条。"
+    "reason": "作者整合 Bloomberg、NYT、FT 与 Culper 报告，梳理黄仁勋与 Megaspeed 关系及 GPU 疑似流入中国的资金链条。"
   },
   {
     "id": "tk36lg7rqiq1i67rq0ce28yo8",
@@ -1339,19 +1391,6 @@
     "reason": "作者实测新模型五个推理档的 SVG 生成，给出可用命令和 max 档 token 耗尽的 bug 记录，方法可直接复用。"
   },
   {
-    "id": "kci32x4hgxrdl0v5o4xrjlxri",
-    "title": "The Verge 梳理黄仁勋与 Megaspeed 高管丑闻对 Nvidia 出口管制游说的影响",
-    "originalTitle": "What could China get from Jensen Huang?",
-    "summary": "The Verge 依据《纽约时报》等报道梳理 Nvidia CEO 黄仁勋与新加坡云服务商 Megaspeed 高管 Alice Huang 的婚外情风波。",
-    "source": "The Verge：AI（RSS）",
-    "originalUrl": "https://www.theverge.com/ai-artificial-intelligence/1030328/what-could-china-get-from-jensen-huang",
-    "aihotUrl": "https://aihot.news/items/kci32x4hgxrdl0v5o4xrjlxri",
-    "publishedAt": "2026-11-09T23:51:58.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "文章梳理了美媒对 Megaspeed 高管事件的报道脉络，把黄仁勋推动放宽对华出口管制的游说时间线与相关指控放在一起，便于读者理解各方立场。"
-  },
-  {
     "id": "po2cdt1whxfqyfew3e81l8mb0",
     "title": "实测 Claude Fable 5.2：一次直出视频与 3D 网页，审美与细节表现突出",
     "originalTitle": "实测Claude Fable 5.2 - 审美与细节的绝对统治。",
@@ -1366,9 +1405,9 @@
   },
   {
     "id": "zqvokl37rwbvoxzfk3c2v7964",
-    "title": "做空机构 Culper Research 曾在丑闻爆发前六个月提示 Nvidia CEO 与疑似中国间谍的关系",
-    "originalTitle": "A short seller flagged Nvidia CEO’s ties to a suspected Chinese spy six months before the scandal",
-    "summary": "Nvidia 间谍丑闻爆发前六个月，做空机构 Culper Research 已在 5 月 13 日报告中质疑 CEO 黄仁勋与 Megaspeed 高管 Alice Huang 关系“异常密切”。",
+    "title": "做空机构 Culper Research 曾在风波爆发前六个月提示 Nvidia CEO 与 Megaspeed 高管关系异常",
+    "originalTitle": null,
+    "summary": "Nvidia 风波爆发前六个月，做空机构 Culper Research 已在 5 月 13 日报告中质疑 CEO 黄仁勋与 Megaspeed 高管 Alice Huang 关系“异常密切”。",
     "source": "TechCrunch：AI（RSS）",
     "originalUrl": "https://techcrunch.com/2026/11/09/a-short-seller-flagged-nvidia-ceos-ties-to-a-suspected-chinese-spy-six-months-before-the-scandal/",
     "aihotUrl": "https://aihot.news/items/zqvokl37rwbvoxzfk3c2v7964",
@@ -1534,19 +1573,6 @@
     "reason": "Anthropic 详细复盘了 1000 个智能体在沙箱内自组织证明费马大定理的过程，并给出了可参考的多智能体安全边界设计。"
   },
   {
-    "id": "e17dl64mjiov57c0jtwn41bxd",
-    "title": "Nvidia CEO 黄仁勋婚外情风波削弱其对严格 AI 芯片出口管制的游说",
-    "originalTitle": "Nvidia espionage scandal weakens Huang's lobby against tighter AI chip export controls",
-    "summary": "据 Bloomberg 报道，Nvidia CEO 黄仁勋在全员备忘录中承认与被美国情报机构认定为疑似中国情报人员线人的 Alice Huang（Huang Le）存在婚外关系，董事会已启动独立董事主导的调查。",
-    "source": "The Decoder：AI News（RSS）",
-    "originalUrl": "https://the-decoder.com/nvidia-espionage-scandal-weakens-huangs-lobby-against-tighter-ai-chip-export-controls/",
-    "aihotUrl": "https://aihot.news/items/e17dl64mjiov57c0jtwn41bxd",
-    "publishedAt": "2026-11-09T11:38:43.000Z",
-    "category": "industry",
-    "categoryLabel": "行业动态",
-    "reason": "原文梳理了丑闻与出口管制监管压力的关联，读者可以据此理解 Nvidia 在对华芯片销售议题上的处境变化。"
-  },
-  {
     "id": "cox936nwax49rkiimi1oicgzu",
     "title": "Meta 发布最小最高效模型 Muse Ember，主打智能体高频任务",
     "originalTitle": "Introducing Our Smallest, Most Efficient Model: Muse Ember",
@@ -1558,32 +1584,6 @@
     "category": "ai-models",
     "categoryLabel": "AI 模型",
     "reason": "官方给出与 Claude Haiku 5.5 和 GPT-6 Luna 的逐项成本与基准对比，读者可据此评估智能体高频任务的性价比选型。"
-  },
-  {
-    "id": "i8df3mmfly47axpbbr1p6ivh5",
-    "title": "耶鲁教授 Sonnenfeld 估计黄仁勋职位去留概率约为 50-50",
-    "originalTitle": "Is Jensen Huang’s job on the line? Yale’s Jeffrey Sonnenfeld estimates it’s ‘about a 50-50’",
-    "summary": "Nvidia 董事会宣布对 CEO 黄仁勋启动独立调查后，TechCrunch 采访耶鲁教授 Jeffrey Sonnenfeld，他估计黄仁勋保住职位的概率约为 50-50。",
-    "source": "TechCrunch：AI（RSS）",
-    "originalUrl": "https://techcrunch.com/2026/11/08/is-jensen-huangs-job-on-the-line-yales-jeffrey-sonnenfeld-estimates-its-about-a-50-50/",
-    "aihotUrl": "https://aihot.news/items/i8df3mmfly47axpbbr1p6ivh5",
-    "publishedAt": "2026-11-09T05:26:29.000Z",
-    "category": "opinion",
-    "categoryLabel": "观点",
-    "reason": "耶鲁教授对黄仁勋去留给出约五五开的判断，并解释了为何缺乏继任安排和先例使这场危机更难处理。"
-  },
-  {
-    "id": "e80fmjdp23n217sd6e7ky52om",
-    "title": "数字生命卡兹克上线免费 Token 福利聚合网站 Token羊毛",
-    "originalTitle": "我做了一个监控全网免费Token的网站，今天向所有人免费开放。",
-    "summary": "数字生命卡兹克上线免费聚合网站 Token羊毛（aihot.news/free-tokens），把各厂商公开的免费额度、签到积分、限时免费等活动汇总到一页，页面显示今日可领金额并按日、周、月分组，还设计了随领取次数升级亮度的卡片收集玩法。",
-    "source": "公众号：数字生命卡兹克",
-    "originalUrl": "https://mp.weixin.qq.com/s/MyNWZlURmO0xIxQpMOQZWg",
-    "aihotUrl": "https://aihot.news/items/e80fmjdp23n217sd6e7ky52om",
-    "publishedAt": "2026-11-08T23:56:00.000Z",
-    "category": "ai-products",
-    "categoryLabel": "AI 产品",
-    "reason": "作者自建聚合页免费开放，并把筛选、核实、巡查整套 Agent 流程公开，读者可了解信息聚合类工具的实现思路。"
   },
   {
     "id": "r5h0cwwdh1peqbg2rk6k9ljrh",
